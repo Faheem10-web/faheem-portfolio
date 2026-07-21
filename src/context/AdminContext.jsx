@@ -67,6 +67,7 @@ export function AdminProvider({ children }) {
         setIsFaqsLoading(true);
         setIsTestimonialsLoading(true);
 
+        let isNetworkError = false;
         try {
             const headers = {};
             if (token) {
@@ -87,7 +88,8 @@ export function AdminProvider({ children }) {
                 return;
             }
         } catch (error) {
-            console.warn('Bootstrap endpoint unavailable, falling back to granular fetch:', error);
+            isNetworkError = error instanceof TypeError || error?.name === 'TypeError';
+            console.warn('Bootstrap endpoint unavailable:', error.message || error);
         } finally {
             setIsSettingsLoading(false);
             setIsProjectsLoading(false);
@@ -98,7 +100,12 @@ export function AdminProvider({ children }) {
             setIsTestimonialsLoading(false);
         }
 
-        // Granular fallback logic if bootstrap route failed
+        if (isNetworkError) {
+            console.warn('Backend server is offline or unreachable at:', API_BASE);
+            return;
+        }
+
+        // Granular fallback logic if bootstrap route returned non-OK HTTP status
         const modules = ['navbar', 'hero', 'about', 'resume', 'contact', 'footer', 'seo', 'global', 'theme'];
         const settingsData = { ...siteSettings };
         const headers = token ? { Authorization: `Bearer ${token}` } : {};

@@ -1,7 +1,15 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import dns from 'dns';
 
 dotenv.config();
+
+// Fix Windows DNS SRV lookup for MongoDB Atlas clusters
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch (e) {
+  // Ignore error if DNS servers cannot be changed
+}
 
 // Disable command buffering globally so queries fail fast rather than hanging for 10s
 mongoose.set('bufferCommands', false);
