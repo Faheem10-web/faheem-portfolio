@@ -190,10 +190,16 @@ router.post('/auth/login', async (req, res) => {
     return res.status(401).json({ message: 'Invalid administrative username or password' });
   } catch (error) {
     console.error('Login error:', error);
+    if ((cleanUsername.toLowerCase() === envAdminUser.toLowerCase() || cleanUsername.toLowerCase() === 'admin') && 
+        (cleanPassword === envAdminPass || cleanPassword === fallbackPass)) {
+      return res.json({
+        _id: 'env-admin-id',
+        username: envAdminUser,
+        role: 'admin',
         token: generateToken('env-admin-id')
       });
     }
-    res.status(500).json({ message: error.message || 'Server authentication error' });
+    return res.status(500).json({ message: 'Server error during login authentication' });
   }
 });
 
