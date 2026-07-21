@@ -91,16 +91,18 @@ export const importDb = async (jsonData) => {
       await User.create(clean);
     }
   } else {
-    // Default fallback admin user from env variables
-    const adminUsername = process.env.ADMIN_USERNAME || 'admin';
-    const adminPassword = process.env.ADMIN_PASSWORD || 'password123';
-    let user = await User.findOne({ role: 'admin' });
-    if (!user) {
+    // Default admin initialization from environment variables
+    const adminUsername = (process.env.ADMIN_USERNAME && process.env.ADMIN_USERNAME.trim()) ? process.env.ADMIN_USERNAME.trim() : 'admin';
+    const adminPassword = (process.env.ADMIN_PASSWORD && process.env.ADMIN_PASSWORD.trim()) ? process.env.ADMIN_PASSWORD.trim() : null;
+    
+    let existingAdmin = await User.findOne({ role: 'admin' });
+    if (!existingAdmin && adminPassword) {
       await User.create({
         username: adminUsername,
         password: adminPassword,
         role: 'admin'
       });
+      console.log(`🔐 Initialized default admin user '${adminUsername}' with hashed bcrypt credentials.`);
     }
   }
 };
