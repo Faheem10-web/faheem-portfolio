@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url';
 import { sendAdminEmail, sendVisitorAutoReply } from '../services/emailService.js';
 import { uploadToCloudinary, deleteFromCloudinary, deleteCloudinaryAssetsFromObject } from '../services/cloudinaryService.js';
 import { importDb, exportDb } from '../scripts/seeder.js';
+import connectDB from '../config/db.js';
 
 import {
   NavbarSettings,
@@ -1047,6 +1048,37 @@ router.get('/analytics', protect, async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+});
+
+// Diagnostic endpoint to check Mongoose and MongoDB Atlas connectivity in production Vercel
+router.get('/test-db', async (req, res) => {
+  const result = {
+    mongooseConnectionState: mongoose.connection.readyState,
+    mongodbUriConfigured: !!process.env.MONGODB_URI,
+    mongodbUriLength: process.env.MONGODB_URI ? process.env.MONGODB_URI.length : 0,
+    nodeEnv: process.env.NODE_ENV,
+    isVercel: !!process.env.VERCEL,
+    envKeys: Object.keys(process.env).filter(k => !k.includes('PASS') && !k.includes('SECRET') && !k.includes('KEY'))
+  };
+
+  try {
+    const conn = await connectDB();
+    if (conn) {
+      result.connectionSuccess = true;
+      result.readyStateAfterConnect = mongoose.connection.readyState;
+      result.dbHost = conn.connection.host;
+      result.dbName = conn.connection.name;
+    } else {
+      result.connectionSuccess = false;
+      result.message = 'connectDB() returned null';
+    }
+  } catch (err) {
+    result.connectionSuccess = false;
+    result.error = err.message;
+    result.stack = err.stack;
+  }
+
+  res.json(result);
 });
 
 export default router;
