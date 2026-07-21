@@ -688,10 +688,15 @@ router.delete('/projects/:id', protect, async (req, res) => {
 
 router.get('/faqs', checkMaintenance, async (req, res) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      const seed = getDefaultSeedData();
+      return res.json(seed.faqs || []);
+    }
     const faqs = await FAQ.find().sort({ order: 1 }).lean();
     res.json(faqs);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch {
+    const seed = getDefaultSeedData();
+    res.json(seed.faqs || []);
   }
 });
 
@@ -739,10 +744,15 @@ router.delete('/faqs/:id', protect, async (req, res) => {
 
 router.get('/testimonials', checkMaintenance, async (req, res) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      const seed = getDefaultSeedData();
+      return res.json(seed.testimonials || []);
+    }
     const testimonials = await Testimonial.find().sort({ order: 1 }).lean();
     res.json(testimonials);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch {
+    const seed = getDefaultSeedData();
+    res.json(seed.testimonials || []);
   }
 });
 
@@ -876,10 +886,13 @@ router.post('/messages', checkMaintenance, async (req, res) => {
 // View Inbox (Protected)
 router.get('/messages', protect, async (req, res) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.json([]);
+    }
     const messages = await Message.find().sort({ createdAt: -1 });
     res.json(messages);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch {
+    res.json([]);
   }
 });
 
@@ -1002,10 +1015,15 @@ router.post('/media/replace/:id', protect, upload.single('file'), async (req, re
 // Get Media Files
 router.get('/media', checkMaintenance, async (req, res) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      const seed = getDefaultSeedData();
+      return res.json(seed.media || []);
+    }
     const media = await Media.find().sort({ createdAt: -1 }).lean();
     res.json(media);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch {
+    const seed = getDefaultSeedData();
+    res.json(seed.media || []);
   }
 });
 
@@ -1044,6 +1062,19 @@ router.delete('/media/:id', protect, async (req, res) => {
 
 router.get('/analytics', protect, async (req, res) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      const seed = getDefaultSeedData();
+      return res.json({
+        totalProjects: (seed.projects || []).length,
+        totalMessages: 0,
+        totalSkills: (seed.skills || []).length,
+        totalServices: (seed.services || []).length,
+        totalFAQ: (seed.faqs || []).length,
+        totalExperience: (seed.experiences || []).length,
+        unreadMessages: 0,
+        recentMessages: []
+      });
+    }
     const totalProjects = await Project.countDocuments();
     const totalMessages = await Message.countDocuments();
     const totalSkills = await Skill.countDocuments();
@@ -1065,8 +1096,18 @@ router.get('/analytics', protect, async (req, res) => {
       unreadMessages,
       recentMessages
     });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch {
+    const seed = getDefaultSeedData();
+    res.json({
+      totalProjects: (seed.projects || []).length,
+      totalMessages: 0,
+      totalSkills: (seed.skills || []).length,
+      totalServices: (seed.services || []).length,
+      totalFAQ: (seed.faqs || []).length,
+      totalExperience: (seed.experiences || []).length,
+      unreadMessages: 0,
+      recentMessages: []
+    });
   }
 });
 

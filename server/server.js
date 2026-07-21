@@ -79,6 +79,13 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 // API routes
 app.use('/api', apiRouter);
 
+// Global Error Handler Middleware
+app.use((err, req, res, next) => {
+  console.error('⚠️ Express Error Handler:', err.message);
+  const statusCode = err.status || err.statusCode || 500;
+  res.status(statusCode).json({ error: err.message || 'Internal Server Error' });
+});
+
 // Health Endpoint
 app.get('/', (req, res) => {
   res.send('Portfolio API Server is running...');
