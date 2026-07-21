@@ -6,7 +6,6 @@ import {
     FiArrowRight, 
     FiExternalLink
 } from "react-icons/fi";
-import { projectsData } from "../data/projectsData";
 import { useAdmin } from "../context/AdminContext";
 import { getOptimizedImageUrl } from "../utils/imageOptimizer";
 
@@ -100,15 +99,10 @@ function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }
 function ProjectsPage() {
     const { projects, isProjectsLoading } = useAdmin();
     
-    const dbProjects = projects && projects.length > 0
-        ? projects.filter(p => p.enabled !== false)
-        : [];
+    const activeProjects = (projects || [])
+        .filter(p => p && p.enabled !== false);
 
-    const showSkeleton = isProjectsLoading && dbProjects.length === 0;
-
-    const activeProjects = dbProjects.length > 0
-        ? dbProjects
-        : (!isProjectsLoading ? projectsData : []);
+    const showSkeleton = isProjectsLoading && activeProjects.length === 0;
 
     useEffect(() => {
         window.scrollTo(0, 0);

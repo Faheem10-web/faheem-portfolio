@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { projectsData } from "../data/projectsData";
 import { useAdmin } from "../context/AdminContext";
 import { API_BASE } from "../config/api";
 import { getOptimizedImageUrl } from "../utils/imageOptimizer";
@@ -21,23 +20,13 @@ function CaseStudyPage() {
                     const data = await res.json();
                     setProject(data);
                 } else {
-                    const found = projects.find(p => p.slug === id || p._id === id);
-                    if (found) {
-                        setProject(found);
-                    } else {
-                        const staticFound = projectsData.find(p => p.slug === id || p.id === parseInt(id));
-                        setProject(staticFound);
-                    }
+                    const found = (projects || []).find(p => p.slug === id || p._id === id || p.id === id);
+                    setProject(found || null);
                 }
             } catch (err) {
                 console.error("Failed to fetch project details from API:", err);
-                const found = projects.find(p => p.slug === id || p._id === id);
-                if (found) {
-                    setProject(found);
-                } else {
-                    const staticFound = projectsData.find(p => p.slug === id || p.id === parseInt(id));
-                    setProject(staticFound);
-                }
+                const found = (projects || []).find(p => p.slug === id || p._id === id || p.id === id);
+                setProject(found || null);
             } finally {
                 setLoading(false);
             }

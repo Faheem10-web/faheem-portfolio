@@ -2,7 +2,6 @@ import React, { useRef, memo } from "react";
 import "./Projects.css";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import { projectsData } from "../../data/projectsData";
 import { FiExternalLink } from "react-icons/fi";
 import { useAdmin } from "../../context/AdminContext";
 import { getOptimizedImageUrl } from "../../utils/imageOptimizer";
@@ -87,16 +86,11 @@ function Projects() {
     const { projects, isProjectsLoading } = useAdmin();
     const navigate = useNavigate();
     
-    const dbProjects = projects && projects.length > 0
-        ? projects.filter(p => p.enabled !== false).slice(0, 4)
-        : [];
+    const activeProjects = (projects || [])
+        .filter(p => p && p.enabled !== false)
+        .slice(0, 4);
 
-    const showSkeleton = isProjectsLoading && dbProjects.length === 0;
-
-    // Use DB projects or fallback mockup data after load has resolved and no DB items are returned
-    const activeProjects = dbProjects.length > 0 
-        ? dbProjects 
-        : (!isProjectsLoading ? projectsData.slice(0, 4) : []);
+    const showSkeleton = isProjectsLoading && activeProjects.length === 0;
 
     if (showSkeleton) {
         return (
