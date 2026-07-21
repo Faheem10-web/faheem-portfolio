@@ -150,8 +150,13 @@ export default function SectionManager() {
 
   const handleAddFaq = async (e) => {
     e.preventDefault();
-    await faqsCrud.create(newFaq);
-    setNewFaq({ question: '', answer: '', order: 0 });
+    const res = await faqsCrud.create(newFaq);
+    if (res.success) {
+      setNewFaq({ question: '', answer: '', order: 0 });
+      showToast('FAQ item added successfully!', 'success');
+    } else {
+      showToast('Failed to add FAQ item.', 'error');
+    }
   };
 
   const handleUpdateFaq = async (e) => {
@@ -160,12 +165,13 @@ export default function SectionManager() {
     const res = await faqsCrud.update(editingFaq._id, {
       question: editingFaq.question,
       answer: editingFaq.answer,
-      order: editingFaq.order
+      order: editingFaq.order || 0
     });
     if (res.success) {
       setEditingFaq(null);
+      showToast('FAQ item updated successfully!', 'success');
     } else {
-      alert('Failed to update FAQ.');
+      showToast('Failed to update FAQ item.', 'error');
     }
   };
 
@@ -703,8 +709,8 @@ export default function SectionManager() {
  
             {/* Edit / Add FAQ Form */}
             {editingFaq ? (
-              <form onSubmit={handleUpdateFaq} style={{ background: 'rgba(139, 92, 246, 0.05)', padding: '20px', borderRadius: '12px', border: '1px solid var(--admin-primary)', marginBottom: '24px' }}>
-                <h4 style={{ marginBottom: '16px', fontSize: '14px', color: 'var(--admin-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <form onSubmit={handleUpdateFaq} style={{ background: 'rgba(139, 92, 246, 0.08)', padding: '24px', borderRadius: '14px', border: '1px solid rgba(139, 92, 246, 0.4)', marginBottom: '24px', boxShadow: '0 8px 32px rgba(139, 92, 246, 0.1)' }}>
+                <h4 style={{ marginBottom: '16px', fontSize: '15px', color: 'var(--admin-primary)', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600' }}>
                   <FiEdit3 /> Edit FAQ Item
                 </h4>
                 <div className="admin-form-group">
@@ -713,11 +719,15 @@ export default function SectionManager() {
                 </div>
                 <div className="admin-form-group">
                   <label className="admin-label">Answer</label>
-                  <textarea className="admin-textarea" value={editingFaq.answer} onChange={e => setEditingFaq({ ...editingFaq, answer: e.target.value })} required></textarea>
+                  <textarea className="admin-textarea" rows={4} value={editingFaq.answer} onChange={e => setEditingFaq({ ...editingFaq, answer: e.target.value })} required></textarea>
                 </div>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <button type="submit" className="admin-btn admin-btn-primary"><FiSave /> Update FAQ</button>
-                  <button type="button" className="admin-btn admin-btn-secondary" onClick={() => setEditingFaq(null)}>Cancel</button>
+                <div className="admin-form-group">
+                  <label className="admin-label">Display Order</label>
+                  <input type="number" className="admin-input" value={editingFaq.order || 0} onChange={e => setEditingFaq({ ...editingFaq, order: parseInt(e.target.value, 10) || 0 })} />
+                </div>
+                <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
+                  <button type="submit" className="admin-btn admin-btn-primary"><FiSave /> Update FAQ Item</button>
+                  <button type="button" className="admin-btn admin-btn-secondary" onClick={() => setEditingFaq(null)}>Cancel Edit</button>
                 </div>
               </form>
             ) : (
@@ -729,9 +739,13 @@ export default function SectionManager() {
                 </div>
                 <div className="admin-form-group">
                   <label className="admin-label">Answer</label>
-                  <textarea className="admin-textarea" value={newFaq.answer} onChange={e => setNewFaq({ ...newFaq, answer: e.target.value })} required></textarea>
+                  <textarea className="admin-textarea" rows={3} value={newFaq.answer} onChange={e => setNewFaq({ ...newFaq, answer: e.target.value })} required></textarea>
                 </div>
-                <button type="submit" className="admin-btn admin-btn-primary"><FiPlus /> Add FAQ</button>
+                <div className="admin-form-group">
+                  <label className="admin-label">Display Order</label>
+                  <input type="number" className="admin-input" value={newFaq.order || 0} onChange={e => setNewFaq({ ...newFaq, order: parseInt(e.target.value, 10) || 0 })} />
+                </div>
+                <button type="submit" className="admin-btn admin-btn-primary"><FiPlus /> Add FAQ Item</button>
               </form>
             )}
  
@@ -741,34 +755,54 @@ export default function SectionManager() {
                   <tr>
                     <th>Question</th>
                     <th>Answer</th>
+                    <th>Order</th>
                     <th style={{ textAlign: 'right' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {faqs.map(faq => (
-                    <tr key={faq._id}>
-                      <td style={{ fontWeight: '600', maxWidth: '200px', whiteSpace: 'normal' }}>{faq.question}</td>
-                      <td style={{ color: 'var(--admin-text-muted)', fontSize: '13px', whiteSpace: 'normal' }}>{faq.answer}</td>
-                      <td style={{ textAlign: 'right' }}>
-                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-                          <button 
-                            className="admin-btn" 
-                            style={{ padding: '8px', background: 'rgba(139, 92, 246, 0.1)', color: 'var(--admin-primary)', border: '1px solid rgba(139, 92, 246, 0.2)' }} 
-                            onClick={() => setEditingFaq(faq)}
-                          >
-                            <FiEdit3 size={13} />
-                          </button>
-                          <button 
-                            className="admin-btn admin-btn-danger" 
-                            style={{ padding: '8px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)' }} 
-                            onClick={() => faqsCrud.delete(faq._id)}
-                          >
-                            <FiTrash2 size={13} />
-                          </button>
-                        </div>
+                  {faqs && faqs.length > 0 ? (
+                    faqs.map(faq => (
+                      <tr key={faq._id}>
+                        <td style={{ fontWeight: '600', maxWidth: '240px', whiteSpace: 'normal' }}>{faq.question}</td>
+                        <td style={{ color: 'var(--admin-text-muted)', fontSize: '13px', whiteSpace: 'normal' }}>{faq.answer}</td>
+                        <td style={{ fontSize: '13px', color: 'var(--admin-text-muted)' }}>{faq.order || 0}</td>
+                        <td style={{ textAlign: 'right' }}>
+                          <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                            <button 
+                              className="admin-btn" 
+                              style={{ padding: '6px 12px', background: 'rgba(139, 92, 246, 0.15)', color: 'var(--admin-primary)', border: '1px solid rgba(139, 92, 246, 0.3)', display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: '500' }} 
+                              onClick={() => {
+                                setEditingFaq(faq);
+                                window.scrollTo({ top: 180, behavior: 'smooth' });
+                              }}
+                              title="Edit FAQ Item"
+                            >
+                              <FiEdit3 size={13} /> Edit
+                            </button>
+                            <button 
+                              className="admin-btn admin-btn-danger" 
+                              style={{ padding: '6px 12px', background: 'rgba(239, 68, 68, 0.15)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.3)', display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: '500' }} 
+                              onClick={async () => {
+                                if (window.confirm(`Are you sure you want to delete "${faq.question}"?`)) {
+                                  const res = await faqsCrud.delete(faq._id);
+                                  if (res.success) showToast('FAQ deleted successfully!', 'success');
+                                }
+                              }}
+                              title="Delete FAQ Item"
+                            >
+                              <FiTrash2 size={13} /> Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '24px' }}>
+                        No FAQ items found. Add your first FAQ item above.
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
