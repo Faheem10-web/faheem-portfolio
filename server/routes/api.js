@@ -74,10 +74,10 @@ const buildFallbackPayload = () => {
   };
 };
 
-// In-Memory Fast Cache state for /api/bootstrap (Pre-warmed with fallback data)
-let cachedBootstrapPayload = buildFallbackPayload();
+// In-Memory Fast Cache state for /api/bootstrap
+let cachedBootstrapPayload = null;
 let lastBootstrapFetch = 0;
-const CACHE_TTL_MS = 60 * 1000;
+const CACHE_TTL_MS = 15 * 1000;
 
 export const invalidateBootstrapCache = () => {
   cachedBootstrapPayload = null;
@@ -280,67 +280,60 @@ router.get('/bootstrap', checkMaintenance, async (req, res) => {
   res.set('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
   try {
     const now = Date.now();
+
+    if (mongoose.connection.readyState !== 1) {
+      await connectDB();
+    }
+
     if (cachedBootstrapPayload && (now - lastBootstrapFetch < CACHE_TTL_MS)) {
       return res.json(cachedBootstrapPayload);
     }
 
     const isConnected = mongoose.connection.readyState === 1;
-    if (!isConnected) {
-      if (!cachedBootstrapPayload) {
-        cachedBootstrapPayload = buildFallbackPayload();
-      }
+    if (isConnected) {
+      const [
+        navbar, hero, about, resume, contact, footer, seo, globalSettings, theme,
+        projects, services, skills, experiences, faqs, testimonials
+      ] = await Promise.all([
+        NavbarSettings.findOne().lean().then(s => s || {}),
+        HeroSettings.findOne().lean().then(s => s || {}),
+        AboutSettings.findOne().lean().then(s => s || {}),
+        ResumeSettings.findOne().lean().then(s => s || {}),
+        ContactSettings.findOne().lean().then(s => s || {}),
+        FooterSettings.findOne().lean().then(s => s || {}),
+        SeoSettings.findOne().lean().then(s => s || {}),
+        GlobalSettings.findOne().lean().then(s => s || {}),
+        ThemeSettings.findOne().lean().then(s => s || { mode: 'system' }),
+        Project.find().select('name slug category year client coverImage thumbnailImage bannerImage liveUrl githubUrl enabled order').sort({ order: 1 }).lean(),
+        Service.find().sort({ order: 1 }).lean(),
+        Skill.find().sort({ category: 1, order: 1 }).lean(),
+        Experience.find().sort({ order: 1 }).lean(),
+        FAQ.find().sort({ order: 1 }).lean(),
+        Testimonial.find().sort({ order: 1 }).lean()
+      ]);
+
+      cachedBootstrapPayload = {
+        settings: {
+          navbar, hero, about, resume, contact, footer, seo, global: globalSettings, theme
+        },
+        projects,
+        services,
+        skills,
+        experiences,
+        faqs,
+        testimonials
+      };
+      lastBootstrapFetch = now;
+
       return res.json(cachedBootstrapPayload);
     }
 
-    // Fast query execution with lean and default fallbacks without triggering DB write side-effects
-    const queryPromise = Promise.all([
-      NavbarSettings.findOne().lean().then(s => s || {}),
-      HeroSettings.findOne().lean().then(s => s || {}),
-      AboutSettings.findOne().lean().then(s => s || {}),
-      ResumeSettings.findOne().lean().then(s => s || {}),
-      ContactSettings.findOne().lean().then(s => s || {}),
-      FooterSettings.findOne().lean().then(s => s || {}),
-      SeoSettings.findOne().lean().then(s => s || {}),
-      GlobalSettings.findOne().lean().then(s => s || {}),
-      ThemeSettings.findOne().lean().then(s => s || { mode: 'system' }),
-      Project.find().select('name slug category year client coverImage thumbnailImage bannerImage liveUrl githubUrl enabled order').sort({ order: 1 }).lean(),
-      Service.find().sort({ order: 1 }).lean(),
-      Skill.find().sort({ category: 1, order: 1 }).lean(),
-      Experience.find().sort({ order: 1 }).lean(),
-      FAQ.find().sort({ order: 1 }).lean(),
-      Testimonial.find().sort({ order: 1 }).lean()
-    ]);
-
-    // Enforce 1000ms max query timeout so API never hangs
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('Query timeout')), 1000)
-    );
-
-    const [
-      navbar, hero, about, resume, contact, footer, seo, globalSettings, theme,
-      projects, services, skills, experiences, faqs, testimonials
-    ] = await Promise.race([queryPromise, timeoutPromise]);
-
-    cachedBootstrapPayload = {
-      settings: {
-        navbar, hero, about, resume, contact, footer, seo, global: globalSettings, theme
-      },
-      projects,
-      services,
-      skills,
-      experiences,
-      faqs,
-      testimonials
-    };
-    lastBootstrapFetch = now;
-
-    res.json(cachedBootstrapPayload);
+    const fallbackPayload = buildFallbackPayload();
+    return res.json(fallbackPayload);
   } catch (error) {
     console.warn('Bootstrap DB fetch fallback:', error.message);
-    if (!cachedBootstrapPayload) {
-      cachedBootstrapPayload = buildFallbackPayload();
-    }
-    res.json(cachedBootstrapPayload);
+    const fallbackPayload = buildFallbackPayload();
+    res.json(fallbackPayload);
   }
 });
 
