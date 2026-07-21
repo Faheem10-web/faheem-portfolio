@@ -4,11 +4,13 @@ import dns from 'dns';
 
 dotenv.config();
 
-// Fix Windows DNS SRV lookup for MongoDB Atlas clusters
-try {
-  dns.setServers(['8.8.8.8', '1.1.1.1']);
-} catch {
-  // Ignore error if DNS servers cannot be changed
+// Fix Windows DNS SRV lookup for MongoDB Atlas clusters locally
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  try {
+    dns.setServers(['8.8.8.8', '1.1.1.1']);
+  } catch {
+    // Ignore error if DNS servers cannot be changed
+  }
 }
 
 // Disable command buffering globally so queries fail fast rather than hanging for 10s
@@ -24,11 +26,14 @@ const connectDB = async () => {
   }
 
   try {
+    const isProd = process.env.NODE_ENV === 'production' || process.env.VERCEL;
+    const timeoutVal = isProd ? 15000 : 3000;
+
     const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/faheem_portfolio', {
-      maxPoolSize: 10,
-      minPoolSize: 2,
-      serverSelectionTimeoutMS: 1000,
-      connectTimeoutMS: 1000,
+      maxPoolSize: isProd ? 5 : 10,
+      minPoolSize: isProd ? 0 : 2,
+      serverSelectionTimeoutMS: timeoutVal,
+      connectTimeoutMS: timeoutVal,
       family: 4,
       socketTimeoutMS: 45000,
       bufferCommands: false,
