@@ -10,12 +10,14 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Database Connection (fire-and-forget with error handling for serverless)
-connectDB().then(async () => {
-  await autoSeedDB();
-}).catch(err => {
-  console.error('⚠️ Startup DB/Seed error (non-fatal):', err.message);
-});
+// Database Connection (local/standalone server mode)
+if (!process.env.VERCEL) {
+  connectDB().then(async () => {
+    await autoSeedDB();
+  }).catch(err => {
+    console.error('⚠️ Startup DB/Seed error (non-fatal):', err.message);
+  });
+}
 
 import helmet from 'helmet';
 import compression from 'compression';
