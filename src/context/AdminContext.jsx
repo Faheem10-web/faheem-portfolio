@@ -291,7 +291,8 @@ export function AdminProvider({ children }) {
                     await loadPublicData();
                     return { success: true };
                 }
-                return { success: false };
+                const errData = await res.json().catch(() => ({}));
+                return { success: false, message: errData.error || errData.message || 'Failed to create item' };
             },
             update: async (id, item) => {
                 const res = await fetch(`${API_BASE}/${routeSegment}/${id}`, {
@@ -307,7 +308,8 @@ export function AdminProvider({ children }) {
                     await loadPublicData();
                     return { success: true };
                 }
-                return { success: false };
+                const errData = await res.json().catch(() => ({}));
+                return { success: false, message: errData.error || errData.message || 'Failed to update item' };
             },
             delete: async (id) => {
                 // Immediately remove from React state to prevent UI flicker or stale rendering

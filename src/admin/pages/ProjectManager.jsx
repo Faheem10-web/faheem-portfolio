@@ -154,7 +154,7 @@ export default function ProjectManager() {
       resetForm();
       setIsEditing(false);
     } else {
-      alert('Failed to save project. Make sure slug is unique.');
+      alert(res.message || 'Failed to save project. Make sure slug is unique.');
     }
   };
 

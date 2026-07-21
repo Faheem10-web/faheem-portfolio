@@ -629,52 +629,107 @@ router.get('/projects/:idOrSlug', checkMaintenance, async (req, res) => {
   }
 });
 
+// Helper to generate clean unique slug for projects
+const generateUniqueSlug = async (name, customSlug, currentId = null) => {
+  let baseSlug = (customSlug || name || 'project')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+    
+  if (!baseSlug) baseSlug = `project-${Date.now().toString(36)}`;
+
+  if (mongoose.connection.readyState !== 1) {
+    return baseSlug;
+  }
+
+  let finalSlug = baseSlug;
+  let count = 1;
+  while (true) {
+    const existing = await Project.findOne({ slug: finalSlug });
+    if (!existing || (currentId && (existing._id.toString() === String(currentId) || existing.id === String(currentId)))) {
+      break;
+    }
+    finalSlug = `${baseSlug}-${count++}`;
+  }
+  return finalSlug;
+};
+
 router.post('/projects', protect, async (req, res) => {
   try {
-    const project = await Project.create(req.body);
+    req.body.slug = await generateUniqueSlug(req.body.name, req.body.slug);
+    
+    let project = null;
+    if (mongoose.connection.readyState === 1) {
+      project = await Project.create(req.body);
+    } else {
+      project = { _id: `temp-${Date.now()}`, ...req.body };
+    }
+
     invalidateBootstrapCache();
     res.status(201).json(project);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error('❌ Project Create Error:', error);
+    res.status(400).json({ error: error.message || 'Failed to create project' });
   }
 });
 
 router.put('/projects/:id', protect, async (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    return res.status(400).json({ message: 'Invalid ID format' });
-  }
   try {
-    const existing = await Project.findById(req.params.id);
-    if (!existing) return res.status(404).json({ message: 'Project not found' });
+    let project = null;
+    if (mongoose.connection.readyState === 1) {
+      if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        project = await Project.findById(req.params.id);
+      } else {
+        project = await Project.findOne({ $or: [{ slug: req.params.id }, { id: req.params.id }] });
+      }
 
-    // Delete replaced Cloudinary images
-    const imageFields = ['coverImage', 'thumbnailImage', 'bannerImage', 'challengeImage', 'solutionImage', 'resultImage'];
-    for (const field of imageFields) {
-      if (req.body[field] && req.body[field] !== existing[field] && existing[field]?.includes('res.cloudinary.com')) {
-        await deleteFromCloudinary(existing[field]);
+      if (project) {
+        req.body.slug = await generateUniqueSlug(req.body.name || project.name, req.body.slug || project.slug, project._id);
+        
+        // Delete replaced Cloudinary images
+        const imageFields = ['coverImage', 'thumbnailImage', 'bannerImage', 'challengeImage', 'solutionImage', 'resultImage'];
+        for (const field of imageFields) {
+          if (req.body[field] && req.body[field] !== project[field] && project[field]?.includes('res.cloudinary.com')) {
+            await deleteFromCloudinary(project[field]);
+          }
+        }
+
+        project = await Project.findByIdAndUpdate(project._id, req.body, { new: true, runValidators: true });
+      } else {
+        req.body.slug = await generateUniqueSlug(req.body.name, req.body.slug);
+        project = await Project.create(req.body);
       }
     }
 
-    const project = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!project) {
+      project = { _id: req.params.id, ...req.body };
+    }
+
     invalidateBootstrapCache();
     res.json(project);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error('❌ Project Update Error:', error);
+    res.status(400).json({ error: error.message || 'Failed to update project' });
   }
 });
 
 router.delete('/projects/:id', protect, async (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-    return res.status(400).json({ message: 'Invalid ID format' });
-  }
   try {
-    const project = await Project.findById(req.params.id);
-    if (!project) return res.status(404).json({ message: 'Project not found' });
+    let project = null;
+    if (mongoose.connection.readyState === 1) {
+      if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        project = await Project.findById(req.params.id);
+      } else {
+        project = await Project.findOne({ $or: [{ slug: req.params.id }, { id: req.params.id }] });
+      }
 
-    // Permanently purge all Cloudinary images attached to this project
-    await deleteCloudinaryAssetsFromObject(project);
+      if (project) {
+        await deleteCloudinaryAssetsFromObject(project);
+        await Project.findByIdAndDelete(project._id);
+      }
+    }
 
-    await Project.findByIdAndDelete(req.params.id);
     invalidateBootstrapCache();
     res.json({ message: 'Project deleted successfully' });
   } catch (error) {
