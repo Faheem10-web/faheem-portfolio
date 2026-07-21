@@ -4,130 +4,138 @@ import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAdmin } from "../../context/AdminContext";
 import {
-    FaInstagram, FaYoutube, FaGithub, FaFacebook, FaDribbble
+    FaGithub, FaLinkedinIn, FaTwitter, FaDribbble, FaArrowRight
 } from "react-icons/fa";
 import Magnetic from "./Magnetic";
-
-const MotionLink = motion(Link);
 
 function Footer() {
     const { siteSettings } = useAdmin();
     const footerSettings = siteSettings?.footer || {};
     const contactSettings = siteSettings?.contact || {};
-    
+    const globalSettings = siteSettings?.global || {};
+    const heroSettings = siteSettings?.hero || {};
+
     const currentYear = new Date().getFullYear();
     const location = useLocation();
     const isHomePage = location.pathname === "/";
 
+    // Brand name for giant bottom text
+    const brandName = footerSettings.giantText || globalSettings.siteName || heroSettings.name || "COLLINS JOHNSON";
+
     return (
-        <footer className="footer">
+        <footer className="footer-section">
+            <div className="footer-wrapper">
+                
+                {/* ── FLOATING GLASSMORTIC CARD ── */}
+                <motion.div 
+                    className="footer-card"
+                    initial={{ opacity: 0, y: 35 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-80px" }}
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                >
+                    {/* Upper Area: Bio & Navigation Columns */}
+                    <div className="footer-card-top">
+                        {/* Brand Description & CTA */}
+                        <div className="footer-brand-col">
+                            <p className="footer-description">
+                                {footerSettings.description || 
+                                 "I design and build visually striking, high-performing digital experiences that help brands stand out and convert."}
+                            </p>
 
-            {/* ── CTA HERO AREA ── */}
-            <div className="footer-cta-area">
-
-                {/* Background video */}
-                <video
-                    className="footer-bg-video"
-                    src={footerSettings.bgVideo || "/assets/footer-bg.mp4"}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                />
-                {/* Dark overlay for readability */}
-                <div className="footer-video-overlay" aria-hidden="true" />
-
-                {/* Glow orb */}
-                <div className="footer-orb" aria-hidden="true"></div>
-
-                {/* CTA text */}
-                <div className="footer-cta-content">
-                    <motion.h2
-                        className="footer-cta-heading"
-                        initial={{ opacity: 0, y: 25, filter: "blur(8px)" }}
-                        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                        viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    >
-                        Have an idea?
-                    </motion.h2>
-
-                    <MotionLink
-                        to="/contact"
-                        className="footer-cta-btn"
-                        initial={{ opacity: 0, y: 15, filter: "blur(6px)" }}
-                        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                        viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.97 }}
-                    >
-                        TELL US
-                    </MotionLink>
-                </div>
-            </div>
-
-            {/* ── INFO GRID ── */}
-            <div className="footer-info-grid">
-
-                {/* Left: contact details */}
-                <div className="footer-contact-col">
-                    <a href={`mailto:${contactSettings.email || "hello@faheem.design"}`} className="footer-pill-btn">
-                        {contactSettings.email || "hello@faheem.design"}
-                    </a>
-                    {contactSettings.phone && (
-                        <a href={`tel:${contactSettings.phone}`} className="footer-pill-btn">
-                            {contactSettings.phone}
-                        </a>
-                    )}
-
-                    <div className="footer-addresses">
-                        <div className="footer-address">
-                            <span className="address-label">LOCATION</span>
-                            <span className="address-text">{contactSettings.address || "Bangalore, India"}</span>
+                            <Link to="/contact" className="footer-contact-pill">
+                                <span>Contact Me</span>
+                                <FaArrowRight className="footer-pill-arrow" />
+                            </Link>
                         </div>
-                        <div className="footer-address">
-                            <span className="address-label">REMOTE</span>
-                            <span className="address-text">Available Worldwide<br />Full Remote</span>
+
+                        {/* Navigation Columns */}
+                        <div className="footer-links-grid">
+                            <div className="footer-link-group">
+                                <h4 className="footer-group-title">Site Map</h4>
+                                <Link to="/">Home</Link>
+                                <a href={isHomePage ? "#services" : "/#services"}>Services</a>
+                                <Link to="/projects">Projects</Link>
+                                <a href={isHomePage ? "#about" : "/#about"}>Pricing</a>
+                            </div>
+
+                            <div className="footer-link-group">
+                                <h4 className="footer-group-title">Personal</h4>
+                                <a href={isHomePage ? "#experience" : "/#experience"}>Process</a>
+                                <a href={isHomePage ? "#about" : "/#about"}>About</a>
+                            </div>
+
+                            <div className="footer-link-group">
+                                <h4 className="footer-group-title">Information</h4>
+                                <a href={isHomePage ? "#about" : "/#about"}>Why Me</a>
+                                <a href={isHomePage ? "#faq" : "/#faq"}>FAQ</a>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Spacer */}
-                <div className="footer-spacer" />
+                    {/* Lower Area: Social Buttons & Copyright */}
+                    <div className="footer-card-bottom">
+                        <div className="footer-social-circles">
+                            <Magnetic strength={0.2}>
+                                <a 
+                                    href={contactSettings.github || "https://github.com"} 
+                                    target="_blank" 
+                                    rel="noreferrer" 
+                                    aria-label="GitHub"
+                                >
+                                    <FaGithub />
+                                </a>
+                            </Magnetic>
+                            <Magnetic strength={0.2}>
+                                <a 
+                                    href={contactSettings.linkedin || "https://linkedin.com"} 
+                                    target="_blank" 
+                                    rel="noreferrer" 
+                                    aria-label="LinkedIn"
+                                >
+                                    <FaLinkedinIn />
+                                </a>
+                            </Magnetic>
+                            <Magnetic strength={0.2}>
+                                <a 
+                                    href={contactSettings.twitter || "https://twitter.com"} 
+                                    target="_blank" 
+                                    rel="noreferrer" 
+                                    aria-label="Twitter"
+                                >
+                                    <FaTwitter />
+                                </a>
+                            </Magnetic>
+                            <Magnetic strength={0.2}>
+                                <a 
+                                    href={contactSettings.dribbble || "https://dribbble.com"} 
+                                    target="_blank" 
+                                    rel="noreferrer" 
+                                    aria-label="Dribbble"
+                                >
+                                    <FaDribbble />
+                                </a>
+                            </Magnetic>
+                        </div>
 
-                {/* Right: nav columns */}
-                <div className="footer-nav-cols">
-                    <div className="footer-nav-col">
-                        <Link to="/projects">Projects</Link>
-                        <a href={isHomePage ? "#about"   : "/#about"}>Services</a>
-                        <a href={isHomePage ? "#about"   : "/#about"}>Company</a>
+                        <div className="footer-copyright-text">
+                            {footerSettings.copyrightText || `© ${currentYear} — Copyright. All Rights reserved`}
+                        </div>
                     </div>
-                    <div className="footer-nav-col">
-                        <a href={isHomePage ? "#faq"     : "/#faq"}>FAQ</a>
-                        <a href={isHomePage ? "#about"   : "/#about"}>Workflow</a>
-                        <Link to="/contact">Contact</Link>
-                    </div>
-                </div>
+                </motion.div>
+
+                {/* ── GIANT BACKGROUND TYPOGRAPHY ── */}
+                <motion.div 
+                    className="footer-giant-title"
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                >
+                    {brandName}
+                </motion.div>
 
             </div>
-
-            {/* ── BOTTOM BAR ── */}
-            <div className="footer-bottom">
-                <div className="footer-bottom-left">
-                    <a href="#" className="footer-policy">Privacy Policy</a>
-                    <span className="footer-copy">{footerSettings.copyrightText || `${currentYear}, FAHEEM`}</span>
-                </div>
-
-                <div className="footer-socials">
-                    <Magnetic strength={0.3}><a href="https://instagram.com"  target="_blank" rel="noreferrer" aria-label="Instagram"><FaInstagram /></a></Magnetic>
-                    <Magnetic strength={0.3}><a href="https://youtube.com"    target="_blank" rel="noreferrer" aria-label="YouTube"><FaYoutube /></a></Magnetic>
-                    <Magnetic strength={0.3}><a href="https://github.com"     target="_blank" rel="noreferrer" aria-label="GitHub"><FaGithub /></a></Magnetic>
-                    <Magnetic strength={0.3}><a href="https://facebook.com"   target="_blank" rel="noreferrer" aria-label="Facebook"><FaFacebook /></a></Magnetic>
-                    <Magnetic strength={0.3}><a href="https://dribbble.com"   target="_blank" rel="noreferrer" aria-label="Dribbble"><FaDribbble /></a></Magnetic>
-                </div>
-            </div>
-
         </footer>
     );
 }
