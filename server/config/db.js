@@ -34,7 +34,6 @@ const connectDB = async () => {
       minPoolSize: isProd ? 0 : 2,
       serverSelectionTimeoutMS: timeoutVal,
       connectTimeoutMS: timeoutVal,
-      family: 4,
       socketTimeoutMS: 45000,
       bufferCommands: false,
     });

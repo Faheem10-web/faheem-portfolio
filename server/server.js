@@ -21,6 +21,9 @@ import helmet from 'helmet';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 
+// Enable trust proxy for Vercel / serverless reverse proxy
+app.set('trust proxy', 1);
+
 // Global Security & Performance Middleware
 app.set('etag', false);
 
@@ -41,6 +44,7 @@ const globalLimiter = rateLimit({
   max: 300,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { trustProxy: false },
   message: { error: 'Too many requests from this IP address. Please try again later.' }
 });
 app.use('/api', globalLimiter);
@@ -49,6 +53,7 @@ app.use('/api', globalLimiter);
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 15,
+  validate: { trustProxy: false },
   message: { error: 'Too many login attempts. Please wait 15 minutes.' }
 });
 app.use('/api/auth/login', loginLimiter);
