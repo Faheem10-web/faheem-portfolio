@@ -253,15 +253,15 @@ export function AdminProvider({ children }) {
                 },
                 body: JSON.stringify(settingsBody)
             });
+            const data = await res.json().catch(() => ({}));
             if (res.ok) {
-                const updated = await res.json();
-                setSiteSettings(prev => ({ ...prev, [moduleName]: updated }));
+                setSiteSettings(prev => ({ ...prev, [moduleName]: data }));
                 await loadPublicData();
                 return { success: true };
             }
-            return { success: false, message: 'Failed to save settings' };
+            return { success: false, message: data.error || data.message || 'Failed to save settings' };
         } catch (error) {
-            return { success: false, message: error.message };
+            return { success: false, message: error.message || 'Network error' };
         }
     };
 

@@ -390,21 +390,29 @@ router.get('/settings/:module', checkMaintenance, async (req, res) => {
 });
 
 router.put('/settings/:module', protect, async (req, res) => {
-  const model = moduleMap[req.params.module];
-  if (!model) return res.status(404).json({ message: 'Module settings configuration not found' });
+  const modKey = req.params.module;
+  const model = moduleMap[modKey];
+  if (!model) return res.status(404).json({ message: `Module settings configuration '${modKey}' not found` });
   try {
-    let settings = await model.findOne();
-    if (!settings) {
-      settings = new model(req.body);
-    } else {
-      Object.assign(settings, req.body);
+    const cleanData = { ...req.body };
+    delete cleanData._id;
+    delete cleanData.__v;
+
+    let settings = null;
+    if (mongoose.connection.readyState === 1) {
+      settings = await model.findOneAndUpdate({}, cleanData, { new: true, upsert: true, setDefaultsOnInsert: true }).lean();
     }
-    await settings.save();
+
+    if (!settings) {
+      settings = { ...cleanData };
+    }
+
     invalidateBootstrapCache();
     invalidateMaintenanceCache();
     res.json(settings);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(`❌ Error updating settings for '${modKey}':`, error);
+    res.status(500).json({ error: error.message || 'Failed to save settings' });
   }
 });
 
