@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Environment and Local Secrets
+.env
+.env.local
+.env.*.local
+
+# Production Builds
+dist/
+build/
+.output/
+
+# Uploads and Temp
+uploads/*
+!uploads/.gitkeep
+
+# System and IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log

@@ -1,0 +1,304 @@
+import React, { useState } from "react";
+import "./AboutPage.css";
+import { motion, AnimatePresence } from "framer-motion";
+import { useAdmin } from "../context/AdminContext";
+import { 
+  SiFigma, 
+  SiHtml5, 
+  SiJavascript, 
+  SiReact,
+  SiNetlify,
+  SiGit,
+  SiVercel
+} from "react-icons/si";
+
+import { 
+  FaCss3Alt 
+} from "react-icons/fa";
+
+import { 
+  DiPhotoshop 
+} from "react-icons/di";
+
+import { 
+  FiSmartphone, 
+  FiMessageSquare, 
+  FiUsers, 
+  FiZap,
+  FiPenTool
+} from "react-icons/fi";
+
+import { 
+  TbDevices, 
+  TbHierarchy, 
+  TbPuzzle,
+  TbBulb
+} from "react-icons/tb";
+
+// Medal Icon (My Journey)
+const JourneyIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="section-title-icon medal-gradient">
+    <defs>
+      <linearGradient id="medalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#EC4899" />
+        <stop offset="50%" stopColor="#8B5CF6" />
+        <stop offset="100%" stopColor="#F59E0B" />
+      </linearGradient>
+    </defs>
+    <path d="M12 15C15.866 15 19 11.866 19 8C19 4.13401 15.866 1 12 1C8.13401 1 5 4.13401 5 8C5 11.866 8.13401 15 12 15Z" stroke="url(#medalGrad)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M8.21 13.89L7 23L12 20L17 23L15.79 13.88" stroke="url(#medalGrad)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// Key Icon (Capabilities)
+const KeyIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="section-title-icon key-gradient">
+    <defs>
+      <linearGradient id="keyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#8B5CF6" />
+        <stop offset="50%" stopColor="#EC4899" />
+        <stop offset="100%" stopColor="#F59E0B" />
+      </linearGradient>
+    </defs>
+    <path d="M21 2L11.8 11.2M21 2H17M21 2V6M16.5 6.5L18.5 8.5M15 8L17 10" stroke="url(#keyGrad)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M7.5 21C10.5376 21 13 18.5376 13 15.5C13 12.4624 10.5376 10 7.5 10C4.46243 10 2 12.4624 2 15.5C2 18.5376 4.46243 21 7.5 21Z" stroke="url(#keyGrad)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// GSAP Superhero SVG Icon
+const GsapSuperheroIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="skill-svg gsap-brand">
+    <path d="M12 2C12.828 2 13.5 2.672 13.5 3.5C13.5 4.328 12.828 5 12 5C11.172 5 10.5 4.328 10.5 3.5C10.5 2.672 11.172 2 12 2Z" fill="currentColor"/>
+    <path d="M10 6H14V13H10V6Z" fill="currentColor"/>
+    <path d="M6 8C7.5 8 9 9.5 10 10.5V13.5C8 12 6 9.5 6 8Z" fill="currentColor"/>
+    <path d="M18 8C16.5 8 15 9.5 14 10.5V13.5C16 12 18 9.5 18 8Z" fill="currentColor"/>
+    <path d="M8.5 14L6 22H8.5L10.5 16.5H13.5L15.5 22H18L15.5 14H8.5Z" fill="currentColor"/>
+  </svg>
+);
+
+const skillsData = [
+  { name: "Figma", category: "design", icon: "figma", iconClass: "figma-wrapper" },
+  { name: "Adobe Photoshop", category: "design", icon: "photoshop", iconClass: "photoshop-wrapper" },
+  { name: "Wireframing & Prototyping", category: "design", icon: "wireframe", iconClass: "wireframe-wrapper" },
+  { name: "Mobile & Web Interface Design", category: "design", icon: "mobile", iconClass: "mobile-wrapper" },
+  { name: "Responsive Design", category: "design", icon: "responsive", iconClass: "responsive-wrapper" },
+  { name: "Design Systems", category: "design", icon: "design-systems", iconClass: "design-systems-wrapper" },
+  
+  { name: "HTML5", category: "development", icon: "html5", iconClass: "html5-wrapper" },
+  { name: "CSS3", category: "development", icon: "css3", iconClass: "css3-wrapper" },
+  { name: "JavaScript", category: "development", icon: "javascript", iconClass: "javascript-wrapper" },
+  { name: "React", category: "development", icon: "react", iconClass: "react-wrapper" },
+  { name: "GSAP", category: "development", icon: "gsap", iconClass: "gsap-wrapper" },
+  { name: "Netlify", category: "development", icon: "netlify", iconClass: "netlify-wrapper" },
+  { name: "Vercel", category: "development", icon: "vercel", iconClass: "vercel-wrapper" },
+  { name: "Git", category: "development", icon: "git", iconClass: "git-wrapper" },
+  
+  { name: "Creative Thinking", category: "professional", icon: "creative", iconClass: "creative-wrapper" },
+  { name: "Communication", category: "professional", icon: "communication", iconClass: "communication-wrapper" },
+  { name: "Problem Solving", category: "professional", icon: "problem-solving", iconClass: "problem-solving-wrapper" },
+  { name: "Collaboration", category: "professional", icon: "collaboration", iconClass: "collaboration-wrapper" },
+];
+
+const getSkillIcon = (iconName) => {
+  switch (iconName) {
+    case "figma":
+      return <SiFigma className="skill-svg" />;
+    case "photoshop":
+      return <DiPhotoshop className="skill-svg photoshop-brand" />;
+    case "wireframe":
+      return <FiPenTool className="skill-svg wireframe-brand" />;
+    case "mobile":
+      return <FiSmartphone className="skill-svg mobile-brand" />;
+    case "responsive":
+      return <TbDevices className="skill-svg responsive-brand" />;
+    case "design-systems":
+      return <TbHierarchy className="skill-svg design-systems-brand" />;
+    case "html5":
+      return <SiHtml5 className="skill-svg html5-brand" />;
+    case "css3":
+      return <FaCss3Alt className="skill-svg css3-brand" />;
+    case "javascript":
+      return <SiJavascript className="skill-svg javascript-brand" />;
+    case "react":
+      return <SiReact className="skill-svg react-brand" />;
+    case "gsap":
+      return <GsapSuperheroIcon />;
+    case "netlify":
+      return <SiNetlify className="skill-svg netlify-brand" />;
+    case "vercel":
+      return <SiVercel className="skill-svg vercel-brand" />;
+    case "git":
+      return <SiGit className="skill-svg git-brand" />;
+    case "creative":
+      return <TbBulb className="skill-svg creative-brand" />;
+    case "communication":
+      return <FiMessageSquare className="skill-svg communication-brand" />;
+    case "problem-solving":
+      return <TbPuzzle className="skill-svg problem-solving-brand" />;
+    case "collaboration":
+      return <FiUsers className="skill-svg collaboration-brand" />;
+    default:
+      return <FiZap className="skill-svg" />;
+  }
+};
+
+const categories = [
+  { id: "all", label: "All Skills" },
+  { id: "design", label: "Design & UI/UX" },
+  { id: "development", label: "Development & Tech" },
+  { id: "professional", label: "Professional" }
+];
+
+function AboutPage() {
+  const { siteSettings, skills, isSkillsLoading } = useAdmin();
+  const aboutSettings = siteSettings?.about || {};
+  const [activeTab, setActiveTab] = useState("all");
+
+  const dbSkills = skills && skills.length > 0 ? skills : [];
+  
+  // Map database skills to the format used in AboutPage (including lowercase category and correct iconClass)
+  const activeSkills = dbSkills.length > 0
+    ? dbSkills.map(sk => {
+        const cat = sk.category ? sk.category.toLowerCase() : "design";
+        // Map "tools" to "professional" to match frontend tab ids
+        const categoryMapped = cat === "tools" ? "professional" : cat;
+        return {
+          name: sk.name,
+          category: categoryMapped,
+          icon: sk.iconName || "figma",
+          iconClass: `${sk.iconName || "figma"}-wrapper`
+        };
+      })
+    : (!isSkillsLoading ? skillsData : []);
+
+  const filteredSkills = activeSkills.filter(skill => 
+    activeTab === "all" ? true : skill.category === activeTab
+  );
+
+  return (
+    <div className="about-page-wrapper">
+      <section className="about-page-section">
+        <div className="about-page-content-container">
+          
+          {/* Profile and About Intro */}
+          <div className="about-intro-grid">
+            <div className="about-intro-left">
+              <div className="about-title-container">
+                <div className="about-gradient-capsule"></div>
+                <motion.h1 
+                  className="about-heading"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                >
+                  About Me
+                </motion.h1>
+              </div>
+              
+              <motion.p 
+                className="about-intro-desc"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+              >
+                {aboutSettings.description || "I'm Faheem, a passionate UI/UX Designer & Front-End Developer based in India. I believe in the power of simplicity and the impact of good design."}
+              </motion.p>
+            </div>
+
+            <motion.div 
+              className="about-intro-right"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.7 }}
+            >
+              <div className="profile-image-card">
+                <img 
+                  src={aboutSettings.aboutImage || "/assets/about_profile.png"} 
+                  alt="Faheem Profile" 
+                  className="profile-photo"
+                />
+                <div className="profile-photo-overlay"></div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* My Journey Section */}
+          <div className="about-details-section">
+            <div className="about-section-header">
+              <div className="about-header-icon-box">
+                <JourneyIcon />
+              </div>
+              <h3 className="about-subheading">My Journey</h3>
+            </div>
+            
+            <div className="about-section-content">
+              <p className="journey-text">
+                Started with a curiosity for code, evolved into a love for design. Over the years, I've honed my skills in creating seamless digital experiences that solve real problems. My background in both development and design allows me to unify the creative vision with technical feasibility.
+              </p>
+            </div>
+          </div>
+
+          {/* Capabilities Section */}
+          <div className="about-capabilities-section">
+            <div className="capabilities-header-row">
+              <div className="about-section-header">
+                <div className="about-header-icon-box">
+                  <KeyIcon />
+                </div>
+                <h3 className="about-subheading">Capabilities</h3>
+              </div>
+
+              {/* Filter Tabs */}
+              <div className="skills-filter-tabs">
+                {categories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setActiveTab(cat.id)}
+                    className={`filter-tab-btn ${activeTab === cat.id ? "active" : ""}`}
+                  >
+                    {cat.label}
+                    {activeTab === cat.id && (
+                      <motion.div 
+                        layoutId="activeTabIndicator" 
+                        className="active-indicator"
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Skills Grid */}
+            <motion.div 
+              layout 
+              className="skills-grid"
+            >
+              <AnimatePresence mode="popLayout">
+                {filteredSkills.map((skill) => (
+                  <motion.div
+                    layout
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.35 }}
+                    key={skill.name}
+                    className="skill-card"
+                  >
+                    <div className={`skill-icon-outer ${skill.iconClass}`}>
+                      {getSkillIcon(skill.icon)}
+                    </div>
+                    <h4 className="skill-title">{skill.name}</h4>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </motion.div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+  );
+}
+
+export default AboutPage;

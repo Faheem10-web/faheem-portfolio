@@ -1,0 +1,427 @@
+/* Contact Section styling */
+.contact-section {
+  width: 100%;
+  padding: 100px 24px 120px 24px;
+  background-color: var(--bg-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background gradient glow */
+.contact-section::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(ellipse at center, var(--color-primary-glow) 0%, transparent 70%);
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+}
+
+.contact-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+/* Header */
+.contact-header {
+  text-align: center;
+}
+
+.contact-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 5.5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -2px;
+  color: var(--color-text-main);
+}
+
+.contact-title span {
+  color: var(--color-primary);
+}
+
+/* Card container */
+.contact-card-wrapper {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: 28px;
+  padding: 48px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+  transition: var(--transition-smooth);
+}
+
+:root[data-theme='light'] .contact-card-wrapper {
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.04);
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* Group labels for chips */
+.form-group-pills {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.group-label {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text-main);
+  opacity: 0.95;
+}
+
+.pills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Pill buttons */
+.pill-btn {
+  background: transparent;
+  border: 1px solid var(--border-glass);
+  color: var(--color-text-muted);
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover and selected state for pills */
+.pill-btn:hover {
+  border-color: var(--color-text-muted);
+  color: var(--color-text-main);
+}
+
+.pill-btn.selected {
+  background-color: var(--color-text-main);
+  border-color: var(--color-text-main);
+  color: var(--bg-primary);
+  font-weight: 600;
+}
+
+/* Support dark theme colorful primary accent */
+:root[data-theme='dark'] .pill-btn.selected {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #ffffff;
+  box-shadow: 0 4px 15px var(--color-primary-glow);
+}
+
+.pill-check {
+  font-size: 0.85rem;
+}
+
+/* Inputs grid */
+.form-inputs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.form-inputs-grid .full-width {
+  grid-column: span 2;
+}
+
+/* Custom minimal floating label inputs */
+.input-field-wrapper {
+  position: relative;
+  padding-top: 20px;
+  width: 100%;
+}
+
+.contact-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-glass);
+  padding: 12px 0;
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--color-text-main);
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+/* Resize for textarea */
+.textarea-input {
+  resize: none;
+  min-height: 48px;
+  overflow-y: hidden;
+}
+
+/* Floating labels */
+.contact-label {
+  position: absolute;
+  left: 0;
+  top: 30px;
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--color-text-dark);
+  pointer-events: none;
+  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Keep label floated on focus or when input has content */
+.contact-input:focus ~ .contact-label,
+.contact-input:not(:placeholder-shown) ~ .contact-label {
+  top: 0px;
+  font-size: 0.82rem;
+  color: var(--color-primary);
+}
+
+.contact-input:focus {
+  border-bottom-color: var(--color-primary);
+}
+
+/* Input validation error styling */
+.input-field-wrapper.has-error .contact-input {
+  border-bottom-color: #ef4444;
+}
+
+.input-field-wrapper.has-error .contact-label {
+  color: #ef4444;
+}
+
+.error-text {
+  font-size: 0.78rem;
+  color: #ef4444;
+  position: absolute;
+  bottom: -18px;
+  left: 0;
+}
+
+/* Attachment Styles */
+.attachment-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.attachment-trigger {
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-main);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 4px 0;
+  border-bottom: 1.5px solid var(--color-text-main);
+  transition: all 0.25s ease;
+}
+
+.attachment-trigger:hover {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.attachment-icon {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s ease;
+}
+
+.attachment-trigger:hover .attachment-icon {
+  transform: rotate(20deg);
+}
+
+/* Attachment Badge */
+.attachment-file-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--btn-secondary-bg);
+  border: 1px solid var(--border-glass);
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 0.85rem;
+}
+
+.attachment-icon-attached {
+  width: 14px;
+  height: 14px;
+  color: var(--color-primary);
+}
+
+.file-name {
+  color: var(--color-text-main);
+  font-weight: 500;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.remove-file-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-text-dark);
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.remove-file-btn:hover {
+  color: #ef4444;
+}
+
+/* Submit and Footer */
+.form-submit-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 12px;
+}
+
+.send-request-btn {
+  align-self: flex-start;
+  background: transparent;
+  border: 1px solid var(--border-glass);
+  color: var(--color-text-muted);
+  padding: 14px 36px;
+  border-radius: 100px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 160px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.send-request-btn:hover:not(:disabled) {
+  border-color: var(--color-text-main);
+  color: var(--color-text-main);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Active or loaded send button styling - lets make it fill when inputs are valid */
+.send-request-btn.submitting {
+  background-color: var(--btn-secondary-bg);
+  border-color: var(--border-glass);
+  cursor: not-allowed;
+}
+
+/* Spinner */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Status Toasts */
+.status-toast {
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  align-self: flex-start;
+}
+
+.status-toast.success {
+  background-color: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.status-toast.error {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+/* Disclaimer text */
+.disclaimer-text {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: var(--color-text-dark);
+  line-height: 1.5;
+  margin-top: 12px;
+}
+
+.disclaimer-text a {
+  color: var(--color-text-muted);
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.disclaimer-text a:hover {
+  color: var(--color-primary);
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .contact-section {
+    padding: 80px 16px 100px 16px;
+  }
+
+  .contact-container {
+    gap: 36px;
+  }
+
+  .contact-card-wrapper {
+    padding: 28px 20px;
+    border-radius: 20px;
+  }
+
+  .form-inputs-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .form-inputs-grid .full-width {
+    grid-column: span 1;
+  }
+
+  .send-request-btn {
+    width: 100%;
+    align-self: stretch;
+  }
+
+  .status-toast {
+    width: 100%;
+    align-self: stretch;
+    text-align: center;
+  }
+}

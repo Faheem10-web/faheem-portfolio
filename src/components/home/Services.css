@@ -1,0 +1,343 @@
+/* Services Section CSS */
+
+:root {
+    --card-bg: rgba(255, 255, 255, 0.02);
+    --card-border: var(--border-glass);
+    --card-shadow: none;
+    --card-text-main: var(--color-text-main);
+    --card-text-muted: var(--color-text-muted);
+    --card-divider: rgba(255, 255, 255, 0.08);
+    --service-icon-bg: rgba(139, 92, 246, 0.12);
+    --card-pattern-dots: rgba(255, 255, 255, 0.07);
+}
+
+:root[data-theme='light'] {
+    --card-bg: #ffffff;
+    --card-border: rgba(0, 0, 0, 0.05);
+    --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.02);
+    --card-text-main: #18181b;
+    --card-text-muted: #52525b;
+    --card-divider: rgba(0, 0, 0, 0.06);
+    --service-icon-bg: rgba(124, 58, 237, 0.06);
+    --card-pattern-dots: rgba(0, 0, 0, 0.04);
+}
+
+.services-section {
+    width: 100%;
+    background-color: var(--bg-primary);
+    padding: 100px 24px;
+    position: relative;
+    z-index: 10;
+    border-top: 1px solid var(--border-glass);
+    transition: var(--transition-smooth);
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.services-container {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.services-intro {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 50px;
+    width: 100%;
+    max-width: 800px;
+}
+
+.services-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 18px;
+    background-color: var(--service-icon-bg);
+    color: var(--color-primary);
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Nohemi', sans-serif;
+    letter-spacing: 1px;
+}
+
+.badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+}
+
+.services-title {
+    font-size: 3rem;
+    font-weight: 800;
+    font-family: var(--font-heading);
+    color: var(--card-text-main);
+    line-height: 1.2;
+    letter-spacing: -1px;
+}
+
+.title-highlight {
+    position: relative;
+    display: inline-block;
+    color: var(--card-text-main);
+}
+
+.title-underline {
+    position: absolute;
+    bottom: -15px;
+    left: 0;
+    width: 100%;
+    height: 18px;
+    pointer-events: none;
+}
+
+.services-description {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--card-text-muted);
+    font-family: 'Nohemi', sans-serif;
+    font-weight: 400;
+    max-width: 600px;
+    margin-top: 10px;
+}
+
+/* Grid Layout */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    width: 100%;
+}
+
+.service-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--card-border);
+    background-color: var(--card-bg);
+    box-shadow: var(--card-shadow);
+    border-radius: 20px;
+    padding: 28px 24px 18px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: var(--transition-smooth);
+    cursor: pointer;
+}
+
+.card-bg-pattern {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    background-image: 
+        radial-gradient(var(--card-pattern-dots) 1.5px, transparent 1.5px),
+        radial-gradient(circle at 85% 15%, color-mix(in srgb, var(--card-accent-color, var(--color-primary)) 15%, transparent) 0%, transparent 65%);
+    background-size: 14px 14px, 100% 100%;
+    z-index: 1;
+}
+
+.card-top {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.icon-wrapper {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background-color: color-mix(in srgb, var(--card-accent-color, var(--color-primary)) 12%, transparent);
+    color: var(--card-accent-color, var(--color-primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 22px;
+    transition: var(--transition-smooth);
+}
+
+.icon-wrapper svg,
+.icon-wrapper .custom-svg-icon svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.custom-svg-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+.custom-svg-icon svg {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.card-title {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--card-text-main);
+    font-family: var(--font-heading);
+    margin-bottom: 10px;
+}
+
+.card-description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--card-text-muted);
+    font-family: 'Nohemi', sans-serif;
+    font-weight: 400;
+    margin-bottom: 25px;
+}
+
+.card-divider {
+    position: relative;
+    z-index: 2;
+    height: 1px;
+    width: 100%;
+    background-color: var(--card-divider);
+    margin-bottom: 18px;
+}
+
+.card-bottom {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-arrow {
+    font-size: 18px;
+    color: var(--card-accent-color, var(--color-primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), color 0.3s ease;
+}
+
+.card-number {
+    font-size: 1.45rem;
+    font-weight: 700;
+    font-family: 'Nohemi', sans-serif;
+    color: var(--card-accent-color, var(--color-primary));
+    opacity: 0.65;
+    transition: opacity 0.3s ease;
+}
+
+/* Hover States */
+.service-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--card-accent-color, var(--color-primary));
+    box-shadow: none;
+}
+
+.service-card:hover .card-bg-pattern {
+    opacity: 1;
+}
+
+:root[data-theme='light'] .service-card:hover {
+    box-shadow: none;
+}
+
+.service-card:hover .icon-wrapper {
+    background-color: var(--card-accent-color, var(--color-primary));
+    color: #ffffff;
+}
+
+.service-card:hover .icon-wrapper svg,
+.service-card:hover .icon-wrapper .custom-svg-icon svg {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.service-card:hover .card-arrow {
+    transform: translate(4px, -4px) rotate(-45deg);
+}
+
+.service-card:hover .card-number {
+    opacity: 1;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1100px) {
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 991px) {
+    .services-section {
+        padding: 80px 24px;
+    }
+    
+    .services-title {
+        font-size: 2.5rem;
+    }
+    
+    .service-card {
+        padding: 26px 22px 18px 22px;
+        border-radius: 16px;
+    }
+    
+    .icon-wrapper {
+        width: 52px;
+        height: 52px;
+        font-size: 22px;
+        margin-bottom: 18px;
+    }
+    
+    .card-title {
+        font-size: 1.3rem;
+    }
+    
+    .card-number {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .services-section {
+        padding: 60px 20px;
+    }
+    
+    .services-intro {
+        margin-bottom: 40px;
+    }
+    
+    .services-title {
+        font-size: 2rem;
+    }
+    
+    .title-underline {
+        bottom: -10px;
+        height: 12px;
+    }
+    
+    .services-description {
+        font-size: 0.95rem;
+    }
+    
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .service-card {
+        padding: 24px;
+    }
+}

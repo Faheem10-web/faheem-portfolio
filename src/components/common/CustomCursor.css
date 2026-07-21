@@ -1,0 +1,130 @@
+/* ─── Custom Cursor – Premium Glassmorphism & Hover Grow ────────── */
+
+/* Hide default cursor everywhere on desktop devices except inside admin panels */
+@media (min-width: 1024px) {
+    *,
+    body,
+    a,
+    button,
+    [role="button"],
+    input,
+    select,
+    textarea,
+    input[type="submit"],
+    input[type="button"],
+    .project-card-wrapper,
+    img {
+        cursor: none !important;
+    }
+
+    /* Restore native browser cursor behaviors for the Admin Panel */
+    .admin-body,
+    .admin-body *,
+    .admin-container,
+    .admin-container * {
+        cursor: revert !important;
+    }
+}
+
+/* ── Theme Definitions ───────────────────────────────── */
+:root {
+    --cursor-dot-color: #ffffff;
+    --cursor-ring-border: rgba(255, 255, 255, 0.3);
+    --cursor-ring-bg-hover: rgba(255, 255, 255, 0.08);
+    --cursor-ring-border-hover: rgba(255, 255, 255, 0.5);
+    --cursor-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+:root[data-theme='light'] {
+    --cursor-dot-color: #000000;
+    --cursor-ring-border: rgba(0, 0, 0, 0.28);
+    --cursor-ring-bg-hover: rgba(0, 0, 0, 0.05);
+    --cursor-ring-border-hover: rgba(0, 0, 0, 0.45);
+    --cursor-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Outer Ring ──────────────────────────────────────── */
+.custom-cursor-outer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 999999;
+    
+    background: transparent;
+    border: 1px solid var(--cursor-ring-border);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    
+    transition:
+        width 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+        height 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+        background-color 0.35s ease,
+        border-color 0.35s ease,
+        backdrop-filter 0.35s ease,
+        -webkit-backdrop-filter 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+/* ── Inner Dot ───────────────────────────────────────── */
+.custom-cursor-inner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1000000;
+    
+    background-color: var(--cursor-dot-color);
+    
+    transition:
+        transform 0.25s cubic-bezier(0.25, 1, 0.5, 1),
+        background-color 0.25s ease;
+}
+
+/* ── Hover States (Over Buttons, Images, Links) ────────── */
+.custom-cursor-outer.hovered {
+    width: 62px;
+    height: 62px;
+    background-color: var(--cursor-ring-bg-hover);
+    border-color: var(--cursor-ring-border-hover);
+    
+    /* Frosted glass effect */
+    backdrop-filter: blur(8px) saturate(140%);
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
+    box-shadow: var(--cursor-shadow);
+}
+
+.custom-cursor-inner.hovered {
+    transform: translate(-50%, -50%) scale(0.6);
+}
+
+/* ── Dark Footer visibility override ─────────────────── */
+/* In the dark footer, force bright/high-contrast cursor colors */
+.custom-cursor-outer.in-footer {
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+.custom-cursor-inner.in-footer {
+    background-color: #ffffff;
+}
+
+.custom-cursor-outer.in-footer.hovered {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(8px) saturate(140%);
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
+}
+
+/* ── Hide Custom Cursor on Touch Screen Devices ──────── */
+@media (max-width: 1023px) {
+    .custom-cursor-outer,
+    .custom-cursor-inner {
+        display: none !important;
+    }
+}

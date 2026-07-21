@@ -1,0 +1,290 @@
+@import url('https://api.fontshare.com/v2/css?f[]=nohemi@300,400,500,600,700,800,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+    --bg-primary-rgb: 5, 5, 5;
+    --bg-primary: rgb(var(--bg-primary-rgb));
+    --bg-secondary: #0a0a0f;
+    --color-primary: #8B5CF6;
+    --color-primary-glow: rgba(139, 92, 246, 0.35);
+    --color-text-main: #ffffff;
+    --color-text-muted: #a1a1aa;
+    --color-text-dark: #71717a;
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --bg-glass: rgba(18, 18, 22, 0.55);
+    --bg-glass-scrolled: rgba(14, 14, 18, 0.88);
+    --border-glass-scrolled: rgba(255, 255, 255, 0.13);
+    --nav-btn-bg: #ffffff;
+    --nav-btn-text: #111111;
+    --btn-secondary-bg: rgba(255, 255, 255, 0.03);
+    --btn-secondary-hover: rgba(255, 255, 255, 0.08);
+    --scrollbar-thumb: var(--color-primary);
+    --scrollbar-thumb-hover: #a78bfa;
+    --font-heading: 'Geist', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+:root[data-theme='light'] {
+    --bg-primary-rgb: 245, 245, 247;
+    --bg-primary: rgb(var(--bg-primary-rgb));
+    --bg-secondary: #eeeef2;
+    --color-primary: #7C3AED;
+    --color-primary-glow: rgba(124, 58, 237, 0.2);
+    --color-text-main: #18181b;
+    --color-text-muted: #52525b;
+    --color-text-dark: #71717a;
+    --border-glass: rgba(0, 0, 0, 0.08);
+    --bg-glass: rgba(255, 255, 255, 0.7);
+    --bg-glass-scrolled: rgba(250, 250, 252, 0.92);
+    --border-glass-scrolled: rgba(0, 0, 0, 0.12);
+    --nav-btn-bg: #18181b;
+    --nav-btn-text: #ffffff;
+    --btn-secondary-bg: rgba(0, 0, 0, 0.03);
+    --btn-secondary-hover: rgba(0, 0, 0, 0.06);
+    --scrollbar-thumb: var(--color-primary);
+    --scrollbar-thumb-hover: #6d28d9;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    background-color: var(--bg-primary);
+    color: var(--color-text-main);
+    font-family: var(--font-body);
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fallback smooth scroll when Lenis is not loaded or for prefers-reduced-motion */
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.lenis) {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Accessibility Focus Rings */
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--color-text-main);
+    min-height: 100vh;
+    overflow-x: clip;
+}
+
+/* Custom modern scrollbars */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 5px;
+    border: 2px solid var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+}
+
+/* Base layouts */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+    background-color: var(--bg-primary);
+}
+
+.main-content {
+    flex: 1 0 auto;
+    width: 100%;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    font-family: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Geist", sans-serif !important;
+}
+
+/* Lenis smooth scrolling settings */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Global premium transitions for interactive elements */
+button, 
+.btn, 
+.primary-btn, 
+.secondary-btn, 
+.action-btn, 
+.nav-btn, 
+.footer-cta-btn, 
+.mobile-cv-btn, 
+.download-cv-btn, 
+.nav-theme-toggle {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Soft hover scale & glow */
+button:hover, 
+.btn:hover, 
+.primary-btn:hover, 
+.secondary-btn:hover, 
+.action-btn:hover, 
+.nav-btn:hover, 
+.footer-cta-btn:hover, 
+.mobile-cv-btn:hover, 
+.download-cv-btn:hover,
+.nav-theme-toggle:hover {
+    transform: scale(1.03) translateY(-1px) !important;
+    box-shadow: 0 10px 25px rgba(139, 92, 246, 0.12), 
+                0 0 15px rgba(139, 92, 246, 0.05) !important;
+}
+
+/* Gentle press animation */
+button:active, 
+.btn:active, 
+.primary-btn:active, 
+.secondary-btn:active, 
+.action-btn:active, 
+.nav-btn:active, 
+.footer-cta-btn:active, 
+.mobile-cv-btn:active, 
+.download-cv-btn:active,
+.nav-theme-toggle:active {
+    transform: scale(0.97) translateY(0) !important;
+}
+
+/* Premium Card Hover Effects */
+.preview-card, 
+.service-card, 
+.cta-box, 
+.proj-card-inner,
+.project-card,
+.testimonial-card,
+.timeline-content {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: none !important;
+}
+
+.preview-card:hover, 
+.service-card:hover,
+.proj-card-inner:hover,
+.project-card:hover,
+.testimonial-card:hover,
+.timeline-content:hover {
+    transform: translateY(-6px) rotate(0.15deg) !important;
+    box-shadow: none !important;
+    border-color: rgba(139, 92, 246, 0.3) !important;
+}
+
+/* Image Zoom on Hover inside Cards */
+.proj-card-image, 
+.project-image, 
+.service-card img {
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.proj-card-inner:hover .proj-card-image, 
+.project-card-wrapper:hover .project-image {
+    transform: scale(1.04) !important;
+}
+
+/* ── Standard Cursor Behavior Reset ── */
+/* Forces browser system cursors to be visible and responsive globally */
+html,
+body,
+* {
+    cursor: auto !important;
+}
+
+a,
+button,
+[role="button"],
+input[type="submit"],
+input[type="button"],
+.project-card-wrapper,
+.download-cv-btn,
+.view-all-btn,
+.nav-theme-toggle {
+    cursor: pointer !important;
+}
+
+input,
+textarea,
+select,
+[contenteditable="true"] {
+    cursor: text !important;
+}
+
+/* ── Skeleton Shimmer Animation ── */
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer-placeholder {
+  background: linear-gradient(90deg, #0e0e13 25%, #181822 50%, #0e0e13 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite linear;
+}
+
+:root[data-theme='light'] .shimmer-placeholder {
+  background: linear-gradient(90deg, #e5e5ea 25%, #f2f2f7 50%, #e5e5ea 75%);
+  background-size: 200% 100%;
+}
+
+.skeleton-text {
+  height: 16px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}

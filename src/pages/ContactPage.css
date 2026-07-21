@@ -1,0 +1,38 @@
+/* Standalone Contact Page styles */
+.contact-page-wrapper {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--bg-primary);
+    position: relative;
+    overflow: hidden;
+    padding-top: 80px; /* Offset the fixed navbar */
+}
+
+/* Background orbs specifically for the routing page */
+.contact-page-glow-orb {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--color-primary-glow) 0%, transparent 70%);
+    filter: blur(100px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+}
+
+.contact-glow-1 {
+    top: -10%;
+    left: -20%;
+}
+
+.contact-glow-2 {
+    bottom: -10%;
+    right: -20%;
+}
+
+/* Specific spacing overrides if needed when in page mode */
+.contact-page-wrapper .contact-section {
+    padding-top: 60px; /* Reduced top padding since navbar offset is handled */
+    background: transparent;
+}

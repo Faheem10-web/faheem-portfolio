@@ -1,0 +1,231 @@
+/* Editorial Luxury Loader - 2026 Design Standard */
+.editorial-loader-wrapper {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99999;
+  background-color: #050505;
+  background-image: radial-gradient(circle at 50% 50%, rgba(20, 20, 20, 0.3) 0%, #050505 100%);
+  color: #ffffff;
+  font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  overflow: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 12-Column Layout Grid Overlay */
+.editorial-loader-grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  width: 100%;
+  height: 100%;
+  padding: 0 48px;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
+.editorial-grid-col {
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  height: 100%;
+  opacity: 0.04;
+}
+
+.editorial-grid-col:first-child {
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Canvas Layout Grid */
+.editorial-loader-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: auto 1fr auto;
+  padding: 56px 64px;
+  box-sizing: border-box;
+}
+
+/* TOP LEFT: LOADING.. */
+.loader-top-left {
+  grid-column: 1 / span 6;
+  grid-row: 1;
+  align-self: start;
+}
+
+.loader-title {
+  font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 36px;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  line-height: 1;
+  display: inline-block;
+}
+
+/* CENTER RIGHT: Percentage + Progress Bar */
+.loader-center-right {
+  grid-column: 7 / span 6;
+  grid-row: 2;
+  align-self: center;
+  justify-self: end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 360px;
+  max-width: 100%;
+}
+
+.loader-percentage {
+  font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 72px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin-bottom: 20px;
+  font-variant-numeric: tabular-nums;
+}
+
+.loader-progress-track {
+  width: 100%;
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.loader-progress-fill {
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  transform-origin: left;
+  will-change: transform;
+}
+
+/* BOTTOM LEFT: Editorial Image (4:3) */
+.loader-bottom-left {
+  grid-column: 1 / span 5;
+  grid-row: 3;
+  align-self: end;
+}
+
+.editorial-image-frame {
+  position: relative;
+  width: 320px;
+  max-width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 0px;
+  overflow: hidden;
+  box-shadow: none;
+  background-color: #0a0a0a;
+}
+
+.editorial-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 0px;
+  will-change: transform, opacity;
+}
+
+/* BOTTOM RIGHT: Small Subtitle */
+.loader-bottom-right {
+  grid-column: 8 / span 5;
+  grid-row: 3;
+  align-self: end;
+  justify-self: end;
+  text-align: right;
+}
+
+.loader-subtitle {
+  font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #888888;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: opacity 800ms cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-block;
+}
+
+/* Responsiveness Breakpoints */
+@media (max-width: 1024px) {
+  .editorial-loader-content {
+    padding: 44px 40px;
+  }
+
+  .editorial-loader-grid {
+    padding: 0 32px;
+  }
+
+  .loader-title {
+    font-size: 32px;
+  }
+
+  .loader-percentage {
+    font-size: 56px;
+  }
+
+  .loader-center-right {
+    width: 300px;
+  }
+
+  .editorial-image-frame {
+    width: 260px;
+  }
+
+  .loader-subtitle {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 640px) {
+  .editorial-loader-content {
+    padding: 36px 24px;
+  }
+
+  .editorial-loader-grid {
+    padding: 0 16px;
+  }
+
+  .loader-title {
+    font-size: 28px;
+  }
+
+  .loader-percentage {
+    font-size: 44px;
+    margin-bottom: 14px;
+  }
+
+  .loader-center-right {
+    grid-column: 1 / span 12;
+    justify-self: start;
+    width: 100%;
+  }
+
+  .loader-bottom-left {
+    grid-column: 1 / span 7;
+  }
+
+  .editorial-image-frame {
+    width: 180px;
+  }
+
+  .loader-bottom-right {
+    grid-column: 8 / span 5;
+  }
+
+  .loader-subtitle {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
+}

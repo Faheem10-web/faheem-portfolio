@@ -1,0 +1,251 @@
+{
+  "navbarSettings": {
+    "logoText": "FAHEEM",
+    "navItems": [
+      { "label": "Home", "href": "/#home", "isRouter": false, "order": 0, "visible": true },
+      { "label": "About", "href": "/about", "isRouter": true, "order": 1, "visible": true },
+      { "label": "Projects", "href": "/projects", "isRouter": true, "order": 2, "visible": true },
+      { "label": "Contact", "href": "/contact", "isRouter": true, "order": 3, "visible": true }
+    ],
+    "showNavbar": true,
+    "downloadCvBtnText": "Download CV",
+    "downloadCvBtnVisible": true,
+    "themeToggleVisible": true,
+    "stickyNavbar": true
+  },
+  "heroSettings": {
+    "greeting": "I AM",
+    "name": "Faheem",
+    "words": ["Faheem", "a UI/UX Designer", "a Frontend Developer"],
+    "title1": "Designing Future",
+    "title2": "Digital Experiences",
+    "description": "I create premium digital experiences with modern UI/UX design, scalable React development, smooth interactions and high-performance websites."
+  },
+  "aboutSettings": {
+    "title": "Interested in working together?",
+    "subtitle": "Download my resume to learn more about my experience and qualifications.",
+    "description": "Dynamic and result-oriented UI/UX engineer and front-end developer passionate about clean interfaces and high-performance React architectures.",
+    "experienceYears": 3,
+    "stats": [
+      { "label": "Projects Completed", "value": "25+" },
+      { "label": "Happy Clients", "value": "15+" },
+      { "label": "Awards Won", "value": "3+" }
+    ],
+    "aboutImage": "/assets/about_profile.png"
+  },
+  "resumeSettings": {
+    "resumeUrl": "/resume.pdf",
+    "version": "1.0.0",
+    "fileName": "resume.pdf"
+  },
+  "contactSettings": {
+    "heading": "Let's collaborate",
+    "description": "Have a project in mind or want to say hello? Drop a message below.",
+    "email": "avfaheeem@gmail.com",
+    "phone": "+91 7356164236",
+    "whatsapp": "+91 7356164236",
+    "address": "Calicut, Kerala, India",
+    "mapUrl": "",
+    "emailSubject": "New Portfolio Contact - {{name}}",
+    "enableAutoReply": true,
+    "enableWhatsappButton": true,
+    "enableForm": true
+  },
+  "footerSettings": {
+    "logoText": "FAHEEM",
+    "copyrightText": "© 2026 Faheem. All Rights Reserved.",
+    "description": "Creating high performance premium web applications.",
+    "navLinks": [
+      { "label": "Home", "href": "/" },
+      { "label": "About", "href": "/about" },
+      { "label": "Projects", "href": "/projects" },
+      { "label": "Contact", "href": "/contact" }
+    ],
+    "socialLinks": [
+      { "platform": "LinkedIn", "url": "https://linkedin.com" },
+      { "platform": "GitHub", "url": "https://github.com" }
+    ],
+    "contactEmail": "hello@faheem.design",
+    "bgVideo": "/assets/footer-bg.mp4"
+  },
+  "seoSettings": {
+    "siteTitle": "Faheem - Premium UI/UX Portfolio",
+    "metaDescription": "Interactive and modern portfolio website showcasing dynamic frontend development and UI/UX engineering.",
+    "keywords": ["portfolio", "uiux", "developer", "react"]
+  },
+  "globalSettings": {
+    "portfolioName": "Faheem",
+    "websiteUrl": "https://faheem.design",
+    "primaryColor": "#8B5CF6",
+    "secondaryColor": "#0a0a0f",
+    "accentColor": "#fbbf24",
+    "loaderText": "DESIGNING FUTURE"
+  },
+  "themeSettings": {
+    "mode": "system"
+  },
+  "services": [
+    {
+      "title": "UI/UX Design",
+      "description": "User-centered interfaces with seamless digital experiences.",
+      "iconName": "FiPenTool",
+      "color": "#8B5CF6",
+      "iconType": "iconName",
+      "order": 1,
+      "enabled": true
+    },
+    {
+      "title": "Web Design",
+      "description": "Modern, responsive and visually engaging website designs.",
+      "iconName": "FiMonitor",
+      "color": "#3B82F6",
+      "iconType": "iconName",
+      "order": 2,
+      "enabled": true
+    },
+    {
+      "title": "Frontend Development",
+      "description": "Fast, scalable websites built with React and modern technologies.",
+      "iconName": "FiCode",
+      "color": "#10B981",
+      "iconType": "iconName",
+      "order": 3,
+      "enabled": true
+    },
+    {
+      "title": "Mobile App Design",
+      "description": "Intuitive iOS and Android app interfaces focused on usability.",
+      "iconName": "FiSmartphone",
+      "color": "#EC4899",
+      "iconType": "iconName",
+      "order": 4,
+      "enabled": true
+    }
+  ],
+  "projects": [
+    {
+      "name": "Creative Agency Website",
+      "slug": "creative-agency",
+      "category": "Web Design",
+      "year": "2026",
+      "client": "PixelFlow Agency",
+      "status": "Completed",
+      "technologies": ["React", "Framer Motion", "Vite", "Three.js"],
+      "shortDesc": "A fully interactive, motion-heavy website designed for a modern creative agency.",
+      "longDesc": "This project is a high-performance web experience focused on animations, smooth micro-interactions, and premium layouts. Built with Vite and Framer Motion for optimal rendering.",
+      "liveUrl": "https://agency.faheem.design",
+      "githubUrl": "https://github.com/faheem/creative-agency",
+      "coverImage": "https://i.pinimg.com/1200x/da/5c/cc/da5ccc0ed8d088184be949431f9a5185.jpg",
+      "thumbnailImage": "https://i.pinimg.com/1200x/da/5c/cc/da5ccc0ed8d088184be949431f9a5185.jpg",
+      "bannerImage": "https://i.pinimg.com/1200x/da/5c/cc/da5ccc0ed8d088184be949431f9a5185.jpg",
+      "challenge": "Designing a site with heavy animations and WebGL assets while maintaining a Google Lighthouse score above 90.",
+      "challengeImage": "https://i.pinimg.com/736x/b0/0c/7c/b00c7c4f35a3cd254574931ac43afe3b.jpg",
+      "solution": "Utilized lazy-loading of components, texture optimization in WebGL layers, and hardware-accelerated CSS animations.",
+      "solutionImage": "https://i.pinimg.com/1200x/02/27/b2/0227b229d166f4597eaa632153525ce1.jpg",
+      "results": "Achieved a performance score of 98 on desktop and improved page loading times by 40% across all devices.",
+      "resultImage": "/assets/mockup_result.png",
+      "isFeatured": true,
+      "showOnHome": true,
+      "enabled": true,
+      "order": 1
+    },
+    {
+      "name": "Premium FinTech App",
+      "slug": "fintech-app",
+      "category": "Mobile App Design",
+      "year": "2026",
+      "client": "Apex Financial",
+      "status": "Completed",
+      "technologies": ["Swift", "Figma", "UI/UX", "Product Design"],
+      "shortDesc": "An intuitive dashboard and transaction tracker layout for managing luxury finance assets.",
+      "longDesc": "A product design study focused on clarity, security guidelines, and elegant charts for asset allocation. Complete design system developed from scratch.",
+      "liveUrl": "https://fintech.faheem.design",
+      "githubUrl": "",
+      "coverImage": "https://i.pinimg.com/736x/2f/fe/f2/2ffef25f6fc015559b8581e93994cd92.jpg",
+      "thumbnailImage": "https://i.pinimg.com/736x/2f/fe/f2/2ffef25f6fc015559b8581e93994cd92.jpg",
+      "bannerImage": "https://i.pinimg.com/736x/2f/fe/f2/2ffef25f6fc015559b8581e93994cd92.jpg",
+      "challenge": "Presenting complicated investment analytics and balance metrics on standard mobile screens without clutter.",
+      "challengeImage": "/assets/mockup_challenge.png",
+      "solution": "Designed progressive disclosure cards, clean sliding panel drawers, and curated HSL-tailored charts.",
+      "solutionImage": "/assets/mockup_solution.png",
+      "results": "User testing reported a 28% increase in task completion speed for transferring currency and reviewing transactions.",
+      "resultImage": "/assets/mockup_result.png",
+      "isFeatured": true,
+      "showOnHome": true,
+      "enabled": true,
+      "order": 2
+    },
+    {
+      "name": "Minimal E-Commerce Experience",
+      "slug": "minimal-ecommerce",
+      "category": "UI/UX Design",
+      "year": "2025",
+      "client": "Nordic Wood Co.",
+      "status": "Completed",
+      "technologies": ["Next.js", "TailwindCSS", "Shopify GraphAPI", "Figma"],
+      "shortDesc": "A clean, typography-focused storefront interface for premium wooden furniture catalog.",
+      "longDesc": "High-fidelity UI study and front-end template with fluid grids and responsive details designed for premium e-commerce.",
+      "liveUrl": "https://nordic.faheem.design",
+      "githubUrl": "https://github.com/faheem/nordic-wood",
+      "coverImage": "https://i.pinimg.com/736x/79/32/54/793254f2ed910751bb9d0f847329ded2.jpg",
+      "thumbnailImage": "https://i.pinimg.com/736x/79/32/54/793254f2ed910751bb9d0f847329ded2.jpg",
+      "bannerImage": "https://i.pinimg.com/736x/79/32/54/793254f2ed910751bb9d0f847329ded2.jpg",
+      "challenge": "Translating physical texture and premium feel of handcrafted furniture products onto standard flat screens.",
+      "challengeImage": "/assets/mockup_challenge.png",
+      "solution": "High-resolution image grids, minimal text overlays, and slow-zoom scroll animations mimicking real gallery frames.",
+      "solutionImage": "/assets/mockup_solution.png",
+      "results": "Tested and proven to increase conversion engagement metrics during user studies.",
+      "resultImage": "/assets/mockup_result.png",
+      "isFeatured": true,
+      "showOnHome": true,
+      "enabled": true,
+      "order": 3
+    },
+    {
+      "name": "AI SaaS Dashboard",
+      "slug": "ai-saas-dashboard",
+      "category": "Frontend Development",
+      "year": "2026",
+      "client": "Optima AI",
+      "status": "Completed",
+      "technologies": ["React", "Node.js", "ChartJS", "Express"],
+      "shortDesc": "A sleek analytics interface layout for tracking cloud compute and LLM agent iterations.",
+      "longDesc": "Full stack dashboard template design incorporating real-time telemetry datasets and modular widgets.",
+      "liveUrl": "https://optima.faheem.design",
+      "githubUrl": "https://github.com/faheem/optima-dashboard",
+      "coverImage": "https://i.pinimg.com/736x/f6/bf/e9/f6bfe90daa262ea04b71dd1a26da228d.jpg",
+      "thumbnailImage": "https://i.pinimg.com/736x/f6/bf/e9/f6bfe90daa262ea04b71dd1a26da228d.jpg",
+      "bannerImage": "https://i.pinimg.com/736x/f6/bf/e9/f6bfe90daa262ea04b71dd1a26da228d.jpg",
+      "challenge": "Updating multi-threaded dataset feeds instantly on client views without thread locks or browser memory leaks.",
+      "challengeImage": "/assets/mockup_challenge.png",
+      "solution": "Optimized event listeners, virtualized long table lists, and throttled socket updates.",
+      "solutionImage": "/assets/mockup_solution.png",
+      "results": "Delivered an ultra-responsive interface with negligible CPU utilization during stress testing.",
+      "resultImage": "/assets/mockup_result.png",
+      "isFeatured": true,
+      "showOnHome": true,
+      "enabled": true,
+      "order": 4
+    }
+  ],
+  "skills": [
+    { "name": "Figma", "category": "Design", "percentage": 90, "iconName": "figma", "order": 1 },
+    { "name": "Adobe Photoshop", "category": "Design", "percentage": 85, "iconName": "photoshop", "order": 2 },
+    { "name": "Wireframing & Prototyping", "category": "Design", "percentage": 95, "iconName": "wireframe", "order": 3 },
+    { "name": "Mobile & Web Interface Design", "category": "Design", "percentage": 90, "iconName": "mobile", "order": 4 },
+    { "name": "Responsive Design", "category": "Design", "percentage": 90, "iconName": "responsive", "order": 5 },
+    { "name": "Design Systems", "category": "Design", "percentage": 85, "iconName": "design-systems", "order": 6 },
+    { "name": "HTML5", "category": "Development", "percentage": 95, "iconName": "html5", "order": 7 },
+    { "name": "CSS3", "category": "Development", "percentage": 90, "iconName": "css3", "order": 8 },
+    { "name": "JavaScript", "category": "Development", "percentage": 90, "iconName": "javascript", "order": 9 },
+    { "name": "React", "category": "Development", "percentage": 88, "iconName": "react", "order": 10 },
+    { "name": "GSAP", "category": "Development", "percentage": 80, "iconName": "gsap", "order": 11 },
+    { "name": "Netlify", "category": "Development", "percentage": 85, "iconName": "netlify", "order": 12 },
+    { "name": "Vercel", "category": "Development", "percentage": 85, "iconName": "vercel", "order": 13 },
+    { "name": "Git", "category": "Development", "percentage": 88, "iconName": "git", "order": 14 },
+    { "name": "Creative Thinking", "category": "Tools", "percentage": 90, "iconName": "creative", "order": 15 },
+    { "name": "Communication", "category": "Tools", "percentage": 92, "iconName": "communication", "order": 16 },
+    { "name": "Problem Solving", "category": "Tools", "percentage": 90, "iconName": "problem-solving", "order": 17 },
+    { "name": "Collaboration", "category": "Tools", "percentage": 95, "iconName": "collaboration", "order": 18 }
+  ]
+}
