@@ -9,7 +9,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { sendAdminEmail, sendVisitorAutoReply } from '../services/emailService.js';
-import { uploadToCloudinary, deleteFromCloudinary } from '../services/cloudinaryService.js';
+import { uploadToCloudinary, deleteFromCloudinary, deleteCloudinaryAssetsFromObject } from '../services/cloudinaryService.js';
 import { importDb, exportDb } from '../scripts/seeder.js';
 
 import {
@@ -256,10 +256,10 @@ router.put('/auth/update-account', protect, async (req, res) => {
 /* ──────────────────────────────────────────────────────────────────────── */
 
 router.get('/bootstrap', checkMaintenance, async (req, res) => {
+  res.set('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
   try {
     const now = Date.now();
     if (cachedBootstrapPayload && (now - lastBootstrapFetch < CACHE_TTL_MS)) {
-      res.set('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
       return res.json(cachedBootstrapPayload);
     }
 
@@ -268,7 +268,6 @@ router.get('/bootstrap', checkMaintenance, async (req, res) => {
       if (!cachedBootstrapPayload) {
         cachedBootstrapPayload = buildFallbackPayload();
       }
-      res.set('Cache-Control', 'public, max-age=10');
       return res.json(cachedBootstrapPayload);
     }
 
@@ -314,14 +313,12 @@ router.get('/bootstrap', checkMaintenance, async (req, res) => {
     };
     lastBootstrapFetch = now;
 
-    res.set('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
     res.json(cachedBootstrapPayload);
   } catch (error) {
     console.warn('Bootstrap DB fetch fallback:', error.message);
     if (!cachedBootstrapPayload) {
       cachedBootstrapPayload = buildFallbackPayload();
     }
-    res.set('Cache-Control', 'public, max-age=10');
     res.json(cachedBootstrapPayload);
   }
 });
@@ -535,6 +532,10 @@ router.put('/experiences/:id', protect, async (req, res) => {
     return res.status(400).json({ message: 'Invalid ID format' });
   }
   try {
+    const existing = await Experience.findById(req.params.id);
+    if (existing && req.body.logoUrl && req.body.logoUrl !== existing.logoUrl && existing.logoUrl?.includes('res.cloudinary.com')) {
+      await deleteFromCloudinary(existing.logoUrl);
+    }
     const exp = await Experience.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!exp) return res.status(404).json({ message: 'Experience entry not found' });
     invalidateBootstrapCache();
@@ -549,8 +550,14 @@ router.delete('/experiences/:id', protect, async (req, res) => {
     return res.status(400).json({ message: 'Invalid ID format' });
   }
   try {
-    const exp = await Experience.findByIdAndDelete(req.params.id);
+    const exp = await Experience.findById(req.params.id);
     if (!exp) return res.status(404).json({ message: 'Experience entry not found' });
+
+    if (exp.logoUrl && exp.logoUrl.includes('res.cloudinary.com')) {
+      await deleteFromCloudinary(exp.logoUrl);
+    }
+
+    await Experience.findByIdAndDelete(req.params.id);
     invalidateBootstrapCache();
     res.json({ message: 'Experience entry deleted successfully' });
   } catch (error) {
@@ -616,8 +623,18 @@ router.put('/projects/:id', protect, async (req, res) => {
     return res.status(400).json({ message: 'Invalid ID format' });
   }
   try {
+    const existing = await Project.findById(req.params.id);
+    if (!existing) return res.status(404).json({ message: 'Project not found' });
+
+    // Delete replaced Cloudinary images
+    const imageFields = ['coverImage', 'thumbnailImage', 'bannerImage', 'challengeImage', 'solutionImage', 'resultImage'];
+    for (const field of imageFields) {
+      if (req.body[field] && req.body[field] !== existing[field] && existing[field]?.includes('res.cloudinary.com')) {
+        await deleteFromCloudinary(existing[field]);
+      }
+    }
+
     const project = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!project) return res.status(404).json({ message: 'Project not found' });
     invalidateBootstrapCache();
     res.json(project);
   } catch (error) {
@@ -630,8 +647,13 @@ router.delete('/projects/:id', protect, async (req, res) => {
     return res.status(400).json({ message: 'Invalid ID format' });
   }
   try {
-    const project = await Project.findByIdAndDelete(req.params.id);
+    const project = await Project.findById(req.params.id);
     if (!project) return res.status(404).json({ message: 'Project not found' });
+
+    // Permanently purge all Cloudinary images attached to this project
+    await deleteCloudinaryAssetsFromObject(project);
+
+    await Project.findByIdAndDelete(req.params.id);
     invalidateBootstrapCache();
     res.json({ message: 'Project deleted successfully' });
   } catch (error) {
@@ -977,7 +999,9 @@ router.delete('/media/:id', protect, async (req, res) => {
 
     // Delete from Cloudinary or local filesystem
     if (media.publicId) {
-      await deleteFromCloudinary(media.publicId, media.fileType);
+      await deleteFromCloudinary(media.publicId, media.fileType || '');
+    } else if (media.fileUrl && media.fileUrl.includes('res.cloudinary.com')) {
+      await deleteFromCloudinary(media.fileUrl, media.fileType || '');
     } else if (media.fileUrl && media.fileUrl.startsWith('/uploads')) {
       const localPath = path.join(__dirname, '../..', media.fileUrl);
       if (fs.existsSync(localPath)) {
@@ -986,6 +1010,7 @@ router.delete('/media/:id', protect, async (req, res) => {
     }
 
     await Media.findByIdAndDelete(req.params.id);
+    invalidateBootstrapCache();
     res.json({ message: 'Media document deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });

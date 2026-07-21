@@ -37,9 +37,13 @@ export const checkMaintenance = async (req, res, next) => {
         try {
           const token = req.headers.authorization.split(' ')[1];
           const decoded = jwt.verify(token, process.env.JWT_SECRET || 'supersecretportfoliojwttokenkey2026');
-          const user = await User.findById(decoded.id).select('-password').lean();
-          if (user && user.role === 'admin') {
+          if (decoded.id === 'env-admin-id') {
             isAdmin = true;
+          } else {
+            const user = await User.findById(decoded.id).select('-password').lean();
+            if (user && user.role === 'admin') {
+              isAdmin = true;
+            }
           }
         } catch {
           // Token verification failed, treat as public

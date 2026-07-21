@@ -69,22 +69,22 @@ export function AdminProvider({ children }) {
 
         let isNetworkError = false;
         try {
-            const headers = {};
+            const headers = { 'Cache-Control': 'no-cache' };
             if (token) {
                 headers['Authorization'] = `Bearer ${token}`;
             }
 
-            // High-speed consolidated bootstrap query
-            const res = await fetch(`${API_BASE}/bootstrap`, { headers });
+            // High-speed consolidated bootstrap query with cache-busting
+            const res = await fetch(`${API_BASE}/bootstrap?t=${Date.now()}`, { headers, cache: 'no-store' });
             if (res.ok) {
                 const data = await res.json();
                 if (data.settings) setSiteSettings(data.settings);
-                if (data.projects) setProjects(data.projects);
-                if (data.services) setServices(data.services);
-                if (data.skills) setSkills(data.skills);
-                if (data.experiences) setExperiences(data.experiences);
-                if (data.faqs) setFaqs(data.faqs);
-                if (data.testimonials) setTestimonials(data.testimonials);
+                if (data.projects) setProjects(data.projects || []);
+                if (data.services) setServices(data.services || []);
+                if (data.skills) setSkills(data.skills || []);
+                if (data.experiences) setExperiences(data.experiences || []);
+                if (data.faqs) setFaqs(data.faqs || []);
+                if (data.testimonials) setTestimonials(data.testimonials || []);
                 return;
             }
         } catch (error) {
@@ -225,6 +225,7 @@ export function AdminProvider({ children }) {
             if (res.ok) {
                 const updated = await res.json();
                 setSiteSettings(prev => ({ ...prev, [moduleName]: updated }));
+                await loadPublicData();
                 return { success: true };
             }
             return { success: false, message: 'Failed to save settings' };
@@ -236,7 +237,10 @@ export function AdminProvider({ children }) {
     // Generic CRUD helper generator
     const makeCrud = (routeSegment, stateSetter) => {
         const fetchAll = async () => {
-            const res = await fetch(`${API_BASE}/${routeSegment}`);
+            const res = await fetch(`${API_BASE}/${routeSegment}?t=${Date.now()}`, {
+                headers: { 'Cache-Control': 'no-cache' },
+                cache: 'no-store'
+            });
             if (res.ok) stateSetter(await res.json());
         };
 
@@ -253,6 +257,7 @@ export function AdminProvider({ children }) {
                 });
                 if (res.ok) {
                     await fetchAll();
+                    await loadPublicData();
                     return { success: true };
                 }
                 return { success: false };
@@ -268,20 +273,27 @@ export function AdminProvider({ children }) {
                 });
                 if (res.ok) {
                     await fetchAll();
+                    await loadPublicData();
                     return { success: true };
                 }
                 return { success: false };
             },
             delete: async (id) => {
+                // Immediately remove from React state to prevent UI flicker or stale rendering
+                stateSetter(prev => prev.filter(item => (item._id || item.id) !== id));
                 const res = await fetch(`${API_BASE}/${routeSegment}/${id}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) {
                     await fetchAll();
+                    await loadPublicData();
                     return { success: true };
+                } else {
+                    // Revert if request failed
+                    await fetchAll();
+                    return { success: false };
                 }
-                return { success: false };
             }
         };
     };
