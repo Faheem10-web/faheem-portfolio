@@ -8,10 +8,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // On Vercel serverless, the filesystem is read-only except /tmp.
-// Use /tmp for uploads in production, local uploads/ dir otherwise.
 const isVercel = !!process.env.VERCEL;
 const uploadDir = isVercel
-  ? path.join(os.tmpdir(), 'uploads')
+  ? os.tmpdir()
   : path.join(__dirname, '../../uploads');
 
 try {
@@ -19,19 +18,18 @@ try {
     fs.mkdirSync(uploadDir, { recursive: true });
   }
 } catch (err) {
-  console.warn('⚠️ Could not create upload directory:', err.message);
+  console.warn('⚠️ Upload directory check warning:', err.message);
 }
 
 // Define disk storage config
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    // Ensure dir exists at request time too (cold start edge case)
     try {
       if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir, { recursive: true });
       }
     } catch {
-      // Ignore — Cloudinary upload will handle the file anyway
+      // Ignore
     }
     cb(null, uploadDir);
   },
@@ -42,19 +40,24 @@ const storage = multer.diskStorage({
   }
 });
 
-// Check file formats strictly
+// Flexible file format checker
 const checkFileTypes = (file, cb) => {
-  const allowedExts = /jpg|jpeg|png|webp|svg|gif|mp4|pdf/;
-  const isExtValid = allowedExts.test(path.extname(file.originalname).toLowerCase());
+  const allowedExts = /\.(jpg|jpeg|png|webp|svg|gif|mp4|mov|webm|pdf|doc|docx|xls|xlsx|txt)$/i;
+  const isExtValid = allowedExts.test(file.originalname);
   
-  // Accept standard browser and media types
-  const allowedMimeTypes = /image|video\/mp4|application\/pdf/;
-  const isMimeValid = allowedMimeTypes.test(file.mimetype) || file.mimetype === 'image/svg+xml';
+  const isMimeValid = !file.mimetype || 
+                      file.mimetype.startsWith('image/') || 
+                      file.mimetype.startsWith('video/') || 
+                      file.mimetype.includes('pdf') ||
+                      file.mimetype.includes('document') ||
+                      file.mimetype.includes('sheet') ||
+                      file.mimetype.includes('text') ||
+                      file.mimetype === 'application/octet-stream';
 
-  if (isExtValid && isMimeValid) {
+  if (isExtValid || isMimeValid) {
     cb(null, true);
   } else {
-    cb(new Error('Invalid format! Only JPG, PNG, WEBP, SVG, GIF, MP4, and PDF files are supported.'));
+    cb(new Error('Unsupported file format. Please upload standard image, video, or document files.'));
   }
 };
 
@@ -63,7 +66,7 @@ const upload = multer({
   fileFilter(req, file, cb) {
     checkFileTypes(file, cb);
   },
-  limits: { fileSize: 50 * 1024 * 1024 } // limit file size to 50MB for video/PDF compatibility
+  limits: { fileSize: 50 * 1024 * 1024 } // 50MB limit
 });
 
 export default upload;
