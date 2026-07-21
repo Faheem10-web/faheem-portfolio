@@ -7,7 +7,7 @@ dotenv.config();
 // Fix Windows DNS SRV lookup for MongoDB Atlas clusters
 try {
   dns.setServers(['8.8.8.8', '1.1.1.1']);
-} catch (e) {
+} catch {
   // Ignore error if DNS servers cannot be changed
 }
 

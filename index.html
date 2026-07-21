@@ -7,6 +7,11 @@
     <title>Faheem — UI/UX Designer & Frontend Developer</title>
     <meta name="description" content="Portfolio of Faheem — UI/UX Designer & Frontend Developer building high-performance web applications and digital experiences." />
 
+    <!-- Strict Anti-Caching Meta Tags for Production Browsers -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
     <!-- Resource Preconnect Hints for Font Delivery -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,6 +19,18 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- Automatically unregister any legacy service workers on load -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for (let registration of registrations) {
+            registration.unregister();
+          }
+        });
+      }
+    </script>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

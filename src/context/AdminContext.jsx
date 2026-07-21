@@ -53,9 +53,27 @@ export function AdminProvider({ children }) {
         }
     }, [token]);
 
-    // Load initial website configurations
+    // Load initial website configurations & keep synced on window focus / tab switch
     useEffect(() => {
         loadPublicData();
+
+        const handleFocus = () => {
+            loadPublicData();
+        };
+
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                loadPublicData();
+            }
+        };
+
+        window.addEventListener('focus', handleFocus);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        return () => {
+            window.removeEventListener('focus', handleFocus);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
     }, [token]);
 
     const loadPublicData = async () => {

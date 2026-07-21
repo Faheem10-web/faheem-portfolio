@@ -35,26 +35,37 @@ function Hero() {
     
     const heroSettings = siteSettings?.hero || {};
     const name = heroSettings.name || "Faheem";
+    const rawWords = heroSettings.words;
 
     const wordsList = useMemo(() => {
-        const list = heroSettings.words && heroSettings.words.length > 0 
-            ? [...heroSettings.words] 
+        const list = Array.isArray(rawWords) && rawWords.length > 0 
+            ? [...rawWords] 
             : [name, "a UI/UX Designer", "a Frontend Developer"];
         if (list.length > 0 && list[0] === "Faheem" && name !== "Faheem") {
             list[0] = name;
         }
         return list;
-    }, [heroSettings.words, name]);
+    }, [JSON.stringify(rawWords), name]);
 
     const [currentWordIndex, setCurrentWordIndex] = useState(0);
     const [currentText, setCurrentText] = useState("");
     const [isDeleting, setIsDeleting] = useState(false);
     const [typingSpeed, setTypingSpeed] = useState(150);
 
+    // Safely reset typewriter animation state when wordsList changes
+    useEffect(() => {
+        setCurrentWordIndex(0);
+        setCurrentText("");
+        setIsDeleting(false);
+        setTypingSpeed(100);
+    }, [JSON.stringify(wordsList)]);
+
     useEffect(() => {
         const handleType = () => {
-            const fullWord = wordsList[currentWordIndex];
+            const safeIndex = currentWordIndex < wordsList.length ? currentWordIndex : 0;
+            const fullWord = wordsList[safeIndex];
             if (!fullWord) return;
+
             if (!isDeleting) {
                 setCurrentText(fullWord.substring(0, currentText.length + 1));
                 setTypingSpeed(100);

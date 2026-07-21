@@ -25,7 +25,7 @@ export const protect = async (req, res, next) => {
       if (mongoose.connection.readyState === 1) {
         try {
           req.user = await User.findById(decoded.id).select('-password');
-        } catch (e) {
+        } catch {
           // Ignore DB find failure if DB drops mid-request
         }
       }
