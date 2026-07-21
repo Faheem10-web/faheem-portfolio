@@ -17,7 +17,7 @@ const navbarSettingsSchema = new mongoose.Schema({
   themeToggleVisible: { type: Boolean, default: true },
   stickyNavbar: { type: Boolean, default: true }
 });
-export const NavbarSettings = mongoose.model('NavbarSettings', navbarSettingsSchema);
+export const NavbarSettings = mongoose.models.NavbarSettings || mongoose.model('NavbarSettings', navbarSettingsSchema);
 
 // 2. Hero Section Schema
 const heroSettingsSchema = new mongoose.Schema({
@@ -37,7 +37,7 @@ const heroSettingsSchema = new mongoose.Schema({
   isAvailable: { type: Boolean, default: true },
   availabilityText: { type: String, default: 'Available for new projects' }
 });
-export const HeroSettings = mongoose.model('HeroSettings', heroSettingsSchema);
+export const HeroSettings = mongoose.models.HeroSettings || mongoose.model('HeroSettings', heroSettingsSchema);
 
 // 3. About Section Schema
 const aboutSettingsSchema = new mongoose.Schema({
@@ -52,7 +52,7 @@ const aboutSettingsSchema = new mongoose.Schema({
   aboutImage: { type: String, default: '' },
   skillsSummary: { type: String, default: '' }
 });
-export const AboutSettings = mongoose.model('AboutSettings', aboutSettingsSchema);
+export const AboutSettings = mongoose.models.AboutSettings || mongoose.model('AboutSettings', aboutSettingsSchema);
 
 // 4. Resume Schema
 const resumeSettingsSchema = new mongoose.Schema({
@@ -60,7 +60,7 @@ const resumeSettingsSchema = new mongoose.Schema({
   version: { type: String, default: '1.0.0' },
   fileName: { type: String, default: 'resume.pdf' }
 });
-export const ResumeSettings = mongoose.model('ResumeSettings', resumeSettingsSchema);
+export const ResumeSettings = mongoose.models.ResumeSettings || mongoose.model('ResumeSettings', resumeSettingsSchema);
 
 // 5. Service Schema
 const serviceSchema = new mongoose.Schema({
@@ -74,7 +74,7 @@ const serviceSchema = new mongoose.Schema({
   enabled: { type: Boolean, default: true }
 });
 serviceSchema.index({ order: 1, enabled: 1 });
-export const Service = mongoose.model('Service', serviceSchema);
+export const Service = mongoose.models.Service || mongoose.model('Service', serviceSchema);
 
 // 6. Skill Schema
 const skillSchema = new mongoose.Schema({
@@ -85,7 +85,7 @@ const skillSchema = new mongoose.Schema({
   order: { type: Number, default: 0 }
 });
 skillSchema.index({ category: 1, order: 1 });
-export const Skill = mongoose.model('Skill', skillSchema);
+export const Skill = mongoose.models.Skill || mongoose.model('Skill', skillSchema);
 
 // 7. Experience Schema
 const experienceSchema = new mongoose.Schema({
@@ -98,7 +98,7 @@ const experienceSchema = new mongoose.Schema({
   order: { type: Number, default: 0 }
 });
 experienceSchema.index({ order: 1 });
-export const Experience = mongoose.model('Experience', experienceSchema);
+export const Experience = mongoose.models.Experience || mongoose.model('Experience', experienceSchema);
 
 // 8. Project Schema
 const projectSchema = new mongoose.Schema({
@@ -138,7 +138,7 @@ const projectSchema = new mongoose.Schema({
 projectSchema.index({ order: 1, enabled: 1 });
 projectSchema.index({ isFeatured: 1, showOnHome: 1 });
 projectSchema.index({ category: 1 });
-export const Project = mongoose.model('Project', projectSchema);
+export const Project = mongoose.models.Project || mongoose.model('Project', projectSchema);
 
 // 9. FAQ Schema
 const faqSchema = new mongoose.Schema({
@@ -147,7 +147,7 @@ const faqSchema = new mongoose.Schema({
   order: { type: Number, default: 0 }
 });
 faqSchema.index({ order: 1 });
-export const FAQ = mongoose.model('FAQ', faqSchema);
+export const FAQ = mongoose.models.FAQ || mongoose.model('FAQ', faqSchema);
 
 // 10. Testimonial Schema
 const testimonialSchema = new mongoose.Schema({
@@ -159,7 +159,7 @@ const testimonialSchema = new mongoose.Schema({
   order: { type: Number, default: 0 }
 });
 testimonialSchema.index({ order: 1 });
-export const Testimonial = mongoose.model('Testimonial', testimonialSchema);
+export const Testimonial = mongoose.models.Testimonial || mongoose.model('Testimonial', testimonialSchema);
 
 // 11. Contact Settings Schema
 const contactSettingsSchema = new mongoose.Schema({
@@ -175,7 +175,7 @@ const contactSettingsSchema = new mongoose.Schema({
   enableWhatsappButton: { type: Boolean, default: true },
   enableForm: { type: Boolean, default: true }
 });
-export const ContactSettings = mongoose.model('ContactSettings', contactSettingsSchema);
+export const ContactSettings = mongoose.models.ContactSettings || mongoose.model('ContactSettings', contactSettingsSchema);
 
 // 12. Message Schema
 const messageSchema = new mongoose.Schema({
@@ -191,7 +191,7 @@ const messageSchema = new mongoose.Schema({
 });
 messageSchema.index({ createdAt: -1 });
 messageSchema.index({ isRead: 1 });
-export const Message = mongoose.model('Message', messageSchema);
+export const Message = mongoose.models.Message || mongoose.model('Message', messageSchema);
 
 // 13. Footer Settings Schema
 const footerSettingsSchema = new mongoose.Schema({
@@ -209,7 +209,7 @@ const footerSettingsSchema = new mongoose.Schema({
   contactEmail: { type: String, default: 'hello@faheem.design' },
   bgVideo: { type: String, default: '/assets/footer-bg.mp4' }
 });
-export const FooterSettings = mongoose.model('FooterSettings', footerSettingsSchema);
+export const FooterSettings = mongoose.models.FooterSettings || mongoose.model('FooterSettings', footerSettingsSchema);
 
 // 14. Social Link Schema
 const socialLinkSchema = new mongoose.Schema({
@@ -218,7 +218,7 @@ const socialLinkSchema = new mongoose.Schema({
   order: { type: Number, default: 0 }
 });
 socialLinkSchema.index({ order: 1 });
-export const SocialLink = mongoose.model('SocialLink', socialLinkSchema);
+export const SocialLink = mongoose.models.SocialLink || mongoose.model('SocialLink', socialLinkSchema);
 
 // 15. SEO Settings Schema
 const seoSettingsSchema = new mongoose.Schema({
@@ -229,7 +229,7 @@ const seoSettingsSchema = new mongoose.Schema({
   ogImage: { type: String, default: '' },
   canonicalUrl: { type: String, default: '' }
 });
-export const SeoSettings = mongoose.model('SeoSettings', seoSettingsSchema);
+export const SeoSettings = mongoose.models.SeoSettings || mongoose.model('SeoSettings', seoSettingsSchema);
 
 // 16. Global Settings Schema
 const globalSettingsSchema = new mongoose.Schema({
@@ -244,7 +244,7 @@ const globalSettingsSchema = new mongoose.Schema({
   maintenanceMode: { type: Boolean, default: false },
   googleAnalyticsId: { type: String, default: '' }
 });
-export const GlobalSettings = mongoose.model('GlobalSettings', globalSettingsSchema);
+export const GlobalSettings = mongoose.models.GlobalSettings || mongoose.model('GlobalSettings', globalSettingsSchema);
 
 // 17. Media Library Schema
 const mediaSchema = new mongoose.Schema({
@@ -256,11 +256,11 @@ const mediaSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 mediaSchema.index({ createdAt: -1 });
-export const Media = mongoose.model('Media', mediaSchema);
+export const Media = mongoose.models.Media || mongoose.model('Media', mediaSchema);
 
 // 18. Theme Settings Schema
 const themeSettingsSchema = new mongoose.Schema({
   mode: { type: String, default: 'system' } // 'system', 'user', 'light', 'dark'
 });
-export const ThemeSettings = mongoose.model('ThemeSettings', themeSettingsSchema);
+export const ThemeSettings = mongoose.models.ThemeSettings || mongoose.model('ThemeSettings', themeSettingsSchema);
 
