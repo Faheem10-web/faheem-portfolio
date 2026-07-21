@@ -164,6 +164,19 @@ export function AdminProvider({ children }) {
         }
     };
 
+    const safeParseJson = async (res) => {
+        try {
+            const text = await res.text();
+            try {
+                return JSON.parse(text);
+            } catch {
+                return { message: text || `Server responded with status ${res.status}` };
+            }
+        } catch (e) {
+            return { message: e.message || 'Network parsing error' };
+        }
+    };
+
     const login = async (username, password) => {
         setLoading(true);
         try {
@@ -172,7 +185,7 @@ export function AdminProvider({ children }) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
             });
-            const data = await res.json();
+            const data = await safeParseJson(res);
             if (res.ok) {
                 setToken(data.token);
                 setLoading(false);
@@ -202,7 +215,7 @@ export function AdminProvider({ children }) {
                 },
                 body: JSON.stringify({ oldPassword, newPassword })
             });
-            const data = await res.json();
+            const data = await safeParseJson(res);
             return { success: res.ok, message: data.message };
         } catch (error) {
             return { success: false, message: error.message || 'Server connection error' };
@@ -219,7 +232,7 @@ export function AdminProvider({ children }) {
                 },
                 body: JSON.stringify({ username, currentPassword, newPassword })
             });
-            const data = await res.json();
+            const data = await safeParseJson(res);
             if (res.ok && data.user) {
                 setUser(data.user);
             }
