@@ -265,18 +265,19 @@ export default function SiteStatus() {
               </div>
               <div>
                 <h3 style={{
-                  margin: '4px 0 8px 0',
-                  fontSize: '20px',
+                  margin: '0 0 6px 0',
+                  fontSize: '18px',
                   fontWeight: '700',
-                  color: 'var(--admin-text-main)'
+                  color: '#0f172a',
+                  letterSpacing: '-0.3px'
                 }}>
                   {modalType === 'enable' ? 'Enable Maintenance Mode?' : 'Switch Portfolio to Live?'}
                 </h3>
                 <p style={{
                   margin: 0,
                   fontSize: '14px',
-                  lineHeight: '1.5',
-                  color: 'var(--admin-text-muted)'
+                  lineHeight: '1.6',
+                  color: '#334155'
                 }}>
                   {modalType === 'enable' 
                     ? 'Your public portfolio will be temporarily hidden and visitors will see the maintenance page. Admin access will remain available.'
@@ -289,7 +290,7 @@ export default function SiteStatus() {
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '28px' }}>
               <button
                 onClick={() => setShowConfirmModal(false)}
-                className="admin-btn admin-btn-secondary"
+                className="admin-modal-cancel-btn"
                 style={{ minWidth: '90px' }}
               >
                 Cancel
@@ -300,7 +301,9 @@ export default function SiteStatus() {
                 style={{
                   background: modalType === 'enable' ? '#f59e0b' : '#10b981',
                   color: '#ffffff',
-                  minWidth: '150px'
+                  minWidth: '150px',
+                  borderRadius: '10px',
+                  fontWeight: '600'
                 }}
               >
                 {modalType === 'enable' ? 'Enable Maintenance' : 'Switch to Live'}

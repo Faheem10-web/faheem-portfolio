@@ -1202,27 +1202,101 @@ td {
   max-width: 240px;
 }
 
-/* Modal Backdrop */
-.dam-modal-backdrop {
+/* ── UNIVERSAL PRODUCTION MODAL SYSTEM ── */
+.dam-modal-backdrop,
+.admin-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(6px);
-  z-index: 99995;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  background: rgba(15, 23, 42, 0.65) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  z-index: 99995 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px !important;
+  animation: adminModalFadeIn 0.2s ease forwards;
 }
 
-.dam-modal {
-  background: var(--admin-card-bg);
-  border: 1px solid var(--admin-border);
-  border-radius: 18px;
-  width: 100%;
-  max-width: 440px;
-  padding: 28px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+.dam-modal,
+.admin-modal-card {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 20px !important;
+  width: 100% !important;
+  max-width: 460px !important;
+  padding: 30px !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+  position: relative !important;
+  animation: adminModalScaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes adminModalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes adminModalScaleUp {
+  from { opacity: 0; transform: scale(0.95) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.admin-modal-title {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+  margin: 0 0 4px 0 !important;
+  letter-spacing: -0.3px !important;
+}
+
+.admin-modal-subtitle {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: #64748b !important;
+}
+
+.admin-modal-body {
+  font-size: 14px !important;
+  color: #334155 !important;
+  line-height: 1.6 !important;
+  margin: 16px 0 24px 0 !important;
+}
+
+.admin-modal-cancel-btn {
+  padding: 10px 20px !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid #cbd5e1 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.admin-modal-cancel-btn:hover {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+.admin-modal-delete-btn {
+  padding: 10px 22px !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  background: #ef4444 !important;
+  color: #ffffff !important;
+  border: none !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
+  transition: all 0.2s ease !important;
+}
+
+.admin-modal-delete-btn:hover {
+  background: #dc2626 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4) !important;
 }
 
 /* Skeletons */

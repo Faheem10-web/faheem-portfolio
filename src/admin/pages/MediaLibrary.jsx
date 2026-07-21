@@ -706,30 +706,45 @@ export default function MediaLibrary() {
       {deleteTarget && (
         <div className="dam-modal-backdrop" onClick={() => setDeleteTarget(null)}>
           <div className="dam-modal" onClick={e => e.stopPropagation()}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(244, 63, 94, 0.15)', color: '#f43f5e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '18px' }}>
+              <div style={{
+                width: '46px',
+                height: '46px',
+                borderRadius: '14px',
+                background: '#fef2f2',
+                color: '#ef4444',
+                border: '1px solid #fecaca',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '22px',
+                flexShrink: 0
+              }}>
                 <FiTrash2 />
               </div>
               <div>
-                <h3 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--admin-text-main)' }}>Confirm Deletion</h3>
-                <span style={{ fontSize: '12px', color: 'var(--admin-text-muted)' }}>Permanent Cloudinary Removal</span>
+                <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#0f172a', margin: '0 0 2px 0', letterSpacing: '-0.3px' }}>
+                  Confirm Deletion
+                </h3>
+                <span style={{ fontSize: '13px', color: '#64748b', fontWeight: '500' }}>
+                  Permanent Cloudinary & Database Removal
+                </span>
               </div>
             </div>
 
-            <p style={{ fontSize: '13px', color: 'var(--admin-text-muted)', lineHeight: '1.5', marginBottom: '20px' }}>
-              Are you sure you want to permanently delete <strong style={{ color: 'var(--admin-text-main)' }}>"{deleteTarget.fileName}"</strong>? This will remove the asset from Cloudinary and your database.
+            <p style={{ fontSize: '14px', color: '#334155', lineHeight: '1.6', margin: '0 0 24px 0' }}>
+              Are you sure you want to permanently delete <strong style={{ color: '#0f172a', fontWeight: '700' }}>"{deleteTarget.fileName}"</strong>? This action will permanently remove the file from Cloudinary and your database.
             </p>
 
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
               <button 
-                className="admin-btn admin-btn-secondary" 
+                className="admin-modal-cancel-btn"
                 onClick={() => setDeleteTarget(null)}
               >
                 Cancel
               </button>
               <button 
-                className="admin-btn" 
-                style={{ background: '#f43f5e', color: '#ffffff', border: 'none' }}
+                className="admin-modal-delete-btn"
                 onClick={confirmDelete}
               >
                 Delete Asset
