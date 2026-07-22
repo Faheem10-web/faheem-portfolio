@@ -447,9 +447,18 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
         intro: overviewIntro
       },
       secondaryDesc,
+      challenge: [
+        challengeIntro,
+        ...(challengePoints || []).map(p => typeof p === 'string' ? `• ${p}` : `• ${p.title}: ${p.desc}`),
+        challengeConclusion
+      ].filter(Boolean).join('\n'),
       challengeIntro,
       challengePoints,
       challengeConclusion,
+      solution: [
+        solutionIntro,
+        ...(solutionPoints || []).map(p => typeof p === 'string' ? `• ${p}` : `• ${p.title}: ${p.desc}`)
+      ].filter(Boolean).join('\n'),
       solutionIntro,
       solutionPoints,
       seoConfig: { metaTitle, metaDescription }

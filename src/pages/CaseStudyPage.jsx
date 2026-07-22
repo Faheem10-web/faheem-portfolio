@@ -101,6 +101,67 @@ export default function CaseStudyPage() {
     if (src) setLightboxImg(src);
   };
 
+  const renderFormattedSectionContent = (customText, fallbackIntro, fallbackPoints, fallbackConclusion) => {
+    if (customText && customText.trim().length > 0) {
+      const lines = customText.split('\n').map(l => l.trim()).filter(Boolean);
+      const bulletLines = [];
+      const normalParagraphs = [];
+
+      lines.forEach(line => {
+        if (line.startsWith('•') || line.startsWith('-') || line.startsWith('*')) {
+          const cleanText = line.replace(/^[•\-\*]\s*/, '');
+          bulletLines.push(cleanText);
+        } else {
+          normalParagraphs.push(line);
+        }
+      });
+
+      return (
+        <>
+          {normalParagraphs.map((para, idx) => (
+            <p key={idx} className="cs-body-paragraph">{para}</p>
+          ))}
+
+          {bulletLines.length > 0 && (
+            <ul className="cs-editorial-disc-list">
+              {bulletLines.map((bullet, idx) => {
+                const parts = bullet.split(/:\s*(.+)/);
+                if (parts.length > 1) {
+                  return (
+                    <li key={idx}>
+                      <strong>{parts[0]}:</strong> {parts[1]}
+                    </li>
+                  );
+                }
+                return <li key={idx}>{bullet}</li>;
+              })}
+            </ul>
+          )}
+        </>
+      );
+    }
+
+    return (
+      <>
+        {fallbackIntro && <p className="cs-body-paragraph">{fallbackIntro}</p>}
+        {fallbackPoints && fallbackPoints.length > 0 && (
+          <ul className="cs-editorial-disc-list">
+            {fallbackPoints.map((item, idx) => (
+              <li key={idx}>
+                {typeof item === 'string' ? item : (
+                  <>
+                    <strong>{item.title}:</strong> {item.desc}
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+        {fallbackConclusion && <p className="cs-body-paragraph">{fallbackConclusion}</p>}
+      </>
+    );
+  };
+
   return (
     <div className="case-study-root">
       {/* ── 1. PREMIUM HERO SECTION — Full screen, behind navbar ── */}
@@ -244,23 +305,16 @@ export default function CaseStudyPage() {
           <div className="cs-section-header">
             <h2 className="cs-section-title">The Challenge</h2>
             
-            <p className="cs-body-paragraph">
-              {project.challengeIntro || `The primary hurdle for the ${titleText} project was presenting a vast portfolio of diverse design styles without overwhelming the user. We needed to organize complex architectural data into an intuitive interface that maintains a sense of luxury and space.`}
-            </p>
-
-            <ul className="cs-editorial-disc-list">
-              {(project.challengePoints || [
+            {renderFormattedSectionContent(
+              project.challenge,
+              project.challengeIntro || `The primary hurdle for the ${titleText} project was presenting a vast portfolio of diverse design styles without overwhelming the user. We needed to organize complex architectural data into an intuitive interface that maintains a sense of luxury and space.`,
+              project.challengePoints || [
                 "Cluttered navigation is affecting high-end brand perception.",
                 "Slow load times for high-resolution gallery assets.",
                 "Inconsistent user journeys from inspiration to booking."
-              ]).map((point, idx) => (
-                <li key={idx}>{point}</li>
-              ))}
-            </ul>
-
-            <p className="cs-body-paragraph">
-              {project.challengeConclusion || "We engineered a lightweight CMS structure that prioritizes performance and clarity. The visual hierarchy was elevated with minimalist UI elements, ensuring that the design work remains the focal point for every visitor."}
-            </p>
+              ],
+              project.challengeConclusion || "We engineered a lightweight CMS structure that prioritizes performance and clarity. The visual hierarchy was elevated with minimalist UI elements, ensuring that the design work remains the focal point for every visitor."
+            )}
           </div>
 
           <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.challengeImage || '/assets/mockup_challenge.png')}>
@@ -284,26 +338,17 @@ export default function CaseStudyPage() {
           <div className="cs-section-header">
             <h2 className="cs-section-title">The Solution</h2>
             
-            <p className="cs-body-paragraph">
-              {project.solutionIntro || 'Our solution centered on a "Visual-First" philosophy, simplifying the user’s path to discovery through thoughtful interaction design. We created streamlined user flows that make exploring design concepts and scheduling consultations effortless.'}
-            </p>
-
-            <ul className="cs-editorial-disc-list">
-              {(project.solutionPoints || [
+            {renderFormattedSectionContent(
+              project.solution,
+              project.solutionIntro || 'Our solution centered on a "Visual-First" philosophy, simplifying the user’s path to discovery through thoughtful interaction design. We created streamlined user flows that make exploring design concepts and scheduling consultations effortless.',
+              project.solutionPoints || [
                 { title: "Adaptive Masonry Grid", desc: "To showcase projects of varying scales and orientations." },
                 { title: "Seamless CMS Integration", desc: "For easy portfolio updates and category filtering." },
                 { title: "Interactive Style Quiz", desc: "To guide users toward their preferred aesthetic." },
                 { title: "Optimized Performance", desc: "Ensuring 99th percentile load speeds for media-heavy pages." }
-              ]).map((item, idx) => (
-                <li key={idx}>
-                  {typeof item === 'string' ? item : (
-                    <>
-                      <strong>{item.title}:</strong> {item.desc}
-                    </>
-                  )}
-                </li>
-              ))}
-            </ul>
+              ],
+              null
+            )}
           </div>
 
           <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.solutionImage || '/assets/mockup_solution.png')}>
