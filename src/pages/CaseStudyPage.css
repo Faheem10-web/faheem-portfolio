@@ -132,7 +132,7 @@
 
 .sidebar-project-title {
     font-family: var(--font-heading);
-    font-size: clamp(1.6rem, 2.8vw, 2.1rem);
+    font-size: 32px !important;
     font-weight: 800;
     color: var(--color-text-main);
     letter-spacing: -1px;
