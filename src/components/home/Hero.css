@@ -54,8 +54,12 @@
     animation: pulseGlow 14s ease-in-out infinite alternate;
 }
 
+:root[data-theme='light'] .hero {
+    background: linear-gradient(135deg, #cceeee 0%, #e2f8e3 48%, #f6fcbf 100%);
+}
+
 :root[data-theme='light'] .hero-glow-orb {
-    background: radial-gradient(circle, rgba(124, 58, 237, 0.08) 0%, rgba(99, 102, 241, 0.02) 50%, transparent 70%);
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, rgba(74, 222, 128, 0.08) 50%, transparent 70%);
     filter: blur(100px);
 }
 

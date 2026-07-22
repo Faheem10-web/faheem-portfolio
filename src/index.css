@@ -25,9 +25,9 @@
 }
 
 :root[data-theme='light'] {
-    --bg-primary-rgb: 245, 245, 247;
-    --bg-primary: rgb(var(--bg-primary-rgb));
-    --bg-secondary: #eeeef2;
+    --bg-primary-rgb: 226, 248, 227;
+    --bg-primary: linear-gradient(135deg, #cceeee 0%, #e2f8e3 48%, #f6fcbf 100%);
+    --bg-secondary: #e2f8e3;
     --color-primary: #7C3AED;
     --color-primary-glow: rgba(124, 58, 237, 0.2);
     --color-text-main: #18181b;
