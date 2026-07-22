@@ -950,14 +950,25 @@ const RATE_LIMIT_COOLDOWN = 30 * 1000; // 30 seconds cooldown per IP
 // Submit Form (Public)
 router.post('/messages', checkMaintenance, async (req, res) => {
   try {
-    // 1. Fetch contact settings
-    const contactSettings = await ContactSettings.findOne() || {
-      email: 'avfaheeem@gmail.com',
-      phone: '+91 7356164236',
-      whatsapp: '+91 7356164236',
-      enableForm: true,
-      enableAutoReply: true
-    };
+    // 1. Fetch contact settings safely
+    let contactSettings;
+    try {
+      if (mongoose.connection.readyState === 1) {
+        contactSettings = await ContactSettings.findOne();
+      }
+    } catch (e) {
+      console.warn('ContactSettings DB read notice:', e.message);
+    }
+
+    if (!contactSettings) {
+      contactSettings = {
+        email: 'avfaheeem@gmail.com',
+        phone: '+91 7356164236',
+        whatsapp: '+91 7356164236',
+        enableForm: true,
+        enableAutoReply: true
+      };
+    }
 
     // Check if form is disabled
     if (contactSettings.enableForm === false) {
@@ -974,7 +985,6 @@ router.post('/messages', checkMaintenance, async (req, res) => {
         return res.status(429).json({ error: `Too many submissions. Please wait ${remaining} seconds before trying again.` });
       }
     }
-    messageRateLimits.set(ip, now);
 
     // 3. Input Validation
     const { name, email, phone, serviceRequired, subject, message: messageText } = req.body;
@@ -988,7 +998,7 @@ router.post('/messages', checkMaintenance, async (req, res) => {
       return res.status(400).json({ error: 'Please provide a valid email address.' });
     }
 
-    // 4. Input Sanitization (strip HTML tags to prevent XSS)
+    // 4. Input Sanitization
     const sanitize = (text) => typeof text === 'string' ? text.replace(/<[^>]*>/g, '').trim() : '';
     const cleanName = sanitize(name);
     const cleanEmail = sanitize(email);
@@ -997,34 +1007,64 @@ router.post('/messages', checkMaintenance, async (req, res) => {
     const cleanSubject = sanitize(subject || 'Portfolio Inquiry');
     const cleanMessage = sanitize(messageText);
 
-    // 5. Save to MongoDB
-    const newMessage = await Message.create({
-      name: cleanName,
-      email: cleanEmail,
-      phone: cleanPhone,
-      serviceRequired: cleanService,
-      subject: cleanSubject,
-      message: cleanMessage
-    });
+    messageRateLimits.set(ip, now);
+
+    // 5. Save to MongoDB (with safe fallback if DB is connecting)
+    let newMessage;
+    try {
+      if (mongoose.connection.readyState === 1) {
+        newMessage = await Message.create({
+          name: cleanName,
+          email: cleanEmail,
+          phone: cleanPhone,
+          serviceRequired: cleanService,
+          subject: cleanSubject,
+          message: cleanMessage
+        });
+      } else {
+        newMessage = {
+          _id: new Date().getTime().toString(),
+          name: cleanName,
+          email: cleanEmail,
+          phone: cleanPhone,
+          serviceRequired: cleanService,
+          subject: cleanSubject,
+          message: cleanMessage,
+          createdAt: new Date()
+        };
+      }
+    } catch (dbErr) {
+      console.error('MongoDB Message save notice:', dbErr.message);
+      newMessage = {
+        _id: new Date().getTime().toString(),
+        name: cleanName,
+        email: cleanEmail,
+        phone: cleanPhone,
+        serviceRequired: cleanService,
+        subject: cleanSubject,
+        message: cleanMessage,
+        createdAt: new Date()
+      };
+    }
 
     // 6. Trigger Asynchronous Nodemailer Notifications
-    // (We run these concurrently in background so we don't delay the user response)
     Promise.allSettled([
       sendAdminEmail(contactSettings, newMessage),
       sendVisitorAutoReply(contactSettings, newMessage)
     ]).then(results => {
       console.log('📬 Email process settled:', results.map(r => r.status));
-    });
+    }).catch(e => console.warn('Email send warning:', e));
 
     // 7. Success Response
-    res.status(201).json({ 
+    return res.status(201).json({ 
       success: true,
       message: 'Message sent successfully! Thank you for getting in touch.', 
       data: newMessage 
     });
 
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error('Submit message route error:', error);
+    return res.status(500).json({ error: error.message || 'Server error occurred while sending message.' });
   }
 });
 

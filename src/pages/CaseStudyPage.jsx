@@ -384,40 +384,6 @@ export default function CaseStudyPage() {
           </div>
         </motion.section>
 
-        {/* ── 7. RESEARCH & DESIGN SYSTEM MODULES (IF PRESENT) ── */}
-        {project.designSystemConfig?.typography && (
-          <motion.section 
-            className="cs-editorial-section"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="cs-section-title">Design System & Architecture</h2>
-            <div className="cs-card-grid">
-              <div className="cs-feature-card">
-                <span className="cs-card-icon">🎨</span>
-                <h3 className="cs-card-title">Color Palette</h3>
-                <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
-                  {(project.designSystemConfig.colors || ['#0A0A0A', '#FFFFFF', '#4F46E5', '#10B981']).map((c, i) => (
-                    <div key={i} style={{ width: '32px', height: '32px', borderRadius: '50%', background: c, border: '1px solid #E5E7EB' }} title={c} />
-                  ))}
-                </div>
-              </div>
-
-              <div className="cs-feature-card">
-                <span className="cs-card-icon">🔤</span>
-                <h3 className="cs-card-title">Typography System</h3>
-                <p className="cs-card-text">{project.designSystemConfig.typography}</p>
-              </div>
-
-              <div className="cs-feature-card">
-                <span className="cs-card-icon">📐</span>
-                <h3 className="cs-card-title">Grid & Spacing</h3>
-                <p className="cs-card-text">{project.designSystemConfig.spacing}</p>
-              </div>
-            </div>
-          </motion.section>
-        )}
 
         {/* ── 8. RESULTS & CONCLUSION ── */}
         <motion.section 

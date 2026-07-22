@@ -375,9 +375,13 @@ export function AdminProvider({ children }) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(msg)
             });
-            return { success: res.ok };
-        } catch {
-            return { success: false };
+            const data = await res.json().catch(() => ({}));
+            if (res.ok) {
+                return { success: true, message: data.message || 'Message sent successfully!' };
+            }
+            return { success: false, message: data.error || data.message || 'Submission failed. Please try again.' };
+        } catch (err) {
+            return { success: false, message: err.message || 'Network error. Please try again.' };
         }
     };
 
