@@ -77,7 +77,7 @@
 
 .services-title {
     font-size: 3rem;
-    font-weight: 800;
+    font-weight: 600;
     font-family: var(--font-heading);
     color: var(--card-text-main);
     line-height: 1.2;
@@ -192,7 +192,7 @@
 
 .card-title {
     font-size: 1.45rem;
-    font-weight: 700;
+    font-weight: 600;
     color: var(--card-text-main);
     font-family: var(--font-heading);
     margin-bottom: 10px;

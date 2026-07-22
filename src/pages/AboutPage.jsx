@@ -25,7 +25,10 @@ import {
   FiMessageSquare, 
   FiUsers, 
   FiZap,
-  FiPenTool
+  FiPenTool,
+  FiLayout,
+  FiUser,
+  FiCode
 } from "react-icons/fi";
 
 import { 
@@ -78,25 +81,24 @@ const GsapSuperheroIcon = () => (
 
 const skillsData = [
   { name: "Figma", category: "design", icon: "figma", iconClass: "figma-wrapper" },
-  { name: "Adobe Photoshop", category: "design", icon: "photoshop", iconClass: "photoshop-wrapper" },
-  { name: "Wireframing & Prototyping", category: "design", icon: "wireframe", iconClass: "wireframe-wrapper" },
-  { name: "Mobile & Web Interface Design", category: "design", icon: "mobile", iconClass: "mobile-wrapper" },
-  { name: "Responsive Design", category: "design", icon: "responsive", iconClass: "responsive-wrapper" },
-  { name: "Design Systems", category: "design", icon: "design-systems", iconClass: "design-systems-wrapper" },
-  
+  { name: "Adobe XD", category: "design", icon: "adobe-xd", iconClass: "adobe-xd-wrapper" },
+  { name: "Photoshop", category: "design", icon: "photoshop", iconClass: "photoshop-wrapper" },
+  { name: "Illustrator", category: "design", icon: "illustrator", iconClass: "illustrator-wrapper" },
+
+  { name: "Wireframing", category: "design", icon: "wireframe", iconClass: "wireframe-wrapper" },
+  { name: "Prototyping", category: "design", icon: "prototype", iconClass: "prototype-wrapper" },
+  { name: "Responsive Layouts", category: "design", icon: "responsive", iconClass: "responsive-wrapper" },
+  { name: "Color Theory", category: "design", icon: "color", iconClass: "color-wrapper" },
+
+  { name: "User Research", category: "professional", icon: "research", iconClass: "research-wrapper" },
+  { name: "User Personas", category: "professional", icon: "persona", iconClass: "persona-wrapper" },
+  { name: "Journey Mapping", category: "professional", icon: "journey", iconClass: "journey-wrapper" },
+  { name: "Usability Testing", category: "professional", icon: "testing", iconClass: "testing-wrapper" },
+
   { name: "HTML5", category: "development", icon: "html5", iconClass: "html5-wrapper" },
   { name: "CSS3", category: "development", icon: "css3", iconClass: "css3-wrapper" },
-  { name: "JavaScript", category: "development", icon: "javascript", iconClass: "javascript-wrapper" },
-  { name: "React", category: "development", icon: "react", iconClass: "react-wrapper" },
-  { name: "GSAP", category: "development", icon: "gsap", iconClass: "gsap-wrapper" },
-  { name: "Netlify", category: "development", icon: "netlify", iconClass: "netlify-wrapper" },
-  { name: "Vercel", category: "development", icon: "vercel", iconClass: "vercel-wrapper" },
-  { name: "Git", category: "development", icon: "git", iconClass: "git-wrapper" },
-  
-  { name: "Creative Thinking", category: "professional", icon: "creative", iconClass: "creative-wrapper" },
-  { name: "Communication", category: "professional", icon: "communication", iconClass: "communication-wrapper" },
-  { name: "Problem Solving", category: "professional", icon: "problem-solving", iconClass: "problem-solving-wrapper" },
-  { name: "Collaboration", category: "professional", icon: "collaboration", iconClass: "collaboration-wrapper" },
+  { name: "React.js", category: "development", icon: "react", iconClass: "react-wrapper" },
+  { name: "Responsive Design", category: "development", icon: "responsive", iconClass: "responsive-wrapper" }
 ];
 
 const getSkillIcon = (iconName) => {
@@ -142,38 +144,36 @@ const getSkillIcon = (iconName) => {
   }
 };
 
-const categories = [
-  { id: "all", label: "All Skills" },
-  { id: "design", label: "Design & UI/UX" },
-  { id: "development", label: "Development & Tech" },
-  { id: "professional", label: "Professional" }
-];
-
 function AboutPage() {
   const { siteSettings, skills, isSkillsLoading } = useAdmin();
   const aboutSettings = siteSettings?.about || {};
-  const [activeTab, setActiveTab] = useState("all");
 
-  const dbSkills = skills && skills.length > 0 ? skills : [];
-  
-  // Map database skills to the format used in AboutPage (including lowercase category and correct iconClass)
-  const activeSkills = dbSkills.length > 0
-    ? dbSkills.map(sk => {
-        const cat = sk.category ? sk.category.toLowerCase() : "design";
-        // Map "tools" to "professional" to match frontend tab ids
-        const categoryMapped = cat === "tools" ? "professional" : cat;
-        return {
-          name: sk.name,
-          category: categoryMapped,
-          icon: sk.iconName || "figma",
-          iconClass: `${sk.iconName || "figma"}-wrapper`
-        };
-      })
-    : (!isSkillsLoading ? skillsData : []);
-
-  const filteredSkills = activeSkills.filter(skill => 
-    activeTab === "all" ? true : skill.category === activeTab
-  );
+  const categorizedExpertise = [
+    {
+      id: "design-tools",
+      title: "Design Tools",
+      icon: <FiPenTool className="expertise-icon" />,
+      skills: ["Figma", "Adobe XD", "Photoshop", "Illustrator"]
+    },
+    {
+      id: "ui-skills",
+      title: "UI Skills",
+      icon: <FiLayout className="expertise-icon" />,
+      skills: ["Wireframing", "Prototyping", "Responsive Layouts", "Color Theory"]
+    },
+    {
+      id: "ux-skills",
+      title: "UX Skills",
+      icon: <FiUser className="expertise-icon" />,
+      skills: ["User Research", "User Personas", "Journey Mapping", "Usability Testing"]
+    },
+    {
+      id: "frontend",
+      title: "Frontend",
+      icon: <FiCode className="expertise-icon" />,
+      skills: ["HTML5", "CSS3", "React.js", "Responsive Design"]
+    }
+  ];
 
   return (
     <div className="about-page-wrapper">
@@ -184,7 +184,6 @@ function AboutPage() {
           <div className="about-intro-grid">
             <div className="about-intro-left">
               <div className="about-title-container">
-                <div className="about-gradient-capsule"></div>
                 <motion.h1 
                   className="about-heading"
                   initial={{ opacity: 0, y: 20 }}
@@ -238,61 +237,33 @@ function AboutPage() {
             </div>
           </div>
 
-          {/* Capabilities Section */}
+          {/* My Expertise Section */}
           <div className="about-capabilities-section">
-            <div className="capabilities-header-row">
-              <div className="about-section-header">
-                <div className="about-header-icon-box">
-                  <KeyIcon />
-                </div>
-                <h3 className="about-subheading">Capabilities</h3>
-              </div>
-
-              {/* Filter Tabs */}
-              <div className="skills-filter-tabs">
-                {categories.map((cat) => (
-                  <button
-                    key={cat.id}
-                    onClick={() => setActiveTab(cat.id)}
-                    className={`filter-tab-btn ${activeTab === cat.id ? "active" : ""}`}
-                  >
-                    {cat.label}
-                    {activeTab === cat.id && (
-                      <motion.div 
-                        layoutId="activeTabIndicator" 
-                        className="active-indicator"
-                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                      />
-                    )}
-                  </button>
-                ))}
-              </div>
+            <div className="capabilities-centered-header">
+              <h2 className="expertise-main-title">My Expertise</h2>
+              <p className="expertise-subtitle">Tools and technologies I use to bring ideas to life.</p>
             </div>
 
-            {/* Skills Grid */}
-            <motion.div 
-              layout 
-              className="skills-grid"
-            >
-              <AnimatePresence mode="popLayout">
-                {filteredSkills.map((skill) => (
-                  <motion.div
-                    layout
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.35 }}
-                    key={skill.name}
-                    className="skill-card"
-                  >
-                    <div className={`skill-icon-outer ${skill.iconClass}`}>
-                      {getSkillIcon(skill.icon)}
+            <div className="expertise-grid">
+              {categorizedExpertise.map((group) => (
+                <div key={group.id} className="expertise-column-card">
+                  <div className="expertise-card-header">
+                    <div className={`expertise-icon-container ${group.id}`}>
+                      {group.icon}
                     </div>
-                    <h4 className="skill-title">{skill.name}</h4>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </motion.div>
+                    <h3 className="expertise-column-title">{group.title}</h3>
+                  </div>
+                  
+                  <div className="expertise-skills-list">
+                    {group.skills.map((skill, sIdx) => (
+                      <div key={sIdx} className="expertise-skill-pill">
+                        {skill}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
         </div>

@@ -430,9 +430,9 @@
 }
 
 .meta-title {
-    font-size: 1.45rem;
-    font-weight: 700; /* Title font-weight:700 */
-    font-family: var(--font-heading);
+    font-size: 28px !important;
+    font-weight: 500 !important; /* Reduced from 700 to 500 for a cleaner look */
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
     color: var(--color-text-main);
     margin-bottom: 0;
     line-height: 1.35;
@@ -1196,7 +1196,7 @@
     }
     
     .meta-title {
-        font-size: 1.5rem;
+        font-size: 24px !important;
     }
     
     .proj-card-meta {
@@ -1291,7 +1291,7 @@
     }
     
     .meta-title {
-        font-size: 1.35rem;
+        font-size: 22px !important;
         margin-bottom: 8px;
     }
     

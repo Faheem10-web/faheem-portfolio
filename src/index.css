@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 
 :root {
     --bg-primary-rgb: 5, 5, 5;
@@ -19,8 +19,8 @@
     --btn-secondary-hover: rgba(255, 255, 255, 0.08);
     --scrollbar-thumb: var(--color-primary);
     --scrollbar-thumb-hover: #a78bfa;
-    --font-heading: 'Geist', sans-serif;
-    --font-body: 'Geist', sans-serif;
+    --font-heading: 'Inter', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
     --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -123,7 +123,7 @@ button {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: "Geist", sans-serif !important;
+    font-family: var(--font-heading), sans-serif !important;
 }
 
 /* Lenis smooth scrolling settings */
