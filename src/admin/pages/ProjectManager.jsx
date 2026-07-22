@@ -317,31 +317,31 @@ export default function ProjectManager() {
   const resetForm = () => {
     setName('');
     setSlug('');
-    setCategory('');
-    setYear('');
-    setClient('');
+    setCategory('UI/UX Design');
+    setYear('2026');
+    setClient('Faheem');
     setStatus('Completed');
-    setTechnologies('');
+    setTechnologies('React, Figma, TailwindCSS');
     setShortDesc('');
     setLongDesc('');
     setLiveUrl('');
     setCaseStudyUrl('');
     setGithubUrl('');
-    setCoverImage('');
-    setThumbnailImage('');
-    setBannerImage('');
-    setChallengeImage('');
-    setSolutionImage('');
-    setResultImage('');
-    setChallengeImages([]);
-    setSolutionImages([]);
-    setResultImages([]);
+    setCoverImage('/assets/project_eco_shades.jpg');
+    setThumbnailImage('/assets/project_eco_shades.jpg');
+    setBannerImage('/assets/project_eco_shades.jpg');
+    setChallengeImage('/assets/mockup_challenge.png');
+    setSolutionImage('/assets/mockup_solution.png');
+    setResultImage('/assets/mockup_result.png');
+    setChallengeImages([{ url: '/assets/mockup_challenge.png', public_id: '' }]);
+    setSolutionImages([{ url: '/assets/mockup_solution.png', public_id: '' }]);
+    setResultImages([{ url: '/assets/mockup_result.png', public_id: '' }]);
     setGallery('');
-    setChallenge('');
-    setSolution('');
-    setResults('');
+    setChallenge('A comprehensive overhaul focused on performance, accessibility, and modern glassmorphism aesthetic.');
+    setSolution('Designed progressive disclosure cards, clean drawer navigation, and responsive touch interaction models.');
+    setResults('Achieved 98+ Google Lighthouse performance score and 30% increase in user engagement.');
     setProcess('');
-    setIsFeatured(false);
+    setIsFeatured(true);
     setShowOnHome(true);
     setEnabled(true);
     setOrder(0);
@@ -354,7 +354,7 @@ export default function ProjectManager() {
     setSlug(proj.slug);
     setCategory(proj.category);
     setYear(proj.year);
-    setClient(proj.client || '');
+    setClient(proj.client || 'Faheem');
     setStatus(proj.status || 'Completed');
     setTechnologies(proj.technologies ? proj.technologies.join(', ') : '');
     setShortDesc(proj.shortDesc);
@@ -362,29 +362,35 @@ export default function ProjectManager() {
     setLiveUrl(proj.liveUrl || '');
     setCaseStudyUrl(proj.caseStudyUrl || '');
     setGithubUrl(proj.githubUrl || '');
-    setCoverImage(proj.coverImage || '');
-    setThumbnailImage(proj.thumbnailImage || '');
-    setBannerImage(proj.bannerImage || '');
-    setChallengeImage(proj.challengeImage || '');
-    setSolutionImage(proj.solutionImage || '');
-    setResultImage(proj.resultImage || '');
+    setCoverImage(proj.coverImage || '/assets/project_eco_shades.jpg');
+    setThumbnailImage(proj.thumbnailImage || proj.coverImage || '/assets/project_eco_shades.jpg');
+    setBannerImage(proj.bannerImage || proj.coverImage || '/assets/project_eco_shades.jpg');
+    
+    const defChallenge = proj.challengeImage || '/assets/mockup_challenge.png';
+    const defSolution = proj.solutionImage || '/assets/mockup_solution.png';
+    const defResult = proj.resultImage || '/assets/mockup_result.png';
 
-    const formatGalleryArr = (arr, singleFallback) => {
+    setChallengeImage(defChallenge);
+    setSolutionImage(defSolution);
+    setResultImage(defResult);
+
+    const formatGalleryArr = (arr, singleFallback, defaultAsset) => {
       if (Array.isArray(arr) && arr.length > 0) {
         return arr.map(item => typeof item === 'string' ? { url: item, public_id: '' } : { url: item.url || '', public_id: item.public_id || '' });
       }
       if (singleFallback) return [{ url: singleFallback, public_id: '' }];
+      if (defaultAsset) return [{ url: defaultAsset, public_id: '' }];
       return [];
     };
 
-    setChallengeImages(formatGalleryArr(proj.challengeImages, proj.challengeImage));
-    setSolutionImages(formatGalleryArr(proj.solutionImages, proj.solutionImage));
-    setResultImages(formatGalleryArr(proj.resultImages, proj.resultImage));
+    setChallengeImages(formatGalleryArr(proj.challengeImages, proj.challengeImage, '/assets/mockup_challenge.png'));
+    setSolutionImages(formatGalleryArr(proj.solutionImages, proj.solutionImage, '/assets/mockup_solution.png'));
+    setResultImages(formatGalleryArr(proj.resultImages, proj.resultImage, '/assets/mockup_result.png'));
 
     setGallery(proj.gallery ? proj.gallery.join(', ') : '');
-    setChallenge(proj.challenge || '');
-    setSolution(proj.solution || '');
-    setResults(proj.results || '');
+    setChallenge(proj.challenge || 'A comprehensive overhaul focused on performance, accessibility, and modern glassmorphism aesthetic.');
+    setSolution(proj.solution || 'Designed progressive disclosure cards, clean drawer navigation, and responsive touch interaction models.');
+    setResults(proj.results || 'Achieved 98+ Google Lighthouse performance score and 30% increase in user engagement.');
     setProcess(proj.process || '');
     setIsFeatured(!!proj.isFeatured);
     setShowOnHome(!!proj.showOnHome);

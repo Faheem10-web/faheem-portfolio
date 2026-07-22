@@ -307,7 +307,7 @@ router.get('/bootstrap', checkMaintenance, async (req, res) => {
         GlobalSettings.findOne().lean().then(s => s || {}),
         ThemeSettings.findOne().lean().then(s => s || { mode: 'system' }),
         ChatSettings.findOne().lean().then(s => s || {}),
-        Project.find().select('name slug category year client coverImage thumbnailImage bannerImage liveUrl githubUrl enabled order').sort({ order: 1 }).lean(),
+        Project.find().sort({ order: 1 }).lean(),
         Service.find().sort({ order: 1 }).lean(),
         Skill.find().sort({ category: 1, order: 1 }).lean(),
         Experience.find().sort({ order: 1 }).lean(),
@@ -603,7 +603,6 @@ router.get('/projects', checkMaintenance, async (req, res) => {
       return res.json(seed.projects || []);
     }
     const projects = await Project.find()
-      .select('name slug category year client coverImage thumbnailImage bannerImage liveUrl githubUrl enabled order')
       .sort({ order: 1 })
       .lean();
     res.json(projects);
