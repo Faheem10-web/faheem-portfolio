@@ -191,7 +191,7 @@
 }
 
 .card-title {
-    font-size: 1.45rem;
+    font-size: 28px !important;
     font-weight: 600;
     color: var(--card-text-main);
     font-family: var(--font-heading);
@@ -309,7 +309,7 @@
     }
     
     .card-title {
-        font-size: 1.3rem;
+        font-size: 24px !important;
     }
     
     .card-number {
