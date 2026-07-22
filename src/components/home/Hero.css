@@ -397,7 +397,7 @@
 .hero-marquee-inner {
     display: flex;
     width: max-content;
-    animation: marquee-scroll 35s linear infinite;
+    animation: marquee-scroll 40s linear infinite;
     /* Hardware acceleration for 60fps/120fps stutter-free scroll */
     will-change: transform;
     backface-visibility: hidden;
@@ -407,24 +407,28 @@
 .hero-marquee-track {
     display: flex;
     align-items: center;
-    gap: 32px;
-    padding-right: 32px;
-    white-space: nowrap;
     flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .hero-marquee-item {
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 700;
     color: #4b5563;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     display: inline-flex;
     align-items: center;
-    gap: 32px;
+    gap: 16px;
+    padding: 0 24px;
     flex-shrink: 0;
     white-space: nowrap;
     font-family: var(--font-heading);
+}
+
+.hero-marquee-item span {
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 :root[data-theme='dark'] .hero-marquee-item {

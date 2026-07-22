@@ -179,22 +179,16 @@ function Hero() {
             {/* Infinite Horizontal Marquee Ticker */}
             <div className="hero-marquee">
                 <div className="hero-marquee-inner">
-                    <div className="hero-marquee-track">
-                        {MARQUEE_ITEMS.map((item, idx) => (
-                            <span key={`loop1-${idx}`} className="hero-marquee-item">
-                                <span>{item}</span>
-                                <span className="hero-marquee-dot" aria-hidden="true">•</span>
-                            </span>
-                        ))}
-                    </div>
-                    <div className="hero-marquee-track">
-                        {MARQUEE_ITEMS.map((item, idx) => (
-                            <span key={`loop2-${idx}`} className="hero-marquee-item">
-                                <span>{item}</span>
-                                <span className="hero-marquee-dot" aria-hidden="true">•</span>
-                            </span>
-                        ))}
-                    </div>
+                    {[...Array(4)].map((_, trackIdx) => (
+                        <div key={`track-${trackIdx}`} className="hero-marquee-track">
+                            {MARQUEE_ITEMS.map((item, idx) => (
+                                <span key={`item-${trackIdx}-${idx}`} className="hero-marquee-item">
+                                    <span className="hero-marquee-dot" aria-hidden="true">•</span>
+                                    <span>{item}</span>
+                                </span>
+                            ))}
+                        </div>
+                    ))}
                 </div>
             </div>
         </section>
