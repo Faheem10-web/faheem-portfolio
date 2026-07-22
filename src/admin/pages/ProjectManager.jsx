@@ -450,6 +450,8 @@ export default function ProjectManager() {
     }
   };
 
+  const [editSubTab, setEditSubTab] = useState('info'); // 'info' | 'caseStudy'
+
   return (
     <div>
       <div className="admin-header">
@@ -466,11 +468,35 @@ export default function ProjectManager() {
 
       {isEditing ? (
         <div className="admin-panel">
-          <div className="admin-panel-title">
-            <span>{currentId ? 'Edit Project' : 'Create New Project'}</span>
-            <button className="admin-btn admin-btn-secondary" style={{ padding: '6px 12px' }} onClick={() => setIsEditing(false)}>
-              <FiX /> Cancel
-            </button>
+          <div className="admin-panel-title" style={{ flexWrap: 'wrap', gap: '10px' }}>
+            <span>{currentId ? `Editing: ${name || 'Project'}` : 'Create New Project'}</span>
+            
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+              {currentId && (
+                <div style={{ display: 'flex', background: 'rgba(255,255,255,0.06)', padding: '4px', borderRadius: '10px', border: '1px solid var(--admin-border)' }}>
+                  <button
+                    type="button"
+                    className={`admin-btn ${editSubTab === 'info' ? 'admin-btn-primary' : 'admin-btn-secondary'}`}
+                    style={{ fontSize: '12px', padding: '6px 14px' }}
+                    onClick={() => setEditSubTab('info')}
+                  >
+                    📝 Basic Info
+                  </button>
+                  <button
+                    type="button"
+                    className={`admin-btn ${editSubTab === 'caseStudy' ? 'admin-btn-primary' : 'admin-btn-secondary'}`}
+                    style={{ fontSize: '12px', padding: '6px 14px' }}
+                    onClick={() => setEditSubTab('caseStudy')}
+                  >
+                    ⚡ Case Study Images & Links
+                  </button>
+                </div>
+              )}
+
+              <button className="admin-btn admin-btn-secondary" style={{ padding: '6px 12px' }} onClick={() => setIsEditing(false)}>
+                <FiX /> Exit Editor
+              </button>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit}>
@@ -823,9 +849,11 @@ export default function ProjectManager() {
 
           {/* Case Study CMS Image & Link Manager Cards */}
           {currentId && (
-            <CaseStudyCMSManager 
-              project={projects.find(p => p._id === currentId || p.slug === currentId) || { _id: currentId }}
-            />
+            <div style={{ marginTop: '32px', paddingTop: '24px', borderTop: '2px solid var(--admin-border)' }}>
+              <CaseStudyCMSManager 
+                project={projects.find(p => p._id === currentId || p.slug === currentId) || { _id: currentId }}
+              />
+            </div>
           )}
         </div>
       ) : (
