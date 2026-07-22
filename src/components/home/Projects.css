@@ -1,10 +1,11 @@
 .projects-section {
     width: 100%;
-    background-color: var(--bg-primary);
+    background-color: #050508;
     padding: 90px 24px;
     position: relative;
     z-index: 10;
-    border-top: 1px solid var(--border-glass);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     transition: var(--transition-smooth);
     display: flex;
     justify-content: center;
