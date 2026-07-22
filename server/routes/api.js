@@ -287,7 +287,7 @@ router.get('/bootstrap', checkMaintenance, async (req, res) => {
       await connectDB();
     }
 
-    if (cachedBootstrapPayload && (now - lastBootstrapFetch < CACHE_TTL_MS)) {
+    if (!process.env.VERCEL && cachedBootstrapPayload && (now - lastBootstrapFetch < CACHE_TTL_MS)) {
       return res.json(cachedBootstrapPayload);
     }
 
@@ -797,6 +797,7 @@ router.post('/upload', protect, upload.single('file'), async (req, res) => {
   }
   try {
     const uploadResult = await uploadToCloudinary(req.file.path, req.file.originalname);
+    invalidateBootstrapCache();
     res.json({
       success: true,
       url: uploadResult.url,
@@ -820,6 +821,7 @@ router.delete('/upload', protect, async (req, res) => {
   if (!target) return res.status(400).json({ error: 'public_id or url is required' });
   try {
     const result = await deleteFromCloudinary(target);
+    invalidateBootstrapCache();
     res.json({ success: true, message: 'Image deleted from Cloudinary successfully', result });
   } catch (error) {
     console.error('❌ Dedicated Delete API error:', error);
@@ -1177,6 +1179,7 @@ router.post('/media/upload-multiple', protect, upload.array('files', 15), async 
         fileSize: uploadResult.fileSize
       });
     }
+    invalidateBootstrapCache();
     res.json({ success: true, files: fileResults });
   } catch (error) {
     console.error('❌ Media Multiple Upload API Error:', error);
@@ -1191,6 +1194,7 @@ router.post('/media/delete-cloudinary', protect, async (req, res) => {
   if (!target) return res.status(400).json({ error: 'public_id or url is required' });
   try {
     const result = await deleteFromCloudinary(target);
+    invalidateBootstrapCache();
     res.json({ success: true, result });
   } catch (error) {
     console.error('❌ Delete Cloudinary API error:', error);

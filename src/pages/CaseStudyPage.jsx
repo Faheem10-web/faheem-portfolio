@@ -21,7 +21,10 @@ export default function CaseStudyPage() {
     const loadProject = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${API_BASE}/case-study/${id}`);
+        const res = await fetch(`${API_BASE}/case-study/${id}?t=${Date.now()}`, {
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache' }
+        });
         if (res.ok) {
           const data = await res.json();
           setProject(data);

@@ -124,15 +124,17 @@ export function AdminProvider({ children }) {
             return;
         }
 
-        // Granular fallback logic if bootstrap route returned non-OK HTTP status
-        const modules = ['navbar', 'hero', 'about', 'resume', 'contact', 'footer', 'seo', 'global', 'theme'];
+        const modules = ['navbar', 'hero', 'about', 'resume', 'contact', 'footer', 'seo', 'global', 'theme', 'chat'];
         const settingsData = { ...siteSettings };
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const headers = { 'Cache-Control': 'no-cache' };
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
 
         await Promise.all(
             modules.map(async (mod) => {
                 try {
-                    const res = await fetch(`${API_BASE}/settings/${mod}`, { headers });
+                    const res = await fetch(`${API_BASE}/settings/${mod}?t=${Date.now()}`, { headers, cache: 'no-store' });
                     if (res.ok) settingsData[mod] = await res.json();
                 } catch (err) {
                     console.error(`Failed to load ${mod} settings:`, err);
