@@ -1,0 +1,286 @@
+﻿/* GallerySlider Styles */
+
+.gs-root {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    user-select: none;
+}
+
+.gs-main {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 20px;
+    background-color: var(--btn-secondary-bg, #18181b);
+    cursor: zoom-in;
+}
+
+.gs-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.gs-slide-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    will-change: transform;
+}
+
+.gs-counter {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.5px;
+    pointer-events: none;
+    font-family: var(--font-body, sans-serif);
+}
+
+.gs-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: #ffffff;
+    font-size: 26px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 200ms ease, background 200ms ease, transform 200ms ease;
+}
+
+.gs-root:hover .gs-nav,
+.gs-root:focus-within .gs-nav {
+    opacity: 1;
+}
+
+.gs-nav-prev { left: 14px; }
+.gs-nav-next { right: 14px; }
+
+.gs-nav:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-50%) scale(1.08);
+}
+
+.gs-nav:active { transform: translateY(-50%) scale(0.95); }
+
+.gs-thumbs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px 0 6px 0;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.15) transparent;
+}
+
+.gs-thumbs::-webkit-scrollbar { height: 4px; }
+.gs-thumbs::-webkit-scrollbar-track { background: transparent; }
+.gs-thumbs::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+}
+
+.gs-thumb {
+    flex-shrink: 0;
+    width: 72px;
+    height: 48px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    background: var(--btn-secondary-bg, #27272a);
+    cursor: pointer;
+    padding: 0;
+    transition: border-color 200ms ease, transform 200ms ease, opacity 200ms ease;
+    scroll-snap-align: start;
+    opacity: 0.55;
+}
+
+.gs-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 6px;
+}
+
+.gs-thumb:hover { opacity: 0.85; transform: scale(1.04); }
+
+.gs-thumb-active {
+    border-color: var(--color-primary, #8B5CF6);
+    opacity: 1 !important;
+    transform: scale(1.06) !important;
+}
+
+.gs-lightbox-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(0, 0, 0, 0.88);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gs-lightbox-img-wrap {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-in;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.gs-lightbox-img {
+    max-width: 88vw;
+    max-height: 88vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    border-radius: 10px;
+    will-change: transform;
+    transform-origin: center center;
+}
+
+.gs-lightbox-counter {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100001;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-family: var(--font-body, sans-serif);
+    pointer-events: none;
+}
+
+.gs-lightbox-close {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    z-index: 100001;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.4);
+    color: #ffffff;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 200ms ease, transform 200ms ease;
+}
+
+.gs-lightbox-close:hover {
+    background: rgba(255,255,255,0.15);
+    transform: scale(1.08);
+}
+
+.gs-lightbox-nav {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100001;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(8px);
+    color: #ffffff;
+    font-size: 32px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 200ms ease, transform 200ms ease;
+}
+
+.gs-lightbox-prev { left: 24px; }
+.gs-lightbox-next { right: 24px; }
+
+.gs-lightbox-nav:hover {
+    background: rgba(255,255,255,0.18);
+    transform: translateY(-50%) scale(1.08);
+}
+
+@media (max-width: 768px) {
+    .gs-nav {
+        width: 38px;
+        height: 38px;
+        font-size: 22px;
+        opacity: 1;
+    }
+    .gs-nav-prev { left: 8px; }
+    .gs-nav-next { right: 8px; }
+
+    .gs-thumb {
+        width: 58px;
+        height: 40px;
+    }
+
+    .gs-lightbox-nav {
+        width: 44px;
+        height: 44px;
+        font-size: 26px;
+    }
+    .gs-lightbox-prev { left: 10px; }
+    .gs-lightbox-next { right: 10px; }
+}
+
+@media (max-width: 480px) {
+    .gs-main { border-radius: 16px; }
+    .gs-counter { font-size: 11px; padding: 4px 10px; top: 10px; right: 10px; }
+    .gs-thumb { width: 48px; height: 34px; }
+    .gs-lightbox-close { top: 12px; right: 12px; }
+}
+
+:root[data-theme="light"] .gs-nav {
+    background: rgba(0, 0, 0, 0.1);
+    color: #18181b;
+}
+:root[data-theme="light"] .gs-nav:hover {
+    background: rgba(0, 0, 0, 0.22);
+}
+:root[data-theme="light"] .gs-thumb {
+    background: #f4f4f5;
+}
