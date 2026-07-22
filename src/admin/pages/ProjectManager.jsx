@@ -716,22 +716,13 @@ export default function ProjectManager() {
                   </div>
                 )}
               </div>
-              {/* Challenge Section Gallery */}
-              <SectionGalleryUploader
-                title="Challenge"
-                sectionName="challengeImages"
-                images={challengeImages}
-                onImagesChange={setChallengeImages}
-                onSaveSection={handleSaveSectionIndependent}
-                isSaving={savingSection === 'challengeImages'}
-              />
 
               <div className="admin-form-group" style={{ marginTop: '20px', borderTop: '1px dotted var(--admin-border)', paddingTop: '15px' }}>
                 <label className="admin-label">The Solution (Text)</label>
                 <textarea className="admin-textarea" value={solution} onChange={e => setSolution(e.target.value)}></textarea>
               </div>
               <div className="admin-form-group" style={{ marginBottom: '10px' }}>
-                <label className="admin-label">The Solution Mockup Image URL (Fallback)</label>
+                <label className="admin-label">The Solution Mockup Image URL</label>
                 <div style={{ display: 'flex', gap: '10px' }}>
                   <input 
                     type="text" 
@@ -760,22 +751,12 @@ export default function ProjectManager() {
                 )}
               </div>
 
-              {/* Solution Section Gallery */}
-              <SectionGalleryUploader
-                title="Solution"
-                sectionName="solutionImages"
-                images={solutionImages}
-                onImagesChange={setSolutionImages}
-                onSaveSection={handleSaveSectionIndependent}
-                isSaving={savingSection === 'solutionImages'}
-              />
-
               <div className="admin-form-group" style={{ marginTop: '20px', borderTop: '1px dotted var(--admin-border)', paddingTop: '15px' }}>
                 <label className="admin-label">The Result (Text)</label>
                 <textarea className="admin-textarea" value={results} onChange={e => setResults(e.target.value)} placeholder="Describe the result of the project..."></textarea>
               </div>
               <div className="admin-form-group" style={{ marginBottom: '10px' }}>
-                <label className="admin-label">The Result Mockup Image URL (Fallback)</label>
+                <label className="admin-label">The Result Mockup Image URL</label>
                 <div style={{ display: 'flex', gap: '10px' }}>
                   <input 
                     type="text" 
@@ -803,16 +784,6 @@ export default function ProjectManager() {
                   </div>
                 )}
               </div>
-
-              {/* Result Section Gallery */}
-              <SectionGalleryUploader
-                title="Result"
-                sectionName="resultImages"
-                images={resultImages}
-                onImagesChange={setResultImages}
-                onSaveSection={handleSaveSectionIndependent}
-                isSaving={savingSection === 'resultImages'}
-              />
 
               <div className="admin-form-group" style={{ marginTop: '20px', borderTop: '1px dotted var(--admin-border)', paddingTop: '15px' }}>
                 <label className="admin-label">The Process (Text)</label>
