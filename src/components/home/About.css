@@ -1,7 +1,7 @@
 .about-section {
     width: 100%;
     background-color: var(--bg-primary);
-    padding: 140px 24px;
+    padding: 90px 24px;
     position: relative;
     z-index: 10;
     border-top: 1px solid var(--border-glass);
@@ -40,11 +40,11 @@
 
 .about-text {
     font-size: 1.15rem;
-    line-height: 1.8;
+    line-height: 1.6;
     color: var(--color-text-muted);
-    font-family: 'Nohemi', sans-serif;
+    font-family: var(--font-body);
     font-weight: 400;
-    letter-spacing: 0.2px;
+    letter-spacing: -0.02em;
 }
 
 .about-right {
@@ -60,18 +60,19 @@
 .cta-box h3 {
     font-size: 1.6rem;
     font-weight: 700;
-    font-family: 'Nohemi', sans-serif;
+    font-family: var(--font-heading);
     color: var(--color-text-main);
-    letter-spacing: 0.3px;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
 }
 
 .cta-box p {
     font-size: 1.1rem;
     line-height: 1.6;
     color: var(--color-text-muted);
-    font-family: 'Nohemi', sans-serif;
+    font-family: var(--font-body);
     font-weight: 400;
-    letter-spacing: 0.2px;
+    letter-spacing: -0.02em;
     margin-bottom: 10px;
 }
 
@@ -85,7 +86,7 @@
     color: var(--color-text-main);
     background: transparent;
     font-weight: 600;
-    font-family: 'Nohemi', sans-serif;
+    font-family: var(--font-body);
     font-size: 15px;
     transition: var(--transition-smooth);
     text-decoration: none;

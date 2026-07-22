@@ -112,8 +112,8 @@
 /* Grid Layout */
 .services-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px; /* Premium spacing gap */
     width: 100%;
 }
 
@@ -130,6 +130,7 @@
     justify-content: space-between;
     transition: var(--transition-smooth);
     cursor: pointer;
+    min-height: 350px; /* Ensure all cards are exactly the same size */
 }
 
 .card-bg-pattern {
@@ -151,6 +152,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    width: 100%;
 }
 
 .icon-wrapper {
@@ -194,6 +196,9 @@
     color: var(--card-text-main);
     font-family: var(--font-heading);
     margin-bottom: 10px;
+    min-height: 3.5rem; /* Uniform title height (reserves space for 2 lines) */
+    display: flex;
+    align-items: flex-start;
 }
 
 .card-description {
@@ -203,6 +208,7 @@
     font-family: 'Nohemi', sans-serif;
     font-weight: 400;
     margin-bottom: 25px;
+    min-height: 3.2rem; /* Uniform description height (reserves space for 2 lines) */
 }
 
 .card-divider {
@@ -292,6 +298,7 @@
     .service-card {
         padding: 26px 22px 18px 22px;
         border-radius: 16px;
+        min-height: 320px; /* Uniform height on tablets */
     }
     
     .icon-wrapper {
@@ -339,5 +346,6 @@
     
     .service-card {
         padding: 24px;
+        min-height: auto; /* Let cards grow organically on mobile */
     }
 }

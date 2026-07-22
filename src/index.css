@@ -1,5 +1,4 @@
-@import url('https://api.fontshare.com/v2/css?f[]=nohemi@300,400,500,600,700,800,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
 
 :root {
     --bg-primary-rgb: 5, 5, 5;
@@ -21,7 +20,7 @@
     --scrollbar-thumb: var(--color-primary);
     --scrollbar-thumb-hover: #a78bfa;
     --font-heading: 'Geist', sans-serif;
-    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --font-body: 'Geist', sans-serif;
     --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -287,4 +286,107 @@ select,
   height: 16px;
   border-radius: 4px;
   margin-bottom: 8px;
+}
+
+/* =========================================================================
+   2026 STANDARDIZED TYPOGRAPHY SYSTEM (GEIST ONLY)
+========================================================================= */
+
+/* Base HTML Overrides */
+html, body {
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, .text-h1 {
+    font-size: 56px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.04em !important;
+    line-height: 1.05 !important;
+    font-family: var(--font-heading) !important;
+}
+
+h2, .text-h2 {
+    font-size: 48px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.04em !important;
+    line-height: 1.05 !important;
+    font-family: var(--font-heading) !important;
+}
+
+h3, .text-h3 {
+    font-size: 36px !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.04em !important;
+    line-height: 1.1 !important;
+    font-family: var(--font-heading) !important;
+}
+
+h4, .text-h4 {
+    font-size: 28px !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.04em !important;
+    line-height: 1.1 !important;
+    font-family: var(--font-heading) !important;
+}
+
+h5, .text-h5 {
+    font-size: 22px !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.04em !important;
+    line-height: 1.15 !important;
+    font-family: var(--font-heading) !important;
+}
+
+.text-hero-display {
+    font-size: 72px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.04em !important;
+    line-height: 1.02 !important;
+    font-family: var(--font-heading) !important;
+}
+
+.text-body-large {
+    font-size: 20px !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.02em !important;
+    line-height: 1.6 !important;
+    font-family: var(--font-body) !important;
+}
+
+p, .text-body {
+    font-size: 18px !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.02em !important;
+    line-height: 1.6 !important;
+    font-family: var(--font-body) !important;
+}
+
+.text-small {
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.02em !important;
+    line-height: 1.6 !important;
+    font-family: var(--font-body) !important;
+}
+
+.text-caption {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.02em !important;
+    line-height: 1.6 !important;
+    font-family: var(--font-body) !important;
+}
+
+/* Force override weights to remain strictly within [400, 500, 600, 700] */
+strong, b {
+    font-weight: 700 !important;
+}
+
+/* Smooth high-quality text rendering */
+* {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }

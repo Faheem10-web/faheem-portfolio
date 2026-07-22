@@ -71,7 +71,10 @@ const serviceSchema = new mongoose.Schema({
   iconType: { type: String, enum: ['iconName', 'svgCode'], default: 'iconName' },
   iconSvg: { type: String, default: '' },
   order: { type: Number, default: 0 },
-  enabled: { type: Boolean, default: true }
+  enabled: { type: Boolean, default: true },
+  imageUrl: { type: String, default: '' },
+  bgColor: { type: String, default: '#e7eae0' },
+  skills: { type: [String], default: [] }
 });
 serviceSchema.index({ order: 1, enabled: 1 });
 export const Service = mongoose.models.Service || mongoose.model('Service', serviceSchema);

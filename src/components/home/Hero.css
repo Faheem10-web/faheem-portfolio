@@ -108,11 +108,12 @@
 /* (animation keyframes removed) */
 
 .hero-title {
-    font-size: clamp(2.8rem, 7vw, 5.5rem);
-    line-height: 0.95;
-    font-weight: 600;
+    font-size: clamp(3.2rem, 8.5vw, 96px);
+    line-height: 1.05;
+    font-weight: 800;
     font-family: var(--font-heading);
-    letter-spacing: -0.035em;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
     margin: 0;
     width: 100%;
     text-align: center;
@@ -155,7 +156,8 @@
     color: var(--color-text-main);
     opacity: 0.7; /* White at 70% opacity (or dark text at 70% in light mode) */
     max-width: 680px;
-    margin-bottom: 0; /* Managed by gap */
+    margin-top: 16px; /* Custom gap space */
+    margin-bottom: 0;
     font-family: var(--font-body);
     letter-spacing: -0.2px;
     font-weight: 400;
@@ -280,7 +282,7 @@
     font-weight: 700;
     font-family: var(--font-heading);
     letter-spacing: -0.5px;
-    margin-bottom: -12px; /* Offset spacing in column gap */
+    margin-bottom: 16px; /* Balanced gap spacing */
     color: var(--color-text-main);
 }
 
@@ -317,15 +319,16 @@
     }
 
     .hero-title {
-        font-size: clamp(2.2rem, 8.5vw, 3.2rem);
-        letter-spacing: -0.025em;
+        font-size: clamp(2.4rem, 9vw, 3.8rem);
+        letter-spacing: -0.04em;
+        font-weight: 500;
         line-height: 0.97;
     }
 
     .hero-description {
         font-size: 1.15rem;
         margin-bottom: 35px;
-        letter-spacing: 0.1px;
+        letter-spacing: -0.02em;
     }
 
     .hero-buttons {
@@ -345,8 +348,9 @@
 
 @media (max-width: 480px) {
     .hero-title {
-        font-size: clamp(1.7rem, 10vw, 2.4rem);
-        letter-spacing: -0.02em;
+        font-size: clamp(1.9rem, 11vw, 2.8rem);
+        letter-spacing: -0.04em;
+        font-weight: 500;
         line-height: 0.97;
     }
     

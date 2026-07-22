@@ -1,7 +1,7 @@
 .projects-section {
     width: 100%;
     background-color: var(--bg-primary);
-    padding: 140px 24px;
+    padding: 90px 24px;
     position: relative;
     z-index: 10;
     border-top: 1px solid var(--border-glass);
@@ -43,10 +43,9 @@
     border-radius: 28px;
     color: var(--color-text-main);
     background: transparent;
-    font-weight: 600;
-    font-family: 'Nohemi', sans-serif;
+    font-family: var(--font-body);
     font-size: 14px;
-    letter-spacing: 0.5px;
+    letter-spacing: -0.02em;
     transition: var(--transition-smooth);
     text-decoration: none;
     cursor: pointer;

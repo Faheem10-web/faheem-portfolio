@@ -21,7 +21,7 @@ const DEFAULT_SERVICES = [
     },
     {
         _id: "03",
-        title: "Frontend Development",
+        title: "Frontend Dev",
         description: "Fast, scalable websites built with React and modern technologies.",
         iconName: "code",
         color: "#10B981"
@@ -115,6 +115,7 @@ function Services() {
                         const iconName = service.iconName || "FiCpu";
                         const numLabel = service.order !== undefined ? String(service.order).padStart(2, '0') : String(index + 1).padStart(2, '0');
                         const isSvg = service.iconType === 'svgCode' && service.iconSvg;
+                        const title = service.title === "Frontend Development" ? "Frontend Dev" : service.title;
 
                         return (
                             <motion.div 
@@ -141,7 +142,7 @@ function Services() {
                                             getIcon(iconName)
                                         )}
                                     </div>
-                                    <h3 className="card-title">{service.title}</h3>
+                                    <h3 className="card-title">{title}</h3>
                                     <p className="card-description">{service.description}</p>
                                 </div>
                                 <div className="card-divider"></div>

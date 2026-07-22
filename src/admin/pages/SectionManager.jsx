@@ -108,16 +108,32 @@ export default function SectionManager() {
     color: '#8B5CF6', 
     iconType: 'iconName', 
     iconSvg: '', 
-    order: 0 
+    order: 0,
+    imageUrl: '',
+    bgColor: '#e7eae0',
+    skills: ''
   });
   const [editingService, setEditingService] = useState(null);
   const [newFaq, setNewFaq] = useState({ question: '', answer: '', order: 0 });
   const [editingFaq, setEditingFaq] = useState(null);
   const [newSkill, setNewSkill] = useState({ name: '', category: 'Design', percentage: 80, order: 0 });
+  
+  const handleEditServiceStart = (service) => {
+    setEditingService({
+      ...service,
+      imageUrl: service.imageUrl || '',
+      bgColor: service.bgColor || '#e7eae0',
+      skills: Array.isArray(service.skills) ? service.skills.join(', ') : (service.skills || '')
+    });
+  };
 
   const handleAddService = async (e) => {
     e.preventDefault();
-    await servicesCrud.create(newService);
+    const payload = {
+      ...newService,
+      skills: typeof newService.skills === 'string' ? newService.skills.split(',').map(s => s.trim()).filter(Boolean) : []
+    };
+    await servicesCrud.create(payload);
     setNewService({ 
       title: '', 
       description: '', 
@@ -125,22 +141,29 @@ export default function SectionManager() {
       color: '#8B5CF6', 
       iconType: 'iconName', 
       iconSvg: '', 
-      order: 0 
+      order: 0,
+      imageUrl: '',
+      bgColor: '#e7eae0',
+      skills: ''
     });
   };
 
   const handleUpdateService = async (e) => {
     e.preventDefault();
     if (!editingService) return;
-    const res = await servicesCrud.update(editingService._id, {
+    const payload = {
       title: editingService.title,
       description: editingService.description,
       iconName: editingService.iconName,
       color: editingService.color || '#8B5CF6',
       iconType: editingService.iconType || 'iconName',
       iconSvg: editingService.iconSvg || '',
-      order: editingService.order || 0
-    });
+      order: editingService.order || 0,
+      imageUrl: editingService.imageUrl || '',
+      bgColor: editingService.bgColor || '#e7eae0',
+      skills: typeof editingService.skills === 'string' ? editingService.skills.split(',').map(s => s.trim()).filter(Boolean) : (Array.isArray(editingService.skills) ? editingService.skills : [])
+    };
+    const res = await servicesCrud.update(editingService._id, payload);
     if (res.success) {
       setEditingService(null);
     } else {
@@ -509,6 +532,41 @@ export default function SectionManager() {
                   <textarea className="admin-textarea" value={editingService.description} onChange={e => setEditingService({ ...editingService, description: e.target.value })} required></textarea>
                 </div>
 
+                <div className="admin-form-row">
+                  <div className="admin-form-group">
+                    <label className="admin-label">Card Background Color</label>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <input type="color" className="admin-input" style={{ width: '40px', padding: '2px', height: '40px', cursor: 'pointer' }} value={editingService.bgColor || '#e7eae0'} onChange={e => setEditingService({ ...editingService, bgColor: e.target.value })} />
+                      <input type="text" className="admin-input" value={editingService.bgColor || '#e7eae0'} onChange={e => setEditingService({ ...editingService, bgColor: e.target.value })} placeholder="#e7eae0" />
+                    </div>
+                  </div>
+                  <div className="admin-form-group">
+                    <label className="admin-label">Skills (comma-separated)</label>
+                    <input type="text" className="admin-input" value={editingService.skills || ''} onChange={e => setEditingService({ ...editingService, skills: e.target.value })} placeholder="Research, Wireframes, User Testing" />
+                  </div>
+                </div>
+
+                <div className="admin-form-group">
+                  <label className="admin-label">Service Card Image URL</label>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <input 
+                      type="text" 
+                      className="admin-input" 
+                      value={editingService.imageUrl || ''} 
+                      onChange={e => setEditingService({ ...editingService, imageUrl: e.target.value })} 
+                      placeholder="Enter image URL or upload file" 
+                    />
+                    <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
+                      Upload Image
+                      <input 
+                        type="file" 
+                        onChange={(e) => handleDirectUpload(e, editingService, setEditingService, 'imageUrl')} 
+                        style={{ display: 'none' }} 
+                      />
+                    </label>
+                  </div>
+                </div>
+
                 <div style={{ display: 'flex', gap: '10px' }}>
                   <button type="submit" className="admin-btn admin-btn-primary"><FiSave /> Update Service</button>
                   <button type="button" className="admin-btn admin-btn-secondary" onClick={() => setEditingService(null)}>Cancel</button>
@@ -566,6 +624,41 @@ export default function SectionManager() {
                   <textarea className="admin-textarea" value={newService.description} onChange={e => setNewService({ ...newService, description: e.target.value })} required></textarea>
                 </div>
 
+                <div className="admin-form-row">
+                  <div className="admin-form-group">
+                    <label className="admin-label">Card Background Color</label>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <input type="color" className="admin-input" style={{ width: '40px', padding: '2px', height: '40px', cursor: 'pointer' }} value={newService.bgColor || '#e7eae0'} onChange={e => setNewService({ ...newService, bgColor: e.target.value })} />
+                      <input type="text" className="admin-input" value={newService.bgColor || '#e7eae0'} onChange={e => setNewService({ ...newService, bgColor: e.target.value })} placeholder="#e7eae0" />
+                    </div>
+                  </div>
+                  <div className="admin-form-group">
+                    <label className="admin-label">Skills (comma-separated)</label>
+                    <input type="text" className="admin-input" value={newService.skills || ''} onChange={e => setNewService({ ...newService, skills: e.target.value })} placeholder="Research, Wireframes, User Testing" />
+                  </div>
+                </div>
+
+                <div className="admin-form-group">
+                  <label className="admin-label">Service Card Image URL</label>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <input 
+                      type="text" 
+                      className="admin-input" 
+                      value={newService.imageUrl || ''} 
+                      onChange={e => setNewService({ ...newService, imageUrl: e.target.value })} 
+                      placeholder="Enter image URL or upload file" 
+                    />
+                    <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
+                      Upload Image
+                      <input 
+                        type="file" 
+                        onChange={(e) => handleDirectUpload(e, newService, setNewService, 'imageUrl')} 
+                        style={{ display: 'none' }} 
+                      />
+                    </label>
+                  </div>
+                </div>
+
                 <button type="submit" className="admin-btn admin-btn-primary"><FiPlus /> Add Service</button>
               </form>
             )}
@@ -617,7 +710,7 @@ export default function SectionManager() {
                           <button 
                             className="admin-btn" 
                             style={{ padding: '8px', background: 'rgba(139, 92, 246, 0.1)', color: 'var(--admin-primary)', border: '1px solid rgba(139, 92, 246, 0.2)' }} 
-                            onClick={() => setEditingService(ser)}
+                            onClick={() => handleEditServiceStart(ser)}
                           >
                             <FiEdit3 size={13} />
                           </button>
