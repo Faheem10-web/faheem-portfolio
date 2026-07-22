@@ -338,20 +338,23 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
   const [conclusionImage, setConclusionImage] = useState(project?.conclusionImage || '');
 
   // 2. Editorial Text Content State
-  const [overviewHeading, setOverviewHeading] = useState(project?.overviewConfig?.heading || '');
-  const [overviewIntro, setOverviewIntro] = useState(project?.overviewConfig?.intro || '');
-  const [secondaryDesc, setSecondaryDesc] = useState(project?.secondaryDesc || '');
+  const defaultOverviewIntro = "is a premium interior design platform crafted to bridge the gap between aesthetic inspiration and architectural execution. The objective was to develop a sophisticated, high-performance web experience that showcases luxury spaces while providing an effortless navigation system for potential clients. We implemented a clean, grid-based design language to emphasize visual storytelling and high-resolution imagery.";
+  const defaultSecondaryDesc = "The final product delivers a seamless browsing experience tailored for high-end clientele. The result is a refined digital presence that balances artistic expression with functional lead generation.";
+
+  const [overviewHeading, setOverviewHeading] = useState(project?.overviewConfig?.heading || `${project?.name || 'Project'}: Elevating Interior Design Through Digital Innovation`);
+  const [overviewIntro, setOverviewIntro] = useState(project?.overviewConfig?.intro || defaultOverviewIntro);
+  const [secondaryDesc, setSecondaryDesc] = useState(project?.secondaryDesc || defaultSecondaryDesc);
   
-  const [challengeIntro, setChallengeIntro] = useState(project?.challengeIntro || '');
-  const [challengePoints, setChallengePoints] = useState(project?.challengePoints || [
+  const [challengeIntro, setChallengeIntro] = useState(project?.challengeIntro || `The primary hurdle for the ${project?.name || 'NEXTO'} project was presenting a vast portfolio of diverse design styles without overwhelming the user. We needed to organize complex architectural data into an intuitive interface that maintains a sense of luxury and space.`);
+  const [challengePoints, setChallengePoints] = useState(project?.challengePoints && project?.challengePoints.length > 0 ? project.challengePoints : [
     "Cluttered navigation is affecting high-end brand perception.",
     "Slow load times for high-resolution gallery assets.",
     "Inconsistent user journeys from inspiration to booking."
   ]);
-  const [challengeConclusion, setChallengeConclusion] = useState(project?.challengeConclusion || '');
+  const [challengeConclusion, setChallengeConclusion] = useState(project?.challengeConclusion || "We engineered a lightweight CMS structure that prioritizes performance and clarity. The visual hierarchy was elevated with minimalist UI elements, ensuring that the design work remains the focal point for every visitor.");
 
-  const [solutionIntro, setSolutionIntro] = useState(project?.solutionIntro || '');
-  const [solutionPoints, setSolutionPoints] = useState(project?.solutionPoints || [
+  const [solutionIntro, setSolutionIntro] = useState(project?.solutionIntro || 'Our solution centered on a "Visual-First" philosophy, simplifying the user’s path to discovery through thoughtful interaction design. We created streamlined user flows that make exploring design concepts and scheduling consultations effortless.');
+  const [solutionPoints, setSolutionPoints] = useState(project?.solutionPoints && project?.solutionPoints.length > 0 ? project.solutionPoints : [
     { title: "Adaptive Masonry Grid", desc: "To showcase projects of varying scales and orientations." },
     { title: "Seamless CMS Integration", desc: "For easy portfolio updates and category filtering." },
     { title: "Interactive Style Quiz", desc: "To guide users toward their preferred aesthetic." },
@@ -378,19 +381,19 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
       setSolutionImage(project.solutionImage || '');
       setConclusionImage(project.conclusionImage || '');
 
-      setOverviewHeading(project.overviewConfig?.heading || '');
-      setOverviewIntro(project.overviewConfig?.intro || '');
-      setSecondaryDesc(project.secondaryDesc || '');
+      setOverviewHeading(project.overviewConfig?.heading || `${project.name || 'Project'}: Elevating Interior Design Through Digital Innovation`);
+      setOverviewIntro(project.overviewConfig?.intro || defaultOverviewIntro);
+      setSecondaryDesc(project.secondaryDesc || defaultSecondaryDesc);
 
-      setChallengeIntro(project.challengeIntro || '');
+      setChallengeIntro(project.challengeIntro || `The primary hurdle for the ${project.name || 'NEXTO'} project was presenting a vast portfolio of diverse design styles without overwhelming the user. We needed to organize complex architectural data into an intuitive interface that maintains a sense of luxury and space.`);
       setChallengePoints(project.challengePoints && project.challengePoints.length > 0 ? project.challengePoints : [
         "Cluttered navigation is affecting high-end brand perception.",
         "Slow load times for high-resolution gallery assets.",
         "Inconsistent user journeys from inspiration to booking."
       ]);
-      setChallengeConclusion(project.challengeConclusion || '');
+      setChallengeConclusion(project.challengeConclusion || "We engineered a lightweight CMS structure that prioritizes performance and clarity. The visual hierarchy was elevated with minimalist UI elements, ensuring that the design work remains the focal point for every visitor.");
 
-      setSolutionIntro(project.solutionIntro || '');
+      setSolutionIntro(project.solutionIntro || 'Our solution centered on a "Visual-First" philosophy, simplifying the user’s path to discovery through thoughtful interaction design. We created streamlined user flows that make exploring design concepts and scheduling consultations effortless.');
       setSolutionPoints(project.solutionPoints && project.solutionPoints.length > 0 ? project.solutionPoints : [
         { title: "Adaptive Masonry Grid", desc: "To showcase projects of varying scales and orientations." },
         { title: "Seamless CMS Integration", desc: "For easy portfolio updates and category filtering." },
