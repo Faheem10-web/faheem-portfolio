@@ -46,6 +46,7 @@ export const uploadToCloudinary = async (localFilePath, originalName) => {
       success: true,
       url: optimizedUrl,
       publicId: result.public_id,
+      public_id: result.public_id,
       fileSize: result.bytes,
       fileType: result.format || extension
     };

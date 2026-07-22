@@ -68,6 +68,36 @@ function CaseStudyPage() {
     const bannerImgUrl = project.bannerImage || project.coverImage || project.image;
     const demoLinkUrl = project.liveUrl || project.demoLink;
 
+    const renderSectionGallery = (imagesArray, singleFallbackUrl, altText, defaultAsset) => {
+        let imgs = [];
+        if (Array.isArray(imagesArray) && imagesArray.length > 0) {
+            imgs = imagesArray.map(item => (typeof item === 'string' ? item : item?.url)).filter(Boolean);
+        } else if (singleFallbackUrl) {
+            imgs = [singleFallbackUrl];
+        } else if (defaultAsset) {
+            imgs = [defaultAsset];
+        }
+
+        if (imgs.length === 0) return null;
+
+        return (
+            <div className="section-gallery-container" style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%' }}>
+                {imgs.map((url, idx) => (
+                    <div key={idx} className="section-mockup-wrapper">
+                        <img 
+                            src={getOptimizedImageUrl(url, { width: 1200 })} 
+                            alt={`${altText} ${idx + 1}`} 
+                            className="section-mockup-img"
+                            loading="lazy"
+                            decoding="async"
+                            onError={(e) => { if (e.target.parentElement) e.target.parentElement.style.display = 'none'; }}
+                        />
+                    </div>
+                ))}
+            </div>
+        );
+    };
+
     return (
         <div className="case-study-wrapper">
             
@@ -91,48 +121,21 @@ function CaseStudyPage() {
                     <section className="case-study-section">
                         <h2 className="section-heading">The challenge</h2>
                         <p className="section-paragraph">{challengeText}</p>
-                        <div className="section-mockup-wrapper">
-                            <img 
-                                src={getOptimizedImageUrl(project.challengeImage || "/assets/mockup_challenge.png", { width: 1200 })} 
-                                alt="Challenge Mockup" 
-                                className="section-mockup-img"
-                                loading="lazy"
-                                decoding="async"
-                                onError={(e) => { if (e.target.parentElement) e.target.parentElement.style.display = 'none'; }}
-                            />
-                        </div>
+                        {renderSectionGallery(project.challengeImages, project.challengeImage, "Challenge Mockup", "/assets/mockup_challenge.png")}
                     </section>
 
                     {/* The Solution */}
                     <section className="case-study-section">
                         <h2 className="section-heading">The solution</h2>
                         <p className="section-paragraph">{solutionText}</p>
-                        <div className="section-mockup-wrapper">
-                            <img 
-                                src={getOptimizedImageUrl(project.solutionImage || "/assets/mockup_solution.png", { width: 1200 })} 
-                                alt="Solution Mockup" 
-                                className="section-mockup-img"
-                                loading="lazy"
-                                decoding="async"
-                                onError={(e) => { if (e.target.parentElement) e.target.parentElement.style.display = 'none'; }}
-                            />
-                        </div>
+                        {renderSectionGallery(project.solutionImages, project.solutionImage, "Solution Mockup", "/assets/mockup_solution.png")}
                     </section>
 
                     {/* The Result */}
                     <section className="case-study-section">
                         <h2 className="section-heading">The result</h2>
                         <p className="section-paragraph">{resultText}</p>
-                        <div className="section-mockup-wrapper">
-                            <img 
-                                src={getOptimizedImageUrl(project.resultImage || "/assets/mockup_result.png", { width: 1200 })} 
-                                alt="Result Mockup" 
-                                className="section-mockup-img"
-                                loading="lazy"
-                                decoding="async"
-                                onError={(e) => { if (e.target.parentElement) e.target.parentElement.style.display = 'none'; }}
-                            />
-                        </div>
+                        {renderSectionGallery(project.resultImages, project.resultImage, "Result Mockup", "/assets/mockup_result.png")}
                     </section>
 
                     {/* Conclusion */}

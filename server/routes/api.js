@@ -1018,10 +1018,54 @@ router.post('/media/upload', protect, upload.single('file'), async (req, res) =>
     }
     
     invalidateBootstrapCache();
-    res.status(201).json(media);
+    const responsePayload = {
+      ...(media.toObject ? media.toObject() : media),
+      url: uploadResult.url,
+      fileUrl: uploadResult.url,
+      public_id: uploadResult.publicId,
+      publicId: uploadResult.publicId
+    };
+    res.status(201).json(responsePayload);
   } catch (error) {
     console.error('❌ Media Upload API Error:', error);
     res.status(500).json({ error: error.message || 'Image upload failed' });
+  }
+});
+
+// Upload Multiple Files (Cloudinary Integrated)
+router.post('/media/upload-multiple', protect, upload.array('files', 15), async (req, res) => {
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ error: 'No files received' });
+  }
+  try {
+    const fileResults = [];
+    for (const file of req.files) {
+      const uploadResult = await uploadToCloudinary(file.path, file.originalname);
+      fileResults.push({
+        url: uploadResult.url,
+        public_id: uploadResult.publicId,
+        fileName: file.originalname,
+        fileSize: uploadResult.fileSize
+      });
+    }
+    res.json({ success: true, files: fileResults });
+  } catch (error) {
+    console.error('❌ Media Multiple Upload API Error:', error);
+    res.status(500).json({ error: error.message || 'Multiple images upload failed' });
+  }
+});
+
+// Delete Cloudinary Asset directly by public_id or url
+router.post('/media/delete-cloudinary', protect, async (req, res) => {
+  const { public_id, url } = req.body;
+  const target = public_id || url;
+  if (!target) return res.status(400).json({ error: 'public_id or url is required' });
+  try {
+    const result = await deleteFromCloudinary(target);
+    res.json({ success: true, result });
+  } catch (error) {
+    console.error('❌ Delete Cloudinary API error:', error);
+    res.status(500).json({ error: error.message || 'Failed to delete Cloudinary asset' });
   }
 });
 

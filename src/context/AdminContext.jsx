@@ -393,22 +393,84 @@ export function AdminProvider({ children }) {
         }
     };
 
-    const uploadMediaFile = async (file) => {
+    const uploadMediaFile = async (file, retries = 2) => {
         const formData = new FormData();
         formData.append('file', file);
-        try {
-            const res = await fetch(`${API_BASE}/media/upload`, {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}` },
-                body: formData
-            });
-            if (res.ok) {
-                const uploaded = await res.json();
-                await fetchMedia();
-                return { success: true, url: uploaded.fileUrl };
+        for (let attempt = 0; attempt <= retries; attempt++) {
+            try {
+                const res = await fetch(`${API_BASE}/media/upload`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                if (res.ok) {
+                    const uploaded = await res.json();
+                    await fetchMedia();
+                    return {
+                        success: true,
+                        url: uploaded.url || uploaded.fileUrl,
+                        public_id: uploaded.public_id || uploaded.publicId,
+                        publicId: uploaded.publicId || uploaded.public_id
+                    };
+                }
+                const errData = await res.json().catch(() => ({}));
+                if (attempt === retries) {
+                    return { success: false, message: errData.error || errData.message || 'Upload failed' };
+                }
+            } catch (err) {
+                if (attempt === retries) {
+                    return { success: false, message: err.message || 'Network error during upload' };
+                }
             }
-            return { success: false };
-        } catch {
+            await new Promise(r => setTimeout(r, 1000));
+        }
+        return { success: false };
+    };
+
+    const uploadMultipleMediaFiles = async (filesArray, retries = 2) => {
+        if (!filesArray || filesArray.length === 0) return { success: false, files: [] };
+        const formData = new FormData();
+        Array.from(filesArray).forEach(file => formData.append('files', file));
+        
+        for (let attempt = 0; attempt <= retries; attempt++) {
+            try {
+                const res = await fetch(`${API_BASE}/media/upload-multiple`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    await fetchMedia();
+                    return { success: true, files: data.files || [] };
+                }
+                const errData = await res.json().catch(() => ({}));
+                if (attempt === retries) {
+                    return { success: false, message: errData.error || 'Batch upload failed' };
+                }
+            } catch (err) {
+                if (attempt === retries) {
+                    return { success: false, message: err.message || 'Network error during batch upload' };
+                }
+            }
+            await new Promise(r => setTimeout(r, 1000));
+        }
+        return { success: false, files: [] };
+    };
+
+    const deleteCloudinaryMedia = async (publicIdOrUrl) => {
+        try {
+            const res = await fetch(`${API_BASE}/media/delete-cloudinary`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ public_id: publicIdOrUrl, url: publicIdOrUrl })
+            });
+            return { success: res.ok };
+        } catch (err) {
+            console.error('Delete Cloudinary media error:', err);
             return { success: false };
         }
     };
@@ -423,7 +485,7 @@ export function AdminProvider({ children }) {
             return { success: true };
         }
         return { success: false };
-  };
+    };
 
     const replaceMediaFile = async (id, file) => {
         const formData = new FormData();
@@ -533,6 +595,8 @@ export function AdminProvider({ children }) {
         submitContactMessage,
         fetchMedia,
         uploadMediaFile,
+        uploadMultipleMediaFiles,
+        deleteCloudinaryMedia,
         deleteMediaFile,
         replaceMediaFile,
         fetchAnalytics

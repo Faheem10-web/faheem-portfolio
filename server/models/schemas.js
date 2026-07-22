@@ -104,6 +104,11 @@ experienceSchema.index({ order: 1 });
 export const Experience = mongoose.models.Experience || mongoose.model('Experience', experienceSchema);
 
 // 8. Project Schema
+const galleryImageSchema = new mongoose.Schema({
+  url: { type: String, required: true },
+  public_id: { type: String, default: '' }
+}, { _id: false });
+
 const projectSchema = new mongoose.Schema({
   name: { type: String, required: true },
   slug: { type: String, required: true, unique: true },
@@ -132,6 +137,9 @@ const projectSchema = new mongoose.Schema({
   challengeImage: { type: String, default: '' },
   solutionImage: { type: String, default: '' },
   resultImage: { type: String, default: '' },
+  challengeImages: { type: [galleryImageSchema], default: [] },
+  solutionImages: { type: [galleryImageSchema], default: [] },
+  resultImages: { type: [galleryImageSchema], default: [] },
   testimonial: { type: String, default: '' },
   isFeatured: { type: Boolean, default: false },
   showOnHome: { type: Boolean, default: true },

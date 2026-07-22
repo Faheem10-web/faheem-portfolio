@@ -3,6 +3,250 @@ import { useAdmin } from '../../context/AdminContext';
 import { FiEdit2, FiTrash2, FiPlus, FiX } from 'react-icons/fi';
 import '../Admin.css';
 
+function SectionGalleryUploader({ title, sectionName, images = [], onImagesChange, onSaveSection, isSaving }) {
+  const { uploadMediaFile, uploadMultipleMediaFiles, deleteCloudinaryMedia } = useAdmin();
+  const [isUploading, setIsUploading] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const validateFile = (file) => {
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+    if (!validTypes.includes(file.type) && !file.type.startsWith('image/')) {
+      return 'Only image files (JPG, PNG, WEBP, GIF, SVG) are allowed.';
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      return 'File size exceeds 10MB limit.';
+    }
+    return null;
+  };
+
+  const processFiles = async (files) => {
+    const filesArr = Array.from(files);
+    if (filesArr.length === 0) return;
+    setErrorMessage('');
+
+    for (const f of filesArr) {
+      const err = validateFile(f);
+      if (err) {
+        setErrorMessage(err);
+        return;
+      }
+    }
+
+    setIsUploading(true);
+
+    try {
+      let uploadedResults = [];
+      if (filesArr.length === 1) {
+        const res = await uploadMediaFile(filesArr[0]);
+        if (res.success && res.url) {
+          uploadedResults.push({ url: res.url, public_id: res.public_id || res.publicId || '' });
+        } else {
+          setErrorMessage(res.message || 'Image upload failed.');
+        }
+      } else {
+        const res = await uploadMultipleMediaFiles(filesArr);
+        if (res.success && res.files) {
+          uploadedResults = res.files.map(f => ({ url: f.url, public_id: f.public_id || '' }));
+        } else {
+          setErrorMessage(res.message || 'Batch upload failed.');
+        }
+      }
+
+      if (uploadedResults.length > 0) {
+        const existingUrls = new Set(images.map(i => i.url));
+        const newItems = uploadedResults.filter(i => !existingUrls.has(i.url));
+        const updated = [...images, ...newItems];
+        onImagesChange(updated);
+        if (onSaveSection) {
+          await onSaveSection(sectionName, updated);
+        }
+      }
+    } catch (err) {
+      console.error('Gallery upload error:', err);
+      setErrorMessage(err.message || 'Upload error');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files) {
+      processFiles(e.dataTransfer.files);
+    }
+  };
+
+  const handleDeleteImage = async (indexToDelete) => {
+    const target = images[indexToDelete];
+    if (!target) return;
+    if (target.public_id || target.url) {
+      deleteCloudinaryMedia(target.public_id || target.url);
+    }
+    const updated = images.filter((_, idx) => idx !== indexToDelete);
+    onImagesChange(updated);
+    if (onSaveSection) {
+      await onSaveSection(sectionName, updated);
+    }
+  };
+
+  const handleReplaceImage = async (indexToReplace, e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const err = validateFile(file);
+    if (err) {
+      setErrorMessage(err);
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const oldImg = images[indexToReplace];
+      const res = await uploadMediaFile(file);
+      if (res.success && res.url) {
+        if (oldImg && (oldImg.public_id || oldImg.url)) {
+          deleteCloudinaryMedia(oldImg.public_id || oldImg.url);
+        }
+        const updated = [...images];
+        updated[indexToReplace] = { url: res.url, public_id: res.public_id || res.publicId || '' };
+        onImagesChange(updated);
+        if (onSaveSection) {
+          await onSaveSection(sectionName, updated);
+        }
+      } else {
+        setErrorMessage(res.message || 'Replacement failed');
+      }
+    } catch (err) {
+      console.error('Replace error:', err);
+      setErrorMessage(err.message || 'Replacement failed');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const inputId = `file-input-${sectionName}`;
+
+  return (
+    <div style={{ marginTop: '14px', marginBottom: '20px', background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.06)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+        <h4 style={{ fontSize: '13.5px', color: 'var(--admin-text)', fontWeight: 600, margin: 0 }}>
+          {title} Gallery ({images.length} {images.length === 1 ? 'image' : 'images'})
+        </h4>
+        {onSaveSection && (
+          <button 
+            type="button" 
+            className="admin-btn admin-btn-secondary" 
+            style={{ fontSize: '12px', padding: '4px 10px' }} 
+            onClick={() => onSaveSection(sectionName, images)}
+            disabled={isSaving || isUploading}
+          >
+            {isSaving ? 'Saving...' : 'Save Section'}
+          </button>
+        )}
+      </div>
+
+      {errorMessage && (
+        <div style={{ color: '#ef4444', fontSize: '12px', marginBottom: '10px', background: 'rgba(239,68,68,0.1)', padding: '8px', borderRadius: '6px' }}>
+          ⚠️ {errorMessage}
+        </div>
+      )}
+
+      {/* Drag & Drop Upload Zone */}
+      <div
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        style={{
+          border: `2px dashed ${isDragging ? '#25D366' : 'rgba(255,255,255,0.15)'}`,
+          backgroundColor: isDragging ? 'rgba(37,211,102,0.05)' : 'rgba(0,0,0,0.15)',
+          borderRadius: '10px',
+          padding: '20px',
+          textAlign: 'center',
+          transition: 'all 0.2s ease',
+          marginBottom: images.length > 0 ? '14px' : '0'
+        }}
+      >
+        {isUploading ? (
+          <div style={{ color: '#25D366', fontSize: '13px', fontWeight: 600 }}>
+            ⏳ Uploading to Cloudinary... Please wait.
+          </div>
+        ) : (
+          <div>
+            <p style={{ margin: '0 0 8px 0', fontSize: '13px', color: 'rgba(255,255,255,0.7)' }}>
+              Drag & drop gallery images here, or <span style={{ color: '#25D366', textDecoration: 'underline', cursor: 'pointer' }}>browse files</span>
+            </p>
+            <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)' }}>
+              JPG, PNG, WEBP, GIF, SVG (Max 10MB per file)
+            </span>
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={(e) => processFiles(e.target.files)}
+              style={{ display: 'none' }}
+              id={inputId}
+            />
+            <div style={{ marginTop: '10px' }}>
+              <label htmlFor={inputId} className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', padding: '6px 14px', fontSize: '12px', display: 'inline-block' }}>
+                Select Image Files
+              </label>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Gallery Thumbnail Items */}
+      {images.length > 0 && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '10px' }}>
+          {images.map((img, idx) => (
+            <div key={idx} style={{ position: 'relative', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', background: '#000', height: '80px' }}>
+              <img src={img.url} alt={`Gallery item ${idx + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              <div 
+                style={{ 
+                  position: 'absolute', 
+                  inset: 0, 
+                  background: 'rgba(0,0,0,0.65)', 
+                  opacity: 0, 
+                  transition: 'opacity 0.2s', 
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  gap: '4px' 
+                }} 
+                onMouseEnter={e => e.currentTarget.style.opacity = 1} 
+                onMouseLeave={e => e.currentTarget.style.opacity = 0}
+              >
+                <label style={{ cursor: 'pointer', color: '#fff', fontSize: '10px', background: 'rgba(255,255,255,0.2)', padding: '3px 8px', borderRadius: '4px' }}>
+                  Replace
+                  <input type="file" accept="image/*" onChange={(e) => handleReplaceImage(idx, e)} style={{ display: 'none' }} />
+                </label>
+                <button 
+                  type="button" 
+                  onClick={() => handleDeleteImage(idx)} 
+                  style={{ color: '#ff4d4d', background: 'rgba(255,0,0,0.25)', border: 'none', padding: '3px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '10px' }}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function ProjectManager() {
   const { projects, projectsCrud, uploadMediaFile } = useAdmin();
   const [isEditing, setIsEditing] = useState(false);
@@ -51,6 +295,10 @@ export default function ProjectManager() {
   const [challengeImage, setChallengeImage] = useState('');
   const [solutionImage, setSolutionImage] = useState('');
   const [resultImage, setResultImage] = useState('');
+  const [challengeImages, setChallengeImages] = useState([]);
+  const [solutionImages, setSolutionImages] = useState([]);
+  const [resultImages, setResultImages] = useState([]);
+  const [savingSection, setSavingSection] = useState('');
   const [gallery, setGallery] = useState('');
   const [challenge, setChallenge] = useState('');
   const [solution, setSolution] = useState('');
@@ -85,6 +333,9 @@ export default function ProjectManager() {
     setChallengeImage('');
     setSolutionImage('');
     setResultImage('');
+    setChallengeImages([]);
+    setSolutionImages([]);
+    setResultImages([]);
     setGallery('');
     setChallenge('');
     setSolution('');
@@ -117,6 +368,19 @@ export default function ProjectManager() {
     setChallengeImage(proj.challengeImage || '');
     setSolutionImage(proj.solutionImage || '');
     setResultImage(proj.resultImage || '');
+
+    const formatGalleryArr = (arr, singleFallback) => {
+      if (Array.isArray(arr) && arr.length > 0) {
+        return arr.map(item => typeof item === 'string' ? { url: item, public_id: '' } : { url: item.url || '', public_id: item.public_id || '' });
+      }
+      if (singleFallback) return [{ url: singleFallback, public_id: '' }];
+      return [];
+    };
+
+    setChallengeImages(formatGalleryArr(proj.challengeImages, proj.challengeImage));
+    setSolutionImages(formatGalleryArr(proj.solutionImages, proj.solutionImage));
+    setResultImages(formatGalleryArr(proj.resultImages, proj.resultImage));
+
     setGallery(proj.gallery ? proj.gallery.join(', ') : '');
     setChallenge(proj.challenge || '');
     setSolution(proj.solution || '');
@@ -129,6 +393,19 @@ export default function ProjectManager() {
     setIsEditing(true);
   };
 
+  const handleSaveSectionIndependent = async (sectionName, updatedImages) => {
+    if (!currentId) return;
+    setSavingSection(sectionName);
+    try {
+      const payload = { [sectionName]: updatedImages };
+      await projectsCrud.update(currentId, payload);
+    } catch (err) {
+      console.error(`Failed to save section ${sectionName}:`, err);
+    } finally {
+      setSavingSection('');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formattedTechs = technologies.split(',').map(t => t.trim()).filter(Boolean);
@@ -138,6 +415,7 @@ export default function ProjectManager() {
       name, slug, category, year, client, status, shortDesc, longDesc,
       liveUrl, caseStudyUrl, githubUrl, coverImage, thumbnailImage, bannerImage,
       challenge, challengeImage, solution, solutionImage, results, resultImage,
+      challengeImages, solutionImages, resultImages,
       process, isFeatured, showOnHome, enabled, order,
       technologies: formattedTechs,
       gallery: formattedGallery
@@ -405,13 +683,22 @@ export default function ProjectManager() {
                   </div>
                 )}
               </div>
+              {/* Challenge Section Gallery */}
+              <SectionGalleryUploader
+                title="Challenge"
+                sectionName="challengeImages"
+                images={challengeImages}
+                onImagesChange={setChallengeImages}
+                onSaveSection={handleSaveSectionIndependent}
+                isSaving={savingSection === 'challengeImages'}
+              />
 
               <div className="admin-form-group" style={{ marginTop: '20px', borderTop: '1px dotted var(--admin-border)', paddingTop: '15px' }}>
                 <label className="admin-label">The Solution (Text)</label>
                 <textarea className="admin-textarea" value={solution} onChange={e => setSolution(e.target.value)}></textarea>
               </div>
-              <div className="admin-form-group" style={{ marginBottom: '20px' }}>
-                <label className="admin-label">The Solution Mockup Image URL</label>
+              <div className="admin-form-group" style={{ marginBottom: '10px' }}>
+                <label className="admin-label">The Solution Mockup Image URL (Fallback)</label>
                 <div style={{ display: 'flex', gap: '10px' }}>
                   <input 
                     type="text" 
@@ -440,12 +727,22 @@ export default function ProjectManager() {
                 )}
               </div>
 
+              {/* Solution Section Gallery */}
+              <SectionGalleryUploader
+                title="Solution"
+                sectionName="solutionImages"
+                images={solutionImages}
+                onImagesChange={setSolutionImages}
+                onSaveSection={handleSaveSectionIndependent}
+                isSaving={savingSection === 'solutionImages'}
+              />
+
               <div className="admin-form-group" style={{ marginTop: '20px', borderTop: '1px dotted var(--admin-border)', paddingTop: '15px' }}>
                 <label className="admin-label">The Result (Text)</label>
                 <textarea className="admin-textarea" value={results} onChange={e => setResults(e.target.value)} placeholder="Describe the result of the project..."></textarea>
               </div>
-              <div className="admin-form-group" style={{ marginBottom: '20px' }}>
-                <label className="admin-label">The Result Mockup Image URL</label>
+              <div className="admin-form-group" style={{ marginBottom: '10px' }}>
+                <label className="admin-label">The Result Mockup Image URL (Fallback)</label>
                 <div style={{ display: 'flex', gap: '10px' }}>
                   <input 
                     type="text" 
@@ -473,6 +770,16 @@ export default function ProjectManager() {
                   </div>
                 )}
               </div>
+
+              {/* Result Section Gallery */}
+              <SectionGalleryUploader
+                title="Result"
+                sectionName="resultImages"
+                images={resultImages}
+                onImagesChange={setResultImages}
+                onSaveSection={handleSaveSectionIndependent}
+                isSaving={savingSection === 'resultImages'}
+              />
 
               <div className="admin-form-group" style={{ marginTop: '20px', borderTop: '1px dotted var(--admin-border)', paddingTop: '15px' }}>
                 <label className="admin-label">The Process (Text)</label>
