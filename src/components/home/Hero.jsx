@@ -182,15 +182,15 @@ function Hero() {
                     <div className="hero-marquee-track">
                         {MARQUEE_ITEMS.map((item, idx) => (
                             <span key={`loop1-${idx}`} className="hero-marquee-item">
-                                <span>{item}</span>
+                                <span className="hero-marquee-text">{item}</span>
                                 <span className="hero-marquee-dot" aria-hidden="true">•</span>
                             </span>
                         ))}
                     </div>
-                    <div className="hero-marquee-track">
+                    <div className="hero-marquee-track" aria-hidden="true">
                         {MARQUEE_ITEMS.map((item, idx) => (
                             <span key={`loop2-${idx}`} className="hero-marquee-item">
-                                <span>{item}</span>
+                                <span className="hero-marquee-text">{item}</span>
                                 <span className="hero-marquee-dot" aria-hidden="true">•</span>
                             </span>
                         ))}
