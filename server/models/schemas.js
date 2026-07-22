@@ -149,6 +149,12 @@ const projectSchema = new mongoose.Schema({
   challenge: { type: String, default: '' },
   solution: { type: String, default: '' },
   conclusion: { type: String, default: '' },
+  challengeIntro: { type: String, default: '' },
+  challengePoints: { type: [String], default: [] },
+  challengeConclusion: { type: String, default: '' },
+  solutionIntro: { type: String, default: '' },
+  solutionPoints: { type: [mongoose.Schema.Types.Mixed], default: [] },
+  secondaryDesc: { type: String, default: '' },
   process: { type: String, default: '' },
   research: { type: String, default: '' },
   wireframes: { type: String, default: '' },
@@ -164,6 +170,85 @@ const projectSchema = new mongoose.Schema({
   resultImages: { type: [galleryImageSchema], default: [] },
   conclusionImages: { type: [galleryImageSchema], default: [] },
   links: { type: caseStudyLinksSchema, default: () => ({}) },
+  
+  // Extended 2026 Case Study Sections & Metadata Schema
+  heroConfig: {
+    tagline: { type: String, default: '' },
+    breadcrumb: { type: String, default: '' },
+    overlayOpacity: { type: Number, default: 0.4 }
+  },
+  infoConfig: {
+    industry: { type: String, default: 'Digital Product Design' },
+    timeline: { type: String, default: '2 - 3 Weeks' },
+    role: { type: String, default: 'Lead UI/UX Designer & Webflow Developer' },
+    team: { type: String, default: 'Solo Designer & Developer' },
+    platform: { type: String, default: 'Web & Mobile Apps' },
+    tools: { type: [String], default: ['Figma', 'Webflow', 'React', 'Framer Motion', 'Tailwind'] },
+    visibilityMap: { type: Object, default: () => ({
+      client: true, industry: true, timeline: true, role: true, team: true, year: true, platform: true, tools: true, status: true, liveUrl: true, prototypeUrl: true, githubUrl: true
+    })}
+  },
+  overviewConfig: {
+    intro: { type: String, default: '' },
+    goals: { type: [String], default: [] },
+    problemStatement: { type: String, default: '' },
+    richText: { type: String, default: '' }
+  },
+  researchConfig: {
+    competitiveAnalysis: { type: String, default: '' },
+    personas: { type: String, default: '' },
+    painPoints: { type: [String], default: [] },
+    userJourney: { type: String, default: '' },
+    insights: { type: String, default: '' },
+    images: { type: [galleryImageSchema], default: [] }
+  },
+  designProcessConfig: {
+    wireframes: { type: String, default: '' },
+    lowFidelity: { type: String, default: '' },
+    highFidelity: { type: String, default: '' },
+    iterations: { type: String, default: '' },
+    finalUI: { type: String, default: '' },
+    images: { type: [galleryImageSchema], default: [] }
+  },
+  designSystemConfig: {
+    colors: { type: [String], default: ['#0A0A0A', '#FFFFFF', '#4F46E5', '#10B981', '#F3F4F6'] },
+    typography: { type: String, default: 'Inter / Outfit / SF Pro Display' },
+    spacing: { type: String, default: '8px Grid System (8px, 16px, 24px, 32px, 64px)' },
+    components: { type: String, default: '' },
+    images: { type: [galleryImageSchema], default: [] }
+  },
+  solutionConfig: {
+    featureHighlights: { type: [String], default: [] },
+    uxDecisions: { type: String, default: '' },
+    businessValue: { type: String, default: '' },
+    performance: { type: String, default: '' }
+  },
+  showcaseConfig: {
+    desktopScreens: { type: [galleryImageSchema], default: [] },
+    tabletScreens: { type: [galleryImageSchema], default: [] },
+    mobileScreens: { type: [galleryImageSchema], default: [] },
+    layout: { type: String, default: 'grid-2' } // 'single' | 'grid-2' | 'grid-3' | 'masonry' | 'carousel'
+  },
+  resultsConfig: {
+    successMetrics: { type: [String], default: [] },
+    performanceScore: { type: String, default: '99/100 Lighthouse' },
+    businessImpact: { type: String, default: '' },
+    userFeedback: { type: String, default: '' },
+    achievements: { type: [String], default: [] }
+  },
+  learningsConfig: {
+    lessonsLearned: { type: String, default: '' },
+    futureImprovements: { type: String, default: '' }
+  },
+  seoConfig: {
+    metaTitle: { type: String, default: '' },
+    metaDescription: { type: String, default: '' },
+    keywords: { type: [String], default: [] },
+    canonicalUrl: { type: String, default: '' },
+    ogImage: { type: String, default: '' },
+    isPublished: { type: Boolean, default: true }
+  },
+
   testimonial: { type: String, default: '' },
   isFeatured: { type: Boolean, default: false },
   showOnHome: { type: Boolean, default: true },

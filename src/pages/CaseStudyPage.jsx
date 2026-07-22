@@ -1,301 +1,399 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  FiExternalLink, FiGithub, FiFigma, FiCheck, 
+  FiX, FiChevronRight, FiArrowLeft, FiMaximize2 
+} from "react-icons/fi";
 import { useAdmin } from "../context/AdminContext";
 import { API_BASE } from "../config/api";
 import { getOptimizedImageUrl } from "../utils/imageOptimizer";
 import "./CaseStudyPage.css";
 
-function CaseStudyPage() {
-    const { id } = useParams();
-    const { projects } = useAdmin();
-    const [project, setProject] = useState(null);
-    const [loading, setLoading] = useState(true);
+export default function CaseStudyPage() {
+  const { id } = useParams();
+  const { projects } = useAdmin();
+  const [project, setProject] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [lightboxImg, setLightboxImg] = useState(null);
 
-    useEffect(() => {
-        const loadProject = async () => {
-            setLoading(true);
-            try {
-                const res = await fetch(`${API_BASE}/projects/${id}`);
-                if (res.ok) {
-                    const data = await res.json();
-                    setProject(data);
-                } else {
-                    const found = (projects || []).find(p => p.slug === id || p._id === id || p.id === id);
-                    setProject(found || null);
-                }
-            } catch (err) {
-                console.error("Failed to fetch project details from API:", err);
-                const found = (projects || []).find(p => p.slug === id || p._id === id || p.id === id);
-                setProject(found || null);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        loadProject();
-    }, [id, projects]);
-
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [id]);
-
-    if (loading && !project) {
-        return (
-            <div className="case-study-loading" style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
-                <div style={{ fontSize: '18px', fontWeight: '500' }}>Loading case study details...</div>
-            </div>
-        );
-    }
-
-    if (!project) {
-        return (
-            <div className="case-study-not-found">
-                <h2>Project Not Found</h2>
-                <p>We couldn't find the case study you were looking for.</p>
-                <Link to="/projects" className="back-home-btn">
-                    Back to Projects
-                </Link>
-            </div>
-        );
-    }
-
-    const titleText = project.name || project.title;
-    const challengeText = project.challenge || project.challenges || "No challenge description loaded yet.";
-    const solutionText = project.solution || project.solutions || "No solution description loaded yet.";
-    const resultText = project.results || "No results details loaded yet.";
-    const conclusionText = project.longDesc || project.conclusion || "No conclusion loaded yet.";
-    const clientName = project.client || "Self Project";
-    const bannerImgUrl = project.bannerImage || project.coverImage || project.thumbnailImage || "/assets/project_eco_shades.jpg";
-    const demoLinkUrl = project.liveUrl || project.demoLink;
-
-    const renderSectionGallery = (imagesArray, singleFallbackUrl, altText, defaultAsset) => {
-        let imgs = [];
-        if (Array.isArray(imagesArray) && imagesArray.length > 0) {
-            imgs = imagesArray.map(item => (typeof item === 'string' ? item : item?.url)).filter(Boolean);
-        } 
-        
-        if (imgs.length === 0 && singleFallbackUrl) {
-            imgs = [singleFallbackUrl];
-        } 
-
-        if (imgs.length === 0 && defaultAsset) {
-            imgs = [defaultAsset];
+  useEffect(() => {
+    const loadProject = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch(`${API_BASE}/case-study/${id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setProject(data);
+        } else {
+          const found = (projects || []).find(p => p.slug === id || p._id === id || p.id === id);
+          setProject(found || null);
         }
-
-        if (imgs.length === 0) {
-            imgs = ["/assets/mockup_challenge.png"];
-        }
-
-        return (
-            <div className="section-gallery-container" style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%' }}>
-                {imgs.map((url, idx) => {
-                    const initialSrc = getOptimizedImageUrl(url, { width: 1200 }) || defaultAsset || "/assets/mockup_challenge.png";
-                    return (
-                        <div key={idx} className="section-mockup-wrapper">
-                            <img 
-                                src={initialSrc} 
-                                alt={`${altText} ${idx + 1}`} 
-                                className="section-mockup-img"
-                                loading="lazy"
-                                decoding="async"
-                                onError={(e) => {
-                                    const fallback = defaultAsset || "/assets/mockup_challenge.png";
-                                    if (!e.target.src.endsWith(fallback)) {
-                                        e.target.src = fallback;
-                                    }
-                                }}
-                            />
-                        </div>
-                    );
-                })}
-            </div>
-        );
+      } catch (err) {
+        console.error("Failed to load case study:", err);
+        const found = (projects || []).find(p => p.slug === id || p._id === id || p.id === id);
+        setProject(found || null);
+      } finally {
+        setLoading(false);
+      }
     };
 
+    loadProject();
+  }, [id, projects]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
+  if (loading && !project) {
     return (
-        <div className="case-study-wrapper">
-            
-            {/* ── HERO BANNER ── */}
-            <div className="case-study-hero-banner">
-                <img 
-                    src={getOptimizedImageUrl(bannerImgUrl) || "/assets/project_eco_shades.jpg"} 
-                    alt={`${titleText} Banner`} 
-                    className="hero-banner-img"
-                    onError={(e) => {
-                        if (!e.target.src.endsWith('/assets/project_eco_shades.jpg')) {
-                            e.target.src = '/assets/project_eco_shades.jpg';
-                        }
-                    }}
-                />
-                <div className="hero-banner-overlay" />
-            </div>
-
-            {/* ── MAIN CONTENT CONTAINER (SPLIT LAYOUT) ── */}
-            <div className="case-study-split-container">
-                
-                {/* LEFT COLUMN: Case Study Sections & Mockups */}
-                <main className="case-study-left-content">
-                    
-                    {/* The Challenge */}
-                    <section className="case-study-section">
-                        <h2 className="section-heading">The challenge</h2>
-                        <p className="section-paragraph">{challengeText}</p>
-                        {renderSectionGallery(project.challengeImages, project.challengeImage, "Challenge Mockup", "/assets/mockup_challenge.png")}
-                    </section>
-
-                    {/* The Solution */}
-                    <section className="case-study-section">
-                        <h2 className="section-heading">The solution</h2>
-                        <p className="section-paragraph">{solutionText}</p>
-                        {renderSectionGallery(project.solutionImages, project.solutionImage, "Solution Mockup", "/assets/mockup_solution.png")}
-                    </section>
-
-                    {/* The Result */}
-                    <section className="case-study-section">
-                        <h2 className="section-heading">The result</h2>
-                        <p className="section-paragraph">{resultText}</p>
-                        {renderSectionGallery(project.resultImages, project.resultImage, "Result Mockup", "/assets/mockup_result.png")}
-                    </section>
-
-                    {/* Conclusion */}
-                    <section className="case-study-section">
-                        <h2 className="section-heading">Conclusion</h2>
-                        <p className="section-paragraph">{conclusionText}</p>
-                        {renderSectionGallery(project.conclusionImages, project.conclusionImage, "Conclusion Mockup", "/assets/mockup_conclusion.png")}
-                    </section>
-
-                    {/* Supplementary Unlimited Gallery */}
-                    {Array.isArray(project.galleryImages) && project.galleryImages.length > 0 && (
-                        <section className="case-study-section">
-                            <h2 className="section-heading">Project Gallery</h2>
-                            {renderSectionGallery(project.galleryImages, null, "Gallery Image", null)}
-                        </section>
-                    )}
-
-                </main>
-
-                {/* RIGHT COLUMN: Sticky Sidebar */}
-                <aside className="case-study-sidebar">
-                    <div className="sidebar-sticky-box">
-                        
-                        <h1 className="sidebar-project-title">{titleText}</h1>
-                        <p className="sidebar-project-subtitle">{project.shortDesc || project.subtitle}</p>
- 
-                        <div className="sidebar-meta-table">
-                            
-                            <div className="meta-table-row">
-                                <span className="meta-table-label">Project type</span>
-                                <span className="meta-table-value">{project.category}</span>
-                            </div>
-
-                            <div className="meta-table-row">
-                                <span className="meta-table-label">Year</span>
-                                <span className="meta-table-value">{project.year}</span>
-                            </div>
-
-                            <div className="meta-table-row">
-                                <span className="meta-table-label">Client</span>
-                                <span className="meta-table-value">{clientName}</span>
-                            </div>
-
-                            {/* Dynamic Project Links */}
-                            {(demoLinkUrl || project.links?.liveProject) && (
-                                <div className="meta-table-row">
-                                    <span className="meta-table-label">Live Project</span>
-                                    <span className="meta-table-value">
-                                        <a href={demoLinkUrl || project.links?.liveProject} target="_blank" rel="noreferrer" className="live-project-pill-btn">
-                                            Live Link 🔗
-                                        </a>
-                                    </span>
-                                </div>
-                            )}
-
-                            {(project.githubUrl || project.links?.github) && (
-                                <div className="meta-table-row">
-                                    <span className="meta-table-label">Source Code</span>
-                                    <span className="meta-table-value">
-                                        <a href={project.githubUrl || project.links?.github} target="_blank" rel="noreferrer" className="live-project-pill-btn">
-                                            GitHub 💻
-                                        </a>
-                                    </span>
-                                </div>
-                            )}
-
-                            {project.links?.figma && (
-                                <div className="meta-table-row">
-                                    <span className="meta-table-label">Figma Design</span>
-                                    <span className="meta-table-value">
-                                        <a href={project.links.figma} target="_blank" rel="noreferrer" className="live-project-pill-btn">
-                                            Figma 🎨
-                                        </a>
-                                    </span>
-                                </div>
-                            )}
-
-                            {project.links?.behance && (
-                                <div className="meta-table-row">
-                                    <span className="meta-table-label">Behance</span>
-                                    <span className="meta-table-value">
-                                        <a href={project.links.behance} target="_blank" rel="noreferrer" className="live-project-pill-btn">
-                                            Behance 🖼️
-                                        </a>
-                                    </span>
-                                </div>
-                            )}
-
-                            {project.links?.dribbble && (
-                                <div className="meta-table-row">
-                                    <span className="meta-table-label">Dribbble</span>
-                                    <span className="meta-table-value">
-                                        <a href={project.links.dribbble} target="_blank" rel="noreferrer" className="live-project-pill-btn">
-                                            Dribbble 🏀
-                                        </a>
-                                    </span>
-                                </div>
-                            )}
-
-                            {project.links?.prototype && (
-                                <div className="meta-table-row">
-                                    <span className="meta-table-label">Prototype</span>
-                                    <span className="meta-table-value">
-                                        <a href={project.links.prototype} target="_blank" rel="noreferrer" className="live-project-pill-btn">
-                                            Prototype ⚡
-                                        </a>
-                                    </span>
-                                </div>
-                            )}
-
-                            {project.links?.video && (
-                                <div className="meta-table-row">
-                                    <span className="meta-table-label">Demo Video</span>
-                                    <span className="meta-table-value">
-                                        <a href={project.links.video} target="_blank" rel="noreferrer" className="live-project-pill-btn">
-                                            Watch Video 🎥
-                                        </a>
-                                    </span>
-                                </div>
-                            )}
-
-                        </div>
-
-                        {/* Back to Projects */}
-                        <div className="sidebar-footer-nav">
-                            <Link to="/projects" className="explore-more-btn">
-                                <span>Explore other projects</span>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="btn-arrow">
-                                    <line x1="5" y1="12" x2="19" y2="12" />
-                                    <polyline points="12 5 19 12 12 19" />
-                                </svg>
-                            </Link>
-                        </div>
-
-                    </div>
-                </aside>
-
-            </div>
-
+      <div className="case-study-root" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '80vh' }}>
+        <div style={{ fontSize: '18px', fontWeight: '600', color: 'var(--cs-text-muted)' }}>
+          Loading 2026 Case Study...
         </div>
+      </div>
     );
-}
+  }
 
-export default CaseStudyPage;
+  if (!project) {
+    return (
+      <div className="case-study-root" style={{ textAlign: 'center', paddingTop: '140px' }}>
+        <h2 style={{ fontSize: '32px', fontWeight: '800' }}>Case Study Not Found</h2>
+        <p style={{ color: 'var(--cs-text-secondary)', marginBottom: '24px' }}>The requested portfolio project does not exist.</p>
+        <Link to="/projects" className="cs-view-all-btn">
+          ← Back to All Projects
+        </Link>
+      </div>
+    );
+  }
+
+  // Fallback calculations for backward compatibility
+  const titleText = project.name || project.title || 'Untitled Case Study';
+  const heroImageSrc = project.heroImage || project.bannerImage || project.coverImage || '/assets/project_eco_shades.jpg';
+  const taglineText = project.heroConfig?.tagline || project.shortDesc || project.subtitle || '';
+  const breadcrumbText = project.heroConfig?.breadcrumb || `Home / Work Details / ${titleText}`;
+
+  // Info Config
+  const clientVal = project.client || 'Digital Client';
+  const yearVal = project.year || '2026';
+  const categoryVal = project.category || 'Product Design';
+  const statusVal = project.status || 'Completed';
+  const industryVal = project.infoConfig?.industry || 'Digital Product Experience';
+  const timelineVal = project.infoConfig?.timeline || '2 - 3 Weeks';
+  const roleVal = project.infoConfig?.role || 'Lead UI/UX Designer & Webflow Developer';
+  const teamVal = project.infoConfig?.team || 'Solo Design & Engineering';
+  const platformVal = project.infoConfig?.platform || 'Web & Mobile';
+  const toolsArray = project.infoConfig?.tools && project.infoConfig.tools.length > 0 
+    ? project.infoConfig.tools 
+    : (project.technologies || ['Figma', 'React', 'Framer Motion', 'Webflow']);
+
+  const liveUrl = project.links?.liveProject || project.liveUrl;
+  const githubUrl = project.links?.github || project.githubUrl;
+  const figmaUrl = project.links?.figma;
+  const prototypeUrl = project.links?.prototype;
+
+  // Other Projects for "More Works"
+  const otherProjects = (projects || [])
+    .filter(p => (p.slug !== id && p._id !== id && p.enabled !== false))
+    .slice(0, 2);
+
+  const handleOpenLightbox = (src) => {
+    if (src) setLightboxImg(src);
+  };
+
+  return (
+    <div className="case-study-root">
+      {/* ── 1. PREMIUM HERO SECTION — Full screen, behind navbar ── */}
+      <motion.div 
+        className="cs-hero-wrapper"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+      >
+        <div className="cs-hero-img-container">
+          <img 
+            src={getOptimizedImageUrl(heroImageSrc, { width: 1920 })} 
+            alt={titleText} 
+            className="cs-hero-img"
+            onError={(e) => { e.target.src = '/assets/project_eco_shades.jpg'; }}
+          />
+          <div 
+            className="cs-hero-overlay" 
+            style={{ opacity: project.heroConfig?.overlayOpacity ?? 0.45 }}
+          />
+          
+          <div className="cs-hero-content">
+            <div className="cs-hero-title-group">
+              <h1 className="cs-hero-dot-title">
+                <span className="cs-title-dot" />
+                {titleText}
+              </h1>
+              {taglineText && <p className="cs-hero-tagline">{taglineText}</p>}
+            </div>
+
+            <div className="cs-hero-breadcrumb">
+              <Link to="/" className="cs-breadcrumb-link">Home</Link>
+              <FiChevronRight size={12} />
+              <Link to="/projects" className="cs-breadcrumb-link">Work Details</Link>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      <div className="case-study-content-wrap">
+
+        <motion.div 
+          className="cs-info-grid-panel"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          {/* Project Name — leftmost cell */}
+          <div className="cs-info-item cs-info-item--name">
+            <span className="cs-info-label">Project</span>
+            <span className="cs-info-name-text">{titleText}</span>
+          </div>
+
+          <div className="cs-info-item">
+            <span className="cs-info-label">Client</span>
+            <span className="cs-info-value">{clientVal}</span>
+          </div>
+
+          <div className="cs-info-item">
+            <span className="cs-info-label">Duration</span>
+            <span className="cs-info-value">{timelineVal}</span>
+          </div>
+
+          <div className="cs-info-item">
+            <span className="cs-info-label">Published</span>
+            <span className="cs-info-value">{yearVal}</span>
+          </div>
+
+          <div className="cs-info-item">
+            <span className="cs-info-label">Category</span>
+            <span className="cs-info-value">{categoryVal}</span>
+          </div>
+
+          {/* Live Preview — rightmost action cell */}
+          {liveUrl && (
+            <div className="cs-info-item cs-info-item--action">
+              <a href={liveUrl} target="_blank" rel="noreferrer" className="cs-info-action-btn">
+                Live Preview <FiExternalLink size={13} />
+              </a>
+            </div>
+          )}
+        </motion.div>
+
+        {/* ── 3. PROJECT OVERVIEW ── */}
+        <motion.section 
+          className="cs-editorial-section"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="cs-section-header">
+            <h2 className="cs-section-title">
+              {project.overviewConfig?.heading || `${titleText}: Elevating ${industryVal}`}
+            </h2>
+            
+            <p className="cs-body-paragraph">
+              <strong>{titleText}</strong> {project.overviewConfig?.intro || "is a premium digital experience platform crafted to bridge the gap between aesthetic inspiration and architectural execution. The objective was to develop a sophisticated, high-performance web experience that showcases luxury spaces while providing an effortless navigation system for potential clients. We implemented a clean, grid-based design language to emphasize visual storytelling and high-resolution imagery."}
+            </p>
+
+            <p className="cs-body-paragraph">
+              {project.overviewConfig?.secondaryDesc || "The final product delivers a seamless browsing experience tailored for high-end clientele. The result is a refined digital presence that balances artistic expression with functional lead generation."}
+            </p>
+          </div>
+        </motion.section>
+
+        {/* ── 4. EDITORIAL GALLERY (2-COLUMN GRID) ── */}
+        <motion.div 
+          className="cs-gallery-grid-2" style={{ marginBottom: '64px' }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.challengeImage || '/assets/mockup_challenge.png')}>
+            <img 
+              src={getOptimizedImageUrl(project.challengeImage || '/assets/mockup_challenge.png', { width: 1200 })} 
+              alt="Challenge Preview" 
+              className="cs-mockup-img"
+              loading="lazy"
+            />
+          </div>
+          <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.solutionImage || '/assets/mockup_solution.png')}>
+            <img 
+              src={getOptimizedImageUrl(project.solutionImage || '/assets/mockup_solution.png', { width: 1200 })} 
+              alt="Solution Preview" 
+              className="cs-mockup-img"
+              loading="lazy"
+            />
+          </div>
+        </motion.div>
+
+        {/* ── 5. THE CHALLENGE SECTION ── */}
+        <motion.section 
+          className="cs-editorial-section"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="cs-section-header">
+            <h2 className="cs-section-title">The Challenge</h2>
+            
+            <p className="cs-body-paragraph">
+              {project.challengeIntro || `The primary hurdle for the ${titleText} project was presenting a vast portfolio of diverse design styles without overwhelming the user. We needed to organize complex architectural data into an intuitive interface that maintains a sense of luxury and space.`}
+            </p>
+
+            <ul className="cs-editorial-disc-list">
+              {(project.challengePoints || [
+                "Cluttered navigation is affecting high-end brand perception.",
+                "Slow load times for high-resolution gallery assets.",
+                "Inconsistent user journeys from inspiration to booking."
+              ]).map((point, idx) => (
+                <li key={idx}>{point}</li>
+              ))}
+            </ul>
+
+            <p className="cs-body-paragraph">
+              {project.challengeConclusion || "We engineered a lightweight CMS structure that prioritizes performance and clarity. The visual hierarchy was elevated with minimalist UI elements, ensuring that the design work remains the focal point for every visitor."}
+            </p>
+          </div>
+
+          <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.challengeImage || '/assets/mockup_challenge.png')}>
+            <img 
+              src={getOptimizedImageUrl(project.challengeImage || '/assets/mockup_challenge.png', { width: 1600 })} 
+              alt="The Challenge Mockup" 
+              className="cs-mockup-img"
+              loading="lazy"
+            />
+          </div>
+        </motion.section>
+
+        {/* ── 6. THE SOLUTION SECTION ── */}
+        <motion.section 
+          className="cs-editorial-section"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="cs-section-header">
+            <h2 className="cs-section-title">The Solution</h2>
+            
+            <p className="cs-body-paragraph">
+              {project.solutionIntro || 'Our solution centered on a "Visual-First" philosophy, simplifying the user’s path to discovery through thoughtful interaction design. We created streamlined user flows that make exploring design concepts and scheduling consultations effortless.'}
+            </p>
+
+            <ul className="cs-editorial-disc-list">
+              {(project.solutionPoints || [
+                { title: "Adaptive Masonry Grid", desc: "To showcase projects of varying scales and orientations." },
+                { title: "Seamless CMS Integration", desc: "For easy portfolio updates and category filtering." },
+                { title: "Interactive Style Quiz", desc: "To guide users toward their preferred aesthetic." },
+                { title: "Optimized Performance", desc: "Ensuring 99th percentile load speeds for media-heavy pages." }
+              ]).map((item, idx) => (
+                <li key={idx}>
+                  {typeof item === 'string' ? item : (
+                    <>
+                      <strong>{item.title}:</strong> {item.desc}
+                    </>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.solutionImage || '/assets/mockup_solution.png')}>
+            <img 
+              src={getOptimizedImageUrl(project.solutionImage || '/assets/mockup_solution.png', { width: 1600 })} 
+              alt="The Solution Mockup" 
+              className="cs-mockup-img"
+              loading="lazy"
+            />
+          </div>
+        </motion.section>
+
+        {/* ── 7. RESEARCH & DESIGN SYSTEM MODULES (IF PRESENT) ── */}
+        {project.designSystemConfig?.typography && (
+          <motion.section 
+            className="cs-editorial-section"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="cs-section-title">Design System & Architecture</h2>
+            <div className="cs-card-grid">
+              <div className="cs-feature-card">
+                <span className="cs-card-icon">🎨</span>
+                <h3 className="cs-card-title">Color Palette</h3>
+                <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                  {(project.designSystemConfig.colors || ['#0A0A0A', '#FFFFFF', '#4F46E5', '#10B981']).map((c, i) => (
+                    <div key={i} style={{ width: '32px', height: '32px', borderRadius: '50%', background: c, border: '1px solid #E5E7EB' }} title={c} />
+                  ))}
+                </div>
+              </div>
+
+              <div className="cs-feature-card">
+                <span className="cs-card-icon">🔤</span>
+                <h3 className="cs-card-title">Typography System</h3>
+                <p className="cs-card-text">{project.designSystemConfig.typography}</p>
+              </div>
+
+              <div className="cs-feature-card">
+                <span className="cs-card-icon">📐</span>
+                <h3 className="cs-card-title">Grid & Spacing</h3>
+                <p className="cs-card-text">{project.designSystemConfig.spacing}</p>
+              </div>
+            </div>
+          </motion.section>
+        )}
+
+        {/* ── 8. RESULTS & CONCLUSION ── */}
+        <motion.section 
+          className="cs-editorial-section"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="cs-section-title">Results & Impact</h2>
+          <p className="cs-body-paragraph">
+            {project.results || project.conclusion || "The result is a highly optimized, SEO-friendly digital product that exceeds client expectations and performance benchmarks."}
+          </p>
+
+          {project.conclusionImage && (
+            <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.conclusionImage)}>
+              <img 
+                src={getOptimizedImageUrl(project.conclusionImage, { width: 1600 })} 
+                alt="Conclusion Mockup" 
+                className="cs-mockup-img"
+                loading="lazy"
+              />
+            </div>
+          )}
+        </motion.section>
+
+      </div>
+
+      {/* ── LIGHTBOX FULLSCREEN MODAL ── */}
+      <AnimatePresence>
+        {lightboxImg && (
+          <motion.div 
+            className="cs-lightbox-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setLightboxImg(null)}
+          >
+            <button className="cs-lightbox-close" onClick={() => setLightboxImg(null)}>
+              <FiX />
+            </button>
+            <img src={lightboxImg} alt="Enlarged view" className="cs-lightbox-img" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
