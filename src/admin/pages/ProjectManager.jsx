@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAdmin } from '../../context/AdminContext';
 import { FiEdit2, FiTrash2, FiPlus, FiX } from 'react-icons/fi';
+import CaseStudyCMSManager from '../components/CaseStudyCMSManager';
 import '../Admin.css';
 
 function SectionGalleryUploader({ title, sectionName, images = [], onImagesChange, onSaveSection, isSaving }) {
@@ -819,6 +820,13 @@ export default function ProjectManager() {
               Save Project Info
             </button>
           </form>
+
+          {/* Case Study CMS Image & Link Manager Cards */}
+          {currentId && (
+            <CaseStudyCMSManager 
+              project={projects.find(p => p._id === currentId || p.slug === currentId) || { _id: currentId }}
+            />
+          )}
         </div>
       ) : (
         <div className="admin-panel">

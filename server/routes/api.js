@@ -743,6 +743,91 @@ router.delete('/projects/:id', protect, async (req, res) => {
 });
 
 /* ──────────────────────────────────────────────────────────────────────── */
+/* ── CASE STUDY & DEDICATED UPLOAD ENDPOINTS ────────────────────────────── */
+/* ──────────────────────────────────────────────────────────────────────── */
+
+// GET Case Study Details
+router.get('/case-study/:idOrSlug', checkMaintenance, async (req, res) => {
+  try {
+    if (mongoose.connection.readyState !== 1) {
+      const seed = getDefaultSeedData();
+      const found = (seed.projects || []).find(p => p.slug === req.params.idOrSlug || p.id === req.params.idOrSlug || String(p._id) === req.params.idOrSlug);
+      if (!found) return res.status(404).json({ message: 'Case study not found' });
+      return res.json(found);
+    }
+    const query = req.params.idOrSlug.match(/^[0-9a-fA-F]{24}$/)
+      ? { _id: req.params.idOrSlug }
+      : { slug: req.params.idOrSlug };
+    const project = await Project.findOne(query).lean();
+    if (!project) return res.status(404).json({ message: 'Case study not found' });
+    res.json(project);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// PUT Update Case Study Images & Links
+router.put('/case-study/:idOrSlug', protect, async (req, res) => {
+  try {
+    let project = null;
+    if (mongoose.connection.readyState === 1) {
+      const query = req.params.idOrSlug.match(/^[0-9a-fA-F]{24}$/)
+        ? { _id: req.params.idOrSlug }
+        : { slug: req.params.idOrSlug };
+      
+      project = await Project.findOneAndUpdate(query, req.body, { new: true, runValidators: true }).lean();
+    }
+
+    if (!project) {
+      project = { _id: req.params.idOrSlug, ...req.body };
+    }
+
+    invalidateBootstrapCache();
+    res.json({ success: true, project });
+  } catch (error) {
+    console.error('❌ Case Study Update Error:', error);
+    res.status(400).json({ error: error.message || 'Failed to update case study' });
+  }
+});
+
+// POST Dedicated Single File Upload to Cloudinary with Metadata
+router.post('/upload', protect, upload.single('file'), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file received for upload' });
+  }
+  try {
+    const uploadResult = await uploadToCloudinary(req.file.path, req.file.originalname);
+    res.json({
+      success: true,
+      url: uploadResult.url,
+      public_id: uploadResult.publicId || '',
+      filename: req.file.originalname,
+      width: uploadResult.width || 1200,
+      height: uploadResult.height || 800,
+      size: uploadResult.fileSize || req.file.size || 0,
+      uploadedAt: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('❌ Dedicated Upload API Error:', error);
+    res.status(500).json({ error: error.message || 'Image upload to Cloudinary failed' });
+  }
+});
+
+// DELETE Dedicated Cloudinary Asset
+router.delete('/upload', protect, async (req, res) => {
+  const { public_id, url } = req.body;
+  const target = public_id || url;
+  if (!target) return res.status(400).json({ error: 'public_id or url is required' });
+  try {
+    const result = await deleteFromCloudinary(target);
+    res.json({ success: true, message: 'Image deleted from Cloudinary successfully', result });
+  } catch (error) {
+    console.error('❌ Dedicated Delete API error:', error);
+    res.status(500).json({ error: error.message || 'Failed to delete asset from Cloudinary' });
+  }
+});
+
+/* ──────────────────────────────────────────────────────────────────────── */
 /* ── FAQ CRUD ENDPOINTS ─────────────────────────────────────────────────── */
 /* ──────────────────────────────────────────────────────────────────────── */
 

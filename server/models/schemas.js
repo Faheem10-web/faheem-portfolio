@@ -106,7 +106,25 @@ export const Experience = mongoose.models.Experience || mongoose.model('Experien
 // 8. Project Schema
 const galleryImageSchema = new mongoose.Schema({
   url: { type: String, required: true },
-  public_id: { type: String, default: '' }
+  public_id: { type: String, default: '' },
+  alt: { type: String, default: '' },
+  caption: { type: String, default: '' },
+  filename: { type: String, default: '' },
+  width: { type: Number, default: 0 },
+  height: { type: Number, default: 0 },
+  size: { type: Number, default: 0 },
+  uploadedAt: { type: Date, default: Date.now },
+  order: { type: Number, default: 0 }
+}, { _id: false });
+
+const caseStudyLinksSchema = new mongoose.Schema({
+  liveProject: { type: String, default: '' },
+  github: { type: String, default: '' },
+  figma: { type: String, default: '' },
+  behance: { type: String, default: '' },
+  dribbble: { type: String, default: '' },
+  prototype: { type: String, default: '' },
+  video: { type: String, default: '' }
 }, { _id: false });
 
 const projectSchema = new mongoose.Schema({
@@ -124,10 +142,13 @@ const projectSchema = new mongoose.Schema({
   githubUrl: { type: String, default: '' },
   coverImage: { type: String, default: '' },
   thumbnailImage: { type: String, default: '' },
+  heroImage: { type: String, default: '' },
   bannerImage: { type: String, default: '' },
   gallery: { type: [String], default: [] },
+  galleryImages: { type: [galleryImageSchema], default: [] },
   challenge: { type: String, default: '' },
   solution: { type: String, default: '' },
+  conclusion: { type: String, default: '' },
   process: { type: String, default: '' },
   research: { type: String, default: '' },
   wireframes: { type: String, default: '' },
@@ -137,9 +158,12 @@ const projectSchema = new mongoose.Schema({
   challengeImage: { type: String, default: '' },
   solutionImage: { type: String, default: '' },
   resultImage: { type: String, default: '' },
+  conclusionImage: { type: String, default: '' },
   challengeImages: { type: [galleryImageSchema], default: [] },
   solutionImages: { type: [galleryImageSchema], default: [] },
   resultImages: { type: [galleryImageSchema], default: [] },
+  conclusionImages: { type: [galleryImageSchema], default: [] },
+  links: { type: caseStudyLinksSchema, default: () => ({}) },
   testimonial: { type: String, default: '' },
   isFeatured: { type: Boolean, default: false },
   showOnHome: { type: Boolean, default: true },

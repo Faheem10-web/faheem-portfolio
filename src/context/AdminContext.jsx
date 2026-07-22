@@ -428,6 +428,90 @@ export function AdminProvider({ children }) {
         return { success: false };
     };
 
+    // Dedicated Case Study Upload with Progress & Metadata
+    const uploadCaseStudyFile = (file, onProgress) => {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            const formData = new FormData();
+            formData.append('file', file);
+
+            xhr.upload.addEventListener('progress', (e) => {
+                if (e.lengthComputable && onProgress) {
+                    const percent = Math.round((e.loaded / e.total) * 100);
+                    onProgress(percent);
+                }
+            });
+
+            xhr.addEventListener('load', () => {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                        const data = JSON.parse(xhr.responseText);
+                        resolve({ success: true, ...data });
+                    } catch (e) {
+                        reject({ success: false, message: 'Invalid JSON response from server' });
+                    }
+                } else {
+                    let errMsg = 'Upload failed';
+                    try {
+                        const err = JSON.parse(xhr.responseText);
+                        errMsg = err.error || err.message || errMsg;
+                    } catch {}
+                    reject({ success: false, message: errMsg });
+                }
+            });
+
+            xhr.addEventListener('error', () => {
+                reject({ success: false, message: 'Network error during upload' });
+            });
+
+            xhr.open('POST', `${API_BASE}/upload`);
+            if (token) {
+                xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+            }
+            xhr.send(formData);
+        });
+    };
+
+    const deleteCaseStudyImage = async (public_idOrUrl) => {
+        if (!public_idOrUrl) return { success: false };
+        try {
+            const res = await fetch(`${API_BASE}/upload`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ public_id: public_idOrUrl, url: public_idOrUrl })
+            });
+            const data = await safeParseJson(res);
+            return { success: res.ok, ...data };
+        } catch (err) {
+            return { success: false, message: err.message };
+        }
+    };
+
+    const updateCaseStudy = async (idOrSlug, payload) => {
+        try {
+            const res = await fetch(`${API_BASE}/case-study/${idOrSlug}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload)
+            });
+            const data = await safeParseJson(res);
+            if (res.ok && data.project) {
+                // Update local projects array state immediately for zero-lag UI updates
+                setProjects(prev => (prev || []).map(p => (p._id === data.project._id || p.slug === data.project.slug) ? { ...p, ...data.project } : p));
+                return { success: true, project: data.project };
+            }
+            return { success: false, message: data.error || data.message || 'Failed to update case study' };
+        } catch (err) {
+            return { success: false, message: err.message };
+        }
+    };
+
     const uploadMultipleMediaFiles = async (filesArray, retries = 2) => {
         if (!filesArray || filesArray.length === 0) return { success: false, files: [] };
         const formData = new FormData();
@@ -597,6 +681,9 @@ export function AdminProvider({ children }) {
         fetchMedia,
         uploadMediaFile,
         uploadMultipleMediaFiles,
+        uploadCaseStudyFile,
+        deleteCaseStudyImage,
+        updateCaseStudy,
         deleteCloudinaryMedia,
         deleteMediaFile,
         replaceMediaFile,

@@ -161,7 +161,16 @@ function CaseStudyPage() {
                     <section className="case-study-section">
                         <h2 className="section-heading">Conclusion</h2>
                         <p className="section-paragraph">{conclusionText}</p>
+                        {renderSectionGallery(project.conclusionImages, project.conclusionImage, "Conclusion Mockup", "/assets/mockup_conclusion.png")}
                     </section>
+
+                    {/* Supplementary Unlimited Gallery */}
+                    {Array.isArray(project.galleryImages) && project.galleryImages.length > 0 && (
+                        <section className="case-study-section">
+                            <h2 className="section-heading">Project Gallery</h2>
+                            {renderSectionGallery(project.galleryImages, null, "Gallery Image", null)}
+                        </section>
+                    )}
 
                 </main>
 
@@ -189,17 +198,79 @@ function CaseStudyPage() {
                                 <span className="meta-table-value">{clientName}</span>
                             </div>
 
-                            {demoLinkUrl && (
-                                <div className="meta-table-row borderless">
-                                    <span className="meta-table-label">Live project</span>
+                            {/* Dynamic Project Links */}
+                            {(demoLinkUrl || project.links?.liveProject) && (
+                                <div className="meta-table-row">
+                                    <span className="meta-table-label">Live Project</span>
                                     <span className="meta-table-value">
-                                        <a 
-                                            href={demoLinkUrl} 
-                                            target="_blank" 
-                                            rel="noreferrer"
-                                            className="live-project-pill-btn"
-                                        >
-                                            Live link
+                                        <a href={demoLinkUrl || project.links?.liveProject} target="_blank" rel="noreferrer" className="live-project-pill-btn">
+                                            Live Link 🔗
+                                        </a>
+                                    </span>
+                                </div>
+                            )}
+
+                            {(project.githubUrl || project.links?.github) && (
+                                <div className="meta-table-row">
+                                    <span className="meta-table-label">Source Code</span>
+                                    <span className="meta-table-value">
+                                        <a href={project.githubUrl || project.links?.github} target="_blank" rel="noreferrer" className="live-project-pill-btn">
+                                            GitHub 💻
+                                        </a>
+                                    </span>
+                                </div>
+                            )}
+
+                            {project.links?.figma && (
+                                <div className="meta-table-row">
+                                    <span className="meta-table-label">Figma Design</span>
+                                    <span className="meta-table-value">
+                                        <a href={project.links.figma} target="_blank" rel="noreferrer" className="live-project-pill-btn">
+                                            Figma 🎨
+                                        </a>
+                                    </span>
+                                </div>
+                            )}
+
+                            {project.links?.behance && (
+                                <div className="meta-table-row">
+                                    <span className="meta-table-label">Behance</span>
+                                    <span className="meta-table-value">
+                                        <a href={project.links.behance} target="_blank" rel="noreferrer" className="live-project-pill-btn">
+                                            Behance 🖼️
+                                        </a>
+                                    </span>
+                                </div>
+                            )}
+
+                            {project.links?.dribbble && (
+                                <div className="meta-table-row">
+                                    <span className="meta-table-label">Dribbble</span>
+                                    <span className="meta-table-value">
+                                        <a href={project.links.dribbble} target="_blank" rel="noreferrer" className="live-project-pill-btn">
+                                            Dribbble 🏀
+                                        </a>
+                                    </span>
+                                </div>
+                            )}
+
+                            {project.links?.prototype && (
+                                <div className="meta-table-row">
+                                    <span className="meta-table-label">Prototype</span>
+                                    <span className="meta-table-value">
+                                        <a href={project.links.prototype} target="_blank" rel="noreferrer" className="live-project-pill-btn">
+                                            Prototype ⚡
+                                        </a>
+                                    </span>
+                                </div>
+                            )}
+
+                            {project.links?.video && (
+                                <div className="meta-table-row">
+                                    <span className="meta-table-label">Demo Video</span>
+                                    <span className="meta-table-value">
+                                        <a href={project.links.video} target="_blank" rel="noreferrer" className="live-project-pill-btn">
+                                            Watch Video 🎥
                                         </a>
                                     </span>
                                 </div>
