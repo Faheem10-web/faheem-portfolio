@@ -5,8 +5,8 @@
   width: 100vw;
   height: 100vh;
   z-index: 99999;
-  background-color: #050505;
-  background-image: radial-gradient(circle at 50% 50%, rgba(20, 20, 20, 0.3) 0%, #050505 100%);
+  background-color: #0A0A0A;
+  background-image: radial-gradient(circle at 50% 50%, rgba(25, 25, 25, 0.3) 0%, #0A0A0A 100%);
   color: #ffffff;
   font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
   overflow: hidden;

@@ -111,7 +111,7 @@ function ChatWidget() {
 
     return (
         <div className="chat-widget-container">
-            {/* FAB Toggle Button */}
+            {/* FAB / Pill Trigger Button */}
             <button
                 ref={fabRef}
                 className="chat-widget-fab"
@@ -119,13 +119,20 @@ function ChatWidget() {
                 aria-expanded={isOpen}
                 aria-label="Open WhatsApp Chat Support"
             >
-                <FaWhatsapp />
-                <span className="chat-widget-badge"></span>
-                {!isOpen && (
-                    <span className="chat-widget-tooltip">
-                        Chat with {portfolioName}
-                    </span>
-                )}
+                <div className="chat-fab-content">
+                    {isOpen ? (
+                        <>
+                            <FiX className="chat-fab-close-icon" />
+                            <span className="chat-fab-label">Close</span>
+                        </>
+                    ) : (
+                        <>
+                            <FaWhatsapp className="chat-fab-wa-icon" />
+                            <span className="chat-fab-label">Quick Chat</span>
+                            <span className="chat-fab-online-dot"></span>
+                        </>
+                    )}
+                </div>
             </button>
 
             {/* Chat Window with Spring Animations */}

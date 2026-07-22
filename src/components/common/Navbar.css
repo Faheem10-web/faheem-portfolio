@@ -235,8 +235,10 @@
 }
 
 .mobile-nav-link {
-    display: block;
-    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 12px 18px;
     border-radius: 12px;
     text-decoration: none;
     color: var(--color-text-muted);
@@ -271,15 +273,12 @@
 }
 
 .mobile-cv-btn {
-    flex: 1;
-}
-
-.mobile-cv-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 48px;
+    min-height: 48px;
     border-radius: 12px;
     background: var(--color-primary);
     color: #fff;
@@ -306,12 +305,14 @@
 
     .hamburger {
         display: flex !important;
+        min-width: 44px;
+        min-height: 44px;
     }
 
     .nav-container {
         height: 62px;
         padding: 0 16px;
-        max-width: 480px;
+        max-width: 100%;
     }
 
     .nav-btn {
@@ -352,7 +353,8 @@
         height: 56px;
         padding: 0 14px;
         border-radius: 80px;
-        max-width: 360px;
+        width: 100%;
+        max-width: 100%;
     }
 
     .mobile-menu {
@@ -363,13 +365,13 @@
     }
 
     .hamburger {
-        width: 38px;
-        height: 38px;
+        width: 44px;
+        height: 44px;
     }
 
     .nav-theme-toggle {
-        width: 36px;
-        height: 36px;
+        width: 40px;
+        height: 40px;
     }
 }
 
@@ -381,9 +383,10 @@
 
     .nav-container {
         height: 52px;
-        padding: 0 12px;
+        padding: 0 10px;
         border-radius: 60px;
-        max-width: 290px;
+        width: 100%;
+        max-width: 100%;
     }
 
     .logo {
@@ -391,30 +394,31 @@
     }
 
     .hamburger {
-        width: 34px;
-        height: 34px;
+        width: 40px;
+        height: 40px;
     }
 
     .hamburger span {
-        width: 16px;
+        width: 18px;
     }
 
     .nav-theme-toggle {
-        width: 32px;
-        height: 32px;
+        width: 38px;
+        height: 38px;
     }
 
     .mobile-menu {
         top: 68px;
-        left: 8px;
-        right: 8px;
+        left: 6px;
+        right: 6px;
         padding: 16px 12px 14px;
         border-radius: 14px;
     }
 
     .mobile-nav-link {
         font-size: 14px;
-        padding: 12px 14px;
+        min-height: 44px;
+        padding: 10px 12px;
     }
 }
 

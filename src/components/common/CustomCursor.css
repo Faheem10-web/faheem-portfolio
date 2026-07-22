@@ -122,7 +122,7 @@
 }
 
 /* ── Hide Custom Cursor on Touch Screen Devices ──────── */
-@media (max-width: 1023px) {
+@media (max-width: 1023px), (pointer: coarse) {
     .custom-cursor-outer,
     .custom-cursor-inner {
         display: none !important;

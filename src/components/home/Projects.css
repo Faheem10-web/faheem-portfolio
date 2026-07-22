@@ -191,25 +191,41 @@
     filter: brightness(0.88) translateZ(0); /* Image brightness becomes 88% */
 }
 
+/* Card Active & Touch Focus states */
 .project-card-wrapper:hover .project-overlay,
-.project-card-wrapper:focus-within .project-overlay {
+.project-card-wrapper:focus-within .project-overlay,
+.project-card-wrapper:active .project-overlay {
     opacity: 1;
-    backdrop-filter: blur(5px); /* Apply only blur(5px) */
+    backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     pointer-events: auto;
 }
 
 .project-card-wrapper:hover .project-hover-btn,
-.project-card-wrapper:focus-within .project-hover-btn {
+.project-card-wrapper:focus-within .project-hover-btn,
+.project-card-wrapper:active .project-hover-btn {
     opacity: 1;
     transform: translateY(0) translateZ(0);
-    transition-delay: 80ms; /* Delay 80ms */
+    transition-delay: 40ms;
 }
 
-/* Responsive styles */
+/* Grid & Responsive breakpoints */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 40px;
+    width: 100%;
+}
+
+@media (max-width: 1200px) {
+    .projects-grid {
+        gap: 32px;
+    }
+}
+
 @media (max-width: 991px) {
     .projects-section {
-        padding: 100px 24px;
+        padding: 80px 24px;
     }
     
     .projects-container {
@@ -217,11 +233,11 @@
     }
     
     .projects-title {
-        font-size: 2.8rem;
+        font-size: clamp(2rem, 5vw, 2.8rem);
     }
     
     .projects-grid {
-        gap: 30px;
+        gap: 28px;
     }
     
     .project-card {
@@ -231,21 +247,23 @@
 
 @media (max-width: 767px) {
     .projects-section {
-        padding: 80px 20px;
+        padding: 60px 16px;
     }
     
     .projects-header {
         flex-direction: row;
         align-items: center;
+        justify-content: space-between;
     }
     
     .projects-title {
-        font-size: 2rem;
+        font-size: clamp(1.6rem, 6vw, 2.2rem);
     }
     
     .view-all-btn {
-        padding: 8px 18px;
-        font-size: 12px;
+        padding: 10px 20px;
+        min-height: 44px;
+        font-size: 13px;
     }
     
     .projects-grid {
@@ -259,5 +277,8 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 16px;
+    }
+    .view-all-btn {
+        width: 100%;
     }
 }

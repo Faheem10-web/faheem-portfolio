@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { getOptimizedImageUrl } from "../../utils/imageOptimizer";
 import "./GallerySlider.css";
@@ -35,14 +35,19 @@ function Lightbox({ images, startIndex, onClose }) {
         setZoom((z) => Math.min(Math.max(z - e.deltaY * 0.003, 1), 4));
     };
 
+    const lightboxTouchStartX = useRef(null);
+
     const onTouchStart = (e) => {
-        if (e.touches.length === 2) {
+        if (e.touches.length === 1) {
+            lightboxTouchStartX.current = e.touches[0].clientX;
+        } else if (e.touches.length === 2) {
             lastPinchDist.current = Math.hypot(
                 e.touches[1].clientX - e.touches[0].clientX,
                 e.touches[1].clientY - e.touches[0].clientY
             );
         }
     };
+
     const onTouchMove = (e) => {
         if (e.touches.length === 2) {
             const dist = Math.hypot(e.touches[1].clientX - e.touches[0].clientX, e.touches[1].clientY - e.touches[0].clientY);
@@ -50,6 +55,20 @@ function Lightbox({ images, startIndex, onClose }) {
             lastPinchDist.current = dist;
             setZoom((z) => Math.min(Math.max(z + delta * 0.01, 1), 4));
         }
+    };
+
+    const onTouchEnd = (e) => {
+        if (lightboxTouchStartX.current !== null && e.changedTouches.length === 1 && zoom === 1) {
+            const delta = e.changedTouches[0].clientX - lightboxTouchStartX.current;
+            if (Math.abs(delta) > 40) {
+                if (delta < 0) {
+                    next();
+                } else {
+                    prev();
+                }
+            }
+        }
+        lightboxTouchStartX.current = null;
     };
 
     const variants = makeVariants(direction);
@@ -60,7 +79,7 @@ function Lightbox({ images, startIndex, onClose }) {
             <button className="gs-lightbox-close" onClick={onClose} aria-label="Close lightbox">x</button>
             {total > 1 && <button className="gs-lightbox-nav gs-lightbox-prev" onClick={(e) => { e.stopPropagation(); prev(); }} aria-label="Previous">&lt;</button>}
             <AnimatePresence initial={false} custom={direction} mode="popLayout">
-                <motion.div key={index} className="gs-lightbox-img-wrap" custom={direction} variants={variants} initial="enter" animate="center" exit="exit" onClick={(e) => e.stopPropagation()} onWheel={onWheel} onTouchStart={onTouchStart} onTouchMove={onTouchMove}>
+                <motion.div key={index} className="gs-lightbox-img-wrap" custom={direction} variants={variants} initial="enter" animate="center" exit="exit" onClick={(e) => e.stopPropagation()} onWheel={onWheel} onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}>
                     <motion.img src={getOptimizedImageUrl(images[index], { width: 1600, quality: 95 })} alt={`Lightbox image ${index + 1}`} className="gs-lightbox-img" draggable={false} animate={{ scale: zoom }} transition={{ type: "spring", stiffness: 300, damping: 30 }} />
                 </motion.div>
             </AnimatePresence>
@@ -127,7 +146,13 @@ export default function GallerySlider({ images = [], fallbackImage = null, alt =
     const onTouchEnd = (e) => {
         if (touchStartX.current === null) return;
         const delta = e.changedTouches[0].clientX - touchStartX.current;
-        if (Math.abs(delta) > 40) delta < 0 ? next() : prev();
+        if (Math.abs(delta) > 40) {
+            if (delta < 0) {
+                next();
+            } else {
+                prev();
+            }
+        }
         touchStartX.current = null;
     };
 

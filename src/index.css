@@ -1,17 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 
 :root {
-    --bg-primary-rgb: 5, 5, 5;
-    --bg-primary: rgb(var(--bg-primary-rgb));
-    --bg-secondary: #0a0a0f;
+    --bg-primary-rgb: 10, 10, 10;
+    --bg-primary: #0A0A0A;
+    --bg-secondary: #0A0A0A;
     --color-primary: #8B5CF6;
     --color-primary-glow: rgba(139, 92, 246, 0.35);
     --color-text-main: #ffffff;
     --color-text-muted: #a1a1aa;
     --color-text-dark: #71717a;
     --border-glass: rgba(255, 255, 255, 0.08);
-    --bg-glass: rgba(18, 18, 22, 0.55);
-    --bg-glass-scrolled: rgba(14, 14, 18, 0.88);
+    --bg-glass: rgba(10, 10, 10, 0.75);
+    --bg-glass-scrolled: rgba(10, 10, 10, 0.92);
     --border-glass-scrolled: rgba(255, 255, 255, 0.13);
     --nav-btn-bg: #ffffff;
     --nav-btn-text: #111111;
@@ -289,7 +289,7 @@ select,
 }
 
 /* =========================================================================
-   2026 STANDARDIZED TYPOGRAPHY SYSTEM (GEIST ONLY)
+   2026 STANDARDIZED FLUID TYPOGRAPHY SYSTEM & RESPONSIVE SAFETY
 ========================================================================= */
 
 /* Base HTML Overrides */
@@ -297,58 +297,73 @@ html, body {
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    max-width: 100vw;
+    overflow-x: clip;
 }
 
+/* Fluid Typography with clamp() for 320px -> 2560px smooth scaling */
 h1, .text-h1 {
-    font-size: 56px !important;
+    font-size: clamp(2.2rem, 5vw + 1rem, 3.5rem) !important;
     font-weight: 700 !important;
     letter-spacing: -0.04em !important;
-    line-height: 1.05 !important;
+    line-height: 1.08 !important;
     font-family: var(--font-heading) !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 h2, .text-h2 {
-    font-size: 48px !important;
+    font-size: clamp(1.8rem, 4vw + 0.8rem, 3rem) !important;
     font-weight: 700 !important;
     letter-spacing: -0.04em !important;
-    line-height: 1.05 !important;
+    line-height: 1.1 !important;
     font-family: var(--font-heading) !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 h3, .text-h3 {
-    font-size: 36px !important;
+    font-size: clamp(1.4rem, 3vw + 0.5rem, 2.25rem) !important;
     font-weight: 600 !important;
-    letter-spacing: -0.04em !important;
-    line-height: 1.1 !important;
+    letter-spacing: -0.03em !important;
+    line-height: 1.15 !important;
     font-family: var(--font-heading) !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 h4, .text-h4 {
-    font-size: 28px !important;
+    font-size: clamp(1.2rem, 2vw + 0.4rem, 1.75rem) !important;
     font-weight: 600 !important;
-    letter-spacing: -0.04em !important;
-    line-height: 1.1 !important;
+    letter-spacing: -0.03em !important;
+    line-height: 1.2 !important;
     font-family: var(--font-heading) !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 h5, .text-h5 {
-    font-size: 22px !important;
+    font-size: clamp(1.05rem, 1.5vw + 0.3rem, 1.375rem) !important;
     font-weight: 600 !important;
-    letter-spacing: -0.04em !important;
-    line-height: 1.15 !important;
+    letter-spacing: -0.02em !important;
+    line-height: 1.25 !important;
     font-family: var(--font-heading) !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .text-hero-display {
-    font-size: 72px !important;
+    font-size: clamp(2.5rem, 7vw + 1rem, 4.5rem) !important;
     font-weight: 700 !important;
     letter-spacing: -0.04em !important;
     line-height: 1.02 !important;
     font-family: var(--font-heading) !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .text-body-large {
-    font-size: 20px !important;
+    font-size: clamp(1rem, 1.2vw + 0.6rem, 1.25rem) !important;
     font-weight: 400 !important;
     letter-spacing: -0.02em !important;
     line-height: 1.6 !important;
@@ -356,15 +371,16 @@ h5, .text-h5 {
 }
 
 p, .text-body {
-    font-size: 18px !important;
+    font-size: clamp(0.9375rem, 1vw + 0.5rem, 1.125rem) !important;
     font-weight: 400 !important;
     letter-spacing: -0.02em !important;
     line-height: 1.6 !important;
     font-family: var(--font-body) !important;
+    overflow-wrap: anywhere;
 }
 
 .text-small {
-    font-size: 16px !important;
+    font-size: clamp(0.875rem, 0.8vw + 0.5rem, 1rem) !important;
     font-weight: 400 !important;
     letter-spacing: -0.02em !important;
     line-height: 1.6 !important;
@@ -372,7 +388,7 @@ p, .text-body {
 }
 
 .text-caption {
-    font-size: 14px !important;
+    font-size: clamp(0.8rem, 0.6vw + 0.5rem, 0.875rem) !important;
     font-weight: 400 !important;
     letter-spacing: -0.02em !important;
     line-height: 1.6 !important;
@@ -384,9 +400,32 @@ strong, b {
     font-weight: 700 !important;
 }
 
-/* Smooth high-quality text rendering */
+/* Smooth high-quality text rendering and layout overflow prevention */
 * {
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    max-width: 100%;
+}
+
+img, video, canvas, svg, iframe {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Touch targets & reduced motion */
+@media (pointer: coarse) {
+    button, a, [role="button"], input[type="submit"], input[type="button"] {
+        min-height: 48px;
+        min-width: 48px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }

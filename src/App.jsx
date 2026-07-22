@@ -13,6 +13,7 @@ import { AdminProvider, useAdmin } from "./context/AdminContext";
 import Loader from "./components/common/Loader";
 import Lenis from "lenis";
 import ChatWidget from "./components/common/ChatWidget";
+import ClickSpark from "./components/common/ClickSpark";
 
 // Lazy-loaded Admin CMS Routes for optimal initial bundle size
 const AdminLayout = lazy(() => import("./admin/AdminLayout"));
@@ -193,7 +194,7 @@ function AppContent() {
           <div className="admin-container" key="admin-content">
             <main>
               <Suspense fallback={
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', backgroundColor: '#050505', color: '#888', fontFamily: 'sans-serif', fontSize: '14px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', backgroundColor: '#0A0A0A', color: '#888', fontFamily: 'sans-serif', fontSize: '14px' }}>
                   Loading Admin Panel...
                 </div>
               }>
@@ -217,7 +218,13 @@ function AppContent() {
             </main>
           </div>
         ) : (
-          <>
+          <ClickSpark
+            sparkColor="#8B5CF6"
+            sparkSize={14}
+            sparkRadius={24}
+            sparkCount={10}
+            duration={450}
+          >
             <motion.div 
               key="content"
               className="app-container"
@@ -239,7 +246,7 @@ function AppContent() {
               <Footer />
             </motion.div>
             <ChatWidget />
-          </>
+          </ClickSpark>
         )}
       </AnimatePresence>
     </>

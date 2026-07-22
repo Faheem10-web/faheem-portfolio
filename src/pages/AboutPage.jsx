@@ -144,9 +144,52 @@ const getSkillIcon = (iconName) => {
   }
 };
 
+const FallbackProfileCard = () => (
+  <motion.div 
+    className="fallback-profile-card"
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    whileHover={{ scale: 1.02 }}
+    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+  >
+    <div className="fallback-bg-grid"></div>
+    <div className="fallback-purple-glow"></div>
+
+    <div className="fallback-content">
+      {/* Large Initials */}
+      <div className="fallback-initials-wrapper">
+        <div className="fallback-initials">FA</div>
+      </div>
+
+      {/* Profile Information */}
+      <div className="fallback-info">
+        <h3 className="fallback-name">Faheem A V</h3>
+        <p className="fallback-role">UI/UX Designer • Frontend Developer</p>
+      </div>
+
+      {/* Status Badge */}
+      <div className="fallback-status-badge">
+        <span className="status-dot-green"></span>
+        <span>Available for Work</span>
+      </div>
+
+      {/* Skills Chips */}
+      <div className="fallback-skills-chips">
+        <span className="skill-chip">Figma</span>
+        <span className="skill-chip">React</span>
+        <span className="skill-chip">UX Research</span>
+        <span className="skill-chip">Prototyping</span>
+      </div>
+    </div>
+  </motion.div>
+);
+
 function AboutPage() {
   const { siteSettings, skills, isSkillsLoading } = useAdmin();
   const aboutSettings = siteSettings?.about || {};
+  const [imgError, setImgError] = useState(false);
+
+  const profileImgSrc = aboutSettings.aboutImage || "/assets/about_profile.png";
 
   const categorizedExpertise = [
     {
@@ -183,40 +226,77 @@ function AboutPage() {
           {/* Profile and About Intro */}
           <div className="about-intro-grid">
             <div className="about-intro-left">
-              <div className="about-title-container">
-                <motion.h1 
-                  className="about-heading"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                >
-                  About Me
-                </motion.h1>
-              </div>
+              {/* Capsule Badge */}
+              <motion.div 
+                className="about-pill-badge"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <FiUser className="pill-badge-icon" />
+                <span>About Me</span>
+              </motion.div>
               
-              <motion.p 
-                className="about-intro-desc"
+              {/* Main Heading with Purple Dot */}
+              <motion.h1 
+                className="about-hero-title"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
+                transition={{ duration: 0.6, delay: 0.08 }}
               >
-                {aboutSettings.description || "I'm Faheem, a passionate UI/UX Designer & Front-End Developer based in India. I believe in the power of simplicity and the impact of good design."}
-              </motion.p>
+                About me<span className="purple-dot">.</span>
+              </motion.h1>
+              
+              {/* Greeting & Bio Block */}
+              <motion.div 
+                className="about-greeting-block"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.15 }}
+              >
+                <div className="about-greeting-hi">
+                  Hi! <span className="wave-hand">👋</span>
+                </div>
+                
+                <p className="about-bio-text">
+                  {aboutSettings.bioIntro || "My name is Faheem. I am a UI/UX Designer & Frontend Developer based in India with experience through projects and building modern web applications."}
+                </p>
+
+                <p className="about-objective-text">
+                  {aboutSettings.objective || "My objective: Challenge myself in a new environment to learn, develop, improve my skills through different projects and contribute more to the company with my abilities."}
+                </p>
+              </motion.div>
+
+              <div className="about-intro-line"></div>
             </div>
 
+            {/* Right Column Profile Card with Ornaments */}
             <motion.div 
               className="about-intro-right"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
             >
-              <div className="profile-image-card">
-                <img 
-                  src={aboutSettings.aboutImage || "/assets/about_profile.png"} 
-                  alt="Faheem Profile" 
-                  className="profile-photo"
-                />
-                <div className="profile-photo-overlay"></div>
+              <div className="profile-image-container">
+                {/* Decorative background circles & dots matching reference image */}
+                <div className="decor-circle decor-circle-top-left"></div>
+                <div className="decor-circle decor-circle-bottom-right"></div>
+                <div className="decor-sparkle-star">✦</div>
+                <div className="decor-dots-grid"></div>
+
+                {/* Main Profile Photo Squircle Card / Fallback Card */}
+                <div className="profile-photo-card">
+                  {!imgError && profileImgSrc ? (
+                    <img 
+                      src={profileImgSrc} 
+                      alt="Faheem Profile" 
+                      className="profile-photo-img"
+                      onError={() => setImgError(true)}
+                    />
+                  ) : (
+                    <FallbackProfileCard />
+                  )}
+                </div>
               </div>
             </motion.div>
           </div>

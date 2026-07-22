@@ -294,9 +294,10 @@
 }
 
 .proj-card-inner:hover .proj-card-hover-overlay,
-.proj-card-inner:focus-within .proj-card-hover-overlay {
+.proj-card-inner:focus-within .proj-card-hover-overlay,
+.proj-card-inner:active .proj-card-hover-overlay {
     opacity: 1;
-    backdrop-filter: blur(5px); /* Apply only blur(5px) */
+    backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     pointer-events: auto;
 }
@@ -305,8 +306,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 18px; /* Buttons centered with 18px gap */
-    transition: transform 0.1s ease-out; /* Smooth direct cursor follow */
+    gap: 18px;
+    transition: transform 0.1s ease-out;
     will-change: transform;
 }
 
@@ -315,16 +316,16 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    height: 54px; /* Buttons height: 54px */
+    height: 54px;
     padding: 0 28px;
-    border-radius: 999px; /* Border radius: 999px */
+    border-radius: 999px;
     font-size: 14px;
     font-weight: 600;
     font-family: var(--font-heading);
     text-decoration: none;
     cursor: pointer;
     opacity: 0;
-    transform: translateY(18px) translateZ(0); /* Animation translateY(18px) -> translateY(0) */
+    transform: translateY(18px) translateZ(0);
     transition: opacity 420ms cubic-bezier(.22, 1, .36, 1), 
                 transform 420ms cubic-bezier(.22, 1, .36, 1), 
                 background-color 300ms ease, 
@@ -334,10 +335,11 @@
 }
 
 .proj-card-inner:hover .proj-card-hover-overlay .hover-btn,
-.proj-card-inner:focus-within .proj-card-hover-overlay .hover-btn {
+.proj-card-inner:focus-within .proj-card-hover-overlay .hover-btn,
+.proj-card-inner:active .proj-card-hover-overlay .hover-btn {
     opacity: 1;
     transform: translateY(0) translateZ(0);
-    transition-delay: 80ms; /* Delay 80ms */
+    transition-delay: 40ms;
 }
 
 /* Button 1: Case Study */
@@ -1146,9 +1148,22 @@
 }
 
 /* Responsive adjustments */
+.proj-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 40px;
+    width: 100%;
+}
+
+@media (max-width: 1200px) {
+    .proj-grid {
+        gap: 32px;
+    }
+}
+
 @media (max-width: 1024px) {
     .proj-hero-title {
-        font-size: 3.8rem;
+        font-size: clamp(2.5rem, 5vw, 3.8rem);
     }
     
     .proj-grid {
@@ -1173,21 +1188,21 @@
 
 @media (max-width: 768px) {
     .proj-hero-section {
-        padding: 140px 20px 60px 20px;
+        padding: 120px 16px 50px 16px;
     }
     
     .proj-hero-title {
-        font-size: 2.8rem;
+        font-size: clamp(2rem, 6vw, 2.8rem);
         letter-spacing: -1px;
     }
     
     .proj-hero-description {
-        font-size: 1.1rem;
+        font-size: 1.05rem;
     }
     
     .filter-sticky-bar {
         top: 60px;
-        padding: 12px 16px;
+        padding: 12px 12px;
     }
     
     .proj-grid {
@@ -1196,15 +1211,15 @@
     }
     
     .meta-title {
-        font-size: 24px !important;
+        font-size: clamp(1.25rem, 4vw, 1.5rem) !important;
     }
     
     .proj-card-meta {
-        padding: 24px;
+        padding: 20px 16px;
     }
     
     .showcase-title {
-        font-size: 2.2rem;
+        font-size: clamp(1.8rem, 5vw, 2.2rem);
     }
     
     .showcase-layout {
@@ -1244,7 +1259,7 @@
     }
     
     .timeline-content {
-        padding: 20px;
+        padding: 18px 16px;
     }
     
     .timeline-phase {
@@ -1264,75 +1279,61 @@
     }
     
     .cta-heading {
-        font-size: 2.8rem;
+        font-size: clamp(2rem, 6vw, 2.8rem);
     }
     
     .cta-subheading {
-        font-size: 1.1rem;
+        font-size: 1.05rem;
     }
 }
 
 @media (max-width: 480px) {
     .proj-page-heading-wrap {
-        padding: 100px 16px 24px 16px;
+        padding: 90px 12px 20px 12px;
     }
     
     .proj-page-heading {
-        font-size: 2.2rem;
+        font-size: clamp(1.6rem, 7vw, 2.2rem);
         letter-spacing: -1px;
     }
 
     .proj-grid-section {
-        padding: 40px 16px 80px 16px;
+        padding: 30px 12px 60px 12px;
     }
     
     .proj-card-meta {
-        padding: 20px 16px;
+        padding: 16px 14px;
     }
     
     .meta-title {
-        font-size: 22px !important;
+        font-size: 1.2rem !important;
         margin-bottom: 8px;
     }
     
     .meta-desc {
         font-size: 0.9rem;
-        margin-bottom: 20px;
-    }
-    
-    .proj-card-actions {
-        gap: 8px;
+        margin-bottom: 16px;
     }
     
     .action-btn {
-        padding: 0 12px;
-        font-size: 12px;
+        padding: 0 14px;
+        font-size: 13px;
         gap: 6px;
-        height: 36px;
+        min-height: 44px;
         white-space: nowrap;
         flex: 1;
     }
     
-    .action-btn span {
-        white-space: nowrap;
-    }
-    
-    .action-btn svg {
-        font-size: 13px;
-        flex-shrink: 0;
-    }
-    
-    .proj-hero-title {
-        font-size: 2.2rem;
-    }
-    
     .filter-segmented-controls {
         padding: 4px;
+        width: 100%;
+        justify-content: flex-start;
     }
     
     .filter-btn {
         padding: 8px 16px;
         font-size: 13px;
+        min-height: 40px;
     }
     
     .stats-grid {
@@ -1346,6 +1347,6 @@
     }
     
     .cta-heading {
-        font-size: 2.2rem;
+        font-size: clamp(1.6rem, 7vw, 2.2rem);
     }
 }

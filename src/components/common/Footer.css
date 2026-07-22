@@ -77,12 +77,13 @@
 
 .footer-email-link {
     font-family: var(--font-heading);
-    font-size: clamp(2.4rem, 5.5vw, 4.8rem);
+    font-size: clamp(1.4rem, 5.5vw, 4.8rem);
     font-weight: 700;
     color: #ffffff;
     text-decoration: none;
     letter-spacing: -0.04em;
-    line-height: 1.05;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
     word-break: break-word;
     transition: color 0.3s ease, transform 0.3s ease;
 }
@@ -96,8 +97,8 @@
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.15);
     color: #ffffff;
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -156,7 +157,11 @@
 }
 
 .footer-nav-pill {
-    padding: 10px 26px;
+    padding: 10px 24px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     border-radius: 100px;
     font-family: var(--font-body);
     font-size: 14px;
@@ -216,6 +221,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    min-height: 44px;
     cursor: pointer;
     transition: color 0.3s ease, transform 0.3s ease;
 }
@@ -238,12 +244,13 @@
 .footer-social-circles {
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    gap: 12px;
 }
 
 .footer-social-circles a {
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     background: #ffffff;
     color: #1a1a1a;
@@ -270,7 +277,7 @@
     }
 
     .footer-card {
-        padding: 56px 20px 48px 20px;
+        padding: 48px 16px 40px 16px;
         border-radius: 32px;
         min-height: auto;
     }
@@ -297,14 +304,19 @@
 }
 
 @media (max-width: 600px) {
+    .footer-wrapper {
+        padding: 16px 10px 12px 10px;
+    }
+
     .footer-card {
-        padding: 44px 16px 36px 16px;
+        padding: 36px 14px 28px 14px;
         border-radius: 24px;
     }
 
     .footer-nav-pill {
-        padding: 8px 20px;
+        padding: 8px 18px;
         font-size: 13px;
+        min-height: 42px;
     }
 
     .footer-email-container {
@@ -313,6 +325,6 @@
     }
 
     .footer-email-link {
-        font-size: clamp(1.8rem, 8vw, 2.8rem);
+        font-size: clamp(1.2rem, 7.5vw, 2.5rem);
     }
 }
