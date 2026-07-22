@@ -131,7 +131,7 @@ function ChatWidget() {
 
     return (
         <div className="chat-widget-container" style={customStyles}>
-            {/* FAB / Pill Trigger Button */}
+            {/* FAB / Circular WhatsApp Trigger Button */}
             <button
                 ref={fabRef}
                 className="chat-widget-fab"
@@ -141,14 +141,10 @@ function ChatWidget() {
             >
                 <div className="chat-fab-content">
                     {isOpen ? (
-                        <>
-                            <FiX className="chat-fab-close-icon" />
-                            <span className="chat-fab-label">Close</span>
-                        </>
+                        <FiX className="chat-fab-close-icon" />
                     ) : (
                         <>
                             <FaWhatsapp className="chat-fab-wa-icon" />
-                            <span className="chat-fab-label">{buttonText}</span>
                             <span className="chat-fab-online-dot"></span>
                         </>
                     )}
