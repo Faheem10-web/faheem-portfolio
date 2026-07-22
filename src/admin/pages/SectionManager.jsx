@@ -39,7 +39,7 @@ export default function SectionManager() {
 
   // Tab State variables
   const [heroForm, setHeroForm] = useState({ greeting: '', name: '', words: '', title1: '', title2: '', description: '', isAvailable: true, availabilityText: '', heroImage: '', bgImage: '', bgVideo: '' });
-  const [navForm, setNavForm] = useState({ logoText: '', logoImage: '', downloadCvBtnText: '', downloadCvBtnVisible: true, themeToggleVisible: true, stickyNavbar: true });
+  const [navForm, setNavForm] = useState({ logoType: 'text', logoText: 'FAHEEM', logoImage: '', logoHeight: 32, downloadCvBtnText: 'Download CV', downloadCvBtnVisible: true, themeToggleVisible: true, stickyNavbar: true });
   const [aboutForm, setAboutForm] = useState({ title: '', subtitle: '', description: '', experienceYears: 3, aboutImage: '' });
   const [footerForm, setFooterForm] = useState({ logoText: '', copyrightText: '', description: '', contactEmail: '', bgVideo: '' });
   const [seoForm, setSeoForm] = useState({ siteTitle: '', metaDescription: '', keywords: '', favicon: '', ogImage: '' });
@@ -356,36 +356,106 @@ export default function SectionManager() {
         {activeTab === 'navbar' && (
           <>
             <form onSubmit={(e) => { e.preventDefault(); handleSaveSettings('navbar', navForm); }}>
-              <h3 className="admin-panel-title">Navbar Configuration</h3>
-              <div className="admin-form-row">
-                <div className="admin-form-group">
-                  <label className="admin-label">Logo Text</label>
-                  <input type="text" className="admin-input" value={navForm.logoText} onChange={e => setNavForm({ ...navForm, logoText: e.target.value })} />
+              <h3 className="admin-panel-title">Navbar Configuration & Logo Manager</h3>
+              
+              {/* Brand Logo Type & Settings */}
+              <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--admin-border)', borderRadius: '16px', padding: '20px', marginBottom: '24px' }}>
+                <h4 style={{ margin: '0 0 16px 0', fontSize: '15px', fontWeight: '700', color: 'var(--admin-text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  🎨 Brand Logo Mode & Appearance
+                </h4>
+
+                <div className="admin-form-group" style={{ marginBottom: '16px' }}>
+                  <label className="admin-label">Logo Display Mode</label>
+                  <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+                    <label style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}>
+                      <input 
+                        type="radio" 
+                        name="logoType" 
+                        value="text" 
+                        checked={(navForm.logoType || 'text') === 'text'} 
+                        onChange={() => setNavForm({ ...navForm, logoType: 'text' })} 
+                      />
+                      🔤 Text Logo (e.g. FAHEEM)
+                    </label>
+                    <label style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: '600' }}>
+                      <input 
+                        type="radio" 
+                        name="logoType" 
+                        value="image" 
+                        checked={navForm.logoType === 'image'} 
+                        onChange={() => setNavForm({ ...navForm, logoType: 'image' })} 
+                      />
+                      🖼️ Image Logo (Custom PNG / SVG / WEBP)
+                    </label>
+                  </div>
                 </div>
-                <div className="admin-form-group">
-                  <label className="admin-label">CV Button Text</label>
-                  <input type="text" className="admin-input" value={navForm.downloadCvBtnText} onChange={e => setNavForm({ ...navForm, downloadCvBtnText: e.target.value })} />
+
+                <div className="admin-form-row">
+                  <div className="admin-form-group">
+                    <label className="admin-label">Logo Text</label>
+                    <input 
+                      type="text" 
+                      className="admin-input" 
+                      value={navForm.logoText || 'FAHEEM'} 
+                      onChange={e => setNavForm({ ...navForm, logoText: e.target.value })} 
+                      placeholder="e.g. FAHEEM"
+                    />
+                  </div>
+
+                  <div className="admin-form-group">
+                    <label className="admin-label">Image Logo Height: {navForm.logoHeight || 32}px</label>
+                    <input 
+                      type="range" 
+                      min="20" 
+                      max="60" 
+                      value={navForm.logoHeight || 32} 
+                      onChange={e => setNavForm({ ...navForm, logoHeight: parseInt(e.target.value) || 32 })} 
+                      style={{ width: '100%', cursor: 'pointer' }}
+                    />
+                  </div>
+                </div>
+
+                <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                  <label className="admin-label">Image Logo File / URL</label>
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    <input 
+                      type="text" 
+                      className="admin-input" 
+                      value={navForm.logoImage || ''} 
+                      onChange={e => setNavForm({ ...navForm, logoImage: e.target.value })} 
+                      placeholder="Enter logo image URL or upload file" 
+                    />
+                    <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
+                      Upload Logo
+                      <input 
+                        type="file" 
+                        accept="image/*"
+                        onChange={(e) => handleDirectUpload(e, navForm, setNavForm, 'logoImage')} 
+                        style={{ display: 'none' }} 
+                      />
+                    </label>
+                  </div>
+                  {navForm.logoImage && (
+                    <div style={{ marginTop: '12px', display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(0,0,0,0.3)', padding: '10px 14px', borderRadius: '10px', width: 'fit-content' }}>
+                      <span style={{ fontSize: '12px', color: '#9CA3AF' }}>Active Logo Preview:</span>
+                      <img src={navForm.logoImage} alt="Logo Preview" style={{ height: `${navForm.logoHeight || 32}px`, width: 'auto', objectFit: 'contain' }} />
+                      <button 
+                        type="button" 
+                        onClick={() => setNavForm({ ...navForm, logoImage: '' })}
+                        style={{ background: 'rgba(239,68,68,0.2)', color: '#EF4444', border: 'none', padding: '4px 8px', borderRadius: '6px', cursor: 'pointer', fontSize: '11px', fontWeight: '700' }}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <div className="admin-form-group">
-                <label className="admin-label">Logo Image URL (optional branding)</label>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <input 
-                    type="text" 
-                    className="admin-input" 
-                    value={navForm.logoImage || ''} 
-                    onChange={e => setNavForm({ ...navForm, logoImage: e.target.value })} 
-                    placeholder="Enter logo image URL or upload file" 
-                  />
-                  <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
-                    Upload File
-                    <input 
-                      type="file" 
-                      onChange={(e) => handleDirectUpload(e, navForm, setNavForm, 'logoImage')} 
-                      style={{ display: 'none' }} 
-                    />
-                  </label>
+              {/* Button & Navbar Controls */}
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">CV Button Text</label>
+                  <input type="text" className="admin-input" value={navForm.downloadCvBtnText} onChange={e => setNavForm({ ...navForm, downloadCvBtnText: e.target.value })} />
                 </div>
               </div>
 

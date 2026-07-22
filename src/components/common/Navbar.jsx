@@ -128,6 +128,11 @@ function Navbar() {
         }
     };
 
+    const logoType = navSettings.logoType || (navSettings.logoImage ? 'image' : 'text');
+    const logoText = navSettings.logoText || "FAHEEM";
+    const logoImage = navSettings.logoImage || "";
+    const logoHeight = navSettings.logoHeight || 32;
+
     const navLinks = [
         { label: "Home",     href: isHomePage ? "#home"    : "/#home",    isRouter: false },
         { label: "About",    href: "/about",                               isRouter: true  },
@@ -143,8 +148,22 @@ function Navbar() {
                 <div className="nav-container">
 
                     <Magnetic strength={0.15}>
-                        <Link to="/" className="logo">
-                            {navSettings.logoText || "FAHEEM"}
+                        <Link to="/" className="logo" style={{ display: 'flex', alignItems: 'center' }}>
+                            {logoType === "image" && logoImage ? (
+                                <img 
+                                    src={logoImage} 
+                                    alt={logoText} 
+                                    style={{ 
+                                        height: `${logoHeight}px`, 
+                                        width: 'auto', 
+                                        maxHeight: '48px',
+                                        objectFit: 'contain', 
+                                        display: 'block' 
+                                    }} 
+                                />
+                            ) : (
+                                <span style={{ fontWeight: 900, letterSpacing: '0.04em' }}>{logoText}</span>
+                            )}
                         </Link>
                     </Magnetic>
 

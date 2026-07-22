@@ -2,8 +2,10 @@ import mongoose from 'mongoose';
 
 // 1. Navbar Settings Schema
 const navbarSettingsSchema = new mongoose.Schema({
+  logoType: { type: String, default: 'text' }, // 'text' | 'image'
   logoText: { type: String, default: 'FAHEEM' },
   logoImage: { type: String, default: '' },
+  logoHeight: { type: Number, default: 32 },
   navItems: [{
     label: { type: String, required: true },
     href: { type: String, required: true },
