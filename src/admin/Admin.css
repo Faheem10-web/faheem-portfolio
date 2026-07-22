@@ -159,7 +159,7 @@ td {
 
 .admin-login-title {
   font-family: var(--font-heading);
-  font-size: 28px;
+  font-size: 28px !important;
   font-weight: 800;
   margin-bottom: 8px;
   letter-spacing: -1px;
@@ -307,7 +307,7 @@ td {
 
 .admin-header-title {
   font-family: var(--font-heading);
-  font-size: 28px;
+  font-size: 28px !important;
   font-weight: 700;
   letter-spacing: -0.8px;
 }
@@ -372,7 +372,7 @@ td {
 
 .admin-panel-title {
   font-family: var(--font-heading);
-  font-size: 18px;
+  font-size: 18px !important;
   font-weight: 600;
   margin-bottom: 24px;
   display: flex;
@@ -899,7 +899,7 @@ td {
   }
 
   .admin-header-title {
-    font-size: 22px;
+    font-size: 22px !important;
   }
 
   .admin-header-subtitle {
@@ -918,7 +918,7 @@ td {
   }
 
   .admin-login-title {
-    font-size: 22px;
+    font-size: 22px !important;
   }
 
   .admin-stat-card {
@@ -953,7 +953,7 @@ td {
   }
 
   .admin-header-title {
-    font-size: 18px;
+    font-size: 18px !important;
   }
 }
 
