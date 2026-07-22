@@ -121,10 +121,10 @@
 /* ── CHAT WINDOW ── */
 .chat-window {
     position: fixed;
-    bottom: 112px;
+    bottom: 88px;
     right: 32px;
-    width: 400px;
-    height: 540px;
+    width: 380px;
+    height: 520px;
     border-radius: 24px;
     background-color: #0b0b0f;
     backdrop-filter: blur(20px);
@@ -213,11 +213,11 @@
 /* Chat Body */
 .chat-body {
     flex: 1;
-    padding: 16px 20px 12px 20px;
+    padding: 12px 16px 8px 16px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     background-color: #0b0b0f;
 }
 
@@ -244,10 +244,10 @@
 
 /* Welcome bubble card */
 .welcome-bubble {
-    width: 350px;
-    min-height: 130px;
-    padding: 20px;
-    border-radius: 20px;
+    width: 100%;
+    min-height: auto;
+    padding: 16px;
+    border-radius: 18px;
     background: #1E1F26;
     border: none;
     display: flex;
