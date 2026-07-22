@@ -67,6 +67,29 @@ export default function CaseStudyPage() {
     );
   }
 
+  if (project.hasCaseStudy === false) {
+    const projectLiveUrl = project.links?.liveProject || project.liveUrl;
+    return (
+      <div className="case-study-root" style={{ textAlign: 'center', paddingTop: '160px', paddingBottom: '120px', minHeight: '80vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔒</div>
+        <h2 style={{ fontSize: '32px', fontWeight: '800', marginBottom: '12px' }}>Case Study Currently Disabled</h2>
+        <p style={{ color: 'var(--cs-text-secondary, #9CA3AF)', maxWidth: '500px', marginBottom: '32px', lineHeight: '1.6' }}>
+          Detailed Case Study for <strong>{project.name}</strong> is turned OFF by the site administrator. You can still visit the live project website.
+        </p>
+        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          {projectLiveUrl && (
+            <a href={projectLiveUrl} target="_blank" rel="noreferrer" className="cs-info-action-btn" style={{ padding: '12px 28px', fontSize: '15px', textDecoration: 'none' }}>
+              Visit Live Project ↗
+            </a>
+          )}
+          <Link to="/projects" className="cs-view-all-btn" style={{ padding: '12px 24px', textDecoration: 'none', background: 'var(--admin-card-bg, #1E1F26)', color: '#fff', borderRadius: '10px' }}>
+            ← Back to All Projects
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   // Fallback calculations for backward compatibility
   const titleText = project.name || project.title || 'Untitled Case Study';
   const heroImageSrc = project.heroImage || project.bannerImage || project.coverImage || '/assets/project_eco_shades.jpg';

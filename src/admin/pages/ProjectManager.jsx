@@ -305,6 +305,7 @@ export default function ProjectManager() {
   const [solution, setSolution] = useState('');
   const [results, setResults] = useState('');
   const [process, setProcess] = useState('');
+  const [hasCaseStudy, setHasCaseStudy] = useState(true);
   const [isFeatured, setIsFeatured] = useState(false);
   const [showOnHome, setShowOnHome] = useState(true);
   const [enabled, setEnabled] = useState(true);
@@ -342,6 +343,7 @@ export default function ProjectManager() {
     setSolution('Designed progressive disclosure cards, clean drawer navigation, and responsive touch interaction models.');
     setResults('Achieved 98+ Google Lighthouse performance score and 30% increase in user engagement.');
     setProcess('');
+    setHasCaseStudy(true);
     setIsFeatured(true);
     setShowOnHome(true);
     setEnabled(true);
@@ -393,6 +395,7 @@ export default function ProjectManager() {
     setSolution(proj.solution || 'Designed progressive disclosure cards, clean drawer navigation, and responsive touch interaction models.');
     setResults(proj.results || 'Achieved 98+ Google Lighthouse performance score and 30% increase in user engagement.');
     setProcess(proj.process || '');
+    setHasCaseStudy(proj.hasCaseStudy !== false);
     setIsFeatured(!!proj.isFeatured);
     setShowOnHome(!!proj.showOnHome);
     setEnabled(!!proj.enabled);
@@ -423,7 +426,7 @@ export default function ProjectManager() {
       liveUrl, caseStudyUrl, githubUrl, coverImage, thumbnailImage, bannerImage,
       challenge, challengeImage, solution, solutionImage, results, resultImage,
       challengeImages, solutionImages, resultImages,
-      process, isFeatured, showOnHome, enabled, order,
+      process, hasCaseStudy, isFeatured, showOnHome, enabled, order,
       technologies: formattedTechs,
       gallery: formattedGallery
     };
@@ -797,7 +800,11 @@ export default function ProjectManager() {
                 <label className="admin-label">Display Order</label>
                 <input type="number" className="admin-input" value={order} onChange={e => setOrder(parseInt(e.target.value) || 0)} />
               </div>
-              <div className="admin-form-group" style={{ display: 'flex', gap: '20px', alignItems: 'center', height: '100%' }}>
+              <div className="admin-form-group" style={{ display: 'flex', gap: '20px', alignItems: 'center', height: '100%', flexWrap: 'wrap' }}>
+                <label style={{ display: 'flex', gap: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: '700', color: hasCaseStudy ? '#10B981' : '#EF4444' }}>
+                  <input type="checkbox" checked={hasCaseStudy} onChange={e => setHasCaseStudy(e.target.checked)} />
+                  📖 Case Study Page ({hasCaseStudy ? 'ON' : 'OFF'})
+                </label>
                 <label style={{ display: 'flex', gap: '8px', cursor: 'pointer', fontSize: '14px' }}>
                   <input type="checkbox" checked={isFeatured} onChange={e => setIsFeatured(e.target.checked)} />
                   Featured Project

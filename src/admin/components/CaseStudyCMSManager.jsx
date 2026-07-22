@@ -370,12 +370,14 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
   const [category, setCategory] = useState(project?.category || 'Product Design');
   const [liveUrl, setLiveUrl] = useState(project?.links?.liveProject || project?.liveUrl || '');
 
-  // 4. SEO State
+  // 4. SEO & Case Study Toggle State
+  const [hasCaseStudy, setHasCaseStudy] = useState(project?.hasCaseStudy !== false);
   const [metaTitle, setMetaTitle] = useState(project?.seoConfig?.metaTitle || project?.name || '');
   const [metaDescription, setMetaDescription] = useState(project?.seoConfig?.metaDescription || project?.shortDesc || '');
 
   useEffect(() => {
     if (project) {
+      setHasCaseStudy(project.hasCaseStudy !== false);
       setHeroImage(project.heroImage || project.bannerImage || '');
       setChallengeImage(project.challengeImage || '');
       setSolutionImage(project.solutionImage || '');
@@ -422,6 +424,7 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
 
     const payload = {
       name: projectName,
+      hasCaseStudy,
       heroImage: typeof heroImage === 'object' ? heroImage.url : heroImage,
       bannerImage: typeof heroImage === 'object' ? heroImage.url : heroImage,
       challengeImage: typeof challengeImage === 'object' ? challengeImage.url : challengeImage,
@@ -541,7 +544,30 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '12px' }}>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <label style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: hasCaseStudy ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+            border: `1px solid ${hasCaseStudy ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
+            padding: '8px 14px',
+            borderRadius: '12px',
+            cursor: 'pointer',
+            fontSize: '13px',
+            fontWeight: '700',
+            color: hasCaseStudy ? '#059669' : '#DC2626',
+            userSelect: 'none'
+          }}>
+            <input 
+              type="checkbox" 
+              checked={hasCaseStudy} 
+              onChange={e => setHasCaseStudy(e.target.checked)} 
+              style={{ cursor: 'pointer', width: '16px', height: '16px' }}
+            />
+            <span>📖 Case Study: {hasCaseStudy ? 'ON' : 'OFF'}</span>
+          </label>
+
           <button 
             type="button" 
             onClick={handleLivePreview}

@@ -35,6 +35,8 @@ function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }
 
     const optimizedCover = getOptimizedImageUrl(coverImg, { width: 800 });
 
+    const hasCaseStudy = project.hasCaseStudy !== false;
+
     return (
         <motion.div
             layout
@@ -64,9 +66,11 @@ function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }
                     {/* Premium Glass Overlay & Centered Buttons */}
                     <div className="proj-card-hover-overlay">
                         <div className="proj-card-hover-buttons" ref={buttonsRef}>
-                            <Link to={cardLink} className="hover-btn hover-btn-glass">
-                                Case Study
-                            </Link>
+                            {hasCaseStudy && (
+                                <Link to={cardLink} className="hover-btn hover-btn-glass">
+                                    Case Study
+                                </Link>
+                            )}
                             {demoLink && (
                                 <a 
                                     href={demoLink} 
@@ -90,11 +94,20 @@ function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }
                     <h3 className="meta-title">{cardTitle}</h3>
                     
                     <div className="proj-card-actions">
-                        <Link to={cardLink} className="action-btn action-primary">
-                            <span>Case Study</span>
-                            <FiArrowRight />
-                        </Link>
-                        {demoLink && (
+                        {hasCaseStudy ? (
+                            <Link to={cardLink} className="action-btn action-primary">
+                                <span>Case Study</span>
+                                <FiArrowRight />
+                            </Link>
+                        ) : (
+                            demoLink && (
+                                <a href={demoLink} className="action-btn action-primary" target="_blank" rel="noreferrer">
+                                    <span>Live Preview</span>
+                                    <FiExternalLink />
+                                </a>
+                            )
+                        )}
+                        {hasCaseStudy && demoLink && (
                             <a href={demoLink} className="action-btn action-secondary" target="_blank" rel="noreferrer">
                                 <FiExternalLink />
                                 <span>Live Preview</span>
