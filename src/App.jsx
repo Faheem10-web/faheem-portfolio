@@ -3,6 +3,7 @@ import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
+import ChatWidget from "./components/common/ChatWidget";
 import Home from "./pages/Home";
 import AboutPage from "./pages/AboutPage";
 import ProjectsPage from "./pages/ProjectsPage";
@@ -235,6 +236,7 @@ function AppContent() {
               </AnimatePresence>
             </main>
             <Footer />
+            <ChatWidget />
           </motion.div>
         )}
       </AnimatePresence>
