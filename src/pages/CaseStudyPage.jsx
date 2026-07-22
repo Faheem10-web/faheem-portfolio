@@ -65,35 +65,49 @@ function CaseStudyPage() {
     const resultText = project.results || "No results details loaded yet.";
     const conclusionText = project.longDesc || project.conclusion || "No conclusion loaded yet.";
     const clientName = project.client || "Self Project";
-    const bannerImgUrl = project.bannerImage || project.coverImage || project.image;
+    const bannerImgUrl = project.bannerImage || project.coverImage || project.thumbnailImage || "/assets/project_eco_shades.jpg";
     const demoLinkUrl = project.liveUrl || project.demoLink;
 
     const renderSectionGallery = (imagesArray, singleFallbackUrl, altText, defaultAsset) => {
         let imgs = [];
         if (Array.isArray(imagesArray) && imagesArray.length > 0) {
             imgs = imagesArray.map(item => (typeof item === 'string' ? item : item?.url)).filter(Boolean);
-        } else if (singleFallbackUrl) {
+        } 
+        
+        if (imgs.length === 0 && singleFallbackUrl) {
             imgs = [singleFallbackUrl];
-        } else if (defaultAsset) {
+        } 
+
+        if (imgs.length === 0 && defaultAsset) {
             imgs = [defaultAsset];
         }
 
-        if (imgs.length === 0) return null;
+        if (imgs.length === 0) {
+            imgs = ["/assets/mockup_challenge.png"];
+        }
 
         return (
             <div className="section-gallery-container" style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%' }}>
-                {imgs.map((url, idx) => (
-                    <div key={idx} className="section-mockup-wrapper">
-                        <img 
-                            src={getOptimizedImageUrl(url, { width: 1200 })} 
-                            alt={`${altText} ${idx + 1}`} 
-                            className="section-mockup-img"
-                            loading="lazy"
-                            decoding="async"
-                            onError={(e) => { if (e.target.parentElement) e.target.parentElement.style.display = 'none'; }}
-                        />
-                    </div>
-                ))}
+                {imgs.map((url, idx) => {
+                    const initialSrc = getOptimizedImageUrl(url, { width: 1200 }) || defaultAsset || "/assets/mockup_challenge.png";
+                    return (
+                        <div key={idx} className="section-mockup-wrapper">
+                            <img 
+                                src={initialSrc} 
+                                alt={`${altText} ${idx + 1}`} 
+                                className="section-mockup-img"
+                                loading="lazy"
+                                decoding="async"
+                                onError={(e) => {
+                                    const fallback = defaultAsset || "/assets/mockup_challenge.png";
+                                    if (!e.target.src.endsWith(fallback)) {
+                                        e.target.src = fallback;
+                                    }
+                                }}
+                            />
+                        </div>
+                    );
+                })}
             </div>
         );
     };
@@ -104,9 +118,14 @@ function CaseStudyPage() {
             {/* ── HERO BANNER ── */}
             <div className="case-study-hero-banner">
                 <img 
-                    src={bannerImgUrl} 
+                    src={getOptimizedImageUrl(bannerImgUrl) || "/assets/project_eco_shades.jpg"} 
                     alt={`${titleText} Banner`} 
                     className="hero-banner-img"
+                    onError={(e) => {
+                        if (!e.target.src.endsWith('/assets/project_eco_shades.jpg')) {
+                            e.target.src = '/assets/project_eco_shades.jpg';
+                        }
+                    }}
                 />
                 <div className="hero-banner-overlay" />
             </div>

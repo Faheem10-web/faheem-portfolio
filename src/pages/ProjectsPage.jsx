@@ -48,7 +48,18 @@ function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }
         >
             <div className="proj-card-inner" tabIndex="0">
                 <div className="proj-card-image-wrap">
-                    <img src={optimizedCover} alt={cardTitle} className="proj-card-image" loading="lazy" decoding="async" />
+                    <img 
+                        src={optimizedCover || "/assets/project_eco_shades.jpg"} 
+                        alt={cardTitle} 
+                        className="proj-card-image" 
+                        loading="lazy" 
+                        decoding="async" 
+                        onError={(e) => {
+                            if (!e.target.src.endsWith('/assets/project_eco_shades.jpg')) {
+                                e.target.src = '/assets/project_eco_shades.jpg';
+                            }
+                        }}
+                    />
                     
                     {/* Premium Glass Overlay & Centered Buttons */}
                     <div className="proj-card-hover-overlay">

@@ -52,11 +52,16 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
         >
             <div className="project-card" tabIndex="0">
                 <img 
-                    src={optimizedCover} 
+                    src={optimizedCover || "/assets/project_eco_shades.jpg"} 
                     alt={cardTitle} 
                     className="project-image" 
                     loading="lazy"
                     decoding="async"
+                    onError={(e) => {
+                        if (!e.target.src.endsWith('/assets/project_eco_shades.jpg')) {
+                            e.target.src = '/assets/project_eco_shades.jpg';
+                        }
+                    }}
                 />
                 <div className="project-overlay">
                     <div className="project-hover-actions" ref={buttonsRef}>
