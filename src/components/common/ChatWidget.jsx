@@ -1,246 +1,231 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./ChatWidget.css";
 import { AnimatePresence, motion } from "framer-motion";
+import { FaWhatsapp } from "react-icons/fa";
+import { FiX, FiSend } from "react-icons/fi";
 import { useAdmin } from "../../context/AdminContext";
-import { FiX, FiSend, FiArrowRight } from "react-icons/fi";
-
-const QUICK_ACTIONS = [
-  { label: "🎨 UI/UX Design", message: "Hello Faheem, I'm interested in UI/UX design services." },
-  { label: "💻 Frontend Development", message: "Hello Faheem, I need frontend development for my project." },
-  { label: "🚀 Build My Website", message: "Hello Faheem, I'd like you to build my website." },
-  { label: "📁 View Portfolio", message: "Hello Faheem, I'm interested in viewing more of your portfolio projects." },
-  { label: "💬 Get a Quote", message: "Hello Faheem, Can I get a quotation for my project?" },
-  { label: "📅 Book a Call", message: "Hello Faheem, I'd like to schedule a call." }
-];
-
-// Custom Chat Bubble Icon SVG matching premium SaaS look
-const ChatIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: "translateY(1px)" }}>
-    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
 
 function ChatWidget() {
-  const { siteSettings } = useAdmin();
-  const [isOpen, setIsOpen] = useState(false);
-  const [customMessage, setCustomMessage] = useState("");
-  
-  const triggerRef = useRef(null);
-  const chatWindowRef = useRef(null);
+    const { siteSettings } = useAdmin();
+    const [isOpen, setIsOpen] = useState(false);
+    const [messageText, setMessageText] = useState("");
+    const chatWindowRef = useRef(null);
+    const fabRef = useRef(null);
 
-  const contactSettings = siteSettings?.contact || {};
-  const aboutSettings = siteSettings?.about || {};
-  const heroSettings = siteSettings?.hero || {};
-
-  const profileName = heroSettings.name ? `${heroSettings.name} A V` : "Faheem A V";
-  const profileImage = aboutSettings.aboutImage || "/assets/about_profile.png";
-
-  const getCleanPhone = () => {
+    const contactSettings = siteSettings?.contact || {};
+    const aboutSettings = siteSettings?.about || {};
     const rawNum = contactSettings.whatsapp || "+91 7356164236";
-    return rawNum.replace(/[^0-9]/g, '');
-  };
+    const cleanNum = rawNum.replace(/[^0-9]/g, "");
 
-  const handleQuickActionClick = (msgText) => {
-    const cleanNum = getCleanPhone();
-    const message = encodeURIComponent(msgText);
-    window.open(`https://wa.me/${cleanNum}?text=${message}`, "_blank");
-  };
+    const avatarImg = aboutSettings.aboutImage || "/assets/about_profile.png";
+    const portfolioName = siteSettings?.hero?.name || "Faheem";
 
-  const handleCustomSubmit = (e) => {
-    e.preventDefault();
-    if (!customMessage.trim()) return;
-    const cleanNum = getCleanPhone();
-    const message = encodeURIComponent(customMessage.trim());
-    window.open(`https://wa.me/${cleanNum}?text=${message}`, "_blank");
-    setCustomMessage("");
-  };
-
-  // Keyboard accessibility & focus trapping
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      // Escape closes chat
-      if (e.key === "Escape" && isOpen) {
-        setIsOpen(false);
-        triggerRef.current?.focus();
-      }
-
-      // Tab key focus trap
-      if (e.key === "Tab" && isOpen && chatWindowRef.current) {
-        const focusableElementsString = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-        const focusableElements = Array.from(
-          chatWindowRef.current.querySelectorAll(focusableElementsString)
-        );
-
-        if (focusableElements.length === 0) return;
-
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
-
-        if (e.shiftKey) {
-          // If Shift + Tab and on first element, wrap to last
-          if (document.activeElement === firstElement) {
-            lastElement.focus();
-            e.preventDefault();
-          }
-        } else {
-          // If Tab and on last element, wrap to first
-          if (document.activeElement === lastElement) {
-            firstElement.focus();
-            e.preventDefault();
-          }
+    // Close on Escape Key
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === "Escape") {
+                setIsOpen(false);
+                fabRef.current?.focus();
+            }
+        };
+        if (isOpen) {
+            window.addEventListener("keydown", handleKeyDown);
         }
-      }
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [isOpen]);
+
+    // Accessibility Focus Trap
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const focusableElementsSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+        const modal = chatWindowRef.current;
+        if (!modal) return;
+
+        const focusableContent = modal.querySelectorAll(focusableElementsSelector);
+        if (focusableContent.length > 0) {
+            // Focus input or first focusable item
+            const inputField = modal.querySelector(".chat-input");
+            if (inputField) {
+                inputField.focus();
+            } else {
+                focusableContent[0].focus();
+            }
+        }
+
+        const handleTabKey = (e) => {
+            if (e.key !== "Tab") return;
+
+            const elements = modal.querySelectorAll(focusableElementsSelector);
+            if (elements.length === 0) return;
+
+            const firstElement = elements[0];
+            const lastElement = elements[elements.length - 1];
+
+            if (e.shiftKey) {
+                if (document.activeElement === firstElement) {
+                    lastElement.focus();
+                    e.preventDefault();
+                }
+            } else {
+                if (document.activeElement === lastElement) {
+                    firstElement.focus();
+                    e.preventDefault();
+                }
+            }
+        };
+
+        window.addEventListener("keydown", handleTabKey);
+        return () => {
+            window.removeEventListener("keydown", handleTabKey);
+        };
+    }, [isOpen]);
+
+    // Handlers
+    const handleQuickAction = (topic) => {
+        let msg = "";
+        switch (topic) {
+            case "uiux":
+                msg = `Hi ${portfolioName}, I'd like to discuss a Custom Web / UI Design project.`;
+                break;
+            case "hire":
+                msg = `Hi ${portfolioName}, I'd like to hire you for a project.`;
+                break;
+            case "pricing":
+                msg = `Hi ${portfolioName}, I'd like to ask about pricing and quotations.`;
+                break;
+            default:
+                msg = `Hi ${portfolioName}, I'd like to discuss a project.`;
+        }
+        window.open(`https://wa.me/${cleanNum}?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen]);
+    const handleSendMessage = (e) => {
+        e.preventDefault();
+        if (!messageText.trim()) return;
+        window.open(`https://wa.me/${cleanNum}?text=${encodeURIComponent(messageText.trim())}`, "_blank", "noopener,noreferrer");
+        setMessageText("");
+    };
 
-  // Autofocus the close button or first element when chat opens
-  useEffect(() => {
-    if (isOpen && chatWindowRef.current) {
-      const closeBtn = chatWindowRef.current.querySelector(".chat-close-btn");
-      closeBtn?.focus();
-    }
-  }, [isOpen]);
+    return (
+        <div className="chat-widget-container">
+            {/* FAB Toggle Button */}
+            <button
+                ref={fabRef}
+                className="chat-widget-fab"
+                onClick={() => setIsOpen(!isOpen)}
+                aria-expanded={isOpen}
+                aria-label="Open WhatsApp Chat Support"
+            >
+                <FaWhatsapp />
+                <span className="chat-widget-badge"></span>
+                {!isOpen && (
+                    <span className="chat-widget-tooltip">
+                        Chat with {portfolioName}
+                    </span>
+                )}
+            </button>
 
-  const chatVariants = {
-    closed: { 
-      opacity: 0, 
-      scale: 0.85, 
-      y: 40,
-      filter: "blur(10px)",
-      transition: {
-        duration: 0.4,
-        ease: [0.16, 1, 0.3, 1]
-      }
-    },
-    open: { 
-      opacity: 1, 
-      scale: 1, 
-      y: 0,
-      filter: "blur(0px)",
-      transition: {
-        type: "spring",
-        stiffness: 350,
-        damping: 26,
-        mass: 0.8
-      }
-    }
-  };
+            {/* Chat Window with Spring Animations */}
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        ref={chatWindowRef}
+                        className="chat-window"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="chat-user-name"
+                        initial={{ opacity: 0, scale: 0.85, y: 30 }}
+                        animate={{ 
+                            opacity: 1, 
+                            scale: 1, 
+                            y: 0,
+                            transition: { type: "spring", stiffness: 350, damping: 25 }
+                        }}
+                        exit={{ 
+                            opacity: 0, 
+                            scale: 0.85, 
+                            y: 30,
+                            transition: { duration: 0.2, ease: "easeInOut" }
+                        }}
+                    >
+                        {/* Header */}
+                        <div className="chat-header">
+                            <div className="chat-header-info">
+                                <div className="chat-avatar-container">
+                                    <img src={avatarImg} alt={`${portfolioName} Profile`} className="chat-avatar" />
+                                </div>
+                                <div className="chat-user-details">
+                                    <span id="chat-user-name" className="chat-user-name">{portfolioName}</span>
+                                    <span className="chat-status">
+                                        Online • Replies in minutes
+                                    </span>
+                                </div>
+                            </div>
+                            <button
+                                className="chat-close-btn"
+                                onClick={() => {
+                                    setIsOpen(false);
+                                    fabRef.current?.focus();
+                                }}
+                                aria-label="Close Chat Window"
+                            >
+                                <FiX size={18} />
+                            </button>
+                        </div>
 
-  return (
-    <div className="portfolio-chat-container">
-      {/* Floating Action Trigger Button */}
-      <button
-        ref={triggerRef}
-        className={`portfolio-chat-trigger ${isOpen ? "open" : ""}`}
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label={isOpen ? "Close portfolio chat" : "Open portfolio chat"}
-        aria-expanded={isOpen}
-        title="Chat with Faheem"
-      >
-        {isOpen ? <FiX size={24} /> : <ChatIcon />}
-      </button>
+                        {/* Body */}
+                        <div className="chat-body">
+                            <div className="chat-date-divider">Today</div>
 
-      {/* Glassmorphic Chat Window */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            ref={chatWindowRef}
-            className="portfolio-chat-window"
-            variants={chatVariants}
-            initial="closed"
-            animate="open"
-            exit="closed"
-            role="dialog"
-            aria-modal="true"
-            aria-label={`Chat with ${profileName}`}
-          >
-            {/* Header */}
-            <div className="chat-header">
-              <div className="chat-header-profile">
-                <div className="chat-avatar-wrapper">
-                  <img 
-                    src={profileImage} 
-                    alt={profileName} 
-                    className="chat-avatar"
-                  />
-                  <span className="chat-status-dot"></span>
-                </div>
-                <div className="chat-profile-meta">
-                  <span className="chat-profile-name">{profileName}</span>
-                  <span className="chat-profile-status">
-                    Online • Replies within a few hours
-                  </span>
-                </div>
-              </div>
-              <button 
-                className="chat-close-btn"
-                onClick={() => {
-                  setIsOpen(false);
-                  triggerRef.current?.focus();
-                }}
-                aria-label="Close chat window"
-              >
-                <FiX size={18} />
-              </button>
-            </div>
+                            <div className="welcome-bubble">
+                                <p>Hi there! 👋 I'm {portfolioName}, UI/UX Designer & Front-End Developer.</p>
+                                <p style={{ marginTop: "12px" }}>How can I help you with your web or mobile project today?</p>
+                                <span className="bubble-timestamp">Just now</span>
+                            </div>
 
-            {/* Chat Messages Body */}
-            <div className="chat-body">
-              {/* Welcome Message Card */}
-              <div className="chat-welcome-card">
-                <span className="chat-welcome-title">Hi there! 👋</span>
-                <p className="chat-welcome-desc">
-                  <span>I'm Faheem, a UI/UX Designer & Frontend Developer.</span>
-                  <span>I create modern websites, intuitive user experiences, and high-performance frontend applications.</span>
-                  <span>How can I help with your project today?</span>
-                </p>
-              </div>
+                            <div className="quick-actions-container">
+                                <button className="quick-action-btn" onClick={() => handleQuickAction("uiux")}>
+                                    💬 Custom Web / UI Design
+                                </button>
+                                <button className="quick-action-btn" onClick={() => handleQuickAction("hire")}>
+                                    🚀 Hire for a Project
+                                </button>
+                                <button className="quick-action-btn" onClick={() => handleQuickAction("pricing")}>
+                                    💰 Pricing & Quotation
+                                </button>
+                            </div>
+                        </div>
 
-              {/* Quick Action Selector Grid */}
-              <span className="chat-actions-label">Select a service:</span>
-              <div className="chat-quick-actions">
-                {QUICK_ACTIONS.map((action, index) => (
-                  <button
-                    key={index}
-                    className="chat-action-btn"
-                    onClick={() => handleQuickActionClick(action.message)}
-                  >
-                    <span className="chat-action-btn-text">{action.label}</span>
-                    <span className="chat-action-arrow"><FiArrowRight size={14} /></span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Footer Form Custom Input */}
-            <form onSubmit={handleCustomSubmit} className="chat-footer">
-              <div className="chat-input-wrapper">
-                <input
-                  type="text"
-                  className="chat-input"
-                  placeholder="Type your message..."
-                  value={customMessage}
-                  onChange={(e) => setCustomMessage(e.target.value)}
-                  aria-label="Type message to send via WhatsApp"
-                />
-                <button
-                  type="submit"
-                  className="chat-send-btn"
-                  disabled={!customMessage.trim()}
-                  aria-label="Send custom message"
-                >
-                  <FiSend />
-                </button>
-              </div>
-            </form>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
+                        {/* Footer / Input form */}
+                        <form className="chat-footer" onSubmit={handleSendMessage}>
+                            <div className="chat-input-wrapper">
+                                <input
+                                    type="text"
+                                    className="chat-input"
+                                    placeholder={`Type a message to ${portfolioName}...`}
+                                    value={messageText}
+                                    onChange={(e) => setMessageText(e.target.value)}
+                                    aria-label="Type message to send via WhatsApp"
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                className="chat-send-btn"
+                                aria-label="Send message via WhatsApp"
+                            >
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                                </svg>
+                            </button>
+                        </form>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
 }
 
 export default ChatWidget;

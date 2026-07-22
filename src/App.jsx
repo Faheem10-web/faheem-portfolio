@@ -3,7 +3,6 @@ import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
-import ChatWidget from "./components/common/ChatWidget";
 import Home from "./pages/Home";
 import AboutPage from "./pages/AboutPage";
 import ProjectsPage from "./pages/ProjectsPage";
@@ -13,6 +12,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { AdminProvider, useAdmin } from "./context/AdminContext";
 import Loader from "./components/common/Loader";
 import Lenis from "lenis";
+import ChatWidget from "./components/common/ChatWidget";
 
 // Lazy-loaded Admin CMS Routes for optimal initial bundle size
 const AdminLayout = lazy(() => import("./admin/AdminLayout"));
@@ -217,27 +217,29 @@ function AppContent() {
             </main>
           </div>
         ) : (
-          <motion.div 
-            key="content"
-            className="app-container"
-            initial={{ opacity: 0, filter: "blur(12px)" }}
-            animate={{ opacity: 1, filter: "blur(0px)" }}
-            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <main className="main-content">
-              <AnimatePresence mode="wait">
-                <Routes location={location} key={location.pathname}>
-                  <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
-                  <Route path="/about" element={<PageWrapper><AboutPage /></PageWrapper>} />
-                  <Route path="/projects" element={<PageWrapper><ProjectsPage /></PageWrapper>} />
-                  <Route path="/contact" element={<PageWrapper><ContactPage /></PageWrapper>} />
-                  <Route path="/case-study/:id" element={<PageWrapper><CaseStudyPage /></PageWrapper>} />
-                </Routes>
-              </AnimatePresence>
-            </main>
-            <Footer />
+          <>
+            <motion.div 
+              key="content"
+              className="app-container"
+              initial={{ opacity: 0, filter: "blur(12px)" }}
+              animate={{ opacity: 1, filter: "blur(0px)" }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <main className="main-content">
+                <AnimatePresence mode="wait">
+                  <Routes location={location} key={location.pathname}>
+                    <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
+                    <Route path="/about" element={<PageWrapper><AboutPage /></PageWrapper>} />
+                    <Route path="/projects" element={<PageWrapper><ProjectsPage /></PageWrapper>} />
+                    <Route path="/contact" element={<PageWrapper><ContactPage /></PageWrapper>} />
+                    <Route path="/case-study/:id" element={<PageWrapper><CaseStudyPage /></PageWrapper>} />
+                  </Routes>
+                </AnimatePresence>
+              </main>
+              <Footer />
+            </motion.div>
             <ChatWidget />
-          </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>
