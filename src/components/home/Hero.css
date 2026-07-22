@@ -396,10 +396,7 @@
 
 .hero-marquee-inner {
     display: flex;
-    flex-shrink: 0;
     width: max-content;
-    min-width: max-content;
-    white-space: nowrap;
     animation: marquee-scroll 35s linear infinite;
     /* Hardware acceleration for 60fps/120fps stutter-free scroll */
     will-change: transform;
@@ -414,8 +411,6 @@
     padding-right: 32px;
     white-space: nowrap;
     flex-shrink: 0;
-    width: max-content;
-    min-width: max-content;
 }
 
 .hero-marquee-item {
@@ -429,20 +424,11 @@
     gap: 32px;
     flex-shrink: 0;
     white-space: nowrap;
-    min-width: max-content;
     font-family: var(--font-heading);
 }
 
 :root[data-theme='dark'] .hero-marquee-item {
     color: #9ca3af;
-}
-
-.hero-marquee-text {
-    display: inline-block;
-    white-space: nowrap;
-    flex-shrink: 0;
-    word-break: keep-all;
-    overflow-wrap: normal;
 }
 
 .hero-marquee-dot {

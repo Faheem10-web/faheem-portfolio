@@ -75,11 +75,6 @@ const buildFallbackPayload = () => {
     testimonials: seed.testimonials || []
   };
 };
-    experiences: seed.experiences || [],
-    faqs: seed.faqs || [],
-    testimonials: seed.testimonials || []
-  };
-};
 
 // In-Memory Fast Cache state for /api/bootstrap
 let cachedBootstrapPayload = null;
