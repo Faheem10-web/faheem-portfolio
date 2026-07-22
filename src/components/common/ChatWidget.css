@@ -244,11 +244,12 @@
 
 /* Welcome bubble card */
 .welcome-bubble {
-    background-color: #1e1e24;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    padding: 14px 18px;
-    border-radius: 18px 18px 18px 4px;
-    max-width: 85%;
+    width: 350px;
+    min-height: 130px;
+    padding: 20px;
+    border-radius: 20px;
+    background: #1E1F26;
+    border: none;
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
