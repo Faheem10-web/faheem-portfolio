@@ -5,7 +5,7 @@ import { useAdmin } from "../../context/AdminContext";
 
 const LiquidEther = lazy(() => import("./LiquidEther"));
 
-const HERO_LIQUID_COLORS = ["#38BDF8", "#4ADE80", "#FACC15"];
+const HERO_LIQUID_COLORS = ["#5227FF", "#FF9FFC", "#B497CF"];
 const MARQUEE_ITEMS = [
   "Brand Strategy",
   "Design Systems",
