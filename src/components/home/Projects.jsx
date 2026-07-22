@@ -11,6 +11,7 @@ const MotionLink = motion(Link);
 // Refactored Subcomponent for Home Page Project Card to handle direct mouse follow
 const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverImg, cardTitle, navigate }) {
     const buttonsRef = useRef(null);
+    const hasCaseStudy = project.hasCaseStudy !== false;
 
     const handleMouseMove = (e) => {
         if (!buttonsRef.current) return;
@@ -34,6 +35,16 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
 
     const optimizedCover = getOptimizedImageUrl(coverImg, { width: 800 });
 
+    const handleCardClick = (e) => {
+        if (!e.target.closest('a')) {
+            if (hasCaseStudy) {
+                navigate(cardLink);
+            } else if (project.liveUrl) {
+                window.open(project.liveUrl, '_blank');
+            }
+        }
+    };
+
     return (
         <motion.div
             className="project-card-wrapper"
@@ -41,12 +52,8 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
             whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
-            onClick={(e) => {
-                if (!e.target.closest('a')) {
-                    navigate(cardLink);
-                }
-            }}
-            style={{ cursor: 'pointer' }}
+            onClick={handleCardClick}
+            style={{ cursor: hasCaseStudy || project.liveUrl ? 'pointer' : 'default' }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
         >
@@ -63,25 +70,29 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
                         }
                     }}
                 />
-                <div className="project-overlay">
-                    <div className="project-hover-actions" ref={buttonsRef}>
-                        <Link to={cardLink} className="project-hover-btn">
-                            Case Study
-                        </Link>
-                        {project.liveUrl && (
-                            <a 
-                                href={project.liveUrl} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                className="project-hover-btn project-hover-btn--primary"
-                                onClick={(e) => e.stopPropagation()}
-                            >
-                                <span>Live Preview</span>
-                                <FiExternalLink />
-                            </a>
-                        )}
+                {(hasCaseStudy || project.liveUrl) && (
+                    <div className="project-overlay">
+                        <div className="project-hover-actions" ref={buttonsRef}>
+                            {hasCaseStudy && (
+                                <Link to={cardLink} className="project-hover-btn">
+                                    Case Study
+                                </Link>
+                            )}
+                            {project.liveUrl && (
+                                <a 
+                                    href={project.liveUrl} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="project-hover-btn project-hover-btn--primary"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <span>Live Preview</span>
+                                    <FiExternalLink />
+                                </a>
+                            )}
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         </motion.div>
     );

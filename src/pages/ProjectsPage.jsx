@@ -64,27 +64,29 @@ function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }
                     />
                     
                     {/* Premium Glass Overlay & Centered Buttons */}
-                    <div className="proj-card-hover-overlay">
-                        <div className="proj-card-hover-buttons" ref={buttonsRef}>
-                            {hasCaseStudy && (
-                                <Link to={cardLink} className="hover-btn hover-btn-glass">
-                                    Case Study
-                                </Link>
-                            )}
-                            {demoLink && (
-                                <a 
-                                    href={demoLink} 
-                                    className="hover-btn hover-btn-purple" 
-                                    target="_blank" 
-                                    rel="noreferrer"
-                                    onClick={(e) => e.stopPropagation()}
-                                >
-                                    <span>Live Preview</span>
-                                    <FiExternalLink />
-                                </a>
-                            )}
+                    {(hasCaseStudy || demoLink) && (
+                        <div className="proj-card-hover-overlay">
+                            <div className="proj-card-hover-buttons" ref={buttonsRef}>
+                                {hasCaseStudy && (
+                                    <Link to={cardLink} className="hover-btn hover-btn-glass">
+                                        Case Study
+                                    </Link>
+                                )}
+                                {demoLink && (
+                                    <a 
+                                        href={demoLink} 
+                                        className="hover-btn hover-btn-purple" 
+                                        target="_blank" 
+                                        rel="noreferrer"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <span>Live Preview</span>
+                                        <FiExternalLink />
+                                    </a>
+                                )}
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
                 
                 <div className="proj-card-meta">
