@@ -59,6 +59,30 @@ export default function SectionManager() {
     enableWhatsappButton: true,
     enableForm: true
   });
+  const [chatForm, setChatForm] = useState({
+    enabled: true,
+    headerTitle: 'Faheem',
+    headerStatusText: 'Online • Replies in minutes',
+    headerBgColor: '#0F8C6E',
+    headerTextColor: '#ffffff',
+    buttonText: 'Quick Chat',
+    buttonBgColor: '#0d0d11',
+    buttonTextColor: '#ffffff',
+    buttonBorderColor: 'rgba(255, 255, 255, 0.14)',
+    buttonIconColor: '#25D366',
+    buttonDotColor: '#10B981',
+    chatBgColor: '#0b0b0f',
+    welcomeBubbleBg: '#1E1F26',
+    welcomeMessageLine1: "Hi there! 👋 I'm Faheem, UI/UX Designer & Front-End Developer.",
+    welcomeMessageLine2: "How can I help you with your web or mobile project today?",
+    fontFamily: 'Plus Jakarta Sans',
+    quickAction1Text: '💬 Custom Web / UI Design',
+    quickAction1Message: "Hi Faheem, I'd like to discuss a Custom Web / UI Design project.",
+    quickAction2Text: '🚀 Hire for a Project',
+    quickAction2Message: "Hi Faheem, I'd like to hire you for a project.",
+    quickAction3Text: '💰 Pricing & Quotation',
+    quickAction3Message: "Hi Faheem, I'd like to ask about pricing and quotations."
+  });
 
   // Initialize forms when siteSettings updates
   useEffect(() => {
@@ -71,6 +95,7 @@ export default function SectionManager() {
     if (siteSettings.theme) setThemeForm({ ...siteSettings.theme });
     if (siteSettings.resume) setResumeForm({ ...siteSettings.resume });
     if (siteSettings.contact) setContactForm({ ...siteSettings.contact });
+    if (siteSettings.chat) setChatForm({ ...siteSettings.chat });
   }, [siteSettings]);
 
   // Load lists exactly once on component mount
@@ -215,13 +240,13 @@ export default function SectionManager() {
 
       {/* Tabs Row */}
       <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--admin-border)', paddingBottom: '16px', marginBottom: '32px', flexWrap: 'wrap' }}>
-        {['hero', 'navbar', 'about', 'services', 'skills', 'faqs', 'contact', 'footer', 'seo', 'global', 'theme'].map(tab => (
+        {['hero', 'navbar', 'about', 'services', 'skills', 'faqs', 'contact', 'footer', 'seo', 'global', 'theme', 'chat'].map(tab => (
           <button 
             key={tab} 
             className={`admin-btn ${activeTab === tab ? 'admin-btn-primary' : 'admin-btn-secondary'}`}
             onClick={() => setActiveTab(tab)}
           >
-            {tab === 'theme' ? 'THEME CONTROLLER' : tab.toUpperCase()}
+            {tab === 'theme' ? 'THEME CONTROLLER' : tab === 'chat' ? '💬 CHAT WIDGET' : tab.toUpperCase()}
           </button>
         ))}
       </div>
@@ -1391,6 +1416,188 @@ export default function SectionManager() {
 
             <button type="submit" className="admin-btn admin-btn-primary" style={{ marginTop: '24px' }} disabled={saving}>
               <FiSave /> Save Theme Configuration
+            </button>
+          </form>
+        )}
+
+        {/* CHAT WIDGET TAB */}
+        {activeTab === 'chat' && (
+          <form onSubmit={(e) => { e.preventDefault(); handleSaveSettings('chat', chatForm); }}>
+            <h3 className="admin-panel-title">💬 Chat Widget & WhatsApp Assistant Settings</h3>
+            <p className="admin-header-subtitle" style={{ marginBottom: '24px' }}>
+              Customize floating pill button colors, fonts, modal themes, welcome messages, and pre-filled quick action templates.
+            </p>
+
+            {/* Enable Toggle */}
+            <div className="admin-form-group" style={{ marginBottom: '24px' }}>
+              <label className="admin-checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '15px', fontWeight: '600' }}>
+                <input 
+                  type="checkbox" 
+                  checked={chatForm.enabled} 
+                  onChange={e => setChatForm({ ...chatForm, enabled: e.target.checked })} 
+                />
+                Enable Floating WhatsApp Chat Widget on Portfolio
+              </label>
+            </div>
+
+            <hr style={{ borderColor: 'var(--admin-border)', margin: '24px 0' }} />
+
+            {/* 1. Floating Pill Button Customization */}
+            <h4 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 'bold', color: 'var(--color-primary)' }}>
+              1. Floating Trigger Button Design
+            </h4>
+
+            <div className="admin-form-row">
+              <div className="admin-form-group">
+                <label className="admin-label">Button Label Text</label>
+                <input type="text" className="admin-input" value={chatForm.buttonText} onChange={e => setChatForm({ ...chatForm, buttonText: e.target.value })} placeholder="Quick Chat" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Button Font Family</label>
+                <select className="admin-input" value={chatForm.fontFamily} onChange={e => setChatForm({ ...chatForm, fontFamily: e.target.value })}>
+                  <option value="Plus Jakarta Sans">Plus Jakarta Sans</option>
+                  <option value="Inter">Inter</option>
+                  <option value="Roboto">Roboto</option>
+                  <option value="Outfit">Outfit</option>
+                  <option value="Geist">Geist</option>
+                  <option value="Fira Code">Fira Code</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="admin-form-row">
+              <div className="admin-form-group">
+                <label className="admin-label">Button Background Color</label>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <input type="color" value={chatForm.buttonBgColor || '#0d0d11'} onChange={e => setChatForm({ ...chatForm, buttonBgColor: e.target.value })} style={{ width: '42px', height: '42px', border: 'none', borderRadius: '8px', cursor: 'pointer' }} />
+                  <input type="text" className="admin-input" value={chatForm.buttonBgColor} onChange={e => setChatForm({ ...chatForm, buttonBgColor: e.target.value })} />
+                </div>
+              </div>
+
+              <div className="admin-form-group">
+                <label className="admin-label">Button Text Color</label>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <input type="color" value={chatForm.buttonTextColor || '#ffffff'} onChange={e => setChatForm({ ...chatForm, buttonTextColor: e.target.value })} style={{ width: '42px', height: '42px', border: 'none', borderRadius: '8px', cursor: 'pointer' }} />
+                  <input type="text" className="admin-input" value={chatForm.buttonTextColor} onChange={e => setChatForm({ ...chatForm, buttonTextColor: e.target.value })} />
+                </div>
+              </div>
+            </div>
+
+            <div className="admin-form-row">
+              <div className="admin-form-group">
+                <label className="admin-label">WhatsApp Icon Color</label>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <input type="color" value={chatForm.buttonIconColor || '#25D366'} onChange={e => setChatForm({ ...chatForm, buttonIconColor: e.target.value })} style={{ width: '42px', height: '42px', border: 'none', borderRadius: '8px', cursor: 'pointer' }} />
+                  <input type="text" className="admin-input" value={chatForm.buttonIconColor} onChange={e => setChatForm({ ...chatForm, buttonIconColor: e.target.value })} />
+                </div>
+              </div>
+
+              <div className="admin-form-group">
+                <label className="admin-label">Online Status Dot Color</label>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <input type="color" value={chatForm.buttonDotColor || '#10B981'} onChange={e => setChatForm({ ...chatForm, buttonDotColor: e.target.value })} style={{ width: '42px', height: '42px', border: 'none', borderRadius: '8px', cursor: 'pointer' }} />
+                  <input type="text" className="admin-input" value={chatForm.buttonDotColor} onChange={e => setChatForm({ ...chatForm, buttonDotColor: e.target.value })} />
+                </div>
+              </div>
+            </div>
+
+            <hr style={{ borderColor: 'var(--admin-border)', margin: '24px 0' }} />
+
+            {/* 2. Modal Header & Window Theme */}
+            <h4 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 'bold', color: 'var(--color-primary)' }}>
+              2. Chat Modal & Window Styling
+            </h4>
+
+            <div className="admin-form-row">
+              <div className="admin-form-group">
+                <label className="admin-label">Header Title Text</label>
+                <input type="text" className="admin-input" value={chatForm.headerTitle} onChange={e => setChatForm({ ...chatForm, headerTitle: e.target.value })} placeholder="Faheem" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Header Subtitle Status</label>
+                <input type="text" className="admin-input" value={chatForm.headerStatusText} onChange={e => setChatForm({ ...chatForm, headerStatusText: e.target.value })} placeholder="Online • Replies in minutes" />
+              </div>
+            </div>
+
+            <div className="admin-form-row">
+              <div className="admin-form-group">
+                <label className="admin-label">Header Background Color</label>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <input type="color" value={chatForm.headerBgColor || '#0F8C6E'} onChange={e => setChatForm({ ...chatForm, headerBgColor: e.target.value })} style={{ width: '42px', height: '42px', border: 'none', borderRadius: '8px', cursor: 'pointer' }} />
+                  <input type="text" className="admin-input" value={chatForm.headerBgColor} onChange={e => setChatForm({ ...chatForm, headerBgColor: e.target.value })} />
+                </div>
+              </div>
+
+              <div className="admin-form-group">
+                <label className="admin-label">Chat Window Background</label>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <input type="color" value={chatForm.chatBgColor || '#0b0b0f'} onChange={e => setChatForm({ ...chatForm, chatBgColor: e.target.value })} style={{ width: '42px', height: '42px', border: 'none', borderRadius: '8px', cursor: 'pointer' }} />
+                  <input type="text" className="admin-input" value={chatForm.chatBgColor} onChange={e => setChatForm({ ...chatForm, chatBgColor: e.target.value })} />
+                </div>
+              </div>
+            </div>
+
+            <hr style={{ borderColor: 'var(--admin-border)', margin: '24px 0' }} />
+
+            {/* 3. Welcome Messages & Quick Actions */}
+            <h4 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: 'bold', color: 'var(--color-primary)' }}>
+              3. Messages & Quick Actions Setup
+            </h4>
+
+            <div className="admin-form-group">
+              <label className="admin-label">Welcome Message Line 1</label>
+              <input type="text" className="admin-input" value={chatForm.welcomeMessageLine1} onChange={e => setChatForm({ ...chatForm, welcomeMessageLine1: e.target.value })} />
+            </div>
+
+            <div className="admin-form-group">
+              <label className="admin-label">Welcome Message Line 2</label>
+              <input type="text" className="admin-input" value={chatForm.welcomeMessageLine2} onChange={e => setChatForm({ ...chatForm, welcomeMessageLine2: e.target.value })} />
+            </div>
+
+            <div style={{ background: 'var(--admin-bg-secondary)', padding: '20px', borderRadius: '16px', border: '1px solid var(--admin-border)', margin: '20px 0' }}>
+              <h5 style={{ margin: '0 0 14px 0', fontSize: '14px', fontWeight: 'bold' }}>Quick Action 1</h5>
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">Button Label</label>
+                  <input type="text" className="admin-input" value={chatForm.quickAction1Text} onChange={e => setChatForm({ ...chatForm, quickAction1Text: e.target.value })} />
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">Pre-filled WhatsApp Message</label>
+                  <input type="text" className="admin-input" value={chatForm.quickAction1Message} onChange={e => setChatForm({ ...chatForm, quickAction1Message: e.target.value })} />
+                </div>
+              </div>
+            </div>
+
+            <div style={{ background: 'var(--admin-bg-secondary)', padding: '20px', borderRadius: '16px', border: '1px solid var(--admin-border)', margin: '20px 0' }}>
+              <h5 style={{ margin: '0 0 14px 0', fontSize: '14px', fontWeight: 'bold' }}>Quick Action 2</h5>
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">Button Label</label>
+                  <input type="text" className="admin-input" value={chatForm.quickAction2Text} onChange={e => setChatForm({ ...chatForm, quickAction2Text: e.target.value })} />
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">Pre-filled WhatsApp Message</label>
+                  <input type="text" className="admin-input" value={chatForm.quickAction2Message} onChange={e => setChatForm({ ...chatForm, quickAction2Message: e.target.value })} />
+                </div>
+              </div>
+            </div>
+
+            <div style={{ background: 'var(--admin-bg-secondary)', padding: '20px', borderRadius: '16px', border: '1px solid var(--admin-border)', margin: '20px 0' }}>
+              <h5 style={{ margin: '0 0 14px 0', fontSize: '14px', fontWeight: 'bold' }}>Quick Action 3</h5>
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">Button Label</label>
+                  <input type="text" className="admin-input" value={chatForm.quickAction3Text} onChange={e => setChatForm({ ...chatForm, quickAction3Text: e.target.value })} />
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">Pre-filled WhatsApp Message</label>
+                  <input type="text" className="admin-input" value={chatForm.quickAction3Message} onChange={e => setChatForm({ ...chatForm, quickAction3Message: e.target.value })} />
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" className="admin-btn admin-btn-primary" style={{ marginTop: '24px' }} disabled={saving}>
+              <FiSave /> Save Chat Widget Configurations
             </button>
           </form>
         )}

@@ -275,3 +275,36 @@ const themeSettingsSchema = new mongoose.Schema({
 });
 export const ThemeSettings = mongoose.models.ThemeSettings || mongoose.model('ThemeSettings', themeSettingsSchema);
 
+// 19. Chat Widget Settings Schema
+const chatSettingsSchema = new mongoose.Schema({
+  enabled: { type: Boolean, default: true },
+  headerTitle: { type: String, default: 'Faheem' },
+  headerStatusText: { type: String, default: 'Online • Replies in minutes' },
+  headerBgColor: { type: String, default: '#0F8C6E' },
+  headerTextColor: { type: String, default: '#ffffff' },
+  
+  // Floating Pill Trigger Button
+  buttonText: { type: String, default: 'Quick Chat' },
+  buttonBgColor: { type: String, default: '#0d0d11' },
+  buttonTextColor: { type: String, default: '#ffffff' },
+  buttonBorderColor: { type: String, default: 'rgba(255, 255, 255, 0.14)' },
+  buttonIconColor: { type: String, default: '#25D366' },
+  buttonDotColor: { type: String, default: '#10B981' },
+
+  // Chat Window & Messages
+  chatBgColor: { type: String, default: '#0b0b0f' },
+  welcomeBubbleBg: { type: String, default: '#1E1F26' },
+  welcomeMessageLine1: { type: String, default: "Hi there! 👋 I'm Faheem, UI/UX Designer & Front-End Developer." },
+  welcomeMessageLine2: { type: String, default: "How can I help you with your web or mobile project today?" },
+  fontFamily: { type: String, default: 'Plus Jakarta Sans' },
+
+  // Quick Action Options
+  quickAction1Text: { type: String, default: '💬 Custom Web / UI Design' },
+  quickAction1Message: { type: String, default: "Hi Faheem, I'd like to discuss a Custom Web / UI Design project." },
+  quickAction2Text: { type: String, default: '🚀 Hire for a Project' },
+  quickAction2Message: { type: String, default: "Hi Faheem, I'd like to hire you for a project." },
+  quickAction3Text: { type: String, default: '💰 Pricing & Quotation' },
+  quickAction3Message: { type: String, default: "Hi Faheem, I'd like to ask about pricing and quotations." }
+});
+export const ChatSettings = mongoose.models.ChatSettings || mongoose.model('ChatSettings', chatSettingsSchema);
+

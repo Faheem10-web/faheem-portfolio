@@ -30,7 +30,8 @@ import {
   SeoSettings,
   GlobalSettings,
   Media,
-  ThemeSettings
+  ThemeSettings,
+  ChatSettings
 } from '../models/schemas.js';
 
 const router = express.Router();
@@ -63,11 +64,17 @@ const buildFallbackPayload = () => {
       footer: seed.footerSettings || {},
       seo: seed.seoSettings || {},
       global: seed.globalSettings || {},
-      theme: seed.themeSettings || { mode: 'system' }
+      theme: seed.themeSettings || { mode: 'system' },
+      chat: seed.chatSettings || {}
     },
     projects: seed.projects || [],
     services: seed.services || [],
     skills: seed.skills || [],
+    experiences: seed.experiences || [],
+    faqs: seed.faqs || [],
+    testimonials: seed.testimonials || []
+  };
+};
     experiences: seed.experiences || [],
     faqs: seed.faqs || [],
     testimonials: seed.testimonials || []
@@ -292,7 +299,7 @@ router.get('/bootstrap', checkMaintenance, async (req, res) => {
     const isConnected = mongoose.connection.readyState === 1;
     if (isConnected) {
       const [
-        navbar, hero, about, resume, contact, footer, seo, globalSettings, theme,
+        navbar, hero, about, resume, contact, footer, seo, globalSettings, theme, chatSettings,
         projects, services, skills, experiences, faqs, testimonials
       ] = await Promise.all([
         NavbarSettings.findOne().lean().then(s => s || {}),
@@ -304,6 +311,7 @@ router.get('/bootstrap', checkMaintenance, async (req, res) => {
         SeoSettings.findOne().lean().then(s => s || {}),
         GlobalSettings.findOne().lean().then(s => s || {}),
         ThemeSettings.findOne().lean().then(s => s || { mode: 'system' }),
+        ChatSettings.findOne().lean().then(s => s || {}),
         Project.find().select('name slug category year client coverImage thumbnailImage bannerImage liveUrl githubUrl enabled order').sort({ order: 1 }).lean(),
         Service.find().sort({ order: 1 }).lean(),
         Skill.find().sort({ category: 1, order: 1 }).lean(),
@@ -314,7 +322,7 @@ router.get('/bootstrap', checkMaintenance, async (req, res) => {
 
       cachedBootstrapPayload = {
         settings: {
-          navbar, hero, about, resume, contact, footer, seo, global: globalSettings, theme
+          navbar, hero, about, resume, contact, footer, seo, global: globalSettings, theme, chat: chatSettings
         },
         projects,
         services,
@@ -347,7 +355,8 @@ const moduleMap = {
   footer: FooterSettings,
   seo: SeoSettings,
   global: GlobalSettings,
-  theme: ThemeSettings
+  theme: ThemeSettings,
+  chat: ChatSettings
 };
 
 router.get('/settings/:module', checkMaintenance, async (req, res) => {
@@ -366,7 +375,8 @@ router.get('/settings/:module', checkMaintenance, async (req, res) => {
         footer: 'footerSettings',
         seo: 'seoSettings',
         global: 'globalSettings',
-        theme: 'themeSettings'
+        theme: 'themeSettings',
+        chat: 'chatSettings'
       };
       const key = settingsKeyMap[modKey];
       return res.json(seed[key] || {});

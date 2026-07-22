@@ -19,7 +19,8 @@ export function AdminProvider({ children }) {
         footer: null,
         seo: null,
         global: null,
-        theme: null
+        theme: null,
+        chat: null
     });
 
     // Refresh dynamic data hooks
