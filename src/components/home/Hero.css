@@ -396,6 +396,7 @@
 
 .hero-marquee-inner {
     display: flex;
+    flex-wrap: nowrap;
     width: max-content;
     animation: marquee-scroll 40s linear infinite;
     /* Hardware acceleration for 60fps/120fps stutter-free scroll */
@@ -407,6 +408,7 @@
 .hero-marquee-track {
     display: flex;
     align-items: center;
+    flex-wrap: nowrap;
     flex-shrink: 0;
     white-space: nowrap;
 }
@@ -420,15 +422,17 @@
     display: inline-flex;
     align-items: center;
     gap: 16px;
-    padding: 0 24px;
+    padding: 0 28px;
     flex-shrink: 0;
     white-space: nowrap;
     font-family: var(--font-heading);
+    line-height: 1;
 }
 
 .hero-marquee-item span {
     white-space: nowrap;
     flex-shrink: 0;
+    display: inline-block;
 }
 
 :root[data-theme='dark'] .hero-marquee-item {
@@ -453,9 +457,9 @@
 
 @keyframes marquee-scroll {
     0% {
-        transform: translateX(0);
+        transform: translate3d(0, 0, 0);
     }
     100% {
-        transform: translateX(-50%);
+        transform: translate3d(-50%, 0, 0);
     }
 }

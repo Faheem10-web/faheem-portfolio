@@ -179,7 +179,7 @@ function Hero() {
             {/* Infinite Horizontal Marquee Ticker */}
             <div className="hero-marquee">
                 <div className="hero-marquee-inner">
-                    {[...Array(4)].map((_, trackIdx) => (
+                    {[...Array(2)].map((_, trackIdx) => (
                         <div key={`track-${trackIdx}`} className="hero-marquee-track">
                             {MARQUEE_ITEMS.map((item, idx) => (
                                 <span key={`item-${trackIdx}-${idx}`} className="hero-marquee-item">
