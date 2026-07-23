@@ -16,9 +16,6 @@ function ChatWidget() {
     const aboutSettings = siteSettings?.about || {};
     const chatSettings = siteSettings?.chat || {};
 
-    // Do not render if explicitly disabled in admin settings
-    if (chatSettings.enabled === false) return null;
-
     const rawNum = contactSettings.whatsapp || "+91 7356164236";
     const cleanNum = rawNum.replace(/[^0-9]/g, "");
 
@@ -128,6 +125,9 @@ function ChatWidget() {
         window.open(`https://wa.me/${cleanNum}?text=${encodeURIComponent(messageText.trim())}`, "_blank", "noopener,noreferrer");
         setMessageText("");
     };
+
+    // Do not render if explicitly disabled in admin settings
+    if (chatSettings.enabled === false) return null;
 
     return (
         <div className="chat-widget-container" style={customStyles}>
