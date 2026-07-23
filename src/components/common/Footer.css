@@ -321,7 +321,7 @@
     position: relative;
     z-index: 2;
     width: 100%;
-    border-top: 1px solid rgba(255, 255, 255, 0.7);
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
     padding: 22px 40px;
     display: flex;
     align-items: center;
@@ -330,15 +330,17 @@
     flex-wrap: wrap;
     box-sizing: border-box;
     
-    /* Frosted Sub-Footer Strip */
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    /* Seamless Unified Glass Surface */
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
 
 :root[data-theme='dark'] .footer-card-bottom {
     border-top-color: rgba(255, 255, 255, 0.12);
-    background: rgba(0, 0, 0, 0.2);
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
 
 /* Left Author Text */
