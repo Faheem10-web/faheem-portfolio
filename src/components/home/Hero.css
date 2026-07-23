@@ -89,7 +89,7 @@
     position: relative;
     z-index: 5;
     width: 100%;
-    max-width: 1100px; /* Exact Spec: Maximum Width 1100px */
+    max-width: 960px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -99,7 +99,7 @@
     gap: 28px;
 }
 
-/* ─── STATUS PILL / BADGE (Neue Montreal SemiBold 18px -0.02em) ─── */
+/* ─── STATUS PILL (FROSTED CRYSTAL GLASS - 30% REFINED BLUR) ─── */
 .hero-glass-pill {
     display: inline-flex !important;
     align-items: center !important;
@@ -107,12 +107,6 @@
     gap: 8px !important;
     padding: 10px 24px !important;
     border-radius: 100px !important;
-    font-family: var(--font-neue-montreal), 'Neue Montreal', 'Söhne', 'Geist', 'Inter', sans-serif !important;
-    font-size: 18px !important; /* Exact Spec: Badge 18px */
-    font-weight: 600 !important; /* Exact Spec: SemiBold */
-    letter-spacing: -0.02em !important; /* Exact Spec: -0.02em */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     
     /* Frosted Crystal Glass Surface */
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(245, 240, 255, 0.65) 100%), rgba(255, 255, 255, 0.8);
@@ -136,80 +130,71 @@
         inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.35);
 }
 
-/* ─── Hero Heading – 2026 Awwwards Editorial Precision Typography ────────────────── */
+/* ─── Hero Heading – Editorial Precision Typography ────────────────── */
 
 .hero-title {
-    font-family: var(--font-neue-montreal), 'Neue Montreal', 'Söhne', 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 112px; /* Exact Spec: 112px (Desktop) */
-    line-height: 0.90; /* Exact Spec: Line Height 0.88–0.92 */
-    font-weight: 900; /* Exact Spec: Font Weight 800–900 */
-    letter-spacing: -0.06em; /* Exact Spec: Letter Spacing -0.06em */
-    text-transform: uppercase;
-    text-rendering: optimizeLegibility; /* Exact Spec: optimizeLegibility */
-    -webkit-font-smoothing: antialiased; /* Exact Spec: antialiased */
-    -moz-osx-font-smoothing: grayscale;
-    font-kerning: normal; /* Exact Spec: Optical kerning */
-    font-variant-numeric: proportional-nums;
+    font-size: clamp(2.4rem, 7.6vw, 5.6rem);
+    line-height: 1.04;
+    font-weight: 800;
+    font-family: 'Outfit', 'Plus Jakarta Sans', 'Inter', sans-serif;
+    letter-spacing: -0.045em;
+    text-transform: lowercase;
     margin: 0;
     width: 100%;
-    max-width: 1100px; /* Exact Spec: Max Width 1100px */
     text-align: center;
-    word-break: normal;
-    overflow-wrap: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
-/* ── Line 1: "DESIGNING FUTURE" ── Pure Black (#111111) in Light, Pure White (#FFFFFF) in Dark */
+/* ── Line 1: "designing future" ── Clean, crisp headline */
 .hero-title .hero-first-row {
     display: block;
     width: 100%;
     text-align: center;
-    color: #111111; /* Exact Spec: Pure Black (#111111) */
-    filter: none !important; /* Razor-sharp rendering: No shadows, no outlines, no glow */
-}
-
-:root[data-theme='dark'] .hero-title .hero-first-row {
+    padding-bottom: 0.04em;
     color: #ffffff;
-    filter: none !important;
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.2));
 }
 
-/* ── Line 2: "DIGITAL EXPERIENCES" ── Premium Purple Gradient (#6A5BFF -> #8A63FF -> #B58DFF) */
+:root[data-theme='light'] .hero-title .hero-first-row {
+    color: #0d0d12;
+    filter: drop-shadow(0 2px 12px rgba(13, 13, 18, 0.08));
+}
+
+/* ── Line 2: "digital experiences" ── Refined purple-indigo linear gradient */
 .hero-title .hero-gradient-text {
     display: block;
     width: 100%;
     text-align: center;
-    background: linear-gradient(135deg, #6A5BFF 0%, #8A63FF 50%, #B58DFF 100%); /* Exact Spec: #6A5BFF -> #8A63FF -> #B58DFF */
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    background: linear-gradient(135deg, #c084fc 0%, #a855f7 40%, #818cf8 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-clip: text;
-    filter: none !important; /* Razor-sharp rendering: No outlines, no heavy glow */
+    filter: drop-shadow(0 0 35px rgba(168, 85, 247, 0.35));
 }
 
-:root[data-theme='dark'] .hero-title .hero-gradient-text {
-    background: linear-gradient(135deg, #6A5BFF 0%, #8A63FF 50%, #B58DFF 100%);
+:root[data-theme='light'] .hero-title .hero-gradient-text {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 45%, #6366f1 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-clip: text;
-    filter: none !important;
+    filter: drop-shadow(0 4px 20px rgba(124, 58, 237, 0.2));
 }
 
-/* ── DESCRIPTION (Neue Montreal Medium 22px 500 line-height 1.7 #555555 max-width 720px) ── */
 .hero-description {
-    font-family: var(--font-neue-montreal), 'Neue Montreal Medium', 'Neue Montreal', 'Söhne', 'Geist', 'Inter', sans-serif;
-    font-size: 22px; /* Exact Spec: 22px */
-    font-weight: 500; /* Exact Spec: Weight 500 (Medium) */
-    line-height: 1.7; /* Exact Spec: Line Height 1.7 */
-    color: #555555; /* Exact Spec: #555555 */
-    max-width: 720px; /* Exact Spec: Max Width 720px */
-    margin-top: 8px;
+    font-size: clamp(0.96rem, 1.25vw + 0.3rem, 1.15rem);
+    line-height: 1.65;
+    color: var(--color-text-main);
+    opacity: 0.75;
+    max-width: 640px;
+    margin-top: 4px;
     margin-bottom: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
     letter-spacing: -0.015em;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-}
-
-:root[data-theme='dark'] .hero-description {
-    color: #a0a0ab;
+    font-weight: 400;
+    text-transform: lowercase;
 }
 
 /* Interactive Buttons */
@@ -358,30 +343,8 @@
     50% { opacity: 0; }
 }
 
-/* ─── HEADING RESPONSIVE BREAKPOINTS (EXACT SPEC MATCH) ───────────────────── */
-
-/* Laptop (992px - 1280px): 96px */
-@media (max-width: 1280px) {
-    .hero-title {
-        font-size: 96px; /* Exact Spec: 96px (Laptop) */
-        line-height: 0.90;
-    }
-}
-
-/* Tablet (768px - 991px): 72px */
-@media (max-width: 991px) {
-    .hero-title {
-        font-size: 72px; /* Exact Spec: 72px (Tablet) */
-        line-height: 0.91;
-    }
-    .hero-description {
-        font-size: 19px;
-        max-width: 640px;
-    }
-}
-
-/* Mobile (< 768px): 48px */
-@media (max-width: 767px) {
+/* Responsiveness Breakpoints */
+@media (max-width: 768px) {
     .hero {
         padding: 90px 16px 65px 16px;
     }
@@ -392,14 +355,13 @@
     }
 
     .hero-title {
-        font-size: 48px; /* Exact Spec: 48px (Mobile) */
-        line-height: 0.92;
-        letter-spacing: -0.04em;
+        font-size: clamp(1.8rem, 8vw, 3.2rem);
+        letter-spacing: -0.03em;
+        line-height: 1.05;
     }
 
     .hero-description {
-        font-size: 17px;
-        line-height: 1.6;
+        font-size: 1rem;
         margin-bottom: 20px;
     }
 
@@ -424,8 +386,9 @@
     }
 
     .hero-title {
-        font-size: clamp(1.45rem, 6.6vw, 42px);
+        font-size: clamp(1.2rem, 5.2vw, 1.85rem);
         letter-spacing: -0.035em;
+        line-height: 1.1;
     }
 
     .hero-title .hero-first-row,
@@ -435,11 +398,17 @@
         width: 100%;
         text-align: center;
     }
+    
+    .hero-badge {
+        font-size: 11px;
+        padding: 6px 14px;
+        letter-spacing: 1px;
+    }
 }
 
 @media (max-width: 390px) {
     .hero-title {
-        font-size: clamp(1.2rem, 5.8vw, 36px);
+        font-size: clamp(1.08rem, 4.8vw, 1.32rem);
         letter-spacing: -0.025em;
     }
 }

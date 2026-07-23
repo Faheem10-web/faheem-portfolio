@@ -161,8 +161,8 @@ function Hero() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    <span className="tagline-prefix">{heroSettings.greeting || "I AM"}</span>
-                    <span className="tagline-typed">{currentText}</span>
+                    <span className="tagline-prefix">{heroSettings.greeting ? heroSettings.greeting.toLowerCase() : "i am"}</span>
+                    <span className="tagline-typed">{currentText.toLowerCase()}</span>
                     <span className="tagline-cursor">|</span>
                 </motion.div>
 
@@ -174,7 +174,7 @@ function Hero() {
                         animate="animate"
                         transition={{ delay: 0.2 }}
                     >
-                        {heroSettings.title1 || "Designing Future"}
+                        {heroSettings.title1 ? heroSettings.title1.toLowerCase() : "designing future"}
                     </motion.div>
                     <motion.div
                         className="hero-gradient-text"
@@ -183,7 +183,7 @@ function Hero() {
                         animate="animate"
                         transition={{ delay: 0.4 }}
                     >
-                        {heroSettings.title2 || "Digital Experiences"}
+                        {heroSettings.title2 ? heroSettings.title2.toLowerCase() : "digital experiences"}
                     </motion.div>
                 </h1>
 
@@ -193,7 +193,7 @@ function Hero() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.45, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    {heroSettings.description || "I create premium digital experiences with modern UI/UX design, scalable React development, smooth interactions and high-performance websites."}
+                    {heroSettings.description ? heroSettings.description.toLowerCase() : "i create premium digital experiences with modern ui/ux design, scalable react development, smooth interactions and high-performance websites."}
                 </motion.p>
 
 
