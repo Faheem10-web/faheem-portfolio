@@ -27,8 +27,12 @@ const DEFAULT_FAQS = [
 ];
 
 function FAQ() {
-    const { faqs, isFaqsLoading } = useAdmin();
+    const { faqs, isFaqsLoading, siteSettings } = useAdmin();
     
+    const faqSettings = siteSettings?.faq || {};
+    const bgImage = faqSettings.bgImage || "/assets/faq_bg_blocks.png";
+    const sectionTitle = faqSettings.title || "Frequently asked Questions";
+
     const dbFaqs = faqs && faqs.length > 0 ? faqs : [];
     const showSkeleton = isFaqsLoading && dbFaqs.length === 0;
     
@@ -81,6 +85,22 @@ function FAQ() {
 
     return (
         <section className="faq-section" id="faq">
+            {/* 3D Geometric Abstract Blocks Background Layer */}
+            <div className="faq-section-bg" aria-hidden="true">
+                <img 
+                    src={bgImage} 
+                    alt="" 
+                    className="faq-section-bg-img"
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                        if (!e.target.src.includes('/assets/faq_bg_blocks.png')) {
+                            e.target.src = '/assets/faq_bg_blocks.png';
+                        }
+                    }}
+                />
+                <div className="faq-section-bg-overlay"></div>
+            </div>
+
             <div className="faq-container">
 
                 <motion.div
@@ -91,7 +111,7 @@ function FAQ() {
                     transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 >
                     <h2 className="faq-title">
-                        Frequently asked Questions
+                        {sectionTitle}
                     </h2>
                 </motion.div>
 

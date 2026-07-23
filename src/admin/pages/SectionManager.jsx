@@ -53,6 +53,7 @@ export default function SectionManager() {
   const [navForm, setNavForm] = useState({ logoType: 'text', logoText: 'FAHEEM', logoImage: '', logoHeight: 32, downloadCvBtnText: 'Download CV', downloadCvBtnVisible: true, themeToggleVisible: true, stickyNavbar: true });
   const [aboutForm, setAboutForm] = useState({ title: '', subtitle: '', description: '', experienceYears: 3, aboutImage: '' });
   const [footerForm, setFooterForm] = useState({ logoText: '', copyrightText: '', authorName: 'Faheem', description: '', contactEmail: '', bgImage: '', bgVideo: '', githubUrl: '', linkedinUrl: '', facebookUrl: '', instagramUrl: '', whatsappUrl: '', dribbbleUrl: '', twitterUrl: '', emailTextColor: 'dark' });
+  const [faqForm, setFaqForm] = useState({ title: 'Frequently asked Questions', bgImage: '/assets/faq_bg_blocks.png' });
   const [seoForm, setSeoForm] = useState({ siteTitle: '', metaDescription: '', keywords: '', favicon: '', ogImage: '' });
   const [globalForm, setGlobalForm] = useState({ portfolioName: '', websiteUrl: '', favicon: '', loaderTitle: 'LOADING', loaderText: 'UI / UX DESIGNER', primaryColor: '', secondaryColor: '', accentColor: '', loaderLogo: '', loaderImage: '', loaderImage1: '', loaderImage2: '', loaderImage3: '', loaderImage4: '', loaderImage5: '' });
   const [themeForm, setThemeForm] = useState({ mode: 'system' });
@@ -101,6 +102,7 @@ export default function SectionManager() {
     if (siteSettings.navbar) setNavForm({ ...siteSettings.navbar });
     if (siteSettings.about) setAboutForm({ ...siteSettings.about });
     if (siteSettings.footer) setFooterForm(prev => ({ ...prev, ...siteSettings.footer }));
+    if (siteSettings.faq) setFaqForm(prev => ({ ...prev, ...siteSettings.faq }));
     if (siteSettings.seo) setSeoForm({ ...siteSettings.seo, keywords: siteSettings.seo.keywords ? siteSettings.seo.keywords.join(', ') : '' });
     if (siteSettings.global) setGlobalForm({ ...siteSettings.global });
     if (siteSettings.theme) setThemeForm({ ...siteSettings.theme });
@@ -905,6 +907,88 @@ export default function SectionManager() {
         {activeTab === 'faqs' && (
           <div>
             <h3 className="admin-panel-title">Frequently Asked Questions</h3>
+
+            {/* FAQ Section Background Image & Section Title CMS Form */}
+            <form 
+              onSubmit={(e) => { e.preventDefault(); handleSaveSettings('faq', faqForm); }}
+              style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--admin-border)', borderRadius: '16px', padding: '24px', marginBottom: '28px' }}
+            >
+              <h4 style={{ margin: '0 0 16px 0', fontSize: '15px', fontWeight: '700', color: 'var(--admin-text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                🖼️ FAQ Section Background Image & Title Customization
+              </h4>
+
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">FAQ Section Main Heading Title</label>
+                  <input 
+                    type="text" 
+                    className="admin-input" 
+                    value={faqForm.title || ''} 
+                    onChange={e => setFaqForm({ ...faqForm, title: e.target.value })} 
+                    placeholder="Frequently asked Questions" 
+                  />
+                </div>
+              </div>
+
+              <div className="admin-form-group" style={{ marginBottom: '14px' }}>
+                <label className="admin-label">FAQ Section Background Image URL (3D Geometric Abstract Blocks)</label>
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                  <input 
+                    type="text" 
+                    className="admin-input" 
+                    style={{ flex: '1 1 300px' }}
+                    value={faqForm.bgImage || ''} 
+                    onChange={e => setFaqForm({ ...faqForm, bgImage: e.target.value })} 
+                    placeholder="Enter image URL (e.g. /assets/faq_bg_blocks.png or https://...)" 
+                  />
+                  <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <FiUpload /> Upload File
+                    <input 
+                      type="file" 
+                      onChange={(e) => handleDirectUpload(e, faqForm, setFaqForm, 'bgImage')} 
+                      style={{ display: 'none' }} 
+                    />
+                  </label>
+                  <button 
+                    type="button" 
+                    className="admin-btn admin-btn-secondary"
+                    onClick={() => setMediaModalTarget({ formState: faqForm, setFormState: setFaqForm, fieldName: 'bgImage' })}
+                    style={{ display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}
+                  >
+                    <FiImage /> Choose from Media Library
+                  </button>
+                </div>
+
+                {/* Active FAQ Background Preview Card */}
+                <div style={{ marginTop: '14px', display: 'flex', alignItems: 'center', gap: '16px', background: 'rgba(255, 255, 255, 0.03)', padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--admin-border)', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                    <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--admin-text)' }}>Currently Active FAQ Background:</span>
+                    <span style={{ fontSize: '11px', color: 'var(--admin-text-muted)', fontFamily: 'monospace' }}>
+                      {faqForm.bgImage ? (faqForm.bgImage.startsWith('/') ? '3D Geometric Blocks Asset (/assets/faq_bg_blocks.png)' : 'Custom Web Image URL') : 'Default 3D Abstract Blocks (/assets/faq_bg_blocks.png)'}
+                    </span>
+                  </div>
+                  <img 
+                    src={faqForm.bgImage || '/assets/faq_bg_blocks.png'} 
+                    alt="FAQ Bg Preview" 
+                    referrerPolicy="no-referrer"
+                    style={{ height: '56px', width: '100px', objectFit: 'cover', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.2)', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }} 
+                  />
+                  {faqForm.bgImage && faqForm.bgImage !== '/assets/faq_bg_blocks.png' && (
+                    <button 
+                      type="button" 
+                      onClick={() => setFaqForm(prev => ({ ...prev, bgImage: '/assets/faq_bg_blocks.png' }))}
+                      style={{ background: 'rgba(239,68,68,0.15)', color: '#EF4444', border: '1px solid rgba(239,68,68,0.3)', padding: '6px 10px', borderRadius: '8px', cursor: 'pointer', fontSize: '11px', fontWeight: '700' }}
+                    >
+                      Reset to Default 3D Blocks
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              <button type="submit" className="admin-btn admin-btn-primary" disabled={saving}>
+                <FiSave /> Save FAQ Section Settings
+              </button>
+            </form>
  
             {/* Edit / Add FAQ Form */}
             {editingFaq ? (

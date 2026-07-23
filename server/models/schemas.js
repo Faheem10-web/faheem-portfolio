@@ -424,3 +424,12 @@ const chatSettingsSchema = new mongoose.Schema({
 });
 export const ChatSettings = mongoose.models.ChatSettings || mongoose.model('ChatSettings', chatSettingsSchema);
 
+// 20. FAQ Section Settings Schema
+const faqSettingsSchema = new mongoose.Schema({
+  title: { type: String, default: 'Frequently asked Questions' },
+  subtitle: { type: String, default: 'Got questions? We have answers.' },
+  bgImage: { type: String, default: '/assets/faq_bg_blocks.png' },
+  enabled: { type: Boolean, default: true }
+}, { strict: false });
+export const FaqSettings = mongoose.models.FaqSettings || mongoose.model('FaqSettings', faqSettingsSchema);
+

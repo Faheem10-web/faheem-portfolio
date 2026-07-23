@@ -31,7 +31,8 @@ import {
   GlobalSettings,
   Media,
   ThemeSettings,
-  ChatSettings
+  ChatSettings,
+  FaqSettings
 } from '../models/schemas.js';
 
 const router = express.Router();
@@ -351,7 +352,8 @@ const moduleMap = {
   seo: SeoSettings,
   global: GlobalSettings,
   theme: ThemeSettings,
-  chat: ChatSettings
+  chat: ChatSettings,
+  faq: FaqSettings
 };
 
 router.get('/settings/:module', checkMaintenance, async (req, res) => {
@@ -371,7 +373,8 @@ router.get('/settings/:module', checkMaintenance, async (req, res) => {
         seo: 'seoSettings',
         global: 'globalSettings',
         theme: 'themeSettings',
-        chat: 'chatSettings'
+        chat: 'chatSettings',
+        faq: 'faqSettings'
       };
       const key = settingsKeyMap[modKey];
       return res.json(seed[key] || {});
