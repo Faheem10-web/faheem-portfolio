@@ -50,6 +50,7 @@ function Footer() {
     // Dynamic Blur & Brightness filters
     const bgBlur = footerSettings.bgBlur !== undefined ? Number(footerSettings.bgBlur) : 12;
     const bgBrightness = footerSettings.bgBrightness !== undefined ? Number(footerSettings.bgBrightness) : 100;
+    const subFooterBlur = footerSettings.subFooterBlur !== undefined ? Number(footerSettings.subFooterBlur) : 16;
 
     const handleCopyEmail = () => {
         if (navigator.clipboard) {
@@ -151,7 +152,13 @@ function Footer() {
                 </div>
 
                 {/* ── CARD BOTTOM SUB-FOOTER ROW (INTEGRATED INSIDE CARD) ── */}
-                <div className="footer-card-bottom">
+                <div 
+                    className="footer-card-bottom"
+                    style={{
+                        backdropFilter: `blur(${subFooterBlur}px)`,
+                        WebkitBackdropFilter: `blur(${subFooterBlur}px)`
+                    }}
+                >
                     <button onClick={scrollToTop} className="footer-back-to-top" aria-label="Back to Top">
                         <span>Back to Top</span>
                         <FiArrowUp className="top-arrow-icon" />

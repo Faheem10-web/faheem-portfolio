@@ -52,7 +52,7 @@ export default function SectionManager() {
   const [heroForm, setHeroForm] = useState({ greeting: '', name: '', words: '', title1: '', title2: '', description: '', isAvailable: true, availabilityText: '', heroImage: '', bgImage: '', bgVideo: '' });
   const [navForm, setNavForm] = useState({ logoType: 'text', logoText: 'FAHEEM', logoImage: '', logoHeight: 32, downloadCvBtnText: 'Download CV', downloadCvBtnVisible: true, themeToggleVisible: true, stickyNavbar: true });
   const [aboutForm, setAboutForm] = useState({ title: '', subtitle: '', description: '', experienceYears: 3, aboutImage: '' });
-  const [footerForm, setFooterForm] = useState({ logoText: '', copyrightText: '', authorName: 'Faheem', description: '', contactEmail: '', bgImage: '', bgVideo: '', githubUrl: '', linkedinUrl: '', facebookUrl: '', instagramUrl: '', whatsappUrl: '', dribbbleUrl: '', twitterUrl: '', emailTextColor: 'dark', bgBlur: 12, bgBrightness: 100 });
+  const [footerForm, setFooterForm] = useState({ logoText: '', copyrightText: '', authorName: 'Faheem', description: '', contactEmail: '', bgImage: '', bgVideo: '', githubUrl: '', linkedinUrl: '', facebookUrl: '', instagramUrl: '', whatsappUrl: '', dribbbleUrl: '', twitterUrl: '', emailTextColor: 'dark', bgBlur: 12, bgBrightness: 100, subFooterBlur: 16 });
   const [faqForm, setFaqForm] = useState({ title: 'Frequently asked Questions', bgImage: '/assets/faq_bg_blocks.png' });
   const [seoForm, setSeoForm] = useState({ siteTitle: '', metaDescription: '', keywords: '', favicon: '', ogImage: '' });
   const [globalForm, setGlobalForm] = useState({ portfolioName: '', websiteUrl: '', favicon: '', loaderTitle: 'LOADING', loaderText: 'UI / UX DESIGNER', primaryColor: '', secondaryColor: '', accentColor: '', loaderLogo: '', loaderImage: '', loaderImage1: '', loaderImage2: '', loaderImage3: '', loaderImage4: '', loaderImage5: '' });
@@ -1252,6 +1252,49 @@ export default function SectionManager() {
                               padding: '3px 8px', fontSize: '11px', borderRadius: '6px', cursor: 'pointer',
                               border: (footerForm.bgBrightness !== undefined ? footerForm.bgBrightness : 100) === p.val ? '1px solid #8B5CF6' : '1px solid var(--admin-border)',
                               background: (footerForm.bgBrightness !== undefined ? footerForm.bgBrightness : 100) === p.val ? 'rgba(139,92,246,0.2)' : 'rgba(255,255,255,0.03)',
+                              color: 'var(--admin-text)'
+                            }}
+                          >
+                            {p.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Sub-Footer Bottom Bar Blur Slider */}
+                  <div style={{ marginTop: '16px', paddingTop: '14px', borderTop: '1px solid var(--admin-border)' }}>
+                    <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                        <label className="admin-label" style={{ margin: 0 }}>🧊 Bottom Bar Frosted Glass Blur (Sub-Footer Strip)</label>
+                        <span style={{ fontSize: '12px', fontWeight: '800', color: '#10B981', background: 'rgba(16,185,129,0.15)', padding: '2px 8px', borderRadius: '6px' }}>
+                          {footerForm.subFooterBlur !== undefined ? footerForm.subFooterBlur : 16}px
+                        </span>
+                      </div>
+                      <input 
+                        type="range" 
+                        min="0" 
+                        max="40" 
+                        step="1"
+                        value={footerForm.subFooterBlur !== undefined ? footerForm.subFooterBlur : 16} 
+                        onChange={e => setFooterForm({ ...footerForm, subFooterBlur: Number(e.target.value) })}
+                        style={{ width: '100%', accentColor: '#10B981', cursor: 'pointer' }}
+                      />
+                      <div style={{ display: 'flex', gap: '6px', marginTop: '8px', flexWrap: 'wrap' }}>
+                        {[
+                          { label: 'Clear Glass (0px)', val: 0 },
+                          { label: 'Subtle (6px)', val: 6 },
+                          { label: 'Default (16px)', val: 16 },
+                          { label: 'Heavy Glass (30px)', val: 30 }
+                        ].map(p => (
+                          <button
+                            key={p.val}
+                            type="button"
+                            onClick={() => setFooterForm(prev => ({ ...prev, subFooterBlur: p.val }))}
+                            style={{
+                              padding: '3px 8px', fontSize: '11px', borderRadius: '6px', cursor: 'pointer',
+                              border: (footerForm.subFooterBlur !== undefined ? footerForm.subFooterBlur : 16) === p.val ? '1px solid #10B981' : '1px solid var(--admin-border)',
+                              background: (footerForm.subFooterBlur !== undefined ? footerForm.subFooterBlur : 16) === p.val ? 'rgba(16,185,129,0.2)' : 'rgba(255,255,255,0.03)',
                               color: 'var(--admin-text)'
                             }}
                           >
