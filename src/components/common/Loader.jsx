@@ -19,7 +19,7 @@ const containerVariants = {
   exit: {
     opacity: 0,
     transition: {
-      duration: 0.6,
+      duration: 0.35,
       ease: [0.16, 1, 0.3, 1],
     },
   },
@@ -101,7 +101,7 @@ export default function Loader({ onComplete, isLoading }) {
       return;
     }
 
-    const DURATION = 2600; // 2.6 seconds total smooth animation sequence
+    const DURATION = 1000; // 1.0 second fast, sleek, lightweight loader sequence
 
     const updateProgress = (timestamp) => {
       if (!startTimeRef.current) startTimeRef.current = timestamp;
@@ -116,7 +116,7 @@ export default function Loader({ onComplete, isLoading }) {
       let currentVal = easedRatio * 100;
 
       // Safety cap at 98% only if backend is still actively loading within safety window
-      if (isLoading && elapsed < 3200 && currentVal > 98) {
+      if (isLoading && elapsed < 1400 && currentVal > 98) {
         currentVal = 98;
       }
 
@@ -126,10 +126,10 @@ export default function Loader({ onComplete, isLoading }) {
         animationFrameRef.current = requestAnimationFrame(updateProgress);
       } else if (!completedRef.current) {
         completedRef.current = true;
-        // Wait 250ms after reaching 100% before starting exit crossfade
+        // Fast 100ms pause after 100% before starting fade-out reveal
         setTimeout(() => {
           if (onComplete) onComplete();
-        }, 250);
+        }, 100);
       }
     };
 
