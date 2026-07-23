@@ -47,10 +47,9 @@ function Footer() {
     const emailColorMode = footerSettings.emailTextColor || 'dark';
     const emailTextColor = emailColorMode === 'white' ? '#ffffff' : '#0d0d12';
 
-    // Dynamic Blur & Brightness filters
+    // Dynamic Blur & Brightness filters (Unified Master Blur for Background & Bottom Bar)
     const bgBlur = footerSettings.bgBlur !== undefined ? Number(footerSettings.bgBlur) : 12;
     const bgBrightness = footerSettings.bgBrightness !== undefined ? Number(footerSettings.bgBrightness) : 100;
-    const subFooterBlur = footerSettings.subFooterBlur !== undefined ? Number(footerSettings.subFooterBlur) : 16;
 
     const handleCopyEmail = () => {
         if (navigator.clipboard) {
@@ -151,8 +150,14 @@ function Footer() {
                     </nav>
                 </div>
 
-                {/* ── CARD BOTTOM SUB-FOOTER ROW (INTEGRATED INSIDE CARD - NO SEPARATION STRIP) ── */}
-                <div className="footer-card-bottom">
+                {/* ── CARD BOTTOM SUB-FOOTER ROW (INTEGRATED INSIDE CARD - SYNCED WITH MASTER BLUR) ── */}
+                <div 
+                    className="footer-card-bottom"
+                    style={{
+                        backdropFilter: `blur(${bgBlur}px)`,
+                        WebkitBackdropFilter: `blur(${bgBlur}px)`
+                    }}
+                >
                     <button onClick={scrollToTop} className="footer-back-to-top" aria-label="Back to Top">
                         <span>Back to Top</span>
                         <FiArrowUp className="top-arrow-icon" />

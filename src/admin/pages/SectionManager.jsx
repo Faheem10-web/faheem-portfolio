@@ -1179,10 +1179,10 @@ export default function SectionManager() {
                   </h5>
 
                   <div className="admin-form-row">
-                    {/* Blur Slider */}
+                    {/* Master Unified Blur Slider */}
                     <div className="admin-form-group">
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                        <label className="admin-label" style={{ margin: 0 }}>💧 Blur Effect Level</label>
+                        <label className="admin-label" style={{ margin: 0 }}>💧 Unified Blur (Background & Bottom Bar)</label>
                         <span style={{ fontSize: '12px', fontWeight: '800', color: '#8B5CF6', background: 'rgba(139,92,246,0.15)', padding: '2px 8px', borderRadius: '6px' }}>
                           {footerForm.bgBlur !== undefined ? footerForm.bgBlur : 12}px
                         </span>
