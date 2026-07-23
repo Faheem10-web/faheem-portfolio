@@ -33,6 +33,8 @@ function Footer() {
     const [copied, setCopied] = useState(false);
 
     const bgImage = footerSettings.bgImage || "/assets/footer_sky_bg.png";
+    const bgVideo = footerSettings.bgVideo || "";
+    const bgMediaType = footerSettings.bgMediaType || (bgVideo ? "video" : "image");
     const email = footerSettings.contactEmail || contactSettings.email || "avfaheeeem@gmail.com";
 
     const githubUrl = footerSettings.githubUrl || contactSettings.githubUrl || "https://github.com";
@@ -77,22 +79,39 @@ function Footer() {
         <footer className="footer-wrapper">
             {/* ── FLOATING LIQUID GLASS CONTAINER CARD ── */}
             <div className="footer-card">
-                {/* Background Image Layer contained ONLY inside Card */}
+                {/* Background Image/Video Layer contained ONLY inside Card */}
                 <div className="footer-card-bg" aria-hidden="true">
-                    <img 
-                        src={bgImage} 
-                        alt="" 
-                        className="footer-card-bg-img"
-                        referrerPolicy="no-referrer"
-                        style={{
-                            filter: `blur(${bgBlur}px) brightness(${bgBrightness}%)`
-                        }}
-                        onError={(e) => {
-                            if (!e.target.src.includes('/assets/footer_sky_bg.png')) {
-                                e.target.src = '/assets/footer_sky_bg.png';
-                            }
-                        }}
-                    />
+                    {bgMediaType === 'video' && bgVideo ? (
+                        <video
+                            src={bgVideo}
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="footer-card-bg-img"
+                            style={{
+                                filter: `blur(${bgBlur}px) brightness(${bgBrightness}%)`,
+                                objectFit: 'cover',
+                                width: '100%',
+                                height: '100%'
+                            }}
+                        />
+                    ) : (
+                        <img 
+                            src={bgImage} 
+                            alt="" 
+                            className="footer-card-bg-img"
+                            referrerPolicy="no-referrer"
+                            style={{
+                                filter: `blur(${bgBlur}px) brightness(${bgBrightness}%)`
+                            }}
+                            onError={(e) => {
+                                if (!e.target.src.includes('/assets/footer_sky_bg.png')) {
+                                    e.target.src = '/assets/footer_sky_bg.png';
+                                }
+                            }}
+                        />
+                    )}
                 </div>
 
                 {/* Ambient Lavender & Pink Glow Orbs */}

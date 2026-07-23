@@ -1097,55 +1097,144 @@ export default function SectionManager() {
           <form onSubmit={(e) => { e.preventDefault(); handleSaveSettings('footer', footerForm); }}>
             <h3 className="admin-panel-title">Footer & Social Media Manager</h3>
 
-            {/* 1. Footer Card Background Image Settings */}
+            {/* 1. Footer Card Background Media (Image & Video) Settings */}
             <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--admin-border)', borderRadius: '16px', padding: '20px', marginBottom: '24px' }}>
               <h4 style={{ margin: '0 0 16px 0', fontSize: '15px', fontWeight: '700', color: 'var(--admin-text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                🖼️ Footer Card Background Image
+                🎬 Footer Card Background Media (Image & Video Options)
               </h4>
-              <div className="admin-form-group" style={{ marginBottom: 0 }}>
-                <label className="admin-label">Card Background Image File / URL</label>
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-                  <input 
-                    type="text" 
-                    className="admin-input" 
-                    value={footerForm.bgImage || ''} 
-                    onChange={e => {
-                      const val = e.target.value;
-                      setFooterForm(prev => ({ ...prev, bgImage: val }));
-                    }} 
-                    placeholder="Enter image URL or upload image file" 
-                    style={{ flex: '1', minWidth: '240px' }}
-                  />
-                  <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <FiUpload /> Upload File
+
+              {/* Media Type Mode Selector (Image vs Video) */}
+              <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
+                <button
+                  type="button"
+                  className={`admin-btn ${(footerForm.bgMediaType || (footerForm.bgVideo ? 'video' : 'image')) === 'image' ? 'admin-btn-primary' : 'admin-btn-secondary'}`}
+                  onClick={() => setFooterForm(prev => ({ ...prev, bgMediaType: 'image' }))}
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', padding: '8px 16px' }}
+                >
+                  🖼️ Option 1: Background Image
+                </button>
+                <button
+                  type="button"
+                  className={`admin-btn ${(footerForm.bgMediaType || (footerForm.bgVideo ? 'video' : 'image')) === 'video' ? 'admin-btn-primary' : 'admin-btn-secondary'}`}
+                  onClick={() => setFooterForm(prev => ({ ...prev, bgMediaType: 'video' }))}
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', padding: '8px 16px' }}
+                >
+                  🎥 Option 2: Background Video
+                </button>
+              </div>
+
+              {/* OPTION 1: IMAGE SETTINGS */}
+              {(footerForm.bgMediaType || (footerForm.bgVideo ? 'video' : 'image')) === 'image' && (
+                <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                  <label className="admin-label">Card Background Image File / URL</label>
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
                     <input 
-                      type="file" 
-                      accept="image/*"
-                      onChange={(e) => handleDirectUpload(e, footerForm, setFooterForm, 'bgImage')} 
-                      style={{ display: 'none' }} 
+                      type="text" 
+                      className="admin-input" 
+                      value={footerForm.bgImage || ''} 
+                      onChange={e => {
+                        const val = e.target.value;
+                        setFooterForm(prev => ({ ...prev, bgImage: val }));
+                      }} 
+                      placeholder="Enter image URL or upload image file" 
+                      style={{ flex: '1', minWidth: '240px' }}
                     />
-                  </label>
-                  <button 
-                    type="button" 
-                    className="admin-btn admin-btn-secondary"
-                    onClick={() => {
-                      if (fetchMedia) fetchMedia();
-                      setMediaTargetSetter(() => (url) => setFooterForm(prev => ({ ...prev, bgImage: url })));
-                      setShowMediaModal(true);
-                    }}
-                    style={{ whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px' }}
-                  >
-                    <FiImage /> Choose from Media Library
-                  </button>
-                </div>
-                {/* Active Footer Background Preview Card (Always visible) */}
-                <div style={{ marginTop: '14px', display: 'flex', alignItems: 'center', gap: '16px', background: 'rgba(255, 255, 255, 0.03)', padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--admin-border)', flexWrap: 'wrap' }}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                    <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--admin-text)' }}>Currently Active Footer Background:</span>
-                    <span style={{ fontSize: '11px', color: 'var(--admin-text-muted)', fontFamily: 'monospace' }}>
-                      {footerForm.bgImage ? 'Custom Image URL / File' : 'Default Sky Landscape Image (/assets/footer_sky_bg.png)'}
-                    </span>
+                    <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <FiUpload /> Upload Image
+                      <input 
+                        type="file" 
+                        accept="image/*"
+                        onChange={(e) => handleDirectUpload(e, footerForm, setFooterForm, 'bgImage')} 
+                        style={{ display: 'none' }} 
+                      />
+                    </label>
+                    <button 
+                      type="button" 
+                      className="admin-btn admin-btn-secondary"
+                      onClick={() => {
+                        if (fetchMedia) fetchMedia();
+                        setMediaTargetSetter(() => (url) => setFooterForm(prev => ({ ...prev, bgImage: url })));
+                        setShowMediaModal(true);
+                      }}
+                      style={{ whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px' }}
+                    >
+                      <FiImage /> Choose from Media Library
+                    </button>
                   </div>
+                </div>
+              )}
+
+              {/* OPTION 2: VIDEO SETTINGS */}
+              {(footerForm.bgMediaType || (footerForm.bgVideo ? 'video' : 'image')) === 'video' && (
+                <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                  <label className="admin-label">Card Background Video File / URL (MP4, WebM)</label>
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <input 
+                      type="text" 
+                      className="admin-input" 
+                      value={footerForm.bgVideo || ''} 
+                      onChange={e => {
+                        const val = e.target.value;
+                        setFooterForm(prev => ({ ...prev, bgVideo: val }));
+                      }} 
+                      placeholder="Enter video URL (e.g. https://.../bg.mp4) or upload video file" 
+                      style={{ flex: '1', minWidth: '240px' }}
+                    />
+                    <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <FiUpload /> Upload Video
+                      <input 
+                        type="file" 
+                        accept="video/*"
+                        onChange={(e) => handleDirectUpload(e, footerForm, setFooterForm, 'bgVideo')} 
+                        style={{ display: 'none' }} 
+                      />
+                    </label>
+                    <button 
+                      type="button" 
+                      className="admin-btn admin-btn-secondary"
+                      onClick={() => {
+                        if (fetchMedia) fetchMedia();
+                        setMediaTargetSetter(() => (url) => setFooterForm(prev => ({ ...prev, bgVideo: url })));
+                        setShowMediaModal(true);
+                      }}
+                      style={{ whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px' }}
+                    >
+                      <FiImage /> Choose from Media Library
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Active Footer Background Preview Card (Always visible for active mode) */}
+              <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '16px', background: 'rgba(255, 255, 255, 0.03)', padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--admin-border)', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                  <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--admin-text)' }}>Currently Active Footer Background Media:</span>
+                  <span style={{ fontSize: '11px', color: 'var(--admin-text-muted)', fontFamily: 'monospace' }}>
+                    {(footerForm.bgMediaType || (footerForm.bgVideo ? 'video' : 'image')) === 'video'
+                      ? (footerForm.bgVideo ? 'Custom Video File / URL' : 'No Video Set (Set video URL or upload file)')
+                      : (footerForm.bgImage ? 'Custom Image URL / File' : 'Default Sky Landscape Image (/assets/footer_sky_bg.png)')}
+                  </span>
+                </div>
+
+                {(footerForm.bgMediaType || (footerForm.bgVideo ? 'video' : 'image')) === 'video' && footerForm.bgVideo ? (
+                  <video 
+                    src={footerForm.bgVideo} 
+                    autoPlay 
+                    loop 
+                    muted 
+                    playsInline 
+                    style={{ 
+                      height: '56px', 
+                      width: '100px', 
+                      objectFit: 'cover', 
+                      borderRadius: '8px', 
+                      border: '1px solid rgba(255, 255, 255, 0.2)', 
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                      filter: `blur(${footerForm.bgBlur !== undefined ? footerForm.bgBlur : 12}px) brightness(${footerForm.bgBrightness !== undefined ? footerForm.bgBrightness : 100}%)`,
+                      transition: 'filter 0.3s ease'
+                    }} 
+                  />
+                ) : (
                   <img 
                     src={footerForm.bgImage || '/assets/footer_sky_bg.png'} 
                     alt="Footer Bg Preview" 
@@ -1161,16 +1250,18 @@ export default function SectionManager() {
                       transition: 'filter 0.3s ease'
                     }} 
                   />
-                  {footerForm.bgImage && (
-                    <button 
-                      type="button" 
-                      onClick={() => setFooterForm(prev => ({ ...prev, bgImage: '' }))}
-                      style={{ background: 'rgba(239,68,68,0.15)', color: '#EF4444', border: '1px solid rgba(239,68,68,0.3)', padding: '6px 10px', borderRadius: '8px', cursor: 'pointer', fontSize: '11px', fontWeight: '700' }}
-                    >
-                      Reset to Default Sky Image
-                    </button>
-                  )}
-                </div>
+                )}
+
+                {((footerForm.bgMediaType === 'video' && footerForm.bgVideo) || (footerForm.bgMediaType === 'image' && footerForm.bgImage)) && (
+                  <button 
+                    type="button" 
+                    onClick={() => setFooterForm(prev => ({ ...prev, bgImage: '', bgVideo: '', bgMediaType: 'image' }))}
+                    style={{ background: 'rgba(239,68,68,0.15)', color: '#EF4444', border: '1px solid rgba(239,68,68,0.3)', padding: '6px 10px', borderRadius: '8px', cursor: 'pointer', fontSize: '11px', fontWeight: '700' }}
+                  >
+                    Reset to Default Sky Image
+                  </button>
+                )}
+              </div>
 
                 {/* Background Blur & Brightness Filters Sliders */}
                 <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px dashed var(--admin-border)' }}>
@@ -1263,7 +1354,6 @@ export default function SectionManager() {
                   </div>
                 </div>
               </div>
-            </div>
 
             {/* 2. Email & Author Credit Settings */}
             <div className="admin-form-row">
