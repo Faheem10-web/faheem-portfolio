@@ -196,71 +196,72 @@ function AppContent() {
 
   return (
     <>
+      {/* Editorial Loader Overlay */}
+      <AnimatePresence>
+        {showLoader && (
+          <Loader 
+            key="site-loader" 
+            isLoading={isSettingsLoading || isProfileLoading} 
+            onComplete={() => setLoading(false)} 
+          />
+        )}
+      </AnimatePresence>
+
       {!isAdminRoute && <CustomCursor />}
       {!isAdminRoute && <Navbar />}
       
-      <AnimatePresence mode="wait">
-        {showLoader ? (
-          <Loader key="loader" isLoading={isSettingsLoading || isProfileLoading} onComplete={() => setLoading(false)} />
-        ) : isAdminRoute ? (
-          <div className="admin-container" key="admin-content">
-            <main>
-              <Suspense fallback={
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', backgroundColor: '#0A0A0A', color: '#888', fontFamily: 'sans-serif', fontSize: '14px' }}>
-                  Loading Admin Panel...
-                </div>
-              }>
+      {isAdminRoute ? (
+        <div className="admin-container" key="admin-content">
+          <main>
+            <Suspense fallback={
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', backgroundColor: '#0A0A0A', color: '#888', fontFamily: 'sans-serif', fontSize: '14px' }}>
+                Loading Admin Panel...
+              </div>
+            }>
+              <Routes location={location} key={location.pathname}>
+                <Route path="/admin/login" element={<Login />} />
+                <Route path="/admin" element={
+                  <ProtectedRoute>
+                    <AdminLayout />
+                  </ProtectedRoute>
+                }>
+                  <Route index element={<Dashboard />} />
+                  <Route path="projects" element={<ProjectManager />} />
+                  <Route path="sections" element={<SectionManager />} />
+                  <Route path="inbox" element={<Inbox />} />
+                  <Route path="media" element={<MediaLibrary />} />
+                  <Route path="status" element={<SiteStatus />} />
+                  <Route path="profile" element={<Profile />} />
+                </Route>
+              </Routes>
+            </Suspense>
+          </main>
+        </div>
+      ) : (
+        <ClickSpark
+          sparkColor="#8B5CF6"
+          sparkSize={14}
+          sparkRadius={24}
+          sparkCount={10}
+          duration={450}
+        >
+          <div className="app-container">
+            <main className="main-content">
+              <AnimatePresence mode="wait">
                 <Routes location={location} key={location.pathname}>
-                  <Route path="/admin/login" element={<Login />} />
-                  <Route path="/admin" element={
-                    <ProtectedRoute>
-                      <AdminLayout />
-                    </ProtectedRoute>
-                  }>
-                    <Route index element={<Dashboard />} />
-                    <Route path="projects" element={<ProjectManager />} />
-                    <Route path="sections" element={<SectionManager />} />
-                    <Route path="inbox" element={<Inbox />} />
-                    <Route path="media" element={<MediaLibrary />} />
-                    <Route path="status" element={<SiteStatus />} />
-                    <Route path="profile" element={<Profile />} />
-                  </Route>
+                  <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
+                  <Route path="/about" element={<PageWrapper><AboutPage /></PageWrapper>} />
+                  <Route path="/projects" element={<PageWrapper><ProjectsPage /></PageWrapper>} />
+                  <Route path="/contact" element={<PageWrapper><ContactPage /></PageWrapper>} />
+                  <Route path="/case-study/:id" element={<PageWrapper><CaseStudyPage /></PageWrapper>} />
                 </Routes>
-              </Suspense>
+              </AnimatePresence>
             </main>
+            <Footer />
           </div>
-        ) : (
-          <ClickSpark
-            sparkColor="#8B5CF6"
-            sparkSize={14}
-            sparkRadius={24}
-            sparkCount={10}
-            duration={450}
-          >
-            <motion.div 
-              key="content"
-              className="app-container"
-              initial={{ opacity: 0, filter: "blur(12px)" }}
-              animate={{ opacity: 1, filter: "blur(0px)" }}
-              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <main className="main-content">
-                <AnimatePresence mode="wait">
-                  <Routes location={location} key={location.pathname}>
-                    <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
-                    <Route path="/about" element={<PageWrapper><AboutPage /></PageWrapper>} />
-                    <Route path="/projects" element={<PageWrapper><ProjectsPage /></PageWrapper>} />
-                    <Route path="/contact" element={<PageWrapper><ContactPage /></PageWrapper>} />
-                    <Route path="/case-study/:id" element={<PageWrapper><CaseStudyPage /></PageWrapper>} />
-                  </Routes>
-                </AnimatePresence>
-              </main>
-              <Footer />
-            </motion.div>
-            <ChatWidget />
-          </ClickSpark>
-        )}
-      </AnimatePresence>
+          <ChatWidget />
+        </ClickSpark>
+      )}
     </>
   );
 }
