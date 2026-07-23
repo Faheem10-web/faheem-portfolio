@@ -266,21 +266,33 @@
 .cs-info-action-btn {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  background: var(--cs-text-primary);
-  color: #FFFFFF;
-  padding: 10px 20px;
-  border-radius: 999px;
+  gap: 8px;
+  background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 50%, #6d28d9 100%);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  color: #ffffff;
+  padding: 10px 22px;
+  border-radius: 9999px;
   font-size: 13.5px;
   font-weight: 700;
   text-decoration: none;
-  transition: all 0.2s ease;
+  box-shadow:
+    0 12px 28px -4px rgba(139, 92, 246, 0.45),
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    inset 0 2px 2px rgba(255, 255, 255, 0.8),
+    inset 0 -1.5px 2px rgba(0, 0, 0, 0.2);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
 }
 
 .cs-info-action-btn:hover {
-  background: var(--cs-accent-indigo);
-  transform: translateY(-2px);
+  background: linear-gradient(135deg, #b56bfa 0%, #9869f8 50%, #7c3aed 100%);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.8);
+  transform: translateY(-3px) scale(1.03);
+  box-shadow:
+    0 18px 36px -4px rgba(139, 92, 246, 0.65),
+    0 6px 16px rgba(0, 0, 0, 0.12),
+    inset 0 2px 2px #ffffff;
 }
 
 /* Responsive: stack on mobile */

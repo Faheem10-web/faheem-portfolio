@@ -14,6 +14,8 @@ import Loader from "./components/common/Loader";
 import Lenis from "lenis";
 import ChatWidget from "./components/common/ChatWidget";
 import ClickSpark from "./components/common/ClickSpark";
+import CustomCursor from "./components/common/CustomCursor";
+
 
 // Lazy-loaded Admin CMS Routes for optimal initial bundle size
 const AdminLayout = lazy(() => import("./admin/AdminLayout"));
@@ -69,6 +71,15 @@ function AppContent() {
   const isMaintenanceMode = siteSettings?.global?.maintenanceMode === true;
   const isAdmin = !!token && user?.role === 'admin';
   const showLoader = loading && !isAdminRoute;
+
+  // Toggle body class for admin routes so native mouse cursors are properly restored
+  useEffect(() => {
+    if (isAdminRoute) {
+      document.body.classList.add('admin-body');
+    } else {
+      document.body.classList.remove('admin-body');
+    }
+  }, [isAdminRoute]);
 
   // Dynamically apply SEO settings from backend (Title, Favicon, Meta Description, Keywords)
   useEffect(() => {
@@ -185,6 +196,7 @@ function AppContent() {
 
   return (
     <>
+      {!isAdminRoute && <CustomCursor />}
       {!isAdminRoute && <Navbar />}
       
       <AnimatePresence mode="wait">

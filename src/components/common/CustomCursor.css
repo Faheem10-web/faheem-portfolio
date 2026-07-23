@@ -1,75 +1,89 @@
 /* ═══════════════════════════════════════════════════════
-   LIQUID GLASSMORPHISM CUSTOM CURSOR (10/10 QUALITY MATCH)
-═══════════════════════════════════════════════════════ */
+   PURE LIQUID GLASSMORPHISM CUSTOM CURSOR LENS
+ ═══════════════════════════════════════════════════════ */
 
-/* Hide default cursor everywhere on desktop devices except inside admin panels */
+/* Restore native browser cursor for all Admin Panel & Login pages */
+.admin-body,
+.admin-body *,
+.admin-container,
+.admin-container *,
+.admin-login-container,
+.admin-login-container *,
+.admin-login-card,
+.admin-login-card * {
+    cursor: auto !important;
+}
+
+.admin-body a,
+.admin-body button,
+.admin-body [role="button"],
+.admin-body input[type="submit"],
+.admin-container a,
+.admin-container button,
+.admin-container [role="button"],
+.admin-container input[type="submit"],
+.admin-login-container button,
+.admin-login-container input[type="submit"] {
+    cursor: pointer !important;
+}
+
+.admin-body input,
+.admin-body textarea,
+.admin-container input,
+.admin-container textarea,
+.admin-login-container input {
+    cursor: text !important;
+}
+
+/* Hide default browser cursor on desktop ONLY for non-admin pages */
 @media (min-width: 1024px) {
-    *,
-    body,
-    a,
-    button,
-    [role="button"],
-    input,
-    select,
-    textarea,
-    input[type="submit"],
-    input[type="button"],
-    .project-card-wrapper,
-    img {
+    body:not(.admin-body) *:not(.admin-body *):not(.admin-container *):not(.admin-login-container *) {
         cursor: none !important;
-    }
-
-    /* Restore native browser cursor behaviors for the Admin Panel */
-    .admin-body,
-    .admin-body *,
-    .admin-container,
-    .admin-container * {
-        cursor: revert !important;
     }
 }
 
-/* ── Theme Definitions ───────────────────────────────── */
+/* ── Theme Custom Property Definitions ────────────────── */
 :root {
     --cursor-dot-color: #a855f7;
-    --cursor-ring-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(240, 230, 255, 0.15) 100%), rgba(255, 255, 255, 0.12);
-    --cursor-ring-border: rgba(255, 255, 255, 0.7);
-    --cursor-ring-bg-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(240, 220, 255, 0.4) 100%), rgba(255, 255, 255, 0.25);
-    --cursor-ring-border-hover: rgba(255, 255, 255, 0.95);
-    --cursor-shadow: 0 12px 30px -4px rgba(168, 85, 247, 0.35), inset 0 1.5px 2px rgba(255, 255, 255, 1);
+    --cursor-ring-bg: rgba(255, 255, 255, 0.16);
+    --cursor-ring-border: rgba(255, 255, 255, 0.85);
+    --cursor-ring-bg-hover: rgba(255, 255, 255, 0.28);
+    --cursor-ring-border-hover: rgba(255, 255, 255, 0.98);
+    --cursor-shadow: 0 16px 40px -4px rgba(0, 0, 0, 0.25), inset 0 2px 4px 0 rgba(255, 255, 255, 0.95);
 }
 
 :root[data-theme='light'] {
     --cursor-dot-color: #7c3aed;
-    --cursor-ring-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(245, 235, 255, 0.5) 100%), rgba(255, 255, 255, 0.6);
+    --cursor-ring-bg: rgba(255, 255, 255, 0.55);
     --cursor-ring-border: rgba(255, 255, 255, 0.95);
-    --cursor-ring-bg-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(240, 225, 255, 0.75) 100%), rgba(255, 255, 255, 0.85);
-    --cursor-ring-border-hover: rgba(255, 255, 255, 1);
-    --cursor-shadow: 0 14px 32px -4px rgba(124, 58, 237, 0.28), inset 0 2px 2px #fff;
+    --cursor-ring-bg-hover: rgba(255, 255, 255, 0.75);
+    --cursor-ring-border-hover: #ffffff;
+    --cursor-shadow: 0 16px 40px -4px rgba(0, 0, 0, 0.15), inset 0 2px 4px 0 #ffffff;
 }
 
-/* ── Outer Liquid Glass Ring ─────────────────────────── */
+/* ── Outer Liquid Glass Ring / Lens ─────────────────────────── */
 .custom-cursor-outer {
     position: fixed;
     top: 0;
     left: 0;
-    width: 34px;
-    height: 34px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     pointer-events: none;
     z-index: 999999;
-    
-    /* Frosted Liquid Glass Surface */
+
+    /* Pure Frosted Transparent Glass Refraction Surface */
     background: var(--cursor-ring-bg);
-    backdrop-filter: blur(12px) saturate(180%);
-    -webkit-backdrop-filter: blur(12px) saturate(180%);
-    
-    border: 1px solid var(--cursor-ring-border);
-    
-    /* Specular Lighting Rim & Soft Ambient Purple Glow */
+    backdrop-filter: blur(16px) saturate(200%) contrast(105%);
+    -webkit-backdrop-filter: blur(16px) saturate(200%) contrast(105%);
+
+    border: 1.5px solid var(--cursor-ring-border);
+
+    /* Specular Lighting Rim & Ambient Drop Shadow */
     box-shadow:
-        0 6px 20px -2px rgba(168, 85, 247, 0.2),
-        inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95);
-    
+        0 12px 32px -4px rgba(0, 0, 0, 0.18),
+        inset 0 2px 3px 0 rgba(255, 255, 255, 0.95);
+
     transition:
         width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
         height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
@@ -77,55 +91,134 @@
         border-color 0.35s ease,
         backdrop-filter 0.35s ease,
         -webkit-backdrop-filter 0.35s ease,
-        box-shadow 0.35s ease;
+        box-shadow 0.35s ease,
+        transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ── Inner Glowing Core Dot ───────────────────────────── */
+/* ── Inner Glowing Purple Dot ───────────────────────────── */
 .custom-cursor-inner {
     position: fixed;
     top: 0;
     left: 0;
-    width: 7px;
-    height: 7px;
+    width: 9px;
+    height: 9px;
     border-radius: 50%;
     pointer-events: none;
     z-index: 1000000;
-    
-    background: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
-    box-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
-    
+
+    background: #a855f7;
+    box-shadow: 0 0 14px #a855f7, 0 0 4px #ffffff;
+
     transition:
-        transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
         background 0.25s ease,
         box-shadow 0.25s ease;
 }
 
 :root[data-theme='light'] .custom-cursor-inner {
-    background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
-    box-shadow: 0 0 10px rgba(124, 58, 237, 0.7);
+    background: #7c3aed;
+    box-shadow: 0 0 14px #7c3aed, 0 0 4px #ffffff;
 }
 
-/* ── Hover States (Over Interactive Elements) ──────────── */
+/* ── Hover States (Over Cards, Images, Buttons & Links) ──── */
 .custom-cursor-outer.hovered {
-    width: 66px;
-    height: 66px;
-    
+    width: 68px;
+    height: 68px;
+
     background: var(--cursor-ring-bg-hover);
     border-color: var(--cursor-ring-border-hover);
-    
-    /* Enhanced Liquid Glass Blur & Specular Glow */
-    backdrop-filter: blur(18px) saturate(200%);
-    -webkit-backdrop-filter: blur(18px) saturate(200%);
+
+    backdrop-filter: blur(22px) saturate(210%) contrast(108%);
+    -webkit-backdrop-filter: blur(22px) saturate(210%) contrast(108%);
     box-shadow: var(--cursor-shadow);
 }
 
 .custom-cursor-inner.hovered {
     transform: translate(-50%, -50%) scale(1.3);
-    background: linear-gradient(135deg, #f472b6 0%, #a855f7 100%);
-    box-shadow: 0 0 16px rgba(244, 114, 182, 0.9);
+    background: #a855f7;
+    box-shadow: 0 0 16px #a855f7, 0 0 4px #ffffff;
 }
 
-/* ── Dark Footer visibility override ─────────────────── */
+/* ── Active Press / Click State ──────────────────────── */
+.custom-cursor-outer.active {
+    width: 44px;
+    height: 44px;
+    background: rgba(168, 85, 247, 0.2);
+    border-color: #ffffff;
+    box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4), inset 0 2px 4px #ffffff;
+}
+
+.custom-cursor-inner.active {
+    transform: translate(-50%, -50%) scale(0.6);
+}
+
+/* ── Pure Liquid Glass Text Box Cursor ───────────────── */
+.custom-cursor-outer.text-hovered {
+    width: 24px;
+    height: 40px;
+    border-radius: 12px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.55) 0%,
+        rgba(240, 220, 255, 0.25) 50%,
+        rgba(168, 85, 247, 0.2) 100%
+    );
+    border: 1.5px solid rgba(255, 255, 255, 0.95);
+
+    backdrop-filter: blur(20px) saturate(200%);
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+
+    box-shadow:
+        0 10px 30px -4px rgba(168, 85, 247, 0.45),
+        inset 0 2px 4px 0 rgba(255, 255, 255, 0.95),
+        inset 0 -2px 4px 0 rgba(168, 85, 247, 0.3);
+}
+
+:root[data-theme='light'] .custom-cursor-outer.text-hovered {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.9) 0%,
+        rgba(240, 225, 255, 0.55) 50%,
+        rgba(124, 58, 237, 0.25) 100%
+    );
+    border-color: rgba(255, 255, 255, 1);
+    box-shadow:
+        0 10px 30px -4px rgba(124, 58, 237, 0.35),
+        inset 0 2px 4px #ffffff;
+}
+
+.custom-cursor-inner.text-hovered {
+    width: 3px;
+    height: 22px;
+    border-radius: 2px;
+    transform: translate(-50%, -50%);
+
+    background: linear-gradient(180deg, #ffffff 0%, #c084fc 50%, #a855f7 100%);
+    box-shadow:
+        0 0 14px rgba(168, 85, 247, 1),
+        0 0 4px #ffffff;
+
+    animation: liquid-beam-pulse 1.4s ease-in-out infinite alternate;
+}
+
+:root[data-theme='light'] .custom-cursor-inner.text-hovered {
+    background: linear-gradient(180deg, #7c3aed 0%, #a855f7 100%);
+    box-shadow: 0 0 14px rgba(124, 58, 237, 0.9);
+}
+
+@keyframes liquid-beam-pulse {
+    0% {
+        opacity: 0.75;
+        box-shadow: 0 0 8px rgba(168, 85, 247, 0.8), 0 0 2px #ffffff;
+    }
+    100% {
+        opacity: 1;
+        box-shadow: 0 0 18px rgba(168, 85, 247, 1), 0 0 6px #ffffff;
+    }
+}
+
+/* ── Dark Footer Visibility Override ─────────────────── */
 .custom-cursor-outer.in-footer {
     border-color: rgba(255, 255, 255, 0.85);
 }
@@ -136,7 +229,7 @@
 }
 
 .custom-cursor-outer.in-footer.hovered {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.12) 100%);
     border-color: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);

@@ -4,6 +4,8 @@ import "./CustomCursor.css";
 
 function CustomCursor() {
     const [isHovered, setIsHovered] = useState(false);
+    const [isTextHovered, setIsTextHovered] = useState(false);
+    const [isMouseDown, setIsMouseDown] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [isInFooter, setIsInFooter] = useState(false);
     const [isTouchDevice, setIsTouchDevice] = useState(false);
@@ -12,8 +14,8 @@ function CustomCursor() {
     const cursorX = useMotionValue(-100);
     const cursorY = useMotionValue(-100);
 
-    // Spring physics – glassy fluid lag for outer liquid glass ring
-    const springConfig = { damping: 24, stiffness: 220, mass: 0.5 };
+    // Spring physics – smooth fluid lag for glassmorphism outer ring
+    const springConfig = { damping: 26, stiffness: 240, mass: 0.4 };
     const cursorXSpring = useSpring(cursorX, springConfig);
     const cursorYSpring = useSpring(cursorY, springConfig);
 
@@ -41,22 +43,49 @@ function CustomCursor() {
             setIsVisible(true);
         };
 
+        const handleMouseDown = () => setIsMouseDown(true);
+        const handleMouseUp = () => setIsMouseDown(false);
+
         const handleMouseOver = (e) => {
             const target = e.target;
             if (!target) return;
-            const isClickable = target.closest('a, button, [role="button"], input, select, textarea, img, .project-card, .project-card-wrapper, .service-card, .about-image-container, .social-link, .download-cv-btn, .view-all-btn, .faq-item');
-            setIsHovered(!!isClickable);
+
+            // Check if hovering over any text input / textarea / editable text box
+            const isTextInput = target.closest(
+                'input[type="text"], input[type="email"], input[type="password"], input[type="search"], input[type="tel"], input[type="url"], input[type="number"], input:not([type]), textarea, [contenteditable="true"], .input-field, .form-input, .chat-input, .chat-input-wrapper'
+            );
+
+            // Check if hovering over clickable / interactive elements
+            const isClickable = target.closest(
+                'a, button, [role="button"], input[type="submit"], input[type="button"], input[type="checkbox"], input[type="radio"], input[type="file"], label, img, svg, path, .project-card, .project-card-wrapper, .service-card, .about-image-container, .social-link, .download-cv-btn, .view-all-btn, .faq-item, .glass-card, .hero-glass-pill, [onclick]'
+            );
+
+            if (isTextInput) {
+                setIsTextHovered(true);
+                setIsHovered(false);
+            } else if (isClickable) {
+                setIsHovered(true);
+                setIsTextHovered(false);
+            } else {
+                setIsHovered(false);
+                setIsTextHovered(false);
+            }
+
             setIsInFooter(!!target.closest(".footer"));
         };
 
         window.addEventListener("mousemove", moveCursor);
         window.addEventListener("mouseover", handleMouseOver);
+        window.addEventListener("mousedown", handleMouseDown);
+        window.addEventListener("mouseup", handleMouseUp);
         document.addEventListener("mouseleave", handleMouseLeave);
         document.addEventListener("mouseenter", handleMouseEnter);
 
         return () => {
             window.removeEventListener("mousemove", moveCursor);
             window.removeEventListener("mouseover", handleMouseOver);
+            window.removeEventListener("mousedown", handleMouseDown);
+            window.removeEventListener("mouseup", handleMouseUp);
             window.removeEventListener("resize", checkTouch);
             document.removeEventListener("mouseleave", handleMouseLeave);
             document.removeEventListener("mouseenter", handleMouseEnter);
@@ -67,9 +96,9 @@ function CustomCursor() {
 
     return (
         <>
-            {/* Outer Ring with spring delay */}
+            {/* Outer Glassmorphism Ring / Capsule */}
             <motion.div
-                className={`custom-cursor-outer ${isHovered ? "hovered" : ""} ${isInFooter ? "in-footer" : ""}`}
+                className={`custom-cursor-outer ${isTextHovered ? "text-hovered" : isHovered ? "hovered" : ""} ${isMouseDown ? "active" : ""} ${isInFooter ? "in-footer" : ""}`}
                 style={{
                     x: cursorXSpring,
                     y: cursorYSpring,
@@ -77,9 +106,9 @@ function CustomCursor() {
                     translateY: "-50%",
                 }}
             />
-            {/* Inner Dot following directly */}
+            {/* Inner Glowing Core Dot / Liquid Glass Beam */}
             <motion.div
-                className={`custom-cursor-inner ${isHovered ? "hovered" : ""} ${isInFooter ? "in-footer" : ""}`}
+                className={`custom-cursor-inner ${isTextHovered ? "text-hovered" : isHovered ? "hovered" : ""} ${isMouseDown ? "active" : ""} ${isInFooter ? "in-footer" : ""}`}
                 style={{
                     x: cursorX,
                     y: cursorY,
@@ -92,3 +121,5 @@ function CustomCursor() {
 }
 
 export default CustomCursor;
+
+

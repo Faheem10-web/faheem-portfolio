@@ -361,57 +361,80 @@
 }
 
 .expertise-column-card {
-    background: #111113; /* Premium dark background matching dark mode */
-    border: 1px solid var(--border-glass);
-    border-radius: 28px; /* Mockup card rounded corners */
-    padding: 36px 28px; /* Mockup padding */
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(18, 16, 26, 0.9) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 28px;
+    padding: 36px 28px;
     display: flex;
     flex-direction: column;
-    gap: 24px; /* Spacer between header and list */
-    min-height: 340px; /* Force uniform compact height matching mockup */
-    transition: var(--transition-smooth);
+    gap: 24px;
+    min-height: 340px;
+    box-shadow:
+        0 24px 54px -12px rgba(0, 0, 0, 0.6),
+        0 4px 14px rgba(0, 0, 0, 0.3),
+        inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 :root[data-theme='light'] .expertise-column-card {
-    background: rgba(248, 250, 252, 0.85); /* Premium soft grey card backdrop */
+    background: #ffffff;
     border: 1px solid rgba(0, 0, 0, 0.04);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
+    box-shadow:
+        0 24px 48px -10px rgba(0, 0, 0, 0.08),
+        0 8px 24px -4px rgba(0, 0, 0, 0.03),
+        0 2px 6px rgba(0, 0, 0, 0.02);
 }
 
 .expertise-column-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-6px) scale(1.02);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow:
+        0 36px 72px -12px rgba(0, 0, 0, 0.75),
+        0 12px 24px -6px rgba(0, 0, 0, 0.4);
 }
 
 :root[data-theme='light'] .expertise-column-card:hover {
+    background: #ffffff;
     border-color: rgba(0, 0, 0, 0.08);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    box-shadow:
+        0 36px 72px -14px rgba(0, 0, 0, 0.13),
+        0 14px 28px -6px rgba(0, 0, 0, 0.05),
+        0 2px 6px rgba(0, 0, 0, 0.02);
 }
 
 .expertise-card-header {
     display: flex;
     align-items: center;
-    gap: 12px; /* Tighter spacing to keep text on one line */
+    gap: 12px;
     padding-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* Divider line for dark mode */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     width: 100%;
 }
 
 :root[data-theme='light'] .expertise-card-header {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05); /* Divider line for light mode */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .expertise-icon-container {
     width: 44px;
     height: 44px;
-    border-radius: 12px; /* Squircle design */
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 18px;
-    background: rgba(59, 130, 246, 0.08); /* Light blue backdrop */
-    color: #2563eb; /* Royal blue icon color */
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--color-text-main);
+    border: 1px solid rgba(0, 0, 0, 0.06);
     flex-shrink: 0;
+}
+
+:root[data-theme='dark'] .expertise-icon-container {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.15);
 }
 
 .expertise-icon {
@@ -421,48 +444,88 @@
 }
 
 .expertise-column-title {
-    font-size: 28px !important; /* Set to exactly 28px overriding global h3 !important */
+    font-size: 28px !important;
     font-weight: 700;
     font-family: var(--font-heading);
     color: var(--color-text-main);
     letter-spacing: -0.3px;
     margin: 0;
-    white-space: nowrap; /* Forces title to stay on a single line */
+    white-space: nowrap;
 }
 
 .expertise-skills-list {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 12px;
+    width: 100%;
 }
 
 .expertise-skill-pill {
-    font-family: var(--font-heading); /* Set to Inter font matching the headings */
-    font-size: 0.85rem; /* Mockup font size */
-    font-weight: 500;
-    color: var(--color-text-muted);
-    background: #18181b;
-    border: 1px solid var(--border-glass);
-    padding: 8px 16px; /* Mockup pill padding */
-    border-radius: 12px; /* 12px rounded rectangle corners matching mockup! */
-    transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    padding: 10px 16px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 :root[data-theme='light'] .expertise-skill-pill {
     background: #ffffff;
     color: #1e293b;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    border: 1.5px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.skill-pill-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    flex-shrink: 0;
+}
+
+.skill-pill-icon svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+.skill-pill-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+/* React slow spin animation */
+@keyframes skillSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.skill-react-spin {
+    animation: skillSpin 10s linear infinite;
 }
 
 .expertise-skill-pill:hover {
-    color: var(--color-text-main);
-    border-color: rgba(255, 255, 255, 0.2);
+    border-color: var(--item-accent-color, var(--color-primary));
+    box-shadow:
+        0 8px 24px -4px color-mix(in srgb, var(--item-accent-color, var(--color-primary)) 40%, transparent),
+        0 2px 8px rgba(0, 0, 0, 0.05);
+    background: color-mix(in srgb, var(--item-accent-color, var(--color-primary)) 12%, rgba(255, 255, 255, 0.08));
 }
 
 :root[data-theme='light'] .expertise-skill-pill:hover {
-    border-color: rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
 }
 
 /* Responsive adjustments */

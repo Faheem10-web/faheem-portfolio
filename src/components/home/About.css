@@ -4,8 +4,8 @@
     padding: 120px 24px;
     position: relative;
     z-index: 10;
-    border-top: 1px solid var(--border-glass);
-    border-bottom: 1px solid var(--border-glass);
+    border-top: none;
+    border-bottom: none;
     display: flex;
     justify-content: center;
     overflow: hidden;

@@ -132,25 +132,33 @@ function Services() {
                                 <div className="card-bg-pattern"></div>
                                 
                                 <div className="card-top">
-                                    <div className="icon-wrapper">
-                                        {isSvg ? (
-                                            <div 
-                                                className="custom-svg-icon" 
-                                                dangerouslySetInnerHTML={{ __html: service.iconSvg }} 
-                                            />
-                                        ) : (
-                                            getIcon(iconName)
-                                        )}
+                                    <div className="card-header-row">
+                                        <div className="icon-wrapper">
+                                            {isSvg ? (
+                                                <div 
+                                                    className="custom-svg-icon" 
+                                                    dangerouslySetInnerHTML={{ __html: service.iconSvg }} 
+                                                />
+                                            ) : (
+                                                getIcon(iconName)
+                                            )}
+                                        </div>
+                                        <div className="card-number-badge">
+                                            <span>{numLabel}</span>
+                                        </div>
                                     </div>
+
                                     <h3 className="card-title">{title}</h3>
                                     <p className="card-description">{service.description}</p>
                                 </div>
+
                                 <div className="card-divider"></div>
+
                                 <div className="card-bottom">
-                                    <span className="card-arrow">
+                                    <div className="card-cta-btn">
+                                        <span>Explore Service</span>
                                         <FiArrowRight />
-                                    </span>
-                                    <span className="card-number">{numLabel}</span>
+                                    </div>
                                 </div>
                             </motion.div>
                         );

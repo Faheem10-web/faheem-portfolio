@@ -240,31 +240,32 @@ button:active,
     transform: scale(1.04) !important;
 }
 
-/* ── Standard Cursor Behavior Reset ── */
-/* Forces browser system cursors to be visible and responsive globally */
-html,
-body,
-* {
-    cursor: auto !important;
-}
+/* ── Standard Cursor Behavior Reset (Mobile & Admin) ── */
+@media (max-width: 1023px), (pointer: coarse) {
+    html,
+    body,
+    * {
+        cursor: auto;
+    }
 
-a,
-button,
-[role="button"],
-input[type="submit"],
-input[type="button"],
-.project-card-wrapper,
-.download-cv-btn,
-.view-all-btn,
-.nav-theme-toggle {
-    cursor: pointer !important;
-}
+    a,
+    button,
+    [role="button"],
+    input[type="submit"],
+    input[type="button"],
+    .project-card-wrapper,
+    .download-cv-btn,
+    .view-all-btn,
+    .nav-theme-toggle {
+        cursor: pointer;
+    }
 
-input,
-textarea,
-select,
-[contenteditable="true"] {
-    cursor: text !important;
+    input,
+    textarea,
+    select,
+    [contenteditable="true"] {
+        cursor: text;
+    }
 }
 
 /* ── Skeleton Shimmer Animation ── */

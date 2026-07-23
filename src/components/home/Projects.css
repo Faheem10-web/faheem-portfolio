@@ -4,7 +4,7 @@
     padding: 90px 24px;
     position: relative;
     z-index: 10;
-    border-top: 1px solid var(--border-glass);
+    border-top: none;
     transition: var(--transition-smooth);
     display: flex;
     justify-content: center;
@@ -19,13 +19,13 @@
     z-index: 1;
     pointer-events: none;
     background-image: 
-        linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+        linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
     background-size: 36px 36px;
     background-attachment: fixed;
-    mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0.3) 80%, transparent 100%);
-    -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0.3) 80%, transparent 100%);
-    opacity: 0.9;
+    mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 15%, rgba(0,0,0,0.8) 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 15%, rgba(0,0,0,0.8) 85%, transparent 100%);
+    opacity: 0.85;
 }
 
 :root[data-theme='dark'] .projects-section::before {
@@ -222,17 +222,28 @@
 }
 
 .project-hover-btn--primary {
-    background-color: #7C5CFF; /* Solid Purple #7C5CFF */
-    border-color: transparent;
-    box-shadow: 0 14px 40px rgba(124, 92, 255, 0.35); /* Shadow 0 14px 40px rgba(124,92,255,.35) */
+    background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 50%, #6d28d9 100%);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    color: #ffffff;
+    border-radius: 9999px;
+    font-weight: 700;
+    box-shadow:
+        0 12px 28px -4px rgba(139, 92, 246, 0.45),
+        0 4px 12px rgba(0, 0, 0, 0.1),
+        inset 0 2px 2px rgba(255, 255, 255, 0.8),
+        inset 0 -1.5px 2px rgba(0, 0, 0, 0.2);
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .project-hover-btn--primary:hover {
-    background-color: #8867FF; /* Hover background #8867FF */
+    background: linear-gradient(135deg, #b56bfa 0%, #9869f8 50%, #7c3aed 100%);
     color: #ffffff;
-    border-color: transparent;
-    box-shadow: 0 16px 45px rgba(124, 92, 255, 0.45);
-    transform: translateY(-2px) translateZ(0); /* Hover translateY(-2px) */
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-3px) scale(1.03);
+    box-shadow:
+        0 18px 36px -4px rgba(139, 92, 246, 0.65),
+        0 6px 16px rgba(0, 0, 0, 0.12),
+        inset 0 2px 2px #ffffff;
 }
 
 .project-hover-btn--primary svg {

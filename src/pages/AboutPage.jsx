@@ -28,14 +28,21 @@ import {
   FiPenTool,
   FiLayout,
   FiUser,
-  FiCode
+  FiCode,
+  FiLayers,
+  FiCpu,
+  FiSearch,
+  FiUserCheck,
+  FiCompass,
+  FiCheckSquare
 } from "react-icons/fi";
 
 import { 
   TbDevices, 
   TbHierarchy, 
   TbPuzzle,
-  TbBulb
+  TbBulb,
+  TbPalette
 } from "react-icons/tb";
 
 // Medal Icon (My Journey)
@@ -141,6 +148,61 @@ const getSkillIcon = (iconName) => {
       return <FiUsers className="skill-svg collaboration-brand" />;
     default:
       return <FiZap className="skill-svg" />;
+  }
+};
+
+const AdobeXdIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M4 3h16a1 1 0 011 1v16a1 1 0 01-1 1H4a1 1 0 01-1-1V4a1 1 0 011-1zm3.5 12.5h2.2l1.6-3 1.6 3h2.2l-2.7-4.8 2.5-4.2h-2.1L11.3 9.4 9.8 6.5H7.7l2.4 4.2-2.6 4.8zm9.5 0h2.5V6.5h-2.5v6z" />
+  </svg>
+);
+
+const IllustratorIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2zm-2.25 14.5H8.25l-.75-2.25H4.5l-.75 2.25H2.25L5.25 7.5h1.5l3 9zm-2.85-4.25L5.62 8.75h-.24l-1.28 3.5h2.8zm11.1 4.25h-1.8v-1.5h-.08a2.12 2.12 0 0 1-1.82 1.65A2.25 2.25 0 0 1 12.3 15a2.58 2.58 0 0 1 1.7-2.45l2.25-.8V11.2a1.2 1.2 0 0 0-1.25-1.25 1.5 1.5 0 0 0-1.35.75l-1.35-.9a2.75 2.75 0 0 1 2.7-1.3 2.7 2.7 0 0 1 2.7 2.7v5.3z" />
+  </svg>
+);
+
+const getSkillItemConfig = (name) => {
+  switch (name) {
+    case "Figma":
+      return { icon: <SiFigma />, color: "#F24E1E", class: "figma" };
+    case "Adobe XD":
+      return { icon: <AdobeXdIcon />, color: "#FF61F6", class: "adobexd" };
+    case "Photoshop":
+      return { icon: <DiPhotoshop />, color: "#31A8FF", class: "photoshop" };
+    case "Illustrator":
+      return { icon: <IllustratorIcon />, color: "#FF9A00", class: "illustrator" };
+
+    case "Wireframing":
+      return { icon: <FiLayers />, color: "#8B5CF6", class: "wireframing" };
+    case "Prototyping":
+      return { icon: <FiCpu />, color: "#EC4899", class: "prototyping" };
+    case "Responsive Layouts":
+      return { icon: <TbDevices />, color: "#10B981", class: "responsive" };
+    case "Color Theory":
+      return { icon: <TbPalette />, color: "#F59E0B", class: "colortheory" };
+
+    case "User Research":
+      return { icon: <FiSearch />, color: "#3B82F6", class: "research" };
+    case "User Personas":
+      return { icon: <FiUserCheck />, color: "#A855F7", class: "personas" };
+    case "Journey Mapping":
+      return { icon: <FiCompass />, color: "#06B6D4", class: "journey" };
+    case "Usability Testing":
+      return { icon: <FiCheckSquare />, color: "#10B981", class: "testing" };
+
+    case "HTML5":
+      return { icon: <SiHtml5 />, color: "#E34F26", class: "html5" };
+    case "CSS3":
+      return { icon: <FaCss3Alt />, color: "#1572B6", class: "css3" };
+    case "React.js":
+      return { icon: <SiReact className="skill-react-spin" />, color: "#61DAFB", class: "react" };
+    case "Responsive Design":
+      return { icon: <FiSmartphone />, color: "#8B5CF6", class: "responsivedesign" };
+
+    default:
+      return { icon: <FiZap />, color: "#8B5CF6", class: "default" };
   }
 };
 
@@ -335,11 +397,24 @@ function AboutPage() {
                   </div>
                   
                   <div className="expertise-skills-list">
-                    {group.skills.map((skill, sIdx) => (
-                      <div key={sIdx} className="expertise-skill-pill">
-                        {skill}
-                      </div>
-                    ))}
+                    {group.skills.map((skill, sIdx) => {
+                      const config = getSkillItemConfig(skill);
+                      return (
+                        <motion.div 
+                          key={sIdx} 
+                          className={`expertise-skill-pill ${config.class}`}
+                          style={{ '--item-accent-color': config.color }}
+                          whileHover={{ scale: 1.05, x: 5 }}
+                          whileTap={{ scale: 0.98 }}
+                          transition={{ type: "spring", stiffness: 450, damping: 25 }}
+                        >
+                          <span className="skill-pill-icon" style={{ color: config.color }}>
+                            {config.icon}
+                          </span>
+                          <span className="skill-pill-name">{skill}</span>
+                        </motion.div>
+                      );
+                    })}
                   </div>
                 </div>
               ))}

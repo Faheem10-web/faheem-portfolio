@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAdmin } from "../../context/AdminContext";
-import { FiMail, FiPhone, FiMapPin } from "react-icons/fi";
+import { FiMail, FiPhone, FiMapPin, FiSend } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa";
+
 import "./Contact.css";
 
 const SERVICE_OPTIONS = [
@@ -294,13 +295,16 @@ function Contact() {
                 <div className="form-submit-footer" style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'center' }}>
                   <button 
                     type="submit" 
-                    className={`send-request-btn ${isSubmitting ? "submitting" : ""}`}
+                    className={`send-request-btn liquid-glass-btn-primary ${isSubmitting ? "submitting" : ""}`}
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? (
                       <div className="spinner"></div>
                     ) : (
-                      <span>Submit Message</span>
+                      <>
+                        <FiSend size={16} />
+                        <span>Submit Message</span>
+                      </>
                     )}
                   </button>
 
@@ -310,19 +314,10 @@ function Contact() {
                       href={getWhatsappUrl()} 
                       target="_blank" 
                       rel="noreferrer"
-                      className="send-request-btn"
-                      style={{ 
-                        background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)', 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center',
-                        gap: '8px',
-                        color: '#ffffff',
-                        borderColor: 'transparent'
-                      }}
+                      className="send-request-btn whatsapp-btn"
                     >
-                      <FaWhatsapp size={18} style={{ color: '#ffffff' }} />
-                      <span style={{ color: '#ffffff' }}>WhatsApp Direct</span>
+                      <FaWhatsapp size={18} />
+                      <span>WhatsApp Direct</span>
                     </a>
                   )}
 
