@@ -151,14 +151,8 @@ function Footer() {
                     </nav>
                 </div>
 
-                {/* ── CARD BOTTOM SUB-FOOTER ROW (INTEGRATED INSIDE CARD) ── */}
-                <div 
-                    className="footer-card-bottom"
-                    style={{
-                        backdropFilter: `blur(${subFooterBlur}px)`,
-                        WebkitBackdropFilter: `blur(${subFooterBlur}px)`
-                    }}
-                >
+                {/* ── CARD BOTTOM SUB-FOOTER ROW (INTEGRATED INSIDE CARD - NO SEPARATION STRIP) ── */}
+                <div className="footer-card-bottom">
                     <button onClick={scrollToTop} className="footer-back-to-top" aria-label="Back to Top">
                         <span>Back to Top</span>
                         <FiArrowUp className="top-arrow-icon" />
