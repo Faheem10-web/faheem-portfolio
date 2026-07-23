@@ -503,34 +503,34 @@
 
     .footer-card-top {
         position: relative;
-        padding: 48px 16px 36px 16px;
-        gap: 22px;
+        padding: 68px 20px 32px 20px;
+        gap: 20px;
     }
 
-    /* Top-Right Glass Copy Button */
+    /* Top-Right Glass Copy Button - Inset inside 32px border radius */
     .footer-copy-btn {
         position: absolute;
-        top: 18px;
-        right: 18px;
-        width: 38px;
-        height: 38px;
-        min-width: 38px;
-        font-size: 15px;
+        top: 22px;
+        right: 22px;
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        font-size: 14px;
         z-index: 10;
     }
 
-    /* Email Link - Perfect Fit without Clipping */
+    /* Email Link - Perfect Centered Fit */
     .footer-email-container {
         display: flex;
         align-items: center;
         justify-content: center;
         width: 100%;
-        margin: 6px 0 8px 0;
-        padding: 0 6px;
+        margin: 4px 0 6px 0;
+        padding: 0 10px;
     }
 
     .footer-email-link {
-        font-size: clamp(1.15rem, 5.2vw, 1.7rem);
+        font-size: clamp(1.1rem, 4.8vw, 1.6rem);
         letter-spacing: -0.03em;
         text-align: center;
         word-break: break-all;
@@ -550,7 +550,7 @@
     .footer-nav-pill {
         width: 100%;
         justify-content: center;
-        padding: 12px 14px;
+        padding: 11px 14px;
         font-size: 13.5px;
         min-height: 44px;
         border-radius: 999px;
@@ -563,8 +563,8 @@
         align-items: center;
         justify-content: center;
         text-align: center;
-        padding: 22px 16px 24px 16px;
-        gap: 16px;
+        padding: 16px 16px 20px 16px;
+        gap: 12px;
     }
 
     .footer-bottom-left-group {
@@ -572,15 +572,15 @@
         flex-direction: column;
         align-items: center;
         text-align: center;
-        gap: 6px;
+        gap: 4px;
     }
 
     .footer-back-to-top {
-        font-size: 14.5px;
+        font-size: 14px;
         font-weight: 700;
         color: #ffffff;
-        min-height: 32px;
-        padding: 0 12px;
+        min-height: 28px;
+        padding: 0 10px;
         justify-content: center;
     }
 
@@ -593,9 +593,9 @@
     }
 
     .footer-social-circles a {
-        width: 42px;
-        height: 42px;
-        font-size: 15px;
+        width: 40px;
+        height: 40px;
+        font-size: 14.5px;
     }
 
     .online-badge-dot {
