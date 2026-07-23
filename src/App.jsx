@@ -70,7 +70,7 @@ function AppContent() {
 
   const isMaintenanceMode = siteSettings?.global?.maintenanceMode === true;
   const isAdmin = !!token && user?.role === 'admin';
-  const showLoader = loading && !isAdminRoute;
+  const showLoader = false;
 
   // Toggle body class for admin routes so native mouse cursors are properly restored
   useEffect(() => {
@@ -196,17 +196,6 @@ function AppContent() {
 
   return (
     <>
-      {/* Editorial Loader Overlay */}
-      <AnimatePresence>
-        {showLoader && (
-          <Loader 
-            key="site-loader" 
-            isLoading={isSettingsLoading || isProfileLoading} 
-            onComplete={() => setLoading(false)} 
-          />
-        )}
-      </AnimatePresence>
-
       {!isAdminRoute && <CustomCursor />}
       {!isAdminRoute && <Navbar />}
       
