@@ -101,21 +101,20 @@ function Footer() {
 
                 {/* ── CARD TOP SECTION ── */}
                 <div className="footer-card-top">
-                    {/* Glass Copy Button anchored in Top-Right Corner */}
-                    <button 
-                        onClick={handleCopyEmail} 
-                        className="footer-copy-btn" 
-                        title="Copy Email"
-                        aria-label="Copy Email"
-                    >
-                        {copied ? <FiCheck className="copy-icon copied" /> : <FiCopy className="copy-icon" />}
-                    </button>
-
-                    {/* Giant Center Email */}
+                    {/* Giant Center Email & Inline Glass Copy Button */}
                     <div className="footer-email-container">
                         <a href={`mailto:${email}`} className="footer-email-link" style={{ color: emailTextColor }}>
                             {email}
                         </a>
+
+                        <button 
+                            onClick={handleCopyEmail} 
+                            className="footer-copy-btn" 
+                            title="Copy Email"
+                            aria-label="Copy Email"
+                        >
+                            {copied ? <FiCheck className="copy-icon copied" /> : <FiCopy className="copy-icon" />}
+                        </button>
 
                         <AnimatePresence>
                             {copied && (

@@ -184,15 +184,15 @@
 
 /* Glass Copy Button */
 .footer-copy-btn {
-    position: absolute;
-    top: 28px;
-    right: 28px;
+    position: relative;
+    top: 0;
+    right: 0;
     z-index: 10;
     width: 42px;
     height: 42px;
     min-width: 42px;
     border-radius: 50%;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 235, 255, 0.85) 100%);
@@ -503,15 +503,15 @@
 
     .footer-card-top {
         position: relative;
-        padding: 68px 20px 32px 20px;
+        padding: 44px 16px 28px 16px;
         gap: 20px;
     }
 
-    /* Top-Right Glass Copy Button - Inset inside 32px border radius */
+    /* Glass Copy Button - Inline next to email */
     .footer-copy-btn {
-        position: absolute;
-        top: 22px;
-        right: 22px;
+        position: relative;
+        top: 0;
+        right: 0;
         width: 36px;
         height: 36px;
         min-width: 36px;
