@@ -12,8 +12,8 @@ function CustomCursor() {
     const cursorX = useMotionValue(-100);
     const cursorY = useMotionValue(-100);
 
-    // Spring physics – glassy smooth lag for outer ring
-    const springConfig = { damping: 28, stiffness: 180, mass: 0.6 };
+    // Spring physics – glassy fluid lag for outer liquid glass ring
+    const springConfig = { damping: 24, stiffness: 220, mass: 0.5 };
     const cursorXSpring = useSpring(cursorX, springConfig);
     const cursorYSpring = useSpring(cursorY, springConfig);
 

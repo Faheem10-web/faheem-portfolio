@@ -320,18 +320,22 @@ export const Message = mongoose.models.Message || mongoose.model('Message', mess
 const footerSettingsSchema = new mongoose.Schema({
   logoText: { type: String, default: 'FAHEEM' },
   copyrightText: { type: String, default: '© 2026 Faheem. All Rights Reserved.' },
+  authorName: { type: String, default: 'Faheem' },
   description: { type: String, default: 'Creating high performance premium web applications.' },
-  navLinks: [{
-    label: { type: String, required: true },
-    href: { type: String, required: true }
-  }],
-  socialLinks: [{
-    platform: { type: String, required: true },
-    url: { type: String, required: true }
-  }],
-  contactEmail: { type: String, default: 'hello@faheem.design' },
-  bgVideo: { type: String, default: '/assets/footer-bg.mp4' }
-});
+  bgImage: { type: String, default: '/assets/footer_sky_bg.png' },
+  bgVideo: { type: String, default: '' },
+  contactEmail: { type: String, default: 'avfaheeeem@gmail.com' },
+  githubUrl: { type: String, default: '' },
+  linkedinUrl: { type: String, default: '' },
+  facebookUrl: { type: String, default: '' },
+  instagramUrl: { type: String, default: '' },
+  whatsappUrl: { type: String, default: '' },
+  dribbbleUrl: { type: String, default: '' },
+  twitterUrl: { type: String, default: '' },
+  emailTextColor: { type: String, default: 'dark' }, // 'dark' (#0d0d12) or 'white' (#ffffff)
+  navLinks: { type: [mongoose.Schema.Types.Mixed], default: [] },
+  socialLinks: { type: [mongoose.Schema.Types.Mixed], default: [] }
+}, { strict: false });
 export const FooterSettings = mongoose.models.FooterSettings || mongoose.model('FooterSettings', footerSettingsSchema);
 
 // 14. Social Link Schema

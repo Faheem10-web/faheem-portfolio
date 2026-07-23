@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAdmin } from '../../context/AdminContext';
-import { FiSave, FiPlus, FiTrash2, FiEdit3 } from 'react-icons/fi';
+import { FiSave, FiPlus, FiTrash2, FiEdit3, FiUpload, FiImage, FiX, FiCheck } from 'react-icons/fi';
 import '../Admin.css';
 
 export default function SectionManager() {
@@ -10,17 +10,28 @@ export default function SectionManager() {
     skills, skillsCrud,
     experiencesCrud,
     faqs, faqsCrud,
-    uploadMediaFile
+    uploadMediaFile,
+    media, fetchMedia
   } = useAdmin();
 
+  const [showMediaModal, setShowMediaModal] = useState(false);
+  const [mediaTargetSetter, setMediaTargetSetter] = useState(null);
+
   const handleDirectUpload = async (e, formState, setFormStateCallback, fieldName) => {
-    const file = e.target.files[0];
+    const file = e.target?.files?.[0];
     if (!file) return;
-    const res = await uploadMediaFile(file);
-    if (res.success && res.url) {
-      setFormStateCallback({ ...formState, [fieldName]: res.url });
-    } else {
-      showToast('Upload failed.', 'error');
+    showToast('Uploading image to media storage...', 'info');
+    try {
+      const res = await uploadMediaFile(file);
+      const uploadedUrl = res?.url || res?.fileUrl;
+      if (res?.success && uploadedUrl) {
+        setFormStateCallback(prev => ({ ...prev, [fieldName]: uploadedUrl }));
+        showToast('Image uploaded successfully! Click Save to apply changes.', 'success');
+      } else {
+        showToast(`Upload failed: ${res?.message || 'Please try again.'}`, 'error');
+      }
+    } catch (err) {
+      showToast(`Upload error: ${err.message || 'Network error'}`, 'error');
     }
   };
 
@@ -41,7 +52,7 @@ export default function SectionManager() {
   const [heroForm, setHeroForm] = useState({ greeting: '', name: '', words: '', title1: '', title2: '', description: '', isAvailable: true, availabilityText: '', heroImage: '', bgImage: '', bgVideo: '' });
   const [navForm, setNavForm] = useState({ logoType: 'text', logoText: 'FAHEEM', logoImage: '', logoHeight: 32, downloadCvBtnText: 'Download CV', downloadCvBtnVisible: true, themeToggleVisible: true, stickyNavbar: true });
   const [aboutForm, setAboutForm] = useState({ title: '', subtitle: '', description: '', experienceYears: 3, aboutImage: '' });
-  const [footerForm, setFooterForm] = useState({ logoText: '', copyrightText: '', description: '', contactEmail: '', bgVideo: '' });
+  const [footerForm, setFooterForm] = useState({ logoText: '', copyrightText: '', authorName: 'Faheem', description: '', contactEmail: '', bgImage: '', bgVideo: '', githubUrl: '', linkedinUrl: '', facebookUrl: '', instagramUrl: '', whatsappUrl: '', dribbbleUrl: '', twitterUrl: '', emailTextColor: 'dark' });
   const [seoForm, setSeoForm] = useState({ siteTitle: '', metaDescription: '', keywords: '', favicon: '', ogImage: '' });
   const [globalForm, setGlobalForm] = useState({ portfolioName: '', websiteUrl: '', favicon: '', loaderTitle: 'LOADING', loaderText: 'UI / UX DESIGNER', primaryColor: '', secondaryColor: '', accentColor: '', loaderLogo: '', loaderImage: '', loaderImage1: '', loaderImage2: '', loaderImage3: '', loaderImage4: '', loaderImage5: '' });
   const [themeForm, setThemeForm] = useState({ mode: 'system' });
@@ -89,7 +100,7 @@ export default function SectionManager() {
     if (siteSettings.hero) setHeroForm({ ...siteSettings.hero, words: siteSettings.hero.words ? siteSettings.hero.words.join(', ') : '' });
     if (siteSettings.navbar) setNavForm({ ...siteSettings.navbar });
     if (siteSettings.about) setAboutForm({ ...siteSettings.about });
-    if (siteSettings.footer) setFooterForm({ ...siteSettings.footer });
+    if (siteSettings.footer) setFooterForm(prev => ({ ...prev, ...siteSettings.footer }));
     if (siteSettings.seo) setSeoForm({ ...siteSettings.seo, keywords: siteSettings.seo.keywords ? siteSettings.seo.keywords.join(', ') : '' });
     if (siteSettings.global) setGlobalForm({ ...siteSettings.global });
     if (siteSettings.theme) setThemeForm({ ...siteSettings.theme });
@@ -1000,47 +1011,205 @@ export default function SectionManager() {
         {/* FOOTER TAB */}
         {activeTab === 'footer' && (
           <form onSubmit={(e) => { e.preventDefault(); handleSaveSettings('footer', footerForm); }}>
-            <h3 className="admin-panel-title">Footer Settings</h3>
+            <h3 className="admin-panel-title">Footer & Social Media Manager</h3>
+
+            {/* 1. Footer Card Background Image Settings */}
+            <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--admin-border)', borderRadius: '16px', padding: '20px', marginBottom: '24px' }}>
+              <h4 style={{ margin: '0 0 16px 0', fontSize: '15px', fontWeight: '700', color: 'var(--admin-text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                🖼️ Footer Card Background Image
+              </h4>
+              <div className="admin-form-group" style={{ marginBottom: 0 }}>
+                <label className="admin-label">Card Background Image File / URL</label>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <input 
+                    type="text" 
+                    className="admin-input" 
+                    value={footerForm.bgImage || ''} 
+                    onChange={e => {
+                      const val = e.target.value;
+                      setFooterForm(prev => ({ ...prev, bgImage: val }));
+                    }} 
+                    placeholder="Enter image URL or upload image file" 
+                    style={{ flex: '1', minWidth: '240px' }}
+                  />
+                  <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <FiUpload /> Upload File
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={(e) => handleDirectUpload(e, footerForm, setFooterForm, 'bgImage')} 
+                      style={{ display: 'none' }} 
+                    />
+                  </label>
+                  <button 
+                    type="button" 
+                    className="admin-btn admin-btn-secondary"
+                    onClick={() => {
+                      if (fetchMedia) fetchMedia();
+                      setMediaTargetSetter(() => (url) => setFooterForm(prev => ({ ...prev, bgImage: url })));
+                      setShowMediaModal(true);
+                    }}
+                    style={{ whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '6px' }}
+                  >
+                    <FiImage /> Choose from Media Library
+                  </button>
+                </div>
+                {/* Active Footer Background Preview Card (Always visible) */}
+                <div style={{ marginTop: '14px', display: 'flex', alignItems: 'center', gap: '16px', background: 'rgba(255, 255, 255, 0.03)', padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--admin-border)', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                    <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--admin-text)' }}>Currently Active Footer Background:</span>
+                    <span style={{ fontSize: '11px', color: 'var(--admin-text-muted)', fontFamily: 'monospace' }}>
+                      {footerForm.bgImage ? 'Custom Image URL / File' : 'Default Sky Landscape Image (/assets/footer_sky_bg.png)'}
+                    </span>
+                  </div>
+                  <img 
+                    src={footerForm.bgImage || '/assets/footer_sky_bg.png'} 
+                    alt="Footer Bg Preview" 
+                    referrerPolicy="no-referrer"
+                    style={{ height: '56px', width: '100px', objectFit: 'cover', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.2)', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }} 
+                  />
+                  {footerForm.bgImage && (
+                    <button 
+                      type="button" 
+                      onClick={() => setFooterForm(prev => ({ ...prev, bgImage: '' }))}
+                      style={{ background: 'rgba(239,68,68,0.15)', color: '#EF4444', border: '1px solid rgba(239,68,68,0.3)', padding: '6px 10px', borderRadius: '8px', cursor: 'pointer', fontSize: '11px', fontWeight: '700' }}
+                    >
+                      Reset to Default Sky Image
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* 2. Email & Author Credit Settings */}
+            <div className="admin-form-row">
+              <div className="admin-form-group">
+                <label className="admin-label">Giant Display Contact Email</label>
+                <input type="email" className="admin-input" value={footerForm.contactEmail || ''} onChange={e => setFooterForm({ ...footerForm, contactEmail: e.target.value })} placeholder="avfaheeeem@gmail.com" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Author Credit Name (Theme created by ...)</label>
+                <input type="text" className="admin-input" value={footerForm.authorName || ''} onChange={e => setFooterForm({ ...footerForm, authorName: e.target.value })} placeholder="Faheem" />
+              </div>
+            </div>
+
+            {/* Email Heading Text Color Toggle */}
+            <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--admin-border)', borderRadius: '16px', padding: '20px', marginBottom: '24px' }}>
+              <h4 style={{ margin: '0 0 14px 0', fontSize: '15px', fontWeight: '700', color: 'var(--admin-text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                🔤 Email Heading Text Color
+              </h4>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+                {/* Black option */}
+                <button
+                  type="button"
+                  onClick={() => setFooterForm(prev => ({ ...prev, emailTextColor: 'dark' }))}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '10px',
+                    padding: '10px 20px', borderRadius: '12px', cursor: 'pointer',
+                    fontWeight: '700', fontSize: '13px', transition: 'all 0.2s',
+                    border: (footerForm.emailTextColor || 'dark') === 'dark'
+                      ? '2px solid #8B5CF6'
+                      : '2px solid rgba(255,255,255,0.15)',
+                    background: (footerForm.emailTextColor || 'dark') === 'dark'
+                      ? 'rgba(139,92,246,0.15)'
+                      : 'rgba(255,255,255,0.04)',
+                    color: 'var(--admin-text)'
+                  }}
+                >
+                  <span style={{ width: '28px', height: '28px', borderRadius: '8px', background: '#0d0d12', border: '1px solid rgba(255,255,255,0.2)', display: 'inline-block', flexShrink: 0 }} />
+                  Black Text
+                  {(footerForm.emailTextColor || 'dark') === 'dark' && <FiCheck style={{ color: '#8B5CF6', marginLeft: 4 }} />}
+                </button>
+
+                {/* White option */}
+                <button
+                  type="button"
+                  onClick={() => setFooterForm(prev => ({ ...prev, emailTextColor: 'white' }))}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: '10px',
+                    padding: '10px 20px', borderRadius: '12px', cursor: 'pointer',
+                    fontWeight: '700', fontSize: '13px', transition: 'all 0.2s',
+                    border: footerForm.emailTextColor === 'white'
+                      ? '2px solid #8B5CF6'
+                      : '2px solid rgba(255,255,255,0.15)',
+                    background: footerForm.emailTextColor === 'white'
+                      ? 'rgba(139,92,246,0.15)'
+                      : 'rgba(255,255,255,0.04)',
+                    color: 'var(--admin-text)'
+                  }}
+                >
+                  <span style={{ width: '28px', height: '28px', borderRadius: '8px', background: '#ffffff', border: '1px solid rgba(0,0,0,0.25)', display: 'inline-block', flexShrink: 0 }} />
+                  White Text
+                  {footerForm.emailTextColor === 'white' && <FiCheck style={{ color: '#8B5CF6', marginLeft: 4 }} />}
+                </button>
+
+                {/* Live Preview */}
+                <div style={{
+                  padding: '10px 20px', borderRadius: '12px',
+                  background: footerForm.emailTextColor === 'white' ? '#1a1a2e' : '#f0f0f5',
+                  border: '1px solid rgba(255,255,255,0.12)', fontSize: '13px', fontWeight: '900',
+                  color: footerForm.emailTextColor === 'white' ? '#ffffff' : '#0d0d12',
+                  letterSpacing: '-0.03em'
+                }}>
+                  hello@preview.design
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Social Media Links Manager */}
+            <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--admin-border)', borderRadius: '16px', padding: '20px', marginBottom: '24px' }}>
+              <h4 style={{ margin: '0 0 16px 0', fontSize: '15px', fontWeight: '700', color: 'var(--admin-text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                🔗 Social Media Links Manager
+              </h4>
+
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">🐙 GitHub URL</label>
+                  <input type="text" className="admin-input" value={footerForm.githubUrl || ''} onChange={e => setFooterForm({ ...footerForm, githubUrl: e.target.value })} placeholder="https://github.com/username" />
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">💼 LinkedIn URL</label>
+                  <input type="text" className="admin-input" value={footerForm.linkedinUrl || ''} onChange={e => setFooterForm({ ...footerForm, linkedinUrl: e.target.value })} placeholder="https://linkedin.com/in/username" />
+                </div>
+              </div>
+
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">📸 Instagram URL</label>
+                  <input type="text" className="admin-input" value={footerForm.instagramUrl || ''} onChange={e => setFooterForm({ ...footerForm, instagramUrl: e.target.value })} placeholder="https://instagram.com/username" />
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">💬 WhatsApp Direct Link / Number</label>
+                  <input type="text" className="admin-input" value={footerForm.whatsappUrl || ''} onChange={e => setFooterForm({ ...footerForm, whatsappUrl: e.target.value })} placeholder="https://wa.me/917356164236" />
+                </div>
+              </div>
+
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">📘 Facebook URL</label>
+                  <input type="text" className="admin-input" value={footerForm.facebookUrl || ''} onChange={e => setFooterForm({ ...footerForm, facebookUrl: e.target.value })} placeholder="https://facebook.com/username" />
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">🌐 Dribbble / Website / Portfolio URL</label>
+                  <input type="text" className="admin-input" value={footerForm.dribbbleUrl || ''} onChange={e => setFooterForm({ ...footerForm, dribbbleUrl: e.target.value })} placeholder="https://dribbble.com/username" />
+                </div>
+              </div>
+
+              <div className="admin-form-group">
+                <label className="admin-label">🐦 Twitter / X URL</label>
+                <input type="text" className="admin-input" value={footerForm.twitterUrl || ''} onChange={e => setFooterForm({ ...footerForm, twitterUrl: e.target.value })} placeholder="https://x.com/username" />
+              </div>
+            </div>
+
             <div className="admin-form-row">
               <div className="admin-form-group">
                 <label className="admin-label">Logo Text</label>
-                <input type="text" className="admin-input" value={footerForm.logoText} onChange={e => setFooterForm({ ...footerForm, logoText: e.target.value })} />
+                <input type="text" className="admin-input" value={footerForm.logoText || ''} onChange={e => setFooterForm({ ...footerForm, logoText: e.target.value })} />
               </div>
               <div className="admin-form-group">
-                <label className="admin-label">Contact Email</label>
-                <input type="email" className="admin-input" value={footerForm.contactEmail} onChange={e => setFooterForm({ ...footerForm, contactEmail: e.target.value })} />
+                <label className="admin-label">Copyright Text</label>
+                <input type="text" className="admin-input" value={footerForm.copyrightText || ''} onChange={e => setFooterForm({ ...footerForm, copyrightText: e.target.value })} />
               </div>
-            </div>
-
-            <div className="admin-form-group">
-              <label className="admin-label">Copyright Text</label>
-              <input type="text" className="admin-input" value={footerForm.copyrightText} onChange={e => setFooterForm({ ...footerForm, copyrightText: e.target.value })} />
-            </div>
-
-            <div className="admin-form-group">
-              <label className="admin-label">Footer Background Video URL</label>
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <input 
-                  type="text" 
-                  className="admin-input" 
-                  value={footerForm.bgVideo || ''} 
-                  onChange={e => setFooterForm({ ...footerForm, bgVideo: e.target.value })} 
-                  placeholder="Enter video URL or upload file" 
-                />
-                <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
-                  Upload Video
-                  <input 
-                    type="file" 
-                    onChange={(e) => handleDirectUpload(e, footerForm, setFooterForm, 'bgVideo')} 
-                    style={{ display: 'none' }} 
-                  />
-                </label>
-              </div>
-            </div>
-
-            <div className="admin-form-group">
-              <label className="admin-label">Short Description</label>
-              <textarea className="admin-textarea" value={footerForm.description} onChange={e => setFooterForm({ ...footerForm, description: e.target.value })}></textarea>
             </div>
 
             <button type="submit" className="admin-btn admin-btn-primary" disabled={saving}>
@@ -1671,8 +1840,79 @@ export default function SectionManager() {
             </button>
           </form>
         )}
-
       </div>
+
+      {/* ── MEDIA LIBRARY PICKER MODAL ── */}
+      {showMediaModal && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 99999,
+          background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px'
+        }}>
+          <div style={{
+            background: 'var(--admin-card-bg, #12131a)', border: '1px solid var(--admin-border)',
+            borderRadius: '20px', width: '100%', maxWidth: '720px', maxHeight: '80vh',
+            display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 25px 60px rgba(0,0,0,0.6)'
+          }}>
+            <div style={{ padding: '18px 24px', borderBottom: '1px solid var(--admin-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '700', color: 'var(--admin-text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <FiImage style={{ color: '#8B5CF6' }} /> Select Image from Media Library
+              </h3>
+              <button 
+                type="button"
+                onClick={() => setShowMediaModal(false)}
+                style={{ background: 'none', border: 'none', color: '#9CA3AF', fontSize: '20px', cursor: 'pointer' }}
+              >
+                <FiX />
+              </button>
+            </div>
+
+            <div style={{ padding: '20px', overflowY: 'auto', flex: 1, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '14px' }}>
+              {media && media.length > 0 ? (
+                media.map((item) => {
+                  const url = item.fileUrl || item.url;
+                  return (
+                    <div 
+                      key={item._id || item.url}
+                      onClick={() => {
+                        if (mediaTargetSetter) mediaTargetSetter(url);
+                        setShowMediaModal(false);
+                        showToast('Image selected! Click Save Footer Settings to apply.', 'success');
+                      }}
+                      style={{
+                        position: 'relative', cursor: 'pointer', borderRadius: '12px', overflow: 'hidden',
+                        border: '2px solid rgba(255,255,255,0.1)', background: '#08080a', aspectRatio: '16/10',
+                        transition: 'all 0.2s ease'
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = '#8B5CF6'; e.currentTarget.style.transform = 'scale(1.04)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.transform = 'scale(1)'; }}
+                    >
+                      <img src={url} alt={item.fileName || 'Media'} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.75)', padding: '4px 6px', fontSize: '10px', color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {item.fileName || 'Image'}
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px', color: '#9CA3AF' }}>
+                  No uploaded media files found in Media Library. Upload a file above!
+                </div>
+              )}
+            </div>
+
+            <div style={{ padding: '14px 24px', borderTop: '1px solid var(--admin-border)', display: 'flex', justifyContent: 'flex-end' }}>
+              <button 
+                type="button" 
+                className="admin-btn admin-btn-secondary" 
+                onClick={() => setShowMediaModal(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {toast && (
         <div style={{

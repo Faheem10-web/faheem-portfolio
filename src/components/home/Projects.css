@@ -11,12 +11,38 @@
     overflow: hidden;
 }
 
+/* Graph Grid Pattern Background Overlay - Sticky/Fixed Background */
+.projects-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background-image: 
+        linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+    background-size: 36px 36px;
+    background-attachment: fixed;
+    mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0.3) 80%, transparent 100%);
+    -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0.3) 80%, transparent 100%);
+    opacity: 0.9;
+}
+
+:root[data-theme='dark'] .projects-section::before {
+    background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+    opacity: 0.75;
+}
+
 .projects-container {
     width: 100%;
     max-width: 1200px;
     display: flex;
     flex-direction: column;
     gap: 60px;
+    position: relative;
+    z-index: 2;
 }
 
 .projects-header {
@@ -32,31 +58,67 @@
     font-family: var(--font-heading);
     color: var(--color-text-main);
     letter-spacing: -0.5px;
+    text-transform: uppercase;
 }
 
 .view-all-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 12px 28px;
-    border: 1.5px solid var(--color-primary); /* Primary purple border */
-    border-radius: 28px;
+    padding: 15px 32px;
+    min-height: 50px;
+    border-radius: 9999px;
     color: var(--color-text-main);
-    background: transparent;
     font-family: var(--font-body);
     font-size: 14px;
-    letter-spacing: -0.02em;
-    transition: var(--transition-smooth);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     text-decoration: none;
     cursor: pointer;
     white-space: nowrap;
+    
+    /* Frosted Liquid Glass Surface */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(245, 240, 255, 0.75) 100%), rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    
+    /* Specular Lighting & Ambient Soft Glow Shadow */
+    box-shadow:
+        0 12px 30px -6px rgba(192, 132, 252, 0.22),
+        0 4px 12px rgba(0, 0, 0, 0.03),
+        inset 0 2px 2px 0 rgba(255, 255, 255, 1),
+        inset 0 -1.5px 2px 0 rgba(168, 85, 247, 0.12);
+        
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root[data-theme='dark'] .view-all-btn {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%), rgba(16, 14, 24, 0.75);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow:
+        0 14px 32px -6px rgba(0, 0, 0, 0.4),
+        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.35);
 }
 
 .view-all-btn:hover {
-    background: var(--color-primary-glow);
-    color: var(--color-text-main);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px var(--color-primary-glow);
+    transform: translateY(-3px) scale(1.03);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(240, 230, 255, 0.9) 100%);
+    color: #a855f7;
+    border-color: rgba(192, 132, 252, 0.6);
+    box-shadow:
+        0 18px 40px -6px rgba(168, 85, 247, 0.3),
+        0 6px 18px rgba(0, 0, 0, 0.06),
+        inset 0 2px 2px 0 rgba(255, 255, 255, 1);
+}
+
+:root[data-theme='dark'] .view-all-btn:hover {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(244, 114, 182, 0.2) 100%);
+    border-color: rgba(244, 114, 182, 0.45);
+    color: #ffffff;
+    box-shadow: 0 18px 40px -6px rgba(168, 85, 247, 0.35);
 }
 
 .projects-grid {

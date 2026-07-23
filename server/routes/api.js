@@ -398,7 +398,7 @@ router.put('/settings/:module', protect, async (req, res) => {
 
     let settings = null;
     if (mongoose.connection.readyState === 1) {
-      settings = await model.findOneAndUpdate({}, cleanData, { new: true, upsert: true, setDefaultsOnInsert: true }).lean();
+      settings = await model.findOneAndUpdate({}, cleanData, { new: true, upsert: true, runValidators: false, setDefaultsOnInsert: true }).lean();
     }
 
     if (!settings) {
@@ -1160,6 +1160,41 @@ router.post('/media/upload', protect, upload.single('file'), async (req, res) =>
   } catch (error) {
     console.error('❌ Media Upload API Error:', error);
     res.status(500).json({ error: error.message || 'Image upload failed' });
+  }
+});
+
+// Upload Image via External URL (Cloudinary Integrated)
+router.post('/media/upload-url', protect, async (req, res) => {
+  const { imageUrl } = req.body;
+  if (!imageUrl) return res.status(400).json({ error: 'imageUrl is required' });
+  try {
+    const uploadResult = await uploadToCloudinary(imageUrl, 'external_image.jpg');
+    let media = null;
+    if (mongoose.connection.readyState === 1) {
+      try {
+        media = await Media.create({
+          fileName: 'Uploaded Web Image',
+          fileUrl: uploadResult.url,
+          fileType: uploadResult.fileType || 'jpg',
+          fileSize: uploadResult.fileSize || 0,
+          publicId: uploadResult.publicId
+        });
+      } catch (dbErr) {
+        console.warn('DB Media save warning:', dbErr.message);
+      }
+    }
+
+    invalidateBootstrapCache();
+    res.status(201).json({
+      success: true,
+      url: uploadResult.url,
+      fileUrl: uploadResult.url,
+      publicId: uploadResult.publicId,
+      media
+    });
+  } catch (error) {
+    console.error('❌ Upload URL API Error:', error);
+    res.status(500).json({ error: error.message || 'Image URL import failed' });
   }
 });
 

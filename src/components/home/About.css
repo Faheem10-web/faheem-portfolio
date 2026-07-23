@@ -1,7 +1,7 @@
 .about-section {
     width: 100%;
     background-color: var(--bg-primary);
-    padding: 130px 24px;
+    padding: 120px 24px;
     position: relative;
     z-index: 10;
     border-top: 1px solid var(--border-glass);
@@ -11,7 +11,7 @@
     overflow: hidden;
 }
 
-/* Background Effects System */
+/* ─── ETHEREAL PASTEL LIGHTING & AMBIENT BACKGROUND ─── */
 .about-bg-effects {
     position: absolute;
     inset: 0;
@@ -23,122 +23,251 @@
 .about-glow-orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(140px);
-    opacity: 0.08;
+    filter: blur(130px);
+    opacity: 0.18;
     transition: var(--transition-smooth);
+    will-change: transform, opacity;
 }
 
 .orb-1 {
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, #8B5CF6 0%, #6366F1 50%, transparent 70%);
-    top: -150px;
-    left: -100px;
-    animation: orbFloat1 16s ease-in-out infinite alternate;
+    width: 550px;
+    height: 550px;
+    background: radial-gradient(circle, #f472b6 0%, #c084fc 50%, transparent 75%);
+    top: -160px;
+    left: -120px;
+    animation: orbFloat1 18s ease-in-out infinite alternate;
 }
 
 .orb-2 {
-    width: 450px;
-    height: 450px;
-    background: radial-gradient(circle, #A855F7 0%, #EC4899 50%, transparent 70%);
-    bottom: -150px;
-    right: -100px;
-    animation: orbFloat2 18s ease-in-out infinite alternate;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #a855f7 0%, #6366f1 50%, transparent 75%);
+    bottom: -160px;
+    right: -120px;
+    animation: orbFloat2 20s ease-in-out infinite alternate;
+}
+
+.orb-3 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, #fbcfe8 0%, #e9d5ff 50%, transparent 75%);
+    top: 30%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    animation: orbFloat3 15s ease-in-out infinite alternate;
 }
 
 @keyframes orbFloat1 {
-    0% { transform: translate(0, 0) scale(1); opacity: 0.06; }
-    50% { transform: translate(60px, 40px) scale(1.12); opacity: 0.09; }
-    100% { transform: translate(-30px, 60px) scale(0.95); opacity: 0.07; }
+    0% { transform: translate(0, 0) scale(1); opacity: 0.18; }
+    50% { transform: translate(70px, 50px) scale(1.15); opacity: 0.24; }
+    100% { transform: translate(-40px, 70px) scale(0.92); opacity: 0.16; }
 }
 
 @keyframes orbFloat2 {
-    0% { transform: translate(0, 0) scale(1); opacity: 0.07; }
-    50% { transform: translate(-50px, -40px) scale(1.15); opacity: 0.1; }
-    100% { transform: translate(40px, -30px) scale(0.92); opacity: 0.08; }
+    0% { transform: translate(0, 0) scale(1); opacity: 0.16; }
+    50% { transform: translate(-60px, -50px) scale(1.18); opacity: 0.22; }
+    100% { transform: translate(50px, -40px) scale(0.95); opacity: 0.18; }
+}
+
+@keyframes orbFloat3 {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.12; }
+    50% { transform: translate(-40%, -60%) scale(1.2); opacity: 0.2; }
+    100% { transform: translate(-60%, -40%) scale(0.9); opacity: 0.14; }
 }
 
 .about-grid-pattern {
     position: absolute;
     inset: 0;
     background-image: 
-        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
     background-size: 40px 40px;
-    mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.7) 20%, transparent 75%);
-    -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.7) 20%, transparent 75%);
+    mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.8) 20%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.8) 20%, transparent 75%);
 }
 
 :root[data-theme='light'] .about-grid-pattern {
     background-image: 
-        linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+        linear-gradient(rgba(192, 132, 252, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(192, 132, 252, 0.06) 1px, transparent 1px);
 }
 
 .about-glass-line {
     position: absolute;
     top: 0;
-    left: 15%;
-    right: 15%;
+    left: 10%;
+    right: 10%;
     height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(139, 92, 246, 0.25) 50%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, rgba(244, 114, 182, 0.4) 30%, rgba(192, 132, 252, 0.5) 70%, transparent 100%);
 }
 
-/* Container */
+/* ─── CONTAINER & GRID LAYOUT ─── */
 .about-container {
     width: 100%;
     max-width: 1200px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: flex-start;
+    gap: 40px;
+    align-items: stretch;
     position: relative;
     z-index: 2;
 }
 
-/* Left Column */
+/* ─── LIQUID GLASS FLOATING CARDS WITH DEPTH ─── */
+.about-glass-card {
+    border-radius: 28px;
+    padding: 44px 40px;
+    position: relative;
+    box-sizing: border-box;
+    
+    /* Liquid Glass & Frosted Surface */
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.85) 0%, rgba(245, 240, 255, 0.6) 100%), rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(28px) saturate(190%) contrast(102%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(102%);
+    
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    
+    /* Specular Lighting & Deep Ethereal Shadow */
+    box-shadow:
+        0 24px 50px -12px rgba(192, 132, 252, 0.16),
+        0 8px 24px rgba(0, 0, 0, 0.03),
+        inset 0 2px 2px 0 rgba(255, 255, 255, 1),
+        inset 0 -1.5px 2px 0 rgba(244, 114, 182, 0.12);
+        
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root[data-theme='dark'] .about-glass-card {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%), rgba(16, 14, 24, 0.75);
+    border-color: rgba(255, 255, 255, 0.16);
+    box-shadow:
+        0 28px 60px -14px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.06),
+        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.35),
+        inset 0 -1px 2px 0 rgba(0, 0, 0, 0.25);
+}
+
+.about-glass-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 32px 64px -10px rgba(192, 132, 252, 0.24),
+        0 12px 30px rgba(0, 0, 0, 0.05),
+        inset 0 2px 2px 0 rgba(255, 255, 255, 1);
+}
+
+:root[data-theme='dark'] .about-glass-card:hover {
+    border-color: rgba(192, 132, 252, 0.35);
+    box-shadow:
+        0 32px 64px -10px rgba(168, 85, 247, 0.25),
+        0 0 0 1px rgba(168, 85, 247, 0.2),
+        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+/* ─── LEFT COLUMN: CONTENT ─── */
 .about-left {
     display: flex;
     flex-direction: column;
-    gap: 24px;
-    max-width: 540px;
+    gap: 22px;
+}
+
+.about-badge-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    padding: 6px 16px;
+    border-radius: 100px;
+    background: linear-gradient(135deg, rgba(244, 114, 182, 0.12) 0%, rgba(192, 132, 252, 0.18) 100%);
+    border: 1px solid rgba(244, 114, 182, 0.25);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #a855f7;
+    text-transform: uppercase;
+    font-family: var(--font-heading);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+:root[data-theme='dark'] .about-badge-tag {
+    background: linear-gradient(135deg, rgba(244, 114, 182, 0.2) 0%, rgba(192, 132, 252, 0.25) 100%);
+    border-color: rgba(244, 114, 182, 0.35);
+    color: #e9d5ff;
+}
+
+.badge-sparkle-icon {
+    font-size: 13px;
+    color: #f472b6;
 }
 
 .about-title {
-    font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+    font-size: clamp(2.2rem, 3.8vw, 3.4rem);
     font-weight: 800;
     font-family: var(--font-heading);
     color: var(--color-text-main);
-    letter-spacing: -1.5px;
-    line-height: 1.08;
+    letter-spacing: -1.2px;
+    line-height: 1.1;
     margin: 0;
 }
 
 .purple-dot {
-    color: #8B5CF6;
-    text-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+    color: #c084fc;
+    text-shadow: 0 0 14px rgba(192, 132, 252, 0.6);
 }
 
 :root[data-theme='light'] .purple-dot {
-    color: #7C3AED;
-    text-shadow: 0 0 12px rgba(124, 58, 237, 0.4);
+    color: #a855f7;
+    text-shadow: 0 0 14px rgba(168, 85, 247, 0.5);
 }
 
 .about-text {
-    font-size: clamp(1rem, 1.1vw + 0.4rem, 1.15rem);
-    line-height: 1.7;
+    font-size: clamp(1rem, 1vw + 0.35rem, 1.12rem);
+    line-height: 1.72;
     color: var(--color-text-muted);
     font-family: var(--font-body);
     font-weight: 400;
     margin: 0;
 }
 
-/* Right Column */
+/* Highlights List Pills */
+.about-highlights-list {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.highlight-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--color-text-main);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03), inset 0 1px 1px #fff;
+}
+
+:root[data-theme='dark'] .highlight-pill {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.pill-check-icon {
+    color: #34d399;
+    font-size: 14px;
+}
+
+/* ─── RIGHT COLUMN: CTA & LIQUID GLASS BUTTONS ─── */
 .about-right {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    max-width: 520px;
+    justify-content: center;
 }
 
 .cta-clean-block {
@@ -146,32 +275,28 @@
     flex-direction: column;
     gap: 18px;
     width: 100%;
-    background: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
-    padding: 0 !important;
 }
 
 .cta-title {
-    font-size: clamp(1.8rem, 3.2vw, 2.8rem);
+    font-size: clamp(1.7rem, 2.8vw, 2.5rem);
     font-weight: 800;
     font-family: var(--font-heading);
     color: var(--color-text-main);
-    letter-spacing: -1.2px;
-    line-height: 1.15;
+    letter-spacing: -1px;
+    line-height: 1.18;
     margin: 0;
 }
 
 .cta-subtitle {
-    font-size: clamp(0.98rem, 1vw + 0.4rem, 1.1rem);
+    font-size: clamp(0.96rem, 1vw + 0.35rem, 1.08rem);
     line-height: 1.65;
     color: var(--color-text-muted);
     font-family: var(--font-body);
     font-weight: 400;
-    margin: 0 0 10px 0;
+    margin: 0 0 12px 0;
 }
 
-/* 2 Premium Glass Buttons */
+/* ─── LIQUID GLASS BUTTONS (FROSTED & GLOSSY FINISHES) ─── */
 .about-buttons-row {
     display: flex;
     align-items: center;
@@ -179,136 +304,162 @@
     flex-wrap: wrap;
 }
 
-.download-cv-btn {
+/* Primary Liquid Glass Glossy Button - Sleek Purple Level */
+.liquid-glass-btn-primary {
+    position: relative;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
-    padding: 15px 28px;
-    min-height: 50px;
-    border: 1px dashed rgba(255, 255, 255, 0.25);
-    border-radius: 999px;
-    color: var(--color-text-main);
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    font-weight: 600;
-    font-family: var(--font-body);
-    font-size: 14px;
-    transition: var(--transition-smooth);
+    padding: 16px 34px;
+    min-height: 52px;
+    border-radius: 9999px;
     text-decoration: none;
     cursor: pointer;
+    font-weight: 700;
+    font-family: var(--font-body);
+    font-size: 14.5px;
+    letter-spacing: 0.02em;
+    color: #ffffff !important;
+    
+    /* Sleek Purple Liquid Gloss Gradient Fill */
+    background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 50%, #6d28d9 100%);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    
+    /* Glossy Specular Rim Glow & Ambient Purple Shadow */
+    box-shadow:
+        0 14px 36px -6px rgba(139, 92, 246, 0.5),
+        0 4px 14px rgba(0, 0, 0, 0.1),
+        inset 0 2px 2px 0 rgba(255, 255, 255, 0.95),
+        inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.2);
+        
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-:root[data-theme='light'] .download-cv-btn {
-    border-color: rgba(0, 0, 0, 0.2);
-    background: rgba(0, 0, 0, 0.02);
+.liquid-glass-btn-primary:hover {
+    transform: translateY(-3px) scale(1.03);
+    background: linear-gradient(135deg, #c084fc 0%, #9333ea 50%, #7c3aed 100%);
+    border-color: rgba(255, 255, 255, 0.95);
+    box-shadow:
+        0 20px 44px -6px rgba(139, 92, 246, 0.65),
+        0 6px 20px rgba(0, 0, 0, 0.12),
+        inset 0 2px 2px 0 rgba(255, 255, 255, 1);
 }
 
-.download-cv-btn:hover {
-    border-style: solid;
-    border-color: #8B5CF6;
-    background: rgba(139, 92, 246, 0.15);
-    color: var(--color-text-main);
-    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.25);
-    transform: translateY(-3px);
+.liquid-glass-btn-primary:active {
+    transform: translateY(-1px) scale(0.99);
 }
 
-.more-about-btn {
+/* Secondary Frosted Liquid Glass Button */
+.liquid-glass-btn-secondary {
+    position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 15px 28px;
-    min-height: 50px;
-    border: 1px solid rgba(139, 92, 246, 0.3);
-    border-radius: 999px;
-    color: var(--color-text-main);
-    background: rgba(139, 92, 246, 0.08);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    font-weight: 600;
-    font-family: var(--font-body);
-    font-size: 14px;
-    transition: var(--transition-smooth);
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 32px;
+    min-height: 52px;
+    border-radius: 9999px;
     text-decoration: none;
     cursor: pointer;
+    font-weight: 700;
+    font-family: var(--font-body);
+    font-size: 14.5px;
+    letter-spacing: 0.02em;
+    color: var(--color-text-main) !important;
+    
+    /* Frosted Liquid Glass Finish */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(245, 240, 255, 0.6) 100%), rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    
+    /* Specular Glow & Soft Ambient Shadow */
+    box-shadow:
+        0 12px 28px -6px rgba(192, 132, 252, 0.2),
+        0 4px 12px rgba(0, 0, 0, 0.03),
+        inset 0 2px 2px 0 rgba(255, 255, 255, 1),
+        inset 0 -1.5px 2px 0 rgba(244, 114, 182, 0.12);
+        
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-:root[data-theme='light'] .more-about-btn {
-    background: rgba(124, 58, 237, 0.06);
-    border-color: rgba(124, 58, 237, 0.25);
+:root[data-theme='dark'] .liquid-glass-btn-secondary {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border-color: rgba(255, 255, 255, 0.22);
+    box-shadow:
+        0 12px 28px -6px rgba(0, 0, 0, 0.35),
+        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.35);
 }
 
-.more-about-btn:hover {
-    border-color: #8B5CF6;
-    background: #8B5CF6;
-    color: #ffffff;
-    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.35);
-    transform: translateY(-3px);
+.liquid-glass-btn-secondary:hover {
+    transform: translateY(-3px) scale(1.03);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 230, 255, 0.85) 100%);
+    border-color: rgba(192, 132, 252, 0.5);
+    color: #a855f7 !important;
+    box-shadow:
+        0 18px 36px -6px rgba(192, 132, 252, 0.35),
+        0 6px 18px rgba(0, 0, 0, 0.06),
+        inset 0 2px 2px 0 rgba(255, 255, 255, 1);
 }
 
-.btn-arrow-icon {
-    font-size: 16px;
+:root[data-theme='dark'] .liquid-glass-btn-secondary:hover {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(244, 114, 182, 0.2) 100%);
+    border-color: rgba(244, 114, 182, 0.45);
+    color: #ffffff !important;
+    box-shadow: 0 18px 36px -6px rgba(168, 85, 247, 0.35);
+}
+
+.btn-icon-svg {
+    font-size: 17px;
     transition: transform 0.3s ease;
 }
 
-.more-about-btn:hover .btn-arrow-icon {
+.liquid-glass-btn-primary:hover .btn-icon-svg {
+    transform: translateY(2px);
+}
+
+.btn-arrow-icon {
+    font-size: 17px;
+    transition: transform 0.3s ease;
+}
+
+.liquid-glass-btn-secondary:hover .btn-arrow-icon {
     transform: translateX(4px);
 }
 
-/* Responsive Overrides */
-@media (max-width: 991px) {
-    .about-section {
-        padding: 90px 24px;
-    }
-
+/* ─── RESPONSIVE BREAKPOINTS ─── */
+@media (max-width: 992px) {
     .about-container {
         grid-template-columns: 1fr;
-        gap: 50px;
+        gap: 32px;
     }
-
-    .about-left,
-    .about-right {
-        max-width: 100%;
+    
+    .about-glass-card {
+        padding: 36px 28px;
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
     .about-section {
-        padding: 60px 16px;
+        padding: 80px 16px;
     }
-
+    
+    .about-glass-card {
+        padding: 28px 20px;
+        border-radius: 22px;
+    }
+    
     .about-buttons-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
         width: 100%;
+        flex-direction: column;
     }
-
-    .download-cv-btn,
-    .more-about-btn {
+    
+    .liquid-glass-btn-primary,
+    .liquid-glass-btn-secondary {
         width: 100%;
-        padding: 12px 12px;
-        min-height: 46px;
-        font-size: 13px;
-        justify-content: center;
-        white-space: nowrap;
-        gap: 6px;
-    }
-
-    .download-cv-btn svg,
-    .btn-arrow-icon {
-        font-size: 15px;
-    }
-}
-
-@media (max-width: 360px) {
-    .about-buttons-row {
-        gap: 8px;
-    }
-
-    .download-cv-btn,
-    .more-about-btn {
-        padding: 12px 8px;
-        font-size: 12px;
     }
 }

@@ -173,19 +173,33 @@ function Navbar() {
                             <Magnetic key={link.label} strength={0.25}>
                                 <Link
                                     to={link.href}
-                                    className={isLinkActive(link) ? "active" : ""}
+                                    className={`nav-item ${isLinkActive(link) ? "active" : ""}`}
                                 >
-                                    {link.label}
+                                    <span className="nav-item-text">{link.label}</span>
+                                    {isLinkActive(link) && (
+                                        <motion.span
+                                            layoutId="nav-active-liquid"
+                                            className="nav-active-bg"
+                                            transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                                        />
+                                    )}
                                 </Link>
                             </Magnetic>
                         ) : (
                             <Magnetic key={link.label} strength={0.25}>
                                 <a 
                                     href={link.href}
-                                    className={isLinkActive(link) ? "active" : ""}
+                                    className={`nav-item ${isLinkActive(link) ? "active" : ""}`}
                                     onClick={(e) => handleNavClick(e, link)}
                                 >
-                                    {link.label}
+                                    <span className="nav-item-text">{link.label}</span>
+                                    {isLinkActive(link) && (
+                                        <motion.span
+                                            layoutId="nav-active-liquid"
+                                            className="nav-active-bg"
+                                            transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                                        />
+                                    )}
                                 </a>
                             </Magnetic>
                         ))}

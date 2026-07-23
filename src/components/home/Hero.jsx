@@ -3,18 +3,41 @@ import "./Hero.css";
 import { motion } from "framer-motion";
 import { useAdmin } from "../../context/AdminContext";
 
+import {
+  FaFigma,
+  FaGithub,
+  FaReact,
+  FaNodeJs,
+  FaGitAlt,
+  FaCss3Alt,
+  FaHtml5,
+  FaJsSquare
+} from "react-icons/fa";
+import { TbBrandAdobe } from "react-icons/tb";
+import {
+  SiNextdotjs,
+  SiTailwindcss,
+  SiTypescript,
+  SiFramer
+} from "react-icons/si";
+
 const LiquidEther = lazy(() => import("./LiquidEther"));
 
 const HERO_LIQUID_COLORS = ["#5227FF", "#FF9FFC", "#B497CF"];
 const MARQUEE_ITEMS = [
-  "Brand Strategy",
-  "Design Systems",
-  "Web3 Expertise",
-  "Ownership",
-  "Product Design",
-  "UI/UX Engineering",
-  "Creative Direction",
-  "Interactive Prototyping"
+  { label: "Figma UI/UX", icon: FaFigma },
+  { label: "GitHub & Version Control", icon: FaGithub },
+  { label: "Adobe Creative Suite", icon: TbBrandAdobe },
+  { label: "React.js", icon: FaReact },
+  { label: "Next.js Framework", icon: SiNextdotjs },
+  { label: "JavaScript ES6+", icon: FaJsSquare },
+  { label: "Tailwind CSS", icon: SiTailwindcss },
+  { label: "TypeScript", icon: SiTypescript },
+  { label: "Framer Motion", icon: SiFramer },
+  { label: "HTML5 & Modern Web", icon: FaHtml5 },
+  { label: "CSS3 Styling", icon: FaCss3Alt },
+  { label: "Node.js Backend", icon: FaNodeJs },
+  { label: "Git Workflow", icon: FaGitAlt }
 ];
 
 const lineVariants = {
@@ -121,10 +144,11 @@ function Hero() {
                     />
                 </Suspense>
 
-                <div className="hero-vignette"></div>
-                <div className="hero-noise"></div>
-                <div className="hero-glow-orb"></div>
-                <div className="hero-overlay"></div>
+                <div className="hero-aurora-mesh" aria-hidden="true"></div>
+                <div className="hero-radial-glow" aria-hidden="true"></div>
+                <div className="hero-noise" aria-hidden="true"></div>
+                <div className="hero-vignette" aria-hidden="true"></div>
+                <div className="hero-overlay" aria-hidden="true"></div>
             </div>
 
             {/* Content */}
@@ -132,7 +156,7 @@ function Hero() {
             <div className="hero-container">
 
                 <motion.div
-                    className="hero-tagline"
+                    className="hero-tagline hero-glass-pill"
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -174,22 +198,6 @@ function Hero() {
 
 
 
-            </div>
-
-            {/* Infinite Horizontal Marquee Ticker */}
-            <div className="hero-marquee">
-                <div className="hero-marquee-inner">
-                    {[...Array(2)].map((_, trackIdx) => (
-                        <div key={`track-${trackIdx}`} className="hero-marquee-track">
-                            {MARQUEE_ITEMS.map((item, idx) => (
-                                <span key={`item-${trackIdx}-${idx}`} className="hero-marquee-item">
-                                    <span className="hero-marquee-dot" aria-hidden="true">•</span>
-                                    <span>{item}</span>
-                                </span>
-                            ))}
-                        </div>
-                    ))}
-                </div>
             </div>
         </section>
     );

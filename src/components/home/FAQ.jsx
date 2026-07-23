@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./FAQ.css";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAdmin } from "../../context/AdminContext";
@@ -37,10 +37,30 @@ function FAQ() {
         : (!isFaqsLoading ? DEFAULT_FAQS : []);
 
     const [openId, setOpenId] = useState(null);
+    const timerRef = useRef(null);
 
     const toggle = (id) => {
-        setOpenId(openId === id ? null : id);
+        setOpenId((prevId) => (prevId === id ? null : id));
     };
+
+    // Auto-close FAQ tab after 4 seconds (4000ms)
+    useEffect(() => {
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
+        }
+
+        if (openId !== null) {
+            timerRef.current = setTimeout(() => {
+                setOpenId(null);
+            }, 4000);
+        }
+
+        return () => {
+            if (timerRef.current) {
+                clearTimeout(timerRef.current);
+            }
+        };
+    }, [openId]);
 
     if (showSkeleton) {
         return (
