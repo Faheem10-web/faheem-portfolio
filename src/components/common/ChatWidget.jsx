@@ -46,7 +46,7 @@ function ChatWidget() {
         '--chat-btn-bg': chatSettings.buttonBgColor || '#0d0d11',
         '--chat-btn-text': chatSettings.buttonTextColor || '#ffffff',
         '--chat-btn-border': chatSettings.buttonBorderColor || 'rgba(255, 255, 255, 0.14)',
-        '--chat-btn-icon': chatSettings.buttonIconColor || '#25D366',
+        '--chat-btn-icon': chatSettings.buttonIconColor || '#000000',
         '--chat-btn-dot': chatSettings.buttonDotColor || '#10B981',
         '--chat-window-bg': chatSettings.chatBgColor || '#0b0b0f',
         '--chat-bubble-bg': chatSettings.welcomeBubbleBg || '#1E1F26'
