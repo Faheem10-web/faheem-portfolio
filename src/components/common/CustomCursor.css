@@ -35,12 +35,7 @@
     cursor: text !important;
 }
 
-/* Hide default browser cursor on desktop ONLY for non-admin pages */
-@media (min-width: 1024px) {
-    body:not(.admin-body) *:not(.admin-body *):not(.admin-container *):not(.admin-login-container *) {
-        cursor: none !important;
-    }
-}
+
 
 /* ── Theme Custom Property Definitions ────────────────── */
 :root {
