@@ -33,25 +33,14 @@
     -webkit-backdrop-filter: blur(18px) saturate(140%);
     
     border: 1px solid rgba(255, 255, 255, 0.45);
-    
-    /* Specular Top Rim Glare & Deep Ambient Shadow */
-    box-shadow:
-        0 35px 85px -15px rgba(0, 0, 0, 0.35),
-        0 10px 30px rgba(0, 0, 0, 0.05),
-        inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.8),
-        inset 0 -1.5px 2px 0 rgba(192, 132, 252, 0.15);
-        
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: none;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 :root[data-theme='dark'] .footer-card {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.03) 100%), rgba(16, 14, 22, 0.55);
     border-color: rgba(255, 255, 255, 0.22);
-    box-shadow:
-        0 36px 90px -15px rgba(0, 0, 0, 0.65),
-        0 0 0 1px rgba(255, 255, 255, 0.08),
-        inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.4),
-        inset 0 -1px 2px 0 rgba(0, 0, 0, 0.3);
+    box-shadow: none;
 }
 
 /* Background Image Layer contained ONLY inside Footer Card - Dynamic Glass Blur & Brightness */
