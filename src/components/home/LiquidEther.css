@@ -5,3 +5,11 @@
   height: 100%;
   touch-action: none;
 }
+
+/* Hide LiquidEther WebGL animation on mobile screens (320px to 640px) */
+@media (max-width: 640px) {
+  .liquid-ether-container,
+  canvas {
+    display: none !important;
+  }
+}

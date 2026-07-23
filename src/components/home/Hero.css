@@ -748,3 +748,11 @@
         font-size: 11px;
     }
 }
+
+/* Hide LiquidEther WebGL background animation on mobile screens (320px to 640px) */
+@media (max-width: 640px) {
+    .hero-bg .liquid-ether-container,
+    .hero-bg canvas {
+        display: none !important;
+    }
+}
