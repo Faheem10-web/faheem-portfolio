@@ -52,7 +52,7 @@ export default function SectionManager() {
   const [heroForm, setHeroForm] = useState({ greeting: '', name: '', words: '', title1: '', title2: '', description: '', isAvailable: true, availabilityText: '', heroImage: '', bgImage: '', bgVideo: '' });
   const [navForm, setNavForm] = useState({ logoType: 'text', logoText: 'FAHEEM', logoImage: '', logoHeight: 32, downloadCvBtnText: 'Download CV', downloadCvBtnVisible: true, themeToggleVisible: true, stickyNavbar: true });
   const [aboutForm, setAboutForm] = useState({ title: '', subtitle: '', description: '', experienceYears: 3, aboutImage: '' });
-  const [footerForm, setFooterForm] = useState({ logoText: '', copyrightText: '', authorName: 'Faheem', description: '', contactEmail: '', bgImage: '', bgVideo: '', githubUrl: '', linkedinUrl: '', facebookUrl: '', instagramUrl: '', whatsappUrl: '', dribbbleUrl: '', twitterUrl: '', emailTextColor: 'dark' });
+  const [footerForm, setFooterForm] = useState({ logoText: '', copyrightText: '', authorName: 'Faheem', description: '', contactEmail: '', bgImage: '', bgVideo: '', githubUrl: '', linkedinUrl: '', facebookUrl: '', instagramUrl: '', whatsappUrl: '', dribbbleUrl: '', twitterUrl: '', emailTextColor: 'dark', bgBlur: 12, bgBrightness: 100 });
   const [faqForm, setFaqForm] = useState({ title: 'Frequently asked Questions', bgImage: '/assets/faq_bg_blocks.png' });
   const [seoForm, setSeoForm] = useState({ siteTitle: '', metaDescription: '', keywords: '', favicon: '', ogImage: '' });
   const [globalForm, setGlobalForm] = useState({ portfolioName: '', websiteUrl: '', favicon: '', loaderTitle: 'LOADING', loaderText: 'UI / UX DESIGNER', primaryColor: '', secondaryColor: '', accentColor: '', loaderLogo: '', loaderImage: '', loaderImage1: '', loaderImage2: '', loaderImage3: '', loaderImage4: '', loaderImage5: '' });
@@ -1150,7 +1150,16 @@ export default function SectionManager() {
                     src={footerForm.bgImage || '/assets/footer_sky_bg.png'} 
                     alt="Footer Bg Preview" 
                     referrerPolicy="no-referrer"
-                    style={{ height: '56px', width: '100px', objectFit: 'cover', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.2)', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' }} 
+                    style={{ 
+                      height: '56px', 
+                      width: '100px', 
+                      objectFit: 'cover', 
+                      borderRadius: '8px', 
+                      border: '1px solid rgba(255, 255, 255, 0.2)', 
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                      filter: `blur(${footerForm.bgBlur !== undefined ? footerForm.bgBlur : 12}px) brightness(${footerForm.bgBrightness !== undefined ? footerForm.bgBrightness : 100}%)`,
+                      transition: 'filter 0.3s ease'
+                    }} 
                   />
                   {footerForm.bgImage && (
                     <button 
@@ -1161,6 +1170,97 @@ export default function SectionManager() {
                       Reset to Default Sky Image
                     </button>
                   )}
+                </div>
+
+                {/* Background Blur & Brightness Filters Sliders */}
+                <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px dashed var(--admin-border)' }}>
+                  <h5 style={{ margin: '0 0 14px 0', fontSize: '13.5px', fontWeight: '700', color: 'var(--admin-text)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    ✨ Background Image Blur & Brightness Filters
+                  </h5>
+
+                  <div className="admin-form-row">
+                    {/* Blur Slider */}
+                    <div className="admin-form-group">
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                        <label className="admin-label" style={{ margin: 0 }}>💧 Blur Effect Level</label>
+                        <span style={{ fontSize: '12px', fontWeight: '800', color: '#8B5CF6', background: 'rgba(139,92,246,0.15)', padding: '2px 8px', borderRadius: '6px' }}>
+                          {footerForm.bgBlur !== undefined ? footerForm.bgBlur : 12}px
+                        </span>
+                      </div>
+                      <input 
+                        type="range" 
+                        min="0" 
+                        max="40" 
+                        step="1"
+                        value={footerForm.bgBlur !== undefined ? footerForm.bgBlur : 12} 
+                        onChange={e => setFooterForm({ ...footerForm, bgBlur: Number(e.target.value) })}
+                        style={{ width: '100%', accentColor: '#8B5CF6', cursor: 'pointer' }}
+                      />
+                      <div style={{ display: 'flex', gap: '6px', marginTop: '8px', flexWrap: 'wrap' }}>
+                        {[
+                          { label: 'Off (0px)', val: 0 },
+                          { label: 'Subtle (6px)', val: 6 },
+                          { label: 'Default (12px)', val: 12 },
+                          { label: 'Heavy (24px)', val: 24 }
+                        ].map(p => (
+                          <button
+                            key={p.val}
+                            type="button"
+                            onClick={() => setFooterForm(prev => ({ ...prev, bgBlur: p.val }))}
+                            style={{
+                              padding: '3px 8px', fontSize: '11px', borderRadius: '6px', cursor: 'pointer',
+                              border: (footerForm.bgBlur !== undefined ? footerForm.bgBlur : 12) === p.val ? '1px solid #8B5CF6' : '1px solid var(--admin-border)',
+                              background: (footerForm.bgBlur !== undefined ? footerForm.bgBlur : 12) === p.val ? 'rgba(139,92,246,0.2)' : 'rgba(255,255,255,0.03)',
+                              color: 'var(--admin-text)'
+                            }}
+                          >
+                            {p.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Brightness Slider */}
+                    <div className="admin-form-group">
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                        <label className="admin-label" style={{ margin: 0 }}>☀️ Image Brightness Level</label>
+                        <span style={{ fontSize: '12px', fontWeight: '800', color: '#8B5CF6', background: 'rgba(139,92,246,0.15)', padding: '2px 8px', borderRadius: '6px' }}>
+                          {footerForm.bgBrightness !== undefined ? footerForm.bgBrightness : 100}%
+                        </span>
+                      </div>
+                      <input 
+                        type="range" 
+                        min="20" 
+                        max="150" 
+                        step="5"
+                        value={footerForm.bgBrightness !== undefined ? footerForm.bgBrightness : 100} 
+                        onChange={e => setFooterForm({ ...footerForm, bgBrightness: Number(e.target.value) })}
+                        style={{ width: '100%', accentColor: '#8B5CF6', cursor: 'pointer' }}
+                      />
+                      <div style={{ display: 'flex', gap: '6px', marginTop: '8px', flexWrap: 'wrap' }}>
+                        {[
+                          { label: 'Dark (50%)', val: 50 },
+                          { label: 'Dim (75%)', val: 75 },
+                          { label: 'Default (100%)', val: 100 },
+                          { label: 'Bright (125%)', val: 125 }
+                        ].map(p => (
+                          <button
+                            key={p.val}
+                            type="button"
+                            onClick={() => setFooterForm(prev => ({ ...prev, bgBrightness: p.val }))}
+                            style={{
+                              padding: '3px 8px', fontSize: '11px', borderRadius: '6px', cursor: 'pointer',
+                              border: (footerForm.bgBrightness !== undefined ? footerForm.bgBrightness : 100) === p.val ? '1px solid #8B5CF6' : '1px solid var(--admin-border)',
+                              background: (footerForm.bgBrightness !== undefined ? footerForm.bgBrightness : 100) === p.val ? 'rgba(139,92,246,0.2)' : 'rgba(255,255,255,0.03)',
+                              color: 'var(--admin-text)'
+                            }}
+                          >
+                            {p.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

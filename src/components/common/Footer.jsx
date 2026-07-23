@@ -47,6 +47,10 @@ function Footer() {
     const emailColorMode = footerSettings.emailTextColor || 'dark';
     const emailTextColor = emailColorMode === 'white' ? '#ffffff' : '#0d0d12';
 
+    // Dynamic Blur & Brightness filters
+    const bgBlur = footerSettings.bgBlur !== undefined ? Number(footerSettings.bgBlur) : 12;
+    const bgBrightness = footerSettings.bgBrightness !== undefined ? Number(footerSettings.bgBrightness) : 100;
+
     const handleCopyEmail = () => {
         if (navigator.clipboard) {
             navigator.clipboard.writeText(email);
@@ -80,6 +84,9 @@ function Footer() {
                         alt="" 
                         className="footer-card-bg-img"
                         referrerPolicy="no-referrer"
+                        style={{
+                            filter: `blur(${bgBlur}px) brightness(${bgBrightness}%)`
+                        }}
                         onError={(e) => {
                             if (!e.target.src.includes('/assets/footer_sky_bg.png')) {
                                 e.target.src = '/assets/footer_sky_bg.png';

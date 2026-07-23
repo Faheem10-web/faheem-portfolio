@@ -333,6 +333,8 @@ const footerSettingsSchema = new mongoose.Schema({
   dribbbleUrl: { type: String, default: '' },
   twitterUrl: { type: String, default: '' },
   emailTextColor: { type: String, default: 'dark' }, // 'dark' (#0d0d12) or 'white' (#ffffff)
+  bgBlur: { type: Number, default: 12 }, // Blur amount in px (0 - 40)
+  bgBrightness: { type: Number, default: 100 }, // Brightness in % (20 - 150)
   navLinks: { type: [mongoose.Schema.Types.Mixed], default: [] },
   socialLinks: { type: [mongoose.Schema.Types.Mixed], default: [] }
 }, { strict: false });

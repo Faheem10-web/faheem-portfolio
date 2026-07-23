@@ -54,21 +54,18 @@
         inset 0 -1px 2px 0 rgba(0, 0, 0, 0.3);
 }
 
-/* Background Image Layer contained ONLY inside Footer Card - Subtle Glass Blur */
+/* Background Image Layer contained ONLY inside Footer Card - Dynamic Glass Blur & Brightness */
 .footer-card-bg {
     position: absolute;
-    inset: -10px;
-    width: calc(100% + 20px);
-    height: calc(100% + 20px);
-    opacity: 0.9;
+    inset: -12px;
+    width: calc(100% + 24px);
+    height: calc(100% + 24px);
+    opacity: 0.95;
     z-index: 0;
     pointer-events: none;
     overflow: hidden;
-    
-    /* Moderate Subtle Glass Blur Effect */
-    filter: blur(14px) saturate(140%);
-    transform: scale(1.04);
-    transition: opacity 0.4s ease, filter 0.4s ease;
+    transform: scale(1.02);
+    transition: opacity 0.4s ease;
 }
 
 .footer-card-bg-img {
@@ -77,11 +74,11 @@
     object-fit: cover;
     object-position: center;
     display: block;
+    transition: filter 0.3s ease;
 }
 
 :root[data-theme='dark'] .footer-card-bg {
-    opacity: 0.6;
-    filter: blur(14px) brightness(0.75) contrast(1.1) saturate(140%);
+    opacity: 0.78;
 }
 
 /* Ambient Ambient Glow Orbs inside Card */
