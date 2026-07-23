@@ -1662,21 +1662,84 @@ export default function SectionManager() {
         {/* CHAT WIDGET TAB */}
         {activeTab === 'chat' && (
           <form onSubmit={(e) => { e.preventDefault(); handleSaveSettings('chat', chatForm); }}>
-            <h3 className="admin-panel-title">💬 Chat Widget & WhatsApp Assistant Settings</h3>
+            <h3 className="admin-panel-title">💬 WhatsApp Chat Bot & Assistant Controls</h3>
             <p className="admin-header-subtitle" style={{ marginBottom: '24px' }}>
-              Customize floating pill button colors, fonts, modal themes, welcome messages, and pre-filled quick action templates.
+              Turn the floating WhatsApp chat widget ON or OFF, and customize colors, fonts, welcome messages, and pre-filled quick action templates.
             </p>
 
-            {/* Enable Toggle */}
-            <div className="admin-form-group" style={{ marginBottom: '24px' }}>
-              <label className="admin-checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '15px', fontWeight: '600' }}>
-                <input 
-                  type="checkbox" 
-                  checked={chatForm.enabled} 
-                  onChange={e => setChatForm({ ...chatForm, enabled: e.target.checked })} 
-                />
-                Enable Floating WhatsApp Chat Widget on Portfolio
-              </label>
+            {/* ⚡ Master WhatsApp Chat Bot ON / OFF Toggle Card */}
+            <div style={{
+              background: chatForm.enabled !== false 
+                ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(5, 150, 105, 0.03) 100%)' 
+                : 'linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(185, 28, 28, 0.03) 100%)',
+              border: `2px solid ${chatForm.enabled !== false ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.4)'}`,
+              borderRadius: '20px',
+              padding: '24px',
+              marginBottom: '28px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '16px',
+              boxShadow: chatForm.enabled !== false ? '0 8px 24px rgba(16, 185, 129, 0.1)' : 'none'
+            }}>
+              <div style={{ flex: '1 1 260px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+                  <span style={{
+                    display: 'inline-block',
+                    width: '10px',
+                    height: '10px',
+                    borderRadius: '50%',
+                    background: chatForm.enabled !== false ? '#10B981' : '#EF4444',
+                    boxShadow: chatForm.enabled !== false ? '0 0 10px #10B981' : '0 0 10px #EF4444'
+                  }} />
+                  <h4 style={{ margin: 0, fontSize: '17px', fontWeight: '800', color: 'var(--admin-text)' }}>
+                    WhatsApp Chat Bot Status: {chatForm.enabled !== false ? 'ACTIVE (ON)' : 'DISABLED (OFF)'}
+                  </h4>
+                </div>
+                <p style={{ margin: 0, fontSize: '13px', color: 'var(--admin-text-muted)', lineHeight: '1.5' }}>
+                  {chatForm.enabled !== false 
+                    ? '🟢 The floating WhatsApp quick chat button and interactive bot modal ARE CURRENTLY VISIBLE on all pages.'
+                    : '🔴 The floating WhatsApp quick chat button is HIDDEN from all portfolio pages.'}
+                </p>
+              </div>
+
+              {/* iOS-Style Master Toggle Switch Button */}
+              <button
+                type="button"
+                onClick={() => setChatForm(prev => ({ ...prev, enabled: prev.enabled === false ? true : false }))}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '12px 24px',
+                  borderRadius: '100px',
+                  cursor: 'pointer',
+                  border: 'none',
+                  fontWeight: '800',
+                  fontSize: '14px',
+                  transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                  background: chatForm.enabled !== false ? '#10B981' : '#374151',
+                  color: '#ffffff',
+                  boxShadow: chatForm.enabled !== false ? '0 6px 20px rgba(16, 185, 129, 0.4)' : 'none'
+                }}
+              >
+                <span style={{
+                  width: '24px',
+                  height: '24px',
+                  borderRadius: '50%',
+                  background: '#ffffff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '12px',
+                  color: chatForm.enabled !== false ? '#10B981' : '#374151',
+                  fontWeight: '900'
+                }}>
+                  {chatForm.enabled !== false ? '✓' : '✕'}
+                </span>
+                {chatForm.enabled !== false ? 'CHAT BOT IS ON' : 'CHAT BOT IS OFF'}
+              </button>
             </div>
 
             <hr style={{ borderColor: 'var(--admin-border)', margin: '24px 0' }} />
