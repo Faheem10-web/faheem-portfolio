@@ -153,51 +153,94 @@ function Hero() {
 
             {/* Content */}
 
+            {/* Ambient Vibrant Liquid Gradient Blobs (Behind the Card for Liquid Glass Effect) */}
+            <div className="hero-liquid-orbs" aria-hidden="true">
+                <div className="liquid-orb orb-red-1"></div>
+                <div className="liquid-orb orb-red-2"></div>
+                <div className="liquid-orb orb-purple-3"></div>
+            </div>
+
+            {/* ── LUXURIOUS GLASSMORPHISM CARD CONTAINER (BOX MODEL MATCHING MOCKUP) ── */}
             <div className="hero-container">
-
-                <motion.div
-                    className="hero-tagline hero-glass-pill"
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                <motion.div 
+                    className="hero-glass-card"
+                    initial={{ opacity: 0, y: 30, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    <span className="tagline-prefix">{heroSettings.greeting ? heroSettings.greeting.toLowerCase() : "i am"}</span>
-                    <span className="tagline-typed">{currentText.toLowerCase()}</span>
-                    <span className="tagline-cursor">|</span>
+                    {/* Specular Inner Glare Overlay */}
+                    <div className="hero-card-glare" aria-hidden="true"></div>
+
+                    {/* 1. Card Top Bar Header */}
+                    <div className="hero-card-header">
+                        <div className="hero-card-meta">
+                            <span className="meta-dot"></span>
+                            <span className="meta-label">Glassmorphic UI / UX</span>
+                        </div>
+
+                        <div className="hero-card-action-tag">
+                            <span>Let's create</span>
+                        </div>
+                    </div>
+
+                    {/* 2. Main Center Body Content */}
+                    <div className="hero-card-body">
+                        <motion.div
+                            className="hero-tagline hero-glass-pill"
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                        >
+                            <span className="tagline-prefix">{heroSettings.greeting || "Hello, I'm"}</span>
+                            <span className="tagline-typed">{currentText}</span>
+                            <span className="tagline-cursor">|</span>
+                        </motion.div>
+
+                        <h1 className="hero-title">
+                            <motion.div
+                                className="hero-first-row"
+                                variants={lineVariants}
+                                initial="initial"
+                                animate="animate"
+                                transition={{ delay: 0.3 }}
+                            >
+                                {heroSettings.title1 || "Designing Future"}
+                            </motion.div>
+                            <motion.div
+                                className="hero-gradient-text"
+                                variants={lineVariants}
+                                initial="initial"
+                                animate="animate"
+                                transition={{ delay: 0.45 }}
+                            >
+                                {heroSettings.title2 || "Digital Experiences."}
+                            </motion.div>
+                        </h1>
+
+                        <motion.p
+                            className="hero-description"
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.55, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+                        >
+                            {heroSettings.description || "I create premium digital experiences with modern UI/UX design, scalable React development, smooth interactions and high-performance websites."}
+                        </motion.p>
+                    </div>
+
+                    {/* 3. Card Bottom Bar Footer */}
+                    <div className="hero-card-footer">
+                        <div className="hero-card-handle">
+                            <span>@_{name.toLowerCase()}</span>
+                        </div>
+
+                        {heroSettings.isAvailable !== false && (
+                            <div className="hero-card-status">
+                                <span className="status-live-dot"></span>
+                                <span>{heroSettings.availabilityText || "Available for projects"}</span>
+                            </div>
+                        )}
+                    </div>
                 </motion.div>
-
-                <h1 className="hero-title">
-                    <motion.div
-                        className="hero-first-row"
-                        variants={lineVariants}
-                        initial="initial"
-                        animate="animate"
-                        transition={{ delay: 0.2 }}
-                    >
-                        {heroSettings.title1 ? heroSettings.title1.toLowerCase() : "designing future"}
-                    </motion.div>
-                    <motion.div
-                        className="hero-gradient-text"
-                        variants={lineVariants}
-                        initial="initial"
-                        animate="animate"
-                        transition={{ delay: 0.4 }}
-                    >
-                        {heroSettings.title2 ? heroSettings.title2.toLowerCase() : "digital experiences"}
-                    </motion.div>
-                </h1>
-
-                <motion.p
-                    className="hero-description"
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.45, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
-                >
-                    {heroSettings.description ? heroSettings.description.toLowerCase() : "i create premium digital experiences with modern ui/ux design, scalable react development, smooth interactions and high-performance websites."}
-                </motion.p>
-
-
-
             </div>
         </section>
     );

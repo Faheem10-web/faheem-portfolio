@@ -85,18 +85,241 @@
     pointer-events: none;
 }
 
+/* ─── VIBRANT LIQUID GRADIENT ORBS (BEHIND THE GLASS CONTAINER) ─── */
+.hero-liquid-orbs {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.liquid-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.6;
+    animation: floatOrb 12s ease-in-out infinite alternate;
+}
+
+.orb-red-1 {
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, rgba(225, 29, 72, 0.45) 0%, rgba(159, 18, 57, 0.25) 50%, transparent 80%);
+    bottom: -10%;
+    right: -5%;
+    animation-delay: 0s;
+}
+
+.orb-red-2 {
+    width: 380px;
+    height: 380px;
+    background: radial-gradient(circle, rgba(244, 63, 94, 0.35) 0%, rgba(190, 18, 60, 0.2) 60%, transparent 80%);
+    top: 20%;
+    left: -8%;
+    animation-delay: -4s;
+}
+
+.orb-purple-3 {
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, rgba(147, 51, 234, 0.3) 0%, rgba(126, 34, 206, 0.15) 60%, transparent 80%);
+    top: -10%;
+    right: 15%;
+    animation-delay: -8s;
+}
+
+@keyframes floatOrb {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(30px, -25px) scale(1.08); }
+    100% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+/* ─── HERO CONTAINER & GLASSMORPHISM CARD BOX MODEL ─── */
 .hero-container {
     position: relative;
     z-index: 5;
     width: 100%;
-    max-width: 960px;
+    max-width: 880px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.hero-glass-card {
+    position: relative;
+    width: 100%;
+    border-radius: 40px;
+    padding: 44px 44px 38px 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 36px;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    /* Frosted Liquid Glass Card Effect (Reference Mockup Match) */
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.03) 45%, rgba(0, 0, 0, 0.35) 100%), rgba(20, 18, 30, 0.5);
+    backdrop-filter: blur(40px) saturate(190%);
+    -webkit-backdrop-filter: blur(40px) saturate(190%);
+
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow:
+        0 30px 90px -15px rgba(0, 0, 0, 0.55),
+        0 10px 30px -5px rgba(0, 0, 0, 0.3),
+        inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.35);
+
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root[data-theme='light'] .hero-glass-card {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.6) 45%, rgba(245, 238, 255, 0.75) 100%), rgba(255, 255, 255, 0.7);
+    border-color: rgba(255, 255, 255, 0.95);
+    box-shadow:
+        0 24px 70px -12px rgba(168, 85, 247, 0.15),
+        0 8px 24px -4px rgba(0, 0, 0, 0.04),
+        inset 0 1.5px 2px 0 rgba(255, 255, 255, 1);
+}
+
+.hero-glass-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255, 255, 255, 0.28);
+    box-shadow:
+        0 40px 100px -15px rgba(0, 0, 0, 0.65),
+        0 14px 40px -5px rgba(168, 85, 247, 0.2),
+        inset 0 2px 2.5px 0 rgba(255, 255, 255, 0.45);
+}
+
+/* Specular Glare Line */
+.hero-card-glare {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.7) 50%, transparent 100%);
+    pointer-events: none;
+}
+
+/* 1. Header Row inside Glass Card */
+.hero-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    z-index: 2;
+}
+
+.hero-card-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text-main);
+    letter-spacing: -0.2px;
+}
+
+.meta-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #e11d48;
+    box-shadow: 0 0 10px #e11d48;
+}
+
+.hero-card-action-tag {
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    font-weight: 600;
+    font-style: italic;
+    color: var(--color-text-muted);
+    opacity: 0.85;
+}
+
+/* 2. Main Body Content inside Glass Card */
+.hero-card-body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     text-align: center;
-    padding-top: 40px;
-    gap: 28px;
+    gap: 22px;
+    z-index: 2;
+}
+
+/* 3. Footer Row inside Glass Card */
+.hero-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 2;
+}
+
+:root[data-theme='light'] .hero-card-footer {
+    border-top-color: rgba(0, 0, 0, 0.06);
+}
+
+.hero-card-handle {
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--color-text-main);
+    letter-spacing: -0.3px;
+    opacity: 0.9;
+}
+
+.hero-card-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.status-live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+}
+
+/* Mobile Responsiveness for Glass Card Box Model */
+@media (max-width: 768px) {
+    .hero-glass-card {
+        padding: 32px 24px 28px 24px;
+        border-radius: 32px;
+        gap: 28px;
+    }
+
+    .hero-card-header {
+        font-size: 12px;
+    }
+
+    .hero-card-footer {
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-glass-card {
+        padding: 26px 18px 24px 18px;
+        border-radius: 26px;
+        gap: 22px;
+    }
 }
 
 /* ─── STATUS PILL (FROSTED CRYSTAL GLASS - 30% REFINED BLUR) ─── */
@@ -133,12 +356,12 @@
 /* ─── Hero Heading – Editorial Precision Typography ────────────────── */
 
 .hero-title {
-    font-size: clamp(2.4rem, 7.6vw, 5.6rem);
-    line-height: 1.04;
+    font-size: clamp(2.2rem, 7.5vw, 5.5rem);
+    line-height: 1.05;
     font-weight: 800;
-    font-family: 'Outfit', 'Plus Jakarta Sans', 'Inter', sans-serif;
+    font-family: var(--font-heading);
     letter-spacing: -0.045em;
-    text-transform: lowercase;
+    text-transform: uppercase;
     margin: 0;
     width: 100%;
     text-align: center;
@@ -146,30 +369,26 @@
     word-break: break-word;
 }
 
-/* ── Line 1: "designing future" ── Clean, crisp headline */
+/* ── Line 1: "Designing Future" ── Clean, crisp headline */
 .hero-title .hero-first-row {
     display: block;
     width: 100%;
     text-align: center;
-    padding-bottom: 0.04em;
+    padding-bottom: 0.06em;
     color: #ffffff;
-    font-weight: 800;
-    letter-spacing: -0.045em;
     filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.2));
 }
 
 :root[data-theme='light'] .hero-title .hero-first-row {
-    color: #0d0d12;
-    filter: drop-shadow(0 2px 12px rgba(13, 13, 18, 0.08));
+    color: #0f172a;
+    filter: drop-shadow(0 2px 12px rgba(15, 23, 42, 0.08));
 }
 
-/* ── Line 2: "digital experiences" ── Refined purple-indigo linear gradient */
+/* ── Line 2: "Digital Experiences" ── Refined purple-indigo linear gradient */
 .hero-title .hero-gradient-text {
     display: block;
     width: 100%;
     text-align: center;
-    font-weight: 800;
-    letter-spacing: -0.045em;
     background: linear-gradient(135deg, #c084fc 0%, #a855f7 40%, #818cf8 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -177,24 +396,23 @@
 }
 
 :root[data-theme='light'] .hero-title .hero-gradient-text {
-    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 45%, #6366f1 100%);
+    background: linear-gradient(135deg, #a855f7 0%, #7c3aed 45%, #6366f1 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 4px 20px rgba(124, 58, 237, 0.2));
 }
 
 .hero-description {
-    font-size: clamp(0.96rem, 1.25vw + 0.3rem, 1.15rem);
-    line-height: 1.65;
+    font-size: clamp(0.98rem, 1.3vw + 0.35rem, 1.18rem);
+    line-height: 1.7;
     color: var(--color-text-main);
     opacity: 0.75;
-    max-width: 640px;
-    margin-top: 4px;
+    max-width: 620px;
+    margin-top: 6px;
     margin-bottom: 0;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    letter-spacing: -0.015em;
+    font-family: var(--font-body);
+    letter-spacing: -0.01em;
     font-weight: 400;
-    text-transform: lowercase;
 }
 
 /* Interactive Buttons */
