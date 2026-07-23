@@ -152,14 +152,7 @@ function Services() {
                                     <p className="card-description">{service.description}</p>
                                 </div>
 
-                                <div className="card-divider"></div>
 
-                                <div className="card-bottom">
-                                    <div className="card-cta-btn">
-                                        <span>Explore Service</span>
-                                        <FiArrowRight />
-                                    </div>
-                                </div>
                             </motion.div>
                         );
                     })}

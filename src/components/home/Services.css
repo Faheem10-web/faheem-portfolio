@@ -129,13 +129,13 @@
     position: relative;
     overflow: hidden;
     border-radius: 36px;
-    padding: 32px 28px 26px 28px;
+    padding: 32px 28px 32px 28px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     cursor: pointer;
     height: 100%;
-    min-height: 350px;
+    min-height: 250px;
     box-sizing: border-box;
 
     background: #ffffff;
@@ -312,7 +312,7 @@
     color: var(--card-text-muted);
     font-family: var(--font-body);
     font-weight: 400;
-    margin-bottom: 20px;
+    margin-bottom: 0;
 }
 
 /* Faint Divider Line */
