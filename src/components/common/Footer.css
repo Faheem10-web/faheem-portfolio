@@ -480,37 +480,38 @@
     }
 
     .footer-card-top {
-        padding: 48px 20px 36px 20px;
-        gap: 22px;
+        padding: 64px 24px 44px 24px;
+        gap: 26px;
     }
 
     .footer-card-bottom {
-        padding: 20px 24px;
+        padding: 22px 28px;
         gap: 16px;
     }
 }
 
-/* ── MOBILE SCREENS 425px - 520px (Exact Match to User 425px Mockup) ── */
+/* ── MOBILE SCREENS 320px - 520px (Ultra-Clean Production Polish) ── */
 @media (max-width: 520px) {
     .footer-wrapper {
         padding: 16px 12px 24px 12px;
     }
 
     .footer-card {
-        border-radius: 28px;
+        border-radius: 32px;
+        min-height: auto;
     }
 
     .footer-card-top {
         position: relative;
-        padding: 56px 20px 44px 20px;
-        gap: 28px;
+        padding: 48px 16px 36px 16px;
+        gap: 22px;
     }
 
-    /* Top-Right Floating Copy Button anchored in Card Corner */
+    /* Top-Right Glass Copy Button */
     .footer-copy-btn {
         position: absolute;
-        top: 22px;
-        right: 22px;
+        top: 18px;
+        right: 18px;
         width: 38px;
         height: 38px;
         min-width: 38px;
@@ -518,165 +519,131 @@
         z-index: 10;
     }
 
+    /* Email Link - Perfect Fit without Clipping */
     .footer-email-container {
+        display: flex;
+        align-items: center;
         justify-content: center;
         width: 100%;
-        margin: 12px 0 16px 0;
+        margin: 6px 0 8px 0;
+        padding: 0 6px;
     }
 
     .footer-email-link {
-        font-size: clamp(1.25rem, 5.8vw, 1.85rem);
-        letter-spacing: -0.035em;
+        font-size: clamp(1.15rem, 5.2vw, 1.7rem);
+        letter-spacing: -0.03em;
         text-align: center;
-        white-space: nowrap;
-        max-width: 100%;
+        word-break: break-all;
+        line-height: 1.25;
     }
 
-    /* 2x2 Grid for Nav Pills (Home, About / Portfolio, Contact) */
+    /* 2x2 Grid for Nav Pills */
     .footer-pill-nav {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        gap: 10px;
         width: 100%;
-        max-width: 330px;
+        max-width: 340px;
         margin: 0 auto;
     }
 
     .footer-nav-pill {
         width: 100%;
         justify-content: center;
-        padding: 11px 16px;
+        padding: 12px 14px;
         font-size: 13.5px;
         min-height: 44px;
-        border-radius: 100px;
+        border-radius: 999px;
     }
 
-    /* Card Bottom for 425px: Left group (Theme + Back to top stacked), Right group (Social circles) */
+    /* Centered Stacked Sub-Footer for 320px - 520px Mobile Screens */
     .footer-card-bottom {
-        flex-direction: row;
-        justify-content: space-between;
+        display: flex;
+        flex-direction: column;
         align-items: center;
-        padding: 18px 20px;
-        gap: 12px;
+        justify-content: center;
+        text-align: center;
+        padding: 22px 16px 24px 16px;
+        gap: 16px;
     }
 
     .footer-bottom-left-group {
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-    }
-
-    .footer-left-author {
-        font-size: 12px;
+        align-items: center;
+        text-align: center;
+        gap: 6px;
     }
 
     .footer-back-to-top {
-        font-size: 14px;
+        font-size: 14.5px;
         font-weight: 700;
         color: #ffffff;
-        min-height: 24px;
-        padding: 0;
+        min-height: 32px;
+        padding: 0 12px;
+        justify-content: center;
     }
 
     .footer-social-circles {
-        gap: 7px;
-    }
-
-    .footer-social-circles a {
-        width: 36px;
-        height: 36px;
-        font-size: 13.5px;
-    }
-}
-
-/* ── ULTRA-SMALL MOBILE SCREENS <= 350px (Exact Match to User 320px Mockup) ── */
-@media (max-width: 350px) {
-    .footer-wrapper {
-        padding: 10px 6px 16px 6px;
-    }
-
-    .footer-card {
-        border-radius: 20px;
-    }
-
-    .footer-card-top {
-        padding: 32px 12px 20px 12px;
-        gap: 14px;
-    }
-
-    .footer-copy-btn {
-        top: 12px;
-        right: 12px;
-        width: 34px;
-        height: 34px;
-        min-width: 34px;
-    }
-
-    .footer-email-link {
-        font-size: clamp(1.05rem, 5.2vw, 1.45rem);
-        letter-spacing: -0.025em;
-        white-space: nowrap;
-    }
-
-    /* 1-column vertical stack for nav pills */
-    .footer-pill-nav {
         display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        width: 100%;
-        max-width: 280px;
-        gap: 7px;
-    }
-
-    .footer-nav-pill {
-        width: 100%;
-        justify-content: center;
-        padding: 9px 12px;
-        font-size: 12.5px;
-        min-height: 40px;
-        border-radius: 14px;
-    }
-
-    /* Centered stack for 320px */
-    .footer-card-bottom {
-        flex-direction: column;
         align-items: center;
-        text-align: center;
-        gap: 10px;
-        padding: 14px 10px;
-    }
-
-    .footer-bottom-left-group {
-        align-items: center;
-        text-align: center;
-        gap: 4px;
-    }
-
-    .footer-left-author {
-        font-size: 11.5px;
-    }
-
-    .footer-back-to-top {
-        font-size: 12px;
-    }
-
-    .footer-social-circles {
-        gap: 6px;
         justify-content: center;
+        gap: 12px;
+        width: 100%;
     }
 
     .footer-social-circles a {
-        width: 34px;
-        height: 34px;
-        font-size: 12px;
+        width: 42px;
+        height: 42px;
+        font-size: 15px;
     }
 
     .online-badge-dot {
-        width: 7px;
-        height: 7px;
-        top: 1px;
-        right: 1px;
+        width: 8px;
+        height: 8px;
+        top: 2px;
+        right: 2px;
+    }
+}
+
+/* ── EXTRA SMALL MOBILE SCREENS <= 360px ── */
+@media (max-width: 360px) {
+    .footer-wrapper {
+        padding: 12px 8px 20px 8px;
+    }
+
+    .footer-card {
+        border-radius: 24px;
+    }
+
+    .footer-card-top {
+        padding: 42px 12px 30px 12px;
+        gap: 18px;
+    }
+
+    .footer-email-link {
+        font-size: clamp(1.05rem, 5vw, 1.45rem);
+    }
+
+    .footer-pill-nav {
+        gap: 8px;
+        max-width: 290px;
+    }
+
+    .footer-nav-pill {
+        padding: 10px 10px;
+        font-size: 12.5px;
+        min-height: 42px;
+    }
+
+    .footer-social-circles {
+        gap: 9px;
+    }
+
+    .footer-social-circles a {
+        width: 38px;
+        height: 38px;
+        font-size: 14px;
     }
 }
 
