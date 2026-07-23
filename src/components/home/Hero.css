@@ -284,11 +284,27 @@
     filter: drop-shadow(0 0 35px rgba(168, 85, 247, 0.35));
 }
 
+.hero-gradient-text .split-parent,
+.hero-gradient-text .split-word,
+.hero-gradient-text .split-char {
+    background: linear-gradient(135deg, #c084fc 0%, #a855f7 40%, #818cf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 :root[data-theme='light'] .hero-title .hero-gradient-text {
     background: linear-gradient(135deg, #a855f7 0%, #7c3aed 45%, #6366f1 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 4px 20px rgba(124, 58, 237, 0.2));
+}
+
+:root[data-theme='light'] .hero-gradient-text .split-parent,
+:root[data-theme='light'] .hero-gradient-text .split-word,
+:root[data-theme='light'] .hero-gradient-text .split-char {
+    background: linear-gradient(135deg, #a855f7 0%, #7c3aed 45%, #6366f1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .hero-description {

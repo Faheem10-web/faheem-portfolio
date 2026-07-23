@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, lazy, Suspense } from "react";
 import "./Hero.css";
 import { motion } from "framer-motion";
 import { useAdmin } from "../../context/AdminContext";
+import SplitText from "../common/SplitText";
 
 import {
   FaFigma,
@@ -167,24 +168,38 @@ function Hero() {
                 </motion.div>
 
                 <h1 className="hero-title">
-                    <motion.div
-                        className="hero-first-row"
-                        variants={lineVariants}
-                        initial="initial"
-                        animate="animate"
-                        transition={{ delay: 0.2 }}
-                    >
-                        {heroSettings.title1 || "Designing Future"}
-                    </motion.div>
-                    <motion.div
-                        className="hero-gradient-text"
-                        variants={lineVariants}
-                        initial="initial"
-                        animate="animate"
-                        transition={{ delay: 0.4 }}
-                    >
-                        {heroSettings.title2 || "Digital Experiences"}
-                    </motion.div>
+                    <div className="hero-first-row">
+                        <SplitText
+                            text={heroSettings.title1 || "Designing Future"}
+                            tag="span"
+                            className="hero-split-line"
+                            delay={35}
+                            duration={0.8}
+                            ease="power3.out"
+                            splitType="chars"
+                            from={{ opacity: 0, y: 40 }}
+                            to={{ opacity: 1, y: 0 }}
+                            threshold={0.1}
+                            rootMargin="-50px"
+                            textAlign="center"
+                        />
+                    </div>
+                    <div className="hero-gradient-text">
+                        <SplitText
+                            text={heroSettings.title2 || "Digital Experiences"}
+                            tag="span"
+                            className="hero-split-line-gradient"
+                            delay={40}
+                            duration={0.9}
+                            ease="power3.out"
+                            splitType="chars"
+                            from={{ opacity: 0, y: 40 }}
+                            to={{ opacity: 1, y: 0 }}
+                            threshold={0.1}
+                            rootMargin="-50px"
+                            textAlign="center"
+                        />
+                    </div>
                 </h1>
 
                 <motion.p
