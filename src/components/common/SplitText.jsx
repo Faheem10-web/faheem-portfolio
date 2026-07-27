@@ -17,6 +17,7 @@ const SplitText = ({
   rootMargin = '-100px',
   textAlign = 'center',
   tag = 'p',
+  startAnimation = true,
   onLetterAnimationComplete
 }) => {
   const ref = useRef(null);
@@ -28,7 +29,7 @@ const SplitText = ({
   }, [onLetterAnimationComplete]);
 
   useEffect(() => {
-    if (!ref.current || !text) return;
+    if (!ref.current || !text || !startAnimation) return;
     if (animationCompletedRef.current) return;
 
     const el = ref.current;
@@ -81,7 +82,7 @@ const SplitText = ({
         if (st.trigger === el) st.kill();
       });
     };
-  }, [text, delay, duration, ease, splitType, JSON.stringify(from), JSON.stringify(to), threshold, rootMargin]);
+  }, [text, startAnimation, delay, duration, ease, splitType, JSON.stringify(from), JSON.stringify(to), threshold, rootMargin]);
 
   const Tag = tag || 'p';
 

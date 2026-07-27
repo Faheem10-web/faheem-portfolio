@@ -63,10 +63,16 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function AppContent() {
-  const { siteSettings, isSettingsLoading, token, user, isProfileLoading } = useAdmin();
+  const { siteSettings, isSettingsLoading, token, user, isProfileLoading, setIsSiteLoaded } = useAdmin();
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
+
+  useEffect(() => {
+    if (isAdminRoute) {
+      setIsSiteLoaded(true);
+    }
+  }, [isAdminRoute, setIsSiteLoaded]);
 
   const isMaintenanceMode = siteSettings?.global?.maintenanceMode === true;
   const isAdmin = !!token && user?.role === 'admin';
@@ -226,7 +232,10 @@ function AppContent() {
           <Loader 
             key="site-loader" 
             isLoading={isSettingsLoading || isProfileLoading} 
-            onComplete={() => setLoading(false)} 
+            onComplete={() => {
+              setLoading(false);
+              setIsSiteLoaded(true);
+            }} 
           />
         )}
       </AnimatePresence>

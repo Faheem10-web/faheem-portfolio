@@ -55,7 +55,7 @@ const lineVariants = {
 };
 
 function Hero() {
-    const { siteSettings } = useAdmin();
+    const { siteSettings, isSiteLoaded } = useAdmin();
     
     const heroSettings = siteSettings?.hero || {};
     const name = heroSettings.name || "Faheem";
@@ -159,8 +159,8 @@ function Hero() {
                 <motion.div
                     className="hero-tagline hero-glass-pill"
                     initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.15, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    animate={isSiteLoaded ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+                    transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 >
                     <span className="tagline-prefix">{heroSettings.greeting || "I AM"}</span>
                     <span className="tagline-typed">{currentText}</span>
@@ -171,6 +171,7 @@ function Hero() {
                     <div className="hero-first-row">
                         <SplitText
                             text={heroSettings.title1 || "Designing Future"}
+                            startAnimation={isSiteLoaded}
                             tag="span"
                             className="hero-split-line"
                             delay={35}
@@ -187,6 +188,7 @@ function Hero() {
                     <div className="hero-gradient-text">
                         <SplitText
                             text={heroSettings.title2 || "Digital Experiences"}
+                            startAnimation={isSiteLoaded}
                             tag="span"
                             className="hero-split-line-gradient"
                             delay={40}
@@ -205,8 +207,8 @@ function Hero() {
                 <motion.p
                     className="hero-description"
                     initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.45, duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+                    animate={isSiteLoaded ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+                    transition={{ delay: 0.35, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                 >
                     {heroSettings.description || "I create premium digital experiences with modern UI/UX design, scalable React development, smooth interactions and high-performance websites."}
                 </motion.p>

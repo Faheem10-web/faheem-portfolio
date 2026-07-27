@@ -23,6 +23,9 @@ export function AdminProvider({ children }) {
         chat: null
     });
 
+    // Global preloader completion state for Hero animation timing
+    const [isSiteLoaded, setIsSiteLoaded] = useState(false);
+
     // Refresh dynamic data hooks
     const [projects, setProjects] = useState([]);
     const [services, setServices] = useState([]);
@@ -671,6 +674,8 @@ export function AdminProvider({ children }) {
         isFaqsLoading,
         isTestimonialsLoading,
         isMediaLoading,
+        isSiteLoaded,
+        setIsSiteLoaded,
         siteSettings,
         downloadCv,
         projects,
@@ -721,6 +726,7 @@ export function AdminProvider({ children }) {
         isFaqsLoading,
         isTestimonialsLoading,
         isMediaLoading,
+        isSiteLoaded,
         siteSettings,
         projects,
         services,
