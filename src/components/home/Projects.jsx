@@ -48,10 +48,10 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
     return (
         <motion.div
             className="project-card-wrapper"
-            initial={{ opacity: 0, y: 25, filter: "blur(8px)" }}
-            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
             onClick={handleCardClick}
             style={{ cursor: hasCaseStudy || project.liveUrl ? 'pointer' : 'default' }}
             onMouseMove={handleMouseMove}
@@ -151,20 +151,20 @@ function Projects() {
                 <div className="projects-header">
                     <motion.h2 
                         className="projects-title"
-                        initial={{ opacity: 0, y: 25, filter: "blur(8px)" }}
-                        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                        initial={{ opacity: 0, y: 25 }}
+                        whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                     >
                         FEATURED PROJECTS
                     </motion.h2>
                     <MotionLink 
                         to="/projects"
                         className="view-all-btn"
-                        initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
-                        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
+                        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
                     >
                         VIEW ALL
                     </MotionLink>

@@ -23,16 +23,17 @@
 .about-glow-orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(130px);
-    opacity: 0.18;
-    transition: var(--transition-smooth);
-    will-change: transform, opacity;
+    filter: blur(60px);
+    opacity: 0.22;
+    pointer-events: none;
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 .orb-1 {
     width: 550px;
     height: 550px;
-    background: radial-gradient(circle, #f472b6 0%, #c084fc 50%, transparent 75%);
+    background: radial-gradient(circle, rgba(244, 114, 182, 0.45) 0%, rgba(192, 132, 252, 0.2) 45%, transparent 75%);
     top: -160px;
     left: -120px;
     animation: orbFloat1 18s ease-in-out infinite alternate;
@@ -41,7 +42,7 @@
 .orb-2 {
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, #a855f7 0%, #6366f1 50%, transparent 75%);
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, rgba(99, 102, 241, 0.18) 45%, transparent 75%);
     bottom: -160px;
     right: -120px;
     animation: orbFloat2 20s ease-in-out infinite alternate;
@@ -50,7 +51,7 @@
 .orb-3 {
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, #fbcfe8 0%, #e9d5ff 50%, transparent 75%);
+    background: radial-gradient(circle, rgba(251, 207, 232, 0.35) 0%, rgba(233, 213, 255, 0.15) 45%, transparent 75%);
     top: 30%;
     left: 45%;
     transform: translate(-50%, -50%);
@@ -121,20 +122,22 @@
     box-sizing: border-box;
     
     /* Liquid Glass & Frosted Surface */
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.85) 0%, rgba(245, 240, 255, 0.6) 100%), rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(28px) saturate(190%) contrast(102%);
-    -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(102%);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.88) 0%, rgba(245, 240, 255, 0.65) 100%), rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     
     border: 1px solid rgba(255, 255, 255, 0.95);
     
     /* Specular Lighting & Deep Ethereal Shadow */
     box-shadow:
-        0 24px 50px -12px rgba(192, 132, 252, 0.16),
-        0 8px 24px rgba(0, 0, 0, 0.03),
-        inset 0 2px 2px 0 rgba(255, 255, 255, 1),
+        0 20px 45px -12px rgba(192, 132, 252, 0.14),
+        0 6px 18px rgba(0, 0, 0, 0.02),
+        inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
         inset 0 -1.5px 2px 0 rgba(244, 114, 182, 0.12);
         
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+    transform: translateZ(0);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 :root[data-theme='dark'] .about-glass-card {

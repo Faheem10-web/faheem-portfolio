@@ -111,10 +111,10 @@ function Contact() {
         
         <motion.div 
           className="contact-header"
-          initial={{ opacity: 0, y: 25, filter: "blur(8px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         >
           <h2 className="contact-title" dangerouslySetInnerHTML={{ __html: contactSettings.heading || "Hey! Tell us all <br /><span>the things</span>" }} />
           <p className="contact-subtitle">{contactSettings.description}</p>
@@ -171,10 +171,10 @@ function Contact() {
           ) : (
             <motion.div 
               className="contact-card-wrapper"
-              initial={{ opacity: 0, y: 25, filter: "blur(8px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
             >
               <form className="contact-form" onSubmit={handleSubmit}>
                 
