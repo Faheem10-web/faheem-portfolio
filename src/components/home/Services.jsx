@@ -21,16 +21,16 @@ const DEFAULT_SERVICES = [
     },
     {
         _id: "03",
-        title: "Frontend Dev",
-        description: "Fast, scalable websites built with React and modern technologies.",
-        iconName: "code",
+        title: "Mobile App Design",
+        description: "Intuitive iOS and Android app interfaces focused on usability.",
+        iconName: "smartphone",
         color: "#10B981"
     },
     {
         _id: "04",
-        title: "Mobile App Design",
-        description: "Intuitive iOS and Android app interfaces focused on usability.",
-        iconName: "smartphone",
+        title: "Branding & Identity",
+        description: "Distinct visual identities, logos and cohesive design systems.",
+        iconName: "pen-tool",
         color: "#EC4899"
     }
 ];
@@ -112,12 +112,21 @@ function Services() {
 
                 <div className="services-grid">
                     {activeServices.map((service, index) => {
-                        const iconName = service.iconName || "FiCpu";
+                        let iconName = service.iconName || "FiCpu";
                         const numLabel = service.order !== undefined ? String(service.order).padStart(2, '0') : String(index + 1).padStart(2, '0');
                         const isSvg = service.iconType === 'svgCode' && service.iconSvg;
                         let title = service.title;
+                        let description = service.description;
+
                         if (title === "Web Design") title = "Web Development";
-                        if (title === "Frontend Development") title = "Frontend Dev";
+                        if (title === "Frontend Development" || title === "Frontend Dev") {
+                            title = "Mobile App Design";
+                            iconName = "smartphone";
+                            description = "Intuitive iOS and Android app interfaces focused on usability.";
+                        }
+                        if (title === "Mobile App Design") {
+                            iconName = "smartphone";
+                        }
 
                         return (
                             <motion.div 
@@ -151,7 +160,7 @@ function Services() {
                                     </div>
 
                                     <h3 className="card-title">{title}</h3>
-                                    <p className="card-description">{service.description}</p>
+                                    <p className="card-description">{description}</p>
                                 </div>
 
 
