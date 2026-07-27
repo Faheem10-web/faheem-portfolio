@@ -77,14 +77,9 @@ const buildFallbackPayload = () => {
   };
 };
 
-// In-Memory Fast Cache state for /api/bootstrap
-let cachedBootstrapPayload = null;
-let lastBootstrapFetch = 0;
-const CACHE_TTL_MS = 15 * 1000;
-
+// In-Memory Fast Cache state for /api/bootstrap (Disabled for 100% real-time MongoDB consistency)
 export const invalidateBootstrapCache = () => {
-  cachedBootstrapPayload = null;
-  lastBootstrapFetch = 0;
+  // No-op for real-time MongoDB queries
 };
 
 // Helper to generate JWT Token
@@ -280,16 +275,17 @@ router.put('/auth/update-account', protect, async (req, res) => {
 /* ──────────────────────────────────────────────────────────────────────── */
 
 router.get('/bootstrap', checkMaintenance, async (req, res) => {
-  res.set('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+  res.set({
+    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0, s-maxage=0',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+    'Surrogate-Control': 'no-store',
+    'CDN-Cache-Control': 'no-store',
+    'Vercel-CDN-Cache-Control': 'no-store'
+  });
   try {
-    const now = Date.now();
-
     if (mongoose.connection.readyState !== 1) {
       await connectDB();
-    }
-
-    if (!process.env.VERCEL && cachedBootstrapPayload && (now - lastBootstrapFetch < CACHE_TTL_MS)) {
-      return res.json(cachedBootstrapPayload);
     }
 
     const isConnected = mongoose.connection.readyState === 1;
@@ -316,7 +312,7 @@ router.get('/bootstrap', checkMaintenance, async (req, res) => {
         Testimonial.find().sort({ order: 1 }).lean()
       ]);
 
-      cachedBootstrapPayload = {
+      const freshPayload = {
         settings: {
           navbar, hero, about, resume, contact, footer, seo, global: globalSettings, theme, chat: chatSettings
         },
@@ -327,9 +323,8 @@ router.get('/bootstrap', checkMaintenance, async (req, res) => {
         faqs,
         testimonials
       };
-      lastBootstrapFetch = now;
 
-      return res.json(cachedBootstrapPayload);
+      return res.json(freshPayload);
     }
 
     const fallbackPayload = buildFallbackPayload();
@@ -401,7 +396,23 @@ router.put('/settings/:module', protect, async (req, res) => {
 
     let settings = null;
     if (mongoose.connection.readyState === 1) {
+      // Find existing document to check replaced Cloudinary image fields
+      const existingDoc = await model.findOne();
+      if (existingDoc) {
+        const imageFields = ['logoImage', 'heroImage', 'bgImage', 'aboutImage', 'resumeUrl', 'favicon', 'ogImage', 'loaderLogo'];
+        for (const field of imageFields) {
+          if (cleanData[field] && existingDoc[field] && cleanData[field] !== existingDoc[field] && String(existingDoc[field]).includes('res.cloudinary.com')) {
+            await deleteFromCloudinary(existingDoc[field]);
+          }
+        }
+      }
+
       settings = await model.findOneAndUpdate({}, cleanData, { new: true, upsert: true, runValidators: false, setDefaultsOnInsert: true }).lean();
+
+      // Enforce absolute single-document guarantee: clean up duplicate documents if any exist
+      if (settings && settings._id) {
+        await model.deleteMany({ _id: { $ne: settings._id } });
+      }
     }
 
     if (!settings) {

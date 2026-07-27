@@ -22,7 +22,8 @@ export const uploadToCloudinary = async (localFilePath, originalName) => {
       folder: 'portfolio_media',
       resource_type: resourceType,
       use_filename: true,
-      unique_filename: true
+      unique_filename: true,
+      invalidate: true
     };
 
     // Perform upload
@@ -48,7 +49,8 @@ export const uploadToCloudinary = async (localFilePath, originalName) => {
       publicId: result.public_id,
       public_id: result.public_id,
       fileSize: result.bytes,
-      fileType: result.format || extension
+      fileType: result.format || extension,
+      version: result.version
     };
   } catch (error) {
     console.error('❌ Cloudinary Upload Error:', error);
@@ -107,11 +109,11 @@ export const deleteFromCloudinary = async (publicIdOrUrl, fileType = '') => {
   
   try {
     const isPdf = fileType.toLowerCase() === 'pdf' || publicId.endsWith('.pdf');
-    let result = await cloudinary.uploader.destroy(publicId, { resource_type: isPdf ? 'raw' : 'image' });
+    let result = await cloudinary.uploader.destroy(publicId, { resource_type: isPdf ? 'raw' : 'image', invalidate: true });
     
     if (result.result !== 'ok' && !isPdf) {
       // Retry with raw resource type if image type returned not found
-      result = await cloudinary.uploader.destroy(publicId, { resource_type: 'raw' });
+      result = await cloudinary.uploader.destroy(publicId, { resource_type: 'raw', invalidate: true });
     }
     
     console.log(`🗑️ Cloudinary destroy result for '${publicId}':`, result);

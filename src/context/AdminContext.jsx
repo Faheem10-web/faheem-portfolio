@@ -54,7 +54,7 @@ export function AdminProvider({ children }) {
         }
     }, [token]);
 
-    // Load initial website configurations & keep synced on window focus / tab switch
+    // Load initial website configurations & keep synced on window focus / tab switch / bfcache navigation
     useEffect(() => {
         loadPublicData();
 
@@ -68,12 +68,20 @@ export function AdminProvider({ children }) {
             }
         };
 
+        const handlePageShow = (event) => {
+            if (event.persisted) {
+                loadPublicData();
+            }
+        };
+
         window.addEventListener('focus', handleFocus);
         document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('pageshow', handlePageShow);
 
         return () => {
             window.removeEventListener('focus', handleFocus);
             document.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener('pageshow', handlePageShow);
         };
     }, [token]);
 
@@ -259,7 +267,6 @@ export function AdminProvider({ children }) {
             const data = await res.json().catch(() => ({}));
             if (res.ok) {
                 setSiteSettings(prev => ({ ...prev, [moduleName]: data }));
-                await loadPublicData();
                 return { success: true };
             }
             return { success: false, message: data.error || data.message || 'Failed to save settings' };
@@ -272,7 +279,7 @@ export function AdminProvider({ children }) {
     const makeCrud = (routeSegment, stateSetter) => {
         const fetchAll = async () => {
             const res = await fetch(`${API_BASE}/${routeSegment}?t=${Date.now()}`, {
-                headers: { 'Cache-Control': 'no-cache' },
+                headers: { 'Cache-Control': 'no-cache, no-store' },
                 cache: 'no-store'
             });
             if (res.ok) stateSetter(await res.json());
@@ -290,8 +297,12 @@ export function AdminProvider({ children }) {
                     body: JSON.stringify(item)
                 });
                 if (res.ok) {
-                    await fetchAll();
-                    await loadPublicData();
+                    const createdItem = await res.json().catch(() => null);
+                    if (createdItem) {
+                        stateSetter(prev => [...(prev || []), createdItem]);
+                    } else {
+                        await fetchAll();
+                    }
                     return { success: true };
                 }
                 const errData = await res.json().catch(() => ({}));
@@ -307,8 +318,13 @@ export function AdminProvider({ children }) {
                     body: JSON.stringify(item)
                 });
                 if (res.ok) {
-                    await fetchAll();
-                    await loadPublicData();
+                    const updatedItem = await res.json().catch(() => null);
+                    if (updatedItem && (updatedItem._id || updatedItem.id)) {
+                        const targetId = updatedItem._id || updatedItem.id;
+                        stateSetter(prev => (prev || []).map(existing => (existing._id === targetId || existing.id === targetId) ? { ...existing, ...updatedItem } : existing));
+                    } else {
+                        await fetchAll();
+                    }
                     return { success: true };
                 }
                 const errData = await res.json().catch(() => ({}));
@@ -316,14 +332,12 @@ export function AdminProvider({ children }) {
             },
             delete: async (id) => {
                 // Immediately remove from React state to prevent UI flicker or stale rendering
-                stateSetter(prev => prev.filter(item => (item._id || item.id) !== id));
+                stateSetter(prev => (prev || []).filter(item => (item._id || item.id) !== id));
                 const res = await fetch(`${API_BASE}/${routeSegment}/${id}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (res.ok) {
-                    await fetchAll();
-                    await loadPublicData();
                     return { success: true };
                 } else {
                     // Revert if request failed
