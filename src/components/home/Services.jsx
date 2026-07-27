@@ -14,8 +14,8 @@ const DEFAULT_SERVICES = [
     },
     {
         _id: "02",
-        title: "Web Design",
-        description: "Modern, responsive and visually engaging website designs.",
+        title: "Web Development",
+        description: "Modern, responsive and high-performance web development.",
         iconName: "monitor",
         color: "#3B82F6"
     },
@@ -115,7 +115,9 @@ function Services() {
                         const iconName = service.iconName || "FiCpu";
                         const numLabel = service.order !== undefined ? String(service.order).padStart(2, '0') : String(index + 1).padStart(2, '0');
                         const isSvg = service.iconType === 'svgCode' && service.iconSvg;
-                        const title = service.title === "Frontend Development" ? "Frontend Dev" : service.title;
+                        let title = service.title;
+                        if (title === "Web Design") title = "Web Development";
+                        if (title === "Frontend Development") title = "Frontend Dev";
 
                         return (
                             <motion.div 
