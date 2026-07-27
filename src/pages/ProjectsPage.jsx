@@ -130,7 +130,7 @@ function ProjectsPage() {
     const activeProjects = (projects || [])
         .filter(p => p && p.enabled !== false);
 
-    const showSkeleton = isProjectsLoading;
+    const showSkeleton = isProjectsLoading && activeProjects.length === 0;
 
     useEffect(() => {
         window.scrollTo(0, 0);

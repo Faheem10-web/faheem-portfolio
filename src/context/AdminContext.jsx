@@ -4,13 +4,34 @@ const AdminContext = createContext();
 
 import { API_BASE } from '../config/api';
 
+const getInitialCache = (key, fallback) => {
+    try {
+        const cached = localStorage.getItem(`faheem_cache_${key}`);
+        return cached ? JSON.parse(cached) : fallback;
+    } catch {
+        return fallback;
+    }
+};
+
+const setCache = (key, data) => {
+    try {
+        localStorage.setItem(`faheem_cache_${key}`, JSON.stringify(data));
+    } catch (e) {
+        // Ignore quota limits
+    }
+};
+
 export function AdminProvider({ children }) {
     const [token, setToken] = useState(localStorage.getItem('admin_token') || '');
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [isSettingsLoading, setIsSettingsLoading] = useState(true);
+    
+    const cachedSettings = getInitialCache('settings', null);
+    const cachedProjects = getInitialCache('projects', []);
+
+    const [isSettingsLoading, setIsSettingsLoading] = useState(!cachedSettings);
     const [isProfileLoading, setIsProfileLoading] = useState(!!localStorage.getItem('admin_token'));
-    const [siteSettings, setSiteSettings] = useState({
+    const [siteSettings, setSiteSettings] = useState(cachedSettings || {
         navbar: null,
         hero: null,
         about: null,
@@ -26,9 +47,9 @@ export function AdminProvider({ children }) {
     // Global preloader completion state for Hero animation timing
     const [isSiteLoaded, setIsSiteLoaded] = useState(false);
 
-    // Refresh dynamic data hooks
-    const [projects, setProjects] = useState([]);
-    const [services, setServices] = useState([]);
+    // Refresh dynamic data hooks with instant cache initialization
+    const [projects, setProjects] = useState(cachedProjects);
+    const [services, setServices] = useState(getInitialCache('services', []));
     const [skills, setSkills] = useState([]);
     const [experiences, setExperiences] = useState([]);
     const [faqs, setFaqs] = useState([]);
@@ -37,14 +58,14 @@ export function AdminProvider({ children }) {
     const [media, setMedia] = useState([]);
     const [analytics, setAnalytics] = useState(null);
 
-    // Progressive loading states
-    const [isProjectsLoading, setIsProjectsLoading] = useState(true);
-    const [isServicesLoading, setIsServicesLoading] = useState(true);
-    const [isSkillsLoading, setIsSkillsLoading] = useState(true);
-    const [isExperiencesLoading, setIsExperiencesLoading] = useState(true);
-    const [isFaqsLoading, setIsFaqsLoading] = useState(true);
-    const [isTestimonialsLoading, setIsTestimonialsLoading] = useState(true);
-    const [isMediaLoading, setIsMediaLoading] = useState(true);
+    // Progressive loading states - false if cache exists
+    const [isProjectsLoading, setIsProjectsLoading] = useState(cachedProjects.length === 0);
+    const [isServicesLoading, setIsServicesLoading] = useState(false);
+    const [isSkillsLoading, setIsSkillsLoading] = useState(false);
+    const [isExperiencesLoading, setIsExperiencesLoading] = useState(false);
+    const [isFaqsLoading, setIsFaqsLoading] = useState(false);
+    const [isTestimonialsLoading, setIsTestimonialsLoading] = useState(false);
+    const [isMediaLoading, setIsMediaLoading] = useState(false);
 
     // Save token to localStorage
     useEffect(() => {
@@ -59,21 +80,21 @@ export function AdminProvider({ children }) {
 
     // Load initial website configurations & keep synced on window focus / tab switch / bfcache navigation
     useEffect(() => {
-        loadPublicData();
+        loadPublicData(false);
 
         const handleFocus = () => {
-            loadPublicData();
+            loadPublicData(true);
         };
 
         const handleVisibilityChange = () => {
             if (document.visibilityState === 'visible') {
-                loadPublicData();
+                loadPublicData(true);
             }
         };
 
         const handlePageShow = (event) => {
             if (event.persisted) {
-                loadPublicData();
+                loadPublicData(true);
             }
         };
 
@@ -88,14 +109,11 @@ export function AdminProvider({ children }) {
         };
     }, [token]);
 
-    const loadPublicData = async () => {
-        setIsSettingsLoading(true);
-        setIsProjectsLoading(true);
-        setIsServicesLoading(true);
-        setIsSkillsLoading(true);
-        setIsExperiencesLoading(true);
-        setIsFaqsLoading(true);
-        setIsTestimonialsLoading(true);
+    const loadPublicData = async (isSilent = false) => {
+        if (!isSilent && projects.length === 0) {
+            setIsSettingsLoading(true);
+            setIsProjectsLoading(true);
+        }
 
         let isNetworkError = false;
         try {
@@ -108,9 +126,18 @@ export function AdminProvider({ children }) {
             const res = await fetch(`${API_BASE}/bootstrap?t=${Date.now()}`, { headers, cache: 'no-store' });
             if (res.ok) {
                 const data = await res.json();
-                if (data.settings) setSiteSettings(data.settings);
-                if (data.projects) setProjects(data.projects || []);
-                if (data.services) setServices(data.services || []);
+                if (data.settings) {
+                    setSiteSettings(data.settings);
+                    setCache('settings', data.settings);
+                }
+                if (data.projects) {
+                    setProjects(data.projects || []);
+                    setCache('projects', data.projects || []);
+                }
+                if (data.services) {
+                    setServices(data.services || []);
+                    setCache('services', data.services || []);
+                }
                 if (data.skills) setSkills(data.skills || []);
                 if (data.experiences) setExperiences(data.experiences || []);
                 if (data.faqs) setFaqs(data.faqs || []);

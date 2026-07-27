@@ -63,7 +63,7 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function AppContent() {
-  const { siteSettings, isSettingsLoading, token, user, isProfileLoading, setIsSiteLoaded } = useAdmin();
+  const { siteSettings, isSettingsLoading, isProjectsLoading, token, user, isProfileLoading, setIsSiteLoaded } = useAdmin();
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
@@ -231,7 +231,7 @@ function AppContent() {
         {showLoader && (
           <Loader 
             key="site-loader" 
-            isLoading={isSettingsLoading || isProfileLoading} 
+            isLoading={isSettingsLoading || isProjectsLoading || isProfileLoading} 
             onComplete={() => {
               setLoading(false);
               setIsSiteLoaded(true);

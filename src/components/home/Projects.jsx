@@ -108,7 +108,7 @@ function Projects() {
         .filter(p => p && p.enabled !== false)
         .slice(0, 4);
 
-    const showSkeleton = isProjectsLoading;
+    const showSkeleton = isProjectsLoading && activeProjects.length === 0;
 
     if (showSkeleton) {
         return (
