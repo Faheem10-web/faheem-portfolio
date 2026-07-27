@@ -86,7 +86,6 @@ function AppContent() {
     if (siteSettings) {
       const seo = siteSettings.seo || {};
       const globalSettings = siteSettings.global || {};
-      const faviconUrl = globalSettings.favicon || seo.favicon;
 
       const updateMetaTag = (selector, attributeName, attributeValue, contentValue) => {
         if (!contentValue) return;
@@ -106,25 +105,40 @@ function AppContent() {
         updateMetaTag("meta[name='twitter:title']", 'name', 'twitter:title', seo.siteTitle);
       }
 
-      // Update Favicon
+      // Update Favicon (supports jpg, png, ico, svg, webp, and remote image URLs)
+      const faviconUrl = seo.favicon || globalSettings.favicon;
       if (faviconUrl) {
-        let link = document.querySelector("link[rel*='icon']");
-        if (!link) {
-          link = document.createElement('link');
-          link.rel = 'icon';
-          document.getElementsByTagName('head')[0].appendChild(link);
-        }
+        // Remove existing icon links to prevent browser from prioritizing static SVG icons over dynamic CMS favicon
+        const existingLinks = document.querySelectorAll("link[rel*='icon'], link[rel='apple-touch-icon']");
+        existingLinks.forEach(el => el.remove());
+
+        // Create main favicon link
+        const link = document.createElement('link');
+        link.rel = 'icon';
         link.href = faviconUrl;
 
-        if (faviconUrl.endsWith('.png')) {
+        const lowerUrl = faviconUrl.toLowerCase();
+        if (lowerUrl.endsWith('.png')) {
           link.type = 'image/png';
-        } else if (faviconUrl.endsWith('.ico')) {
+        } else if (lowerUrl.endsWith('.ico')) {
           link.type = 'image/x-icon';
-        } else if (faviconUrl.endsWith('.svg')) {
+        } else if (lowerUrl.endsWith('.svg')) {
           link.type = 'image/svg+xml';
+        } else if (lowerUrl.endsWith('.jpg') || lowerUrl.endsWith('.jpeg')) {
+          link.type = 'image/jpeg';
+        } else if (lowerUrl.endsWith('.webp')) {
+          link.type = 'image/webp';
         } else {
-          link.removeAttribute('type');
+          link.type = 'image/x-icon';
         }
+
+        document.head.appendChild(link);
+
+        // Create apple-touch-icon link
+        const appleLink = document.createElement('link');
+        appleLink.rel = 'apple-touch-icon';
+        appleLink.href = faviconUrl;
+        document.head.appendChild(appleLink);
       }
 
       // Update Meta Description & Social Descriptions
