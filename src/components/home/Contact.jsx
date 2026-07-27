@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAdmin } from "../../context/AdminContext";
 import { FiMail, FiPhone, FiMapPin, FiSend } from "react-icons/fi";
@@ -356,4 +356,4 @@ function Contact() {
   );
 }
 
-export default Contact;
+export default memo(Contact);

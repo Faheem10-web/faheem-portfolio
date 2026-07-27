@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import "./About.css";
 import { motion } from "framer-motion";
 import { FiDownload, FiArrowRight, FiStar, FiCheckCircle } from "react-icons/fi";
@@ -25,8 +25,8 @@ function About() {
                 {/* Left Side: Frosted Glass Card (About Me Story) */}
                 <motion.div 
                     className="about-left about-glass-card"
-                    initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-                    whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-80px" }}
                     transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
                 >
@@ -58,8 +58,8 @@ function About() {
                 {/* Right Side: Glossy Liquid Glass Card (Working Together CTA) */}
                 <motion.div 
                     className="about-right about-glass-card cta-gloss-card"
-                    initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-                    whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-80px" }}
                     transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
                 >
@@ -97,4 +97,4 @@ function About() {
     );
 }
 
-export default About;
+export default memo(About);

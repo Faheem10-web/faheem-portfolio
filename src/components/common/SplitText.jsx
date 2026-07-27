@@ -1,10 +1,10 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const SplitText = ({
+const SplitText = memo(({
   text = '',
   className = '',
   delay = 50,
@@ -78,7 +78,7 @@ const SplitText = ({
         if (st.trigger === el) st.kill();
       });
     };
-  }, [text, delay, duration, ease, splitType, JSON.stringify(from), JSON.stringify(to), threshold, rootMargin]);
+  }, [text, delay, duration, ease, splitType, from.opacity, from.y, to.opacity, to.y, threshold, rootMargin]);
 
   const Tag = tag || 'p';
 
@@ -135,6 +135,6 @@ const SplitText = ({
       {renderContent()}
     </Tag>
   );
-};
+});
 
 export default SplitText;

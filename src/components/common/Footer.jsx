@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import "./Footer.css";
 import { Link, useLocation } from "react-router-dom";
 import { useAdmin } from "../../context/AdminContext";
@@ -185,4 +185,4 @@ function Footer() {
     );
 }
 
-export default Footer;
+export default memo(Footer);

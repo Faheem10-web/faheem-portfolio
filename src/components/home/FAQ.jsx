@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, memo } from "react";
 import "./FAQ.css";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAdmin } from "../../context/AdminContext";
@@ -180,4 +180,4 @@ function FAQ() {
     );
 }
 
-export default FAQ;
+export default memo(FAQ);

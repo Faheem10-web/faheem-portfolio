@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
@@ -10,7 +10,7 @@ import { API_BASE } from "../config/api";
 import { getOptimizedImageUrl } from "../utils/imageOptimizer";
 import "./CaseStudyPage.css";
 
-export default function CaseStudyPage() {
+function CaseStudyPage() {
   const { id } = useParams();
   const { projects } = useAdmin();
   const [project, setProject] = useState(null);
@@ -445,3 +445,5 @@ export default function CaseStudyPage() {
     </div>
   );
 }
+
+export default memo(CaseStudyPage);

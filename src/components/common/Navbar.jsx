@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import "./Navbar.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -21,13 +21,26 @@ function Navbar() {
         setMenuOpen(false);
     }, [location.pathname]);
 
-    // Scroll-aware navbar state
+    // Scroll-aware navbar state with throttled update guards
     useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 40);
-        onScroll(); // run once on mount
+        let ticking = false;
+        const onScroll = () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const isScrolled = window.scrollY > 40;
+                    setScrolled(prev => (prev !== isScrolled ? isScrolled : prev));
+                    if (isHomePage && window.scrollY < 80) {
+                        setActiveSection(prev => (prev !== "home" ? "home" : prev));
+                    }
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        };
+        onScroll();
         window.addEventListener("scroll", onScroll, { passive: true });
         return () => window.removeEventListener("scroll", onScroll);
-    }, []);
+    }, [isHomePage]);
 
     // Prevent body scroll when menu is open
     useEffect(() => {
@@ -39,7 +52,6 @@ function Navbar() {
     useEffect(() => {
         if (location.pathname === "/" && location.state?.scrollToId) {
             const targetId = location.state.scrollToId;
-            // Clear state so it doesn't trigger scroll on page refreshes or navigation back
             window.history.replaceState({}, document.title);
 
             setTimeout(() => {
@@ -51,14 +63,14 @@ function Navbar() {
         }
     }, [location]);
 
-    // Track active scroll section on homepage
+    // Track active scroll section on homepage via IntersectionObserver
     useEffect(() => {
         if (!isHomePage) return;
 
         const sections = ["home", "about"];
         const observerOptions = {
             root: null,
-            rootMargin: "-45% 0px -45% 0px", // Trigger when section occupies center
+            rootMargin: "-45% 0px -45% 0px",
             threshold: 0,
         };
 
@@ -79,20 +91,10 @@ function Navbar() {
             }
         });
 
-        const handleScroll = () => {
-            const currentScrollY = window.scrollY;
-            if (currentScrollY < 80) {
-                setActiveSection("home");
-            }
-        };
-
-        window.addEventListener("scroll", handleScroll);
-
         return () => {
             observer.disconnect();
-            window.removeEventListener("scroll", handleScroll);
         };
-    }, [isHomePage, location.pathname]);
+    }, [isHomePage]);
 
     const handleNavClick = (e, link) => {
         if (!link.isRouter) {
@@ -346,4 +348,4 @@ function Navbar() {
     );
 }
 
-export default Navbar;
+export default memo(Navbar);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import "./Services.css";
 import { motion } from "framer-motion";
 import { FiPenTool, FiMonitor, FiCode, FiSmartphone, FiArrowRight, FiCpu } from "react-icons/fi";
@@ -91,8 +91,8 @@ function Services() {
                 <div className="services-intro">
                     <motion.h2 
                         className="services-title"
-                        initial={{ opacity: 0, y: 25, filter: "blur(8px)" }}
-                        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                        initial={{ opacity: 0, y: 25 }}
+                        whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
                         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
                     >
@@ -101,8 +101,8 @@ function Services() {
 
                     <motion.p 
                         className="services-description"
-                        initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
-                        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
                         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.12 }}
                     >
@@ -124,8 +124,8 @@ function Services() {
                                 style={{
                                     '--card-accent-color': service.color || '#8B5CF6'
                                 }}
-                                initial={{ opacity: 0, y: 25, filter: "blur(8px)" }}
-                                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                                initial={{ opacity: 0, y: 25 }}
+                                whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true, margin: "-80px" }}
                                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
                             >
@@ -162,4 +162,4 @@ function Services() {
     );
 }
 
-export default Services;
+export default memo(Services);

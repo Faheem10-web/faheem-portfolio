@@ -48,8 +48,8 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
     return (
         <motion.div
             className="project-card-wrapper"
-            initial={{ opacity: 0, y: 25, filter: "blur(8px)" }}
-            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
             onClick={handleCardClick}
@@ -151,8 +151,8 @@ function Projects() {
                 <div className="projects-header">
                     <motion.h2 
                         className="projects-title"
-                        initial={{ opacity: 0, y: 25, filter: "blur(8px)" }}
-                        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                        initial={{ opacity: 0, y: 25 }}
+                        whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
                         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                     >
@@ -161,8 +161,8 @@ function Projects() {
                     <MotionLink 
                         to="/projects"
                         className="view-all-btn"
-                        initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
-                        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
                         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
                     >
@@ -194,4 +194,4 @@ function Projects() {
     );
 }
 
-export default Projects;
+export default memo(Projects);

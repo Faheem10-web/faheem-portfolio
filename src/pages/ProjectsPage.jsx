@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, memo } from "react";
 import "./ProjectsPage.css";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -10,7 +10,7 @@ import { useAdmin } from "../context/AdminContext";
 import { getOptimizedImageUrl } from "../utils/imageOptimizer";
 
 // Refactored Subcomponent for Project Card to handle direct mouse follow
-function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }) {
+const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }) {
     const buttonsRef = useRef(null);
 
     const handleMouseMove = (e) => {
@@ -122,7 +122,7 @@ function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }
             </div>
         </motion.div>
     );
-}
+});
 
 function ProjectsPage() {
     const { projects, isProjectsLoading } = useAdmin();
@@ -196,12 +196,12 @@ function ProjectsPage() {
                         className="proj-grid"
                         layout
                     >
-                        <AnimatePresence mode="popLayout">
+                        <AnimatePresence>
                             {activeProjects.map((project, index) => {
                                 const cardLink = project.slug ? `/case-study/${project.slug}` : `/case-study/${project._id || project.id}`;
                                 const coverImg = project.coverImage || project.image;
                                 const cardTitle = project.name || project.title;
-                                const demoLink = project.liveUrl || project.demoLink;
+                                const demoLink = project.liveUrl;
 
                                 return (
                                     <ProjectCard
@@ -224,4 +224,4 @@ function ProjectsPage() {
     );
 }
 
-export default ProjectsPage;
+export default memo(ProjectsPage);
