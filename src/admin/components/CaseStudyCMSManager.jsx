@@ -678,7 +678,6 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
             title="Hero Banner Cover Image" 
             subtitle="Full edge-to-edge cover image displayed at the very top of the Case Study page"
             imageObj={heroImage}
-            defaultDemoAsset="/assets/project_eco_shades.jpg"
             onSaveImage={setHeroImage}
             onRemoveImage={() => setHeroImage('')}
           />
@@ -688,7 +687,6 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
             title="The Challenge Mockup Image" 
             subtitle="Featured mockup image displayed alongside The Challenge section"
             imageObj={challengeImage}
-            defaultDemoAsset="/assets/mockup_challenge.png"
             onSaveImage={setChallengeImage}
             onRemoveImage={() => setChallengeImage('')}
           />
@@ -698,7 +696,6 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
             title="The Solution Mockup Image" 
             subtitle="Featured mockup image displayed alongside The Solution section"
             imageObj={solutionImage}
-            defaultDemoAsset="/assets/mockup_solution.png"
             onSaveImage={setSolutionImage}
             onRemoveImage={() => setSolutionImage('')}
           />
@@ -708,7 +705,6 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
             title="Conclusion Mockup Image" 
             subtitle="Final mockup image displayed at the conclusion of the case study"
             imageObj={conclusionImage}
-            defaultDemoAsset="/assets/mockup_conclusion.png"
             onSaveImage={setConclusionImage}
             onRemoveImage={() => setConclusionImage('')}
           />

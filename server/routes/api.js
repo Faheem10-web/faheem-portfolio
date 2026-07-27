@@ -68,7 +68,7 @@ const buildFallbackPayload = () => {
       theme: seed.themeSettings || { mode: 'system' },
       chat: seed.chatSettings || {}
     },
-    projects: seed.projects || [],
+    projects: [],
     services: seed.services || [],
     skills: seed.skills || [],
     experiences: seed.experiences || [],
@@ -613,26 +613,22 @@ router.delete('/experiences/:id', protect, async (req, res) => {
 router.get('/projects', checkMaintenance, async (req, res) => {
   try {
     if (mongoose.connection.readyState !== 1) {
-      const seed = getDefaultSeedData();
-      return res.json(seed.projects || []);
+      return res.json([]);
     }
     const projects = await Project.find()
       .sort({ order: 1 })
       .lean();
     res.json(projects);
-  } catch {
-    const seed = getDefaultSeedData();
-    res.json(seed.projects || []);
+  } catch (error) {
+    console.error('Error fetching projects from MongoDB:', error.message);
+    res.json([]);
   }
 });
 
 router.get('/projects/:idOrSlug', checkMaintenance, async (req, res) => {
   try {
     if (mongoose.connection.readyState !== 1) {
-      const seed = getDefaultSeedData();
-      const found = (seed.projects || []).find(p => p.slug === req.params.idOrSlug || p.id === req.params.idOrSlug || String(p._id) === req.params.idOrSlug);
-      if (!found) return res.status(404).json({ message: 'Project not found' });
-      return res.json(found);
+      return res.status(503).json({ message: 'Database connection unavailable' });
     }
     const query = req.params.idOrSlug.match(/^[0-9a-fA-F]{24}$/)
       ? { _id: req.params.idOrSlug }
@@ -640,11 +636,9 @@ router.get('/projects/:idOrSlug', checkMaintenance, async (req, res) => {
     const project = await Project.findOne(query).lean();
     if (!project) return res.status(404).json({ message: 'Project not found' });
     res.json(project);
-  } catch {
-    const seed = getDefaultSeedData();
-    const found = (seed.projects || []).find(p => p.slug === req.params.idOrSlug || p.id === req.params.idOrSlug || String(p._id) === req.params.idOrSlug);
-    if (!found) return res.status(404).json({ message: 'Project not found' });
-    res.json(found);
+  } catch (error) {
+    console.error('Error fetching project from MongoDB:', error.message);
+    res.status(500).json({ message: 'Server error fetching project' });
   }
 });
 

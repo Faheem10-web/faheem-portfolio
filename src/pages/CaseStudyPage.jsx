@@ -95,7 +95,7 @@ export default function CaseStudyPage() {
 
   // Fallback calculations for backward compatibility
   const titleText = project.name || project.title || 'Untitled Case Study';
-  const heroImageSrc = project.heroImage || project.bannerImage || project.coverImage || '/assets/project_eco_shades.jpg';
+  const heroImageSrc = project.heroImage || project.bannerImage || project.coverImage || '';
   const taglineText = project.heroConfig?.tagline || project.shortDesc || project.subtitle || '';
   const breadcrumbText = project.heroConfig?.breadcrumb || `Home / Work Details / ${titleText}`;
 
@@ -198,12 +198,13 @@ export default function CaseStudyPage() {
         transition={{ duration: 0.8 }}
       >
         <div className="cs-hero-img-container">
-          <img 
-            src={getOptimizedImageUrl(heroImageSrc, { width: 1920 })} 
-            alt={titleText} 
-            className="cs-hero-img"
-            onError={(e) => { e.target.src = '/assets/project_eco_shades.jpg'; }}
-          />
+          {heroImageSrc && (
+            <img 
+              src={getOptimizedImageUrl(heroImageSrc, { width: 1920 })} 
+              alt={titleText} 
+              className="cs-hero-img"
+            />
+          )}
           <div 
             className="cs-hero-overlay" 
             style={{ opacity: project.heroConfig?.overlayOpacity ?? 0.45 }}
@@ -295,30 +296,36 @@ export default function CaseStudyPage() {
         </motion.section>
 
         {/* ── 4. EDITORIAL GALLERY (2-COLUMN GRID) ── */}
-        <motion.div 
-          className="cs-gallery-grid-2" style={{ marginBottom: '64px' }}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.challengeImage || '/assets/mockup_challenge.png')}>
-            <img 
-              src={getOptimizedImageUrl(project.challengeImage || '/assets/mockup_challenge.png', { width: 1200 })} 
-              alt="Challenge Preview" 
-              className="cs-mockup-img"
-              loading="lazy"
-            />
-          </div>
-          <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.solutionImage || '/assets/mockup_solution.png')}>
-            <img 
-              src={getOptimizedImageUrl(project.solutionImage || '/assets/mockup_solution.png', { width: 1200 })} 
-              alt="Solution Preview" 
-              className="cs-mockup-img"
-              loading="lazy"
-            />
-          </div>
-        </motion.div>
+        {(project.challengeImage || project.solutionImage) && (
+          <motion.div 
+            className="cs-double-mockup-grid"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            {project.challengeImage && (
+              <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.challengeImage)}>
+                <img 
+                  src={getOptimizedImageUrl(project.challengeImage, { width: 1200 })} 
+                  alt="Challenge Preview" 
+                  className="cs-mockup-img"
+                  loading="lazy"
+                />
+              </div>
+            )}
+            {project.solutionImage && (
+              <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.solutionImage)}>
+                <img 
+                  src={getOptimizedImageUrl(project.solutionImage, { width: 1200 })} 
+                  alt="Solution Preview" 
+                  className="cs-mockup-img"
+                  loading="lazy"
+                />
+              </div>
+            )}
+          </motion.div>
+        )}
 
         {/* ── 5. THE CHALLENGE SECTION ── */}
         <motion.section 
@@ -343,14 +350,16 @@ export default function CaseStudyPage() {
             )}
           </div>
 
-          <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.challengeImage || '/assets/mockup_challenge.png')}>
-            <img 
-              src={getOptimizedImageUrl(project.challengeImage || '/assets/mockup_challenge.png', { width: 1600 })} 
-              alt="The Challenge Mockup" 
-              className="cs-mockup-img"
-              loading="lazy"
-            />
-          </div>
+          {project.challengeImage && (
+            <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.challengeImage)}>
+              <img 
+                src={getOptimizedImageUrl(project.challengeImage, { width: 1600 })} 
+                alt="The Challenge Mockup" 
+                className="cs-mockup-img"
+                loading="lazy"
+              />
+            </div>
+          )}
         </motion.section>
 
         {/* ── 6. THE SOLUTION SECTION ── */}
@@ -377,14 +386,16 @@ export default function CaseStudyPage() {
             )}
           </div>
 
-          <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.solutionImage || '/assets/mockup_solution.png')}>
-            <img 
-              src={getOptimizedImageUrl(project.solutionImage || '/assets/mockup_solution.png', { width: 1600 })} 
-              alt="The Solution Mockup" 
-              className="cs-mockup-img"
-              loading="lazy"
-            />
-          </div>
+          {project.solutionImage && (
+            <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.solutionImage)}>
+              <img 
+                src={getOptimizedImageUrl(project.solutionImage, { width: 1600 })} 
+                alt="The Solution Mockup" 
+                className="cs-mockup-img"
+                loading="lazy"
+              />
+            </div>
+          )}
         </motion.section>
 
 

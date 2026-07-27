@@ -50,18 +50,17 @@ function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }
         >
             <div className="proj-card-inner" tabIndex="0">
                 <div className="proj-card-image-wrap">
-                    <img 
-                        src={optimizedCover || "/assets/project_eco_shades.jpg"} 
-                        alt={cardTitle} 
-                        className="proj-card-image" 
-                        loading="lazy" 
-                        decoding="async" 
-                        onError={(e) => {
-                            if (!e.target.src.endsWith('/assets/project_eco_shades.jpg')) {
-                                e.target.src = '/assets/project_eco_shades.jpg';
-                            }
-                        }}
-                    />
+                    {optimizedCover ? (
+                        <img 
+                            src={optimizedCover} 
+                            alt={cardTitle} 
+                            className="proj-card-image" 
+                            loading="lazy" 
+                            decoding="async" 
+                        />
+                    ) : (
+                        <div className="proj-card-image-placeholder" style={{ width: '100%', height: '100%', background: 'var(--admin-card-bg, #1a1b23)' }} />
+                    )}
                     
                     {/* Premium Glass Overlay & Centered Buttons */}
                     {(hasCaseStudy || demoLink) && (
@@ -131,7 +130,7 @@ function ProjectsPage() {
     const activeProjects = (projects || [])
         .filter(p => p && p.enabled !== false);
 
-    const showSkeleton = isProjectsLoading && activeProjects.length === 0;
+    const showSkeleton = isProjectsLoading;
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -152,6 +151,23 @@ function ProjectsPage() {
                                 </div>
                             ))}
                         </div>
+                    </div>
+                </section>
+            </div>
+        );
+    }
+
+    if (activeProjects.length === 0) {
+        return (
+            <div className="projects-page-wrapper">
+                <div className="proj-page-heading-wrap">
+                    <h1 className="proj-page-heading">
+                        Selected <span>Projects</span>
+                    </h1>
+                </div>
+                <section className="proj-grid-section">
+                    <div className="proj-grid-container" style={{ textAlign: 'center', padding: '80px 0', color: 'rgba(255,255,255,0.6)' }}>
+                        <p style={{ fontSize: '18px', fontWeight: '500' }}>No projects found in database.</p>
                     </div>
                 </section>
             </div>

@@ -58,18 +58,17 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
             onMouseLeave={handleMouseLeave}
         >
             <div className="project-card" tabIndex="0">
-                <img 
-                    src={optimizedCover || "/assets/project_eco_shades.jpg"} 
-                    alt={cardTitle} 
-                    className="project-image" 
-                    loading="lazy"
-                    decoding="async"
-                    onError={(e) => {
-                        if (!e.target.src.endsWith('/assets/project_eco_shades.jpg')) {
-                            e.target.src = '/assets/project_eco_shades.jpg';
-                        }
-                    }}
-                />
+                {optimizedCover ? (
+                    <img 
+                        src={optimizedCover} 
+                        alt={cardTitle} 
+                        className="project-image" 
+                        loading="lazy"
+                        decoding="async"
+                    />
+                ) : (
+                    <div className="project-image-placeholder" style={{ width: '100%', height: '100%', background: 'var(--admin-card-bg, #1a1b23)' }} />
+                )}
                 {(hasCaseStudy || project.liveUrl) && (
                     <div className="project-overlay">
                         <div className="project-hover-actions" ref={buttonsRef}>
@@ -109,7 +108,7 @@ function Projects() {
         .filter(p => p && p.enabled !== false)
         .slice(0, 4);
 
-    const showSkeleton = isProjectsLoading && activeProjects.length === 0;
+    const showSkeleton = isProjectsLoading;
 
     if (showSkeleton) {
         return (
@@ -125,6 +124,21 @@ function Projects() {
                                 <div className="project-card shimmer-placeholder" style={{ height: '350px', borderRadius: '24px' }}></div>
                             </div>
                         ))}
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
+    if (activeProjects.length === 0) {
+        return (
+            <section className="projects-section" id="projects">
+                <div className="projects-container">
+                    <div className="projects-header">
+                        <h2 className="projects-title">FEATURED PROJECTS</h2>
+                    </div>
+                    <div style={{ textAlign: 'center', padding: '60px 0', color: 'rgba(255,255,255,0.6)' }}>
+                        <p style={{ fontSize: '16px', fontWeight: '500' }}>No active projects found in database.</p>
                     </div>
                 </div>
             </section>
