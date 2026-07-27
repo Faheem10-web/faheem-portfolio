@@ -1,0 +1,460 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
+:root {
+    --bg-primary-rgb: 10, 10, 10;
+    --bg-primary: #0A0A0A;
+    --bg-secondary: #0A0A0A;
+    --color-primary: #8B5CF6;
+    --color-primary-glow: rgba(139, 92, 246, 0.35);
+    --color-text-main: #ffffff;
+    --color-text-muted: #a1a1aa;
+    --color-text-dark: #71717a;
+    
+    /* Liquid Glass Aesthetic Tokens - Dark Mode */
+    --border-glass: rgba(255, 255, 255, 0.12);
+    --border-glass-specular: rgba(255, 255, 255, 0.4);
+    --bg-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(12, 12, 16, 0.65);
+    --bg-glass-scrolled: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.03) 100%), rgba(10, 10, 14, 0.85);
+    --border-glass-scrolled: rgba(255, 255, 255, 0.18);
+    --nav-btn-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(235, 235, 240, 0.9));
+    --nav-btn-text: #09090b;
+    --btn-secondary-bg: rgba(255, 255, 255, 0.04);
+    --btn-secondary-hover: rgba(255, 255, 255, 0.09);
+    --scrollbar-thumb: var(--color-primary);
+    --scrollbar-thumb-hover: #a78bfa;
+    --font-heading: 'Inter', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --transition-smooth: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root[data-theme='light'] {
+    --bg-primary-rgb: 250, 250, 252;
+    --bg-primary: #FAFAFC;
+    --bg-secondary: #eeeef2;
+    --color-primary: #7C3AED;
+    --color-primary-glow: rgba(124, 58, 237, 0.2);
+    --color-text-main: #18181b;
+    --color-text-muted: #52525b;
+    --color-text-dark: #71717a;
+
+    /* Liquid Glass Aesthetic Tokens - Light Mode */
+    --border-glass: rgba(255, 255, 255, 0.95);
+    --border-glass-specular: rgba(255, 255, 255, 1);
+    --bg-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(248, 245, 255, 0.82) 100%), rgba(255, 255, 255, 0.88);
+    --bg-glass-scrolled: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 245, 255, 0.88) 100%), rgba(255, 255, 255, 0.92);
+    --border-glass-scrolled: rgba(255, 255, 255, 0.98);
+    --nav-btn-bg: linear-gradient(135deg, #18181b, #27272a);
+    --nav-btn-text: #ffffff;
+    --btn-secondary-bg: rgba(0, 0, 0, 0.03);
+    --btn-secondary-hover: rgba(0, 0, 0, 0.07);
+    --scrollbar-thumb: var(--color-primary);
+    --scrollbar-thumb-hover: #6d28d9;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    background-color: var(--bg-primary);
+    color: var(--color-text-main);
+    font-family: var(--font-body);
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fallback smooth scroll when Lenis is not loaded or for prefers-reduced-motion */
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.lenis) {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Accessibility Focus Rings */
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Reduced Motion Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Image & Media CLS Prevention */
+img, video {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Mobile Instant Tap Response */
+a, button, input, select, textarea {
+    touch-action: manipulation;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--color-text-main);
+    min-height: 100vh;
+    overflow-x: clip;
+}
+
+/* Custom modern scrollbars */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 5px;
+    border: 2px solid var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+}
+
+/* Base layouts */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+    background-color: var(--bg-primary);
+}
+
+.main-content {
+    flex: 1 0 auto;
+    width: 100%;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    font-family: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), sans-serif !important;
+}
+
+/* Lenis smooth scrolling settings */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Global premium transitions for interactive elements */
+button, 
+.btn, 
+.primary-btn, 
+.secondary-btn, 
+.action-btn, 
+.nav-btn, 
+.footer-cta-btn, 
+.mobile-cv-btn, 
+.download-cv-btn, 
+.nav-theme-toggle {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Soft hover scale & glow */
+button:hover, 
+.btn:hover, 
+.primary-btn:hover, 
+.secondary-btn:hover, 
+.action-btn:hover, 
+.nav-btn:hover, 
+.footer-cta-btn:hover, 
+.mobile-cv-btn:hover, 
+.download-cv-btn:hover,
+.nav-theme-toggle:hover {
+    transform: scale(1.03) translateY(-1px) !important;
+    box-shadow: 0 10px 25px rgba(139, 92, 246, 0.12), 
+                0 0 15px rgba(139, 92, 246, 0.05) !important;
+}
+
+/* Gentle press animation */
+button:active, 
+.btn:active, 
+.primary-btn:active, 
+.secondary-btn:active, 
+.action-btn:active, 
+.nav-btn:active, 
+.footer-cta-btn:active, 
+.mobile-cv-btn:active, 
+.download-cv-btn:active,
+.nav-theme-toggle:active {
+    transform: scale(0.97) translateY(0) !important;
+}
+
+/* Premium Card Hover Effects */
+.preview-card, 
+.service-card, 
+.cta-box, 
+.proj-card-inner,
+.project-card,
+.testimonial-card,
+.timeline-content {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+                border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: none !important;
+}
+
+.preview-card:hover, 
+.service-card:hover,
+.proj-card-inner:hover,
+.project-card:hover,
+.testimonial-card:hover,
+.timeline-content:hover {
+    transform: translateY(-6px) rotate(0.15deg) !important;
+    box-shadow: none !important;
+    border-color: rgba(139, 92, 246, 0.3) !important;
+}
+
+/* Image Zoom on Hover inside Cards */
+.proj-card-image, 
+.project-image, 
+.service-card img {
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.proj-card-inner:hover .proj-card-image, 
+.project-card-wrapper:hover .project-image {
+    transform: scale(1.04) !important;
+}
+
+/* ── Standard Cursor Behavior Reset (Mobile & Admin) ── */
+@media (max-width: 1023px), (pointer: coarse) {
+    html,
+    body,
+    * {
+        cursor: auto;
+    }
+
+    a,
+    button,
+    [role="button"],
+    input[type="submit"],
+    input[type="button"],
+    .project-card-wrapper,
+    .download-cv-btn,
+    .view-all-btn,
+    .nav-theme-toggle {
+        cursor: pointer;
+    }
+
+    input,
+    textarea,
+    select,
+    [contenteditable="true"] {
+        cursor: text;
+    }
+}
+
+/* ── Skeleton Shimmer Animation ── */
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer-placeholder {
+  background: linear-gradient(90deg, #0e0e13 25%, #181822 50%, #0e0e13 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite linear;
+}
+
+:root[data-theme='light'] .shimmer-placeholder {
+  background: linear-gradient(90deg, #e5e5ea 25%, #f2f2f7 50%, #e5e5ea 75%);
+  background-size: 200% 100%;
+}
+
+.skeleton-text {
+  height: 16px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+/* =========================================================================
+   2026 STANDARDIZED FLUID TYPOGRAPHY SYSTEM & RESPONSIVE SAFETY
+========================================================================= */
+
+/* Base HTML Overrides */
+html, body {
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    max-width: 100vw;
+    overflow-x: clip;
+}
+
+/* Fluid Typography with clamp() for 320px -> 2560px smooth scaling */
+h1, .text-h1 {
+    font-size: clamp(2.2rem, 5vw + 1rem, 3.5rem) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.04em !important;
+    line-height: 1.08 !important;
+    font-family: var(--font-heading) !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+h2, .text-h2 {
+    font-size: clamp(1.8rem, 4vw + 0.8rem, 3rem) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.04em !important;
+    line-height: 1.1 !important;
+    font-family: var(--font-heading) !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+h3, .text-h3 {
+    font-size: clamp(1.4rem, 3vw + 0.5rem, 2.25rem) !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.03em !important;
+    line-height: 1.15 !important;
+    font-family: var(--font-heading) !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+h4, .text-h4 {
+    font-size: clamp(1.2rem, 2vw + 0.4rem, 1.75rem) !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.03em !important;
+    line-height: 1.2 !important;
+    font-family: var(--font-heading) !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+h5, .text-h5 {
+    font-size: clamp(1.05rem, 1.5vw + 0.3rem, 1.375rem) !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.02em !important;
+    line-height: 1.25 !important;
+    font-family: var(--font-heading) !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.text-hero-display {
+    font-size: clamp(2.5rem, 7vw + 1rem, 4.5rem) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.04em !important;
+    line-height: 1.02 !important;
+    font-family: var(--font-heading) !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.text-body-large {
+    font-size: clamp(1rem, 1.2vw + 0.6rem, 1.25rem) !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.02em !important;
+    line-height: 1.6 !important;
+    font-family: var(--font-body) !important;
+}
+
+p, .text-body {
+    font-size: clamp(0.9375rem, 1vw + 0.5rem, 1.125rem) !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.02em !important;
+    line-height: 1.6 !important;
+    font-family: var(--font-body) !important;
+    overflow-wrap: anywhere;
+}
+
+.text-small {
+    font-size: clamp(0.875rem, 0.8vw + 0.5rem, 1rem) !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.02em !important;
+    line-height: 1.6 !important;
+    font-family: var(--font-body) !important;
+}
+
+.text-caption {
+    font-size: clamp(0.8rem, 0.6vw + 0.5rem, 0.875rem) !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.02em !important;
+    line-height: 1.6 !important;
+    font-family: var(--font-body) !important;
+}
+
+/* Force override weights to remain strictly within [400, 500, 600, 700] */
+strong, b {
+    font-weight: 700 !important;
+}
+
+/* Smooth high-quality text rendering and layout overflow prevention */
+* {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    max-width: 100%;
+}
+
+img, video, canvas, svg, iframe {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Touch targets & reduced motion */
+@media (pointer: coarse) {
+    button, a, [role="button"], input[type="submit"], input[type="button"] {
+        min-height: 48px;
+        min-width: 48px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

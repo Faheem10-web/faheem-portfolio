@@ -1,0 +1,457 @@
+/* Services Section CSS */
+
+:root {
+    --card-bg: rgba(255, 255, 255, 0.02);
+    --card-border: var(--border-glass);
+    --card-shadow: none;
+    --card-text-main: var(--color-text-main);
+    --card-text-muted: var(--color-text-muted);
+    --card-divider: rgba(255, 255, 255, 0.08);
+    --service-icon-bg: rgba(139, 92, 246, 0.12);
+    --card-pattern-dots: rgba(255, 255, 255, 0.07);
+}
+
+:root[data-theme='light'] {
+    --card-bg: #ffffff;
+    --card-border: rgba(0, 0, 0, 0.04);
+    --card-shadow: 0 35px 70px -15px rgba(0, 0, 0, 0.12);
+    --card-text-main: #18181b;
+    --card-text-muted: #52525b;
+    --card-divider: rgba(0, 0, 0, 0.06);
+    --service-icon-bg: rgba(124, 58, 237, 0.06);
+    --card-pattern-dots: rgba(0, 0, 0, 0.04);
+}
+
+.services-section {
+    width: 100%;
+    background: transparent;
+    padding: 100px 24px;
+    position: relative;
+    z-index: 10;
+    border-top: none;
+    transition: var(--transition-smooth);
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
+:root[data-theme='light'] .services-section {
+    background: linear-gradient(180deg, var(--bg-primary) 0%, #f2f2f6 12%, #f2f2f6 88%, var(--bg-primary) 100%);
+}
+
+:root[data-theme='dark'] .services-section {
+    background: linear-gradient(180deg, var(--bg-primary) 0%, rgba(139, 92, 246, 0.05) 25%, rgba(139, 92, 246, 0.05) 75%, var(--bg-primary) 100%);
+}
+
+.services-container {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.services-intro {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 50px;
+    width: 100%;
+    max-width: 800px;
+}
+
+.services-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 18px;
+    background-color: var(--service-icon-bg);
+    color: var(--color-primary);
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Nohemi', sans-serif;
+    letter-spacing: 1px;
+}
+
+.badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+}
+
+.services-title {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 600;
+    font-family: var(--font-heading);
+    color: var(--card-text-main);
+    line-height: 1.2;
+    letter-spacing: -1px;
+}
+
+.title-highlight {
+    position: relative;
+    display: inline-block;
+    color: var(--card-text-main);
+}
+
+.title-underline {
+    position: absolute;
+    bottom: -15px;
+    left: 0;
+    width: 100%;
+    height: 18px;
+    pointer-events: none;
+}
+
+.services-description {
+    font-size: clamp(0.95rem, 1.2vw + 0.5rem, 1.05rem);
+    line-height: 1.6;
+    color: var(--card-text-muted);
+    font-family: 'Nohemi', sans-serif;
+    font-weight: 400;
+    max-width: 600px;
+    margin-top: 10px;
+}
+
+/* Grid Layout */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 30px;
+    width: 100%;
+}
+
+.service-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 36px;
+    padding: 42px 32px 42px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    cursor: pointer;
+    height: 100%;
+    min-height: 330px;
+    box-sizing: border-box;
+
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow:
+        0 30px 60px -12px rgba(0, 0, 0, 0.09),
+        0 10px 24px -6px rgba(0, 0, 0, 0.04),
+        0 2px 6px rgba(0, 0, 0, 0.02);
+
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root[data-theme='dark'] .service-card {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.09) 0%, color-mix(in srgb, var(--card-accent-color, var(--color-primary)) 12%, rgba(16, 14, 24, 0.85)) 100%);
+    border: 1.5px solid color-mix(in srgb, var(--card-accent-color, var(--color-primary)) 40%, rgba(255, 255, 255, 0.2));
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    box-shadow:
+        0 0 28px -2px color-mix(in srgb, var(--card-accent-color, var(--color-primary)) 30%, transparent),
+        0 24px 54px -12px rgba(0, 0, 0, 0.65),
+        0 0 0 1px rgba(255, 255, 255, 0.08),
+        inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.4);
+}
+
+:root[data-theme='light'] .service-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    border-radius: 36px;
+    box-shadow:
+        0 30px 60px -12px rgba(0, 0, 0, 0.09),
+        0 10px 24px -6px rgba(0, 0, 0, 0.04),
+        0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.card-bg-pattern {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    background-image: 
+        radial-gradient(var(--card-pattern-dots) 1.5px, transparent 1.5px),
+        radial-gradient(circle at 85% 15%, color-mix(in srgb, var(--card-accent-color, var(--color-primary)) 18%, transparent) 0%, transparent 65%);
+    background-size: 14px 14px, 100% 100%;
+    z-index: 1;
+}
+
+.card-top {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+/* Card Header Row: Icon Squircle + Tag Badge */
+.card-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 28px;
+}
+
+/* Squircle Icon Badge (Matches Stripe S Icon Badge in reference image) */
+.icon-wrapper {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--card-accent-color, var(--color-primary)) 0%, color-mix(in srgb, var(--card-accent-color, var(--color-primary)) 80%, #000) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow:
+        0 10px 22px -4px color-mix(in srgb, var(--card-accent-color, var(--color-primary)) 45%, transparent),
+        inset 0 1.5px 2px rgba(255, 255, 255, 0.6);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    transition: var(--transition-smooth);
+    flex-shrink: 0;
+}
+
+:root[data-theme='dark'] .icon-wrapper {
+    background: linear-gradient(135deg, var(--card-accent-color, var(--color-primary)) 0%, color-mix(in srgb, var(--card-accent-color, var(--color-primary)) 70%, #000) 100%);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.icon-wrapper svg,
+.icon-wrapper .custom-svg-icon svg {
+    width: 22px;
+    height: 22px;
+    display: block;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.custom-svg-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+}
+
+.custom-svg-icon svg {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Number Tag Badge (Top Right Pill like "JAN 14 Mon") */
+.card-number-badge {
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--card-accent-color, var(--color-primary));
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 12px;
+    letter-spacing: 0.02em;
+}
+
+:root[data-theme='dark'] .card-number-badge {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--color-text-main);
+}
+
+/* Metadata Subtitle Row */
+.card-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.card-subtitle {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--card-text-muted);
+}
+
+.card-dot-sep {
+    font-size: 10px;
+    color: #a1a1aa;
+}
+
+.card-tag-pill {
+    background: #f4f4f6;
+    color: #71717a;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 8px;
+}
+
+:root[data-theme='dark'] .card-tag-pill {
+    background: rgba(255, 255, 255, 0.08);
+    color: #a1a1aa;
+}
+
+.card-title {
+    font-size: clamp(1.25rem, 2vw, 1.5rem) !important;
+    font-weight: 700;
+    color: var(--card-text-main);
+    font-family: var(--font-heading);
+    margin-bottom: 8px;
+    letter-spacing: -0.4px;
+    line-height: 1.25;
+}
+
+.card-description {
+    font-size: 0.95rem;
+    line-height: 1.58;
+    color: var(--card-text-muted);
+    font-family: var(--font-body);
+    font-weight: 400;
+    margin-bottom: 0;
+}
+
+/* Faint Divider Line */
+.card-divider {
+    position: relative;
+    z-index: 2;
+    height: 1px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.06);
+    margin-bottom: 18px;
+    margin-top: auto;
+}
+
+:root[data-theme='dark'] .card-divider {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.card-bottom {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
+
+/* 3D Glossy Liquid Pill CTA Button (Matches "Apply Now" button at bottom of card) */
+.card-cta-btn {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 24px;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    
+    background: linear-gradient(135deg, var(--card-accent-color, #8b5cf6) 0%, color-mix(in srgb, var(--card-accent-color, #8b5cf6) 82%, #4f46e5) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #ffffff;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    
+    box-shadow:
+        0 12px 28px -4px color-mix(in srgb, var(--card-accent-color, #8b5cf6) 45%, transparent),
+        0 4px 12px rgba(0, 0, 0, 0.08),
+        inset 0 2px 2px rgba(255, 255, 255, 0.8),
+        inset 0 -1.5px 2px rgba(0, 0, 0, 0.2);
+        
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-cta-btn svg {
+    font-size: 16px;
+    transition: transform 0.3s ease;
+}
+
+/* Hover States for Glassmorphism Depth & Border Glow */
+.service-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow:
+        0 40px 80px -14px rgba(0, 0, 0, 0.15),
+        0 14px 28px -6px rgba(0, 0, 0, 0.06),
+        0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.service-card:hover .card-bg-pattern {
+    opacity: 1;
+}
+
+.service-card:hover .icon-wrapper {
+    transform: scale(1.08) rotate(3deg);
+    box-shadow: 0 14px 28px -4px color-mix(in srgb, var(--card-accent-color, #8b5cf6) 65%, transparent);
+}
+
+.service-card:hover .card-cta-btn {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow:
+        0 18px 36px -4px color-mix(in srgb, var(--card-accent-color, #8b5cf6) 65%, transparent),
+        0 6px 16px rgba(0, 0, 0, 0.12),
+        inset 0 2px 2px #ffffff;
+}
+
+.service-card:hover .card-cta-btn svg {
+    transform: translateX(4px);
+}
+
+:root[data-theme='dark'] .service-card:hover {
+    border-color: color-mix(in srgb, var(--card-accent-color, var(--color-primary)) 75%, rgba(255, 255, 255, 0.5));
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.15) 0%, color-mix(in srgb, var(--card-accent-color, var(--color-primary)) 20%, rgba(20, 18, 30, 0.88)) 100%);
+    box-shadow:
+        0 0 40px 4px color-mix(in srgb, var(--card-accent-color, var(--color-primary)) 50%, transparent),
+        0 30px 65px -8px rgba(0, 0, 0, 0.75),
+        inset 0 2px 3px 0 rgba(255, 255, 255, 0.6);
+}
+
+:root[data-theme='light'] .service-card:hover {
+    border-color: rgba(0, 0, 0, 0.08);
+    background: #ffffff;
+    box-shadow:
+        0 36px 72px -14px rgba(0, 0, 0, 0.14),
+        0 14px 28px -6px rgba(0, 0, 0, 0.06),
+        0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 991px) {
+    .services-section {
+        padding: 70px 20px;
+    }
+
+    .services-intro {
+        margin-bottom: 40px;
+    }
+
+    .service-card {
+        padding: 24px 20px 20px 20px;
+        border-radius: 28px;
+        min-height: 300px;
+    }
+
+    .icon-wrapper {
+        width: 46px;
+        height: 46px;
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 767px) {
+    .services-section {
+        padding: 50px 16px;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .service-card {
+        padding: 24px 20px;
+        min-height: auto;
+    }
+}

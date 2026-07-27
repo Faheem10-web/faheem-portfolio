@@ -1,0 +1,277 @@
+/* =========================================================================
+   PREMIUM ACCORDION CAPSULE FAQ LAYOUT (EXACT MATCH MOCKUP DESIGN)
+========================================================================= */
+
+.faq-section {
+    width: 100%;
+    padding: 100px 24px;
+    background-color: var(--bg-primary);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background Image Layer (3D Geometric Abstract Blocks) */
+.faq-section-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.faq-section-bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0.32;
+    filter: contrast(1.08) brightness(1.02);
+    transition: opacity 0.5s ease;
+}
+
+:root[data-theme='dark'] .faq-section-bg-img {
+    opacity: 0.16;
+    filter: invert(1) contrast(1.15) brightness(0.8);
+}
+
+.faq-section-bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(var(--bg-primary-rgb, 255, 255, 255), 0.4) 0%, rgba(var(--bg-primary-rgb, 255, 255, 255), 0.85) 60%, rgba(var(--bg-primary-rgb, 255, 255, 255), 0.98) 100%);
+    pointer-events: none;
+}
+
+:root[data-theme='dark'] .faq-section-bg-overlay {
+    background: radial-gradient(circle at center, rgba(10, 10, 15, 0.4) 0%, rgba(10, 10, 15, 0.85) 60%, rgba(10, 10, 15, 0.98) 100%);
+}
+
+.faq-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 760px; /* Compact medium width for balanced pill proportions */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+/* Header */
+.faq-header {
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.faq-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 800;
+    letter-spacing: -2px;
+    color: var(--color-text-main);
+    line-height: 1.1;
+    text-transform: none;
+}
+
+/* FAQ list holds individual independent items */
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* spacing between independent pills */
+    width: 100%;
+    background: transparent;
+    border: none;
+    box-shadow: none !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+/* Individual Liquid Glass FAQ Pill (Matching More About Me Button Style - NO Purple Shadow) */
+.faq-item {
+    width: 100%;
+    border-radius: 100px;
+    
+    /* Soft White Liquid Glass Surface */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(248, 245, 252, 0.85) 100%), rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    
+    /* Clean Soft Ambient Shadow & Specular Top Glare (NO Purple Shadow) */
+    box-shadow: 
+        0 8px 24px -4px rgba(0, 0, 0, 0.06),
+        0 2px 8px rgba(0, 0, 0, 0.02),
+        inset 0 1.5px 2px 0 rgba(255, 255, 255, 1);
+        
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root[data-theme='dark'] .faq-item {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%), rgba(16, 14, 24, 0.75);
+    border-color: rgba(255, 255, 255, 0.16);
+    box-shadow: 
+        0 10px 28px -6px rgba(0, 0, 0, 0.35),
+        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.faq-item:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 1);
+    box-shadow: 
+        0 12px 30px -4px rgba(0, 0, 0, 0.09),
+        inset 0 2px 2px 0 rgba(255, 255, 255, 1);
+}
+
+:root[data-theme='dark'] .faq-item:hover {
+    border-color: rgba(255, 255, 255, 0.28);
+    box-shadow: 
+        0 14px 34px -6px rgba(0, 0, 0, 0.45),
+        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* When expanded, maintain the exact same liquid glass pill aesthetic & specular glare */
+.faq-item.open {
+    border-radius: 32px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 245, 252, 0.88) 100%), rgba(255, 255, 255, 0.92);
+    border-color: rgba(255, 255, 255, 0.98);
+    box-shadow: 
+        0 10px 30px -4px rgba(0, 0, 0, 0.07),
+        0 2px 8px rgba(0, 0, 0, 0.02),
+        inset 0 1.5px 2px 0 rgba(255, 255, 255, 1);
+}
+
+:root[data-theme='dark'] .faq-item.open {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.04) 100%), rgba(18, 16, 28, 0.85);
+    border-color: rgba(255, 255, 255, 0.22);
+    box-shadow: 
+        0 12px 32px -6px rgba(0, 0, 0, 0.4),
+        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Question Trigger Area */
+.faq-question {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 36px;
+    min-height: 48px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    color: #111111;
+    font-family: var(--font-body);
+    font-size: clamp(0.95rem, 1.3vw, 1.15rem);
+    font-weight: 600;
+    line-height: 1.4;
+    transition: color 0.3s ease;
+}
+
+:root[data-theme='dark'] .faq-question {
+    color: #ffffff;
+}
+
+.faq-question:hover {
+    color: #000000;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+:root[data-theme='dark'] .faq-question:hover {
+    color: #ffffff;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.faq-item:hover {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+:root[data-theme='dark'] .faq-item:hover {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* Plus Icon Wrapper */
+.faq-icon-wrapper {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    color: rgba(0, 0, 0, 0.35);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
+}
+
+:root[data-theme='dark'] .faq-icon-wrapper {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Answer Section Wrapper */
+.faq-answer-wrap {
+    overflow: hidden;
+    box-shadow: none !important;
+}
+
+.faq-answer-inner {
+    padding: 0 36px 24px 36px;
+    box-sizing: border-box;
+    box-shadow: none !important;
+}
+
+.faq-answer {
+    font-family: var(--font-body);
+    font-size: clamp(0.875rem, 1.1vw, 1rem);
+    color: #4b5563;
+    line-height: 1.65;
+    margin: 0;
+}
+
+:root[data-theme='dark'] .faq-answer {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+/* Responsive adjust */
+@media (max-width: 768px) {
+    .faq-section {
+        padding: 60px 16px;
+    }
+
+    .faq-container {
+        gap: 36px;
+    }
+
+    .faq-question {
+        padding: 18px 20px;
+        min-height: 48px;
+    }
+
+    .faq-answer-inner {
+        padding: 0 20px 20px 20px;
+    }
+
+    .faq-item {
+        border-radius: 40px;
+    }
+
+    .faq-item.open {
+        border-radius: 20px;
+    }
+}
+
+@media (max-width: 360px) {
+    .faq-question {
+        padding: 16px 14px;
+    }
+
+    .faq-answer-inner {
+        padding: 0 14px 16px 14px;
+    }
+}
