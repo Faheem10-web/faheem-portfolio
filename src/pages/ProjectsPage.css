@@ -315,16 +315,16 @@
 .proj-card-hover-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.55) 100%);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.40) 0%, rgba(0, 0, 0, 0.55) 100%); /* 45–55% dark overlay */
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
     opacity: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     pointer-events: none;
-    transition: opacity 250ms cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: opacity;
+    transition: opacity 250ms cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 250ms cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, backdrop-filter;
     z-index: 2;
 }
 
@@ -332,6 +332,8 @@
 .proj-card-inner:focus-within .proj-card-hover-overlay,
 .proj-card-inner:active .proj-card-hover-overlay {
     opacity: 1;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
     pointer-events: auto;
 }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, lazy, Suspense, memo } from "react";
+import React, { useState, useEffect, useMemo, lazy, Suspense } from "react";
 import "./Hero.css";
 import { motion } from "framer-motion";
 import { useAdmin } from "../../context/AdminContext";
@@ -42,10 +42,11 @@ const MARQUEE_ITEMS = [
 ];
 
 const lineVariants = {
-  initial: { opacity: 0, y: 28 },
+  initial: { opacity: 0, y: 28, filter: "blur(8px)" },
   animate: {
     opacity: 1,
     y: 0,
+    filter: "blur(0px)",
     transition: {
       duration: 0.9,
       ease: [0.16, 1, 0.3, 1]
@@ -60,8 +61,6 @@ function Hero() {
     const name = heroSettings.name || "Faheem";
     const rawWords = heroSettings.words;
 
-    const rawWordsJoined = Array.isArray(rawWords) ? rawWords.join('|') : (rawWords || '');
-
     const wordsList = useMemo(() => {
         const list = Array.isArray(rawWords) && rawWords.length > 0 
             ? [...rawWords] 
@@ -70,7 +69,7 @@ function Hero() {
             list[0] = name;
         }
         return list;
-    }, [rawWordsJoined, name]);
+    }, [JSON.stringify(rawWords), name]);
 
     const [currentWordIndex, setCurrentWordIndex] = useState(0);
     const [currentText, setCurrentText] = useState("");
@@ -83,7 +82,7 @@ function Hero() {
         setCurrentText("");
         setIsDeleting(false);
         setTypingSpeed(100);
-    }, [wordsList]);
+    }, [JSON.stringify(wordsList)]);
 
     useEffect(() => {
         const handleType = () => {
@@ -126,10 +125,10 @@ function Hero() {
                         mouseForce={20}
                         cursorSize={100}
                         isViscous
-                        viscous={30}
-                        iterationsViscous={32}
-                        iterationsPoisson={32}
-                        resolution={0.5}
+                        viscous={25}
+                        iterationsViscous={14}
+                        iterationsPoisson={14}
+                        resolution={0.4}
                         isBounce={false}
                         autoDemo
                         autoSpeed={0.5}
@@ -139,62 +138,65 @@ function Hero() {
                         autoRampDuration={0.6}
                         style={{
                             position: "absolute",
-                            top: 0,
-                            left: 0,
+                            inset: 0,
                             width: "100%",
                             height: "100%",
-                            zIndex: 1
                         }}
                     />
                 </Suspense>
+
+                <div className="hero-aurora-mesh" aria-hidden="true"></div>
+                <div className="hero-radial-glow" aria-hidden="true"></div>
+                <div className="hero-noise" aria-hidden="true"></div>
+                <div className="hero-vignette" aria-hidden="true"></div>
+                <div className="hero-overlay" aria-hidden="true"></div>
             </div>
 
-            <div className="hero-content">
+            {/* Content */}
 
-                {/* Subtitle Badge */}
-                <motion.div 
-                    className="hero-badge"
+            <div className="hero-container">
+
+                <motion.div
+                    className="hero-tagline hero-glass-pill"
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ delay: 0.15, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    <span className="badge-pulse-dot" />
-                    <span className="badge-text">AVAILABLE FOR FREELANCE & FULL-TIME</span>
+                    <span className="tagline-prefix">{heroSettings.greeting || "I AM"}</span>
+                    <span className="tagline-typed">{currentText}</span>
+                    <span className="tagline-cursor">|</span>
                 </motion.div>
 
-                {/* Main Heading */}
                 <h1 className="hero-title">
-                    <motion.div 
-                        className="hero-line hero-line-1"
-                        variants={lineVariants}
-                        initial="initial"
-                        animate="animate"
-                    >
-                        <span className="hero-greeting">{heroSettings.greeting || "I AM"}</span>{" "}
-                        <span className="hero-dynamic-wrapper">
-                            <span className="hero-dynamic-text">{currentText}</span>
-                            <span className="typewriter-cursor">|</span>
-                        </span>
-                    </motion.div>
-
-                    <div className="hero-line hero-line-2">
-                        <SplitText 
-                            text={heroSettings.title1 || "Designing Future"} 
-                            className="hero-split-text"
+                    <div className="hero-first-row">
+                        <SplitText
+                            text={heroSettings.title1 || "Designing Future"}
+                            tag="span"
+                            className="hero-split-line"
                             delay={35}
-                            duration={1.1}
+                            duration={0.8}
+                            ease="power3.out"
                             splitType="chars"
+                            from={{ opacity: 0, y: 40 }}
+                            to={{ opacity: 1, y: 0 }}
+                            threshold={0.1}
+                            rootMargin="-50px"
                             textAlign="center"
                         />
                     </div>
-
-                    <div className="hero-line hero-line-3">
-                        <SplitText 
-                            text={heroSettings.title2 || "Digital Experiences"} 
-                            className="hero-split-text gradient-text"
-                            delay={35}
-                            duration={1.1}
+                    <div className="hero-gradient-text">
+                        <SplitText
+                            text={heroSettings.title2 || "Digital Experiences"}
+                            tag="span"
+                            className="hero-split-line-gradient"
+                            delay={40}
+                            duration={0.9}
+                            ease="power3.out"
                             splitType="chars"
+                            from={{ opacity: 0, y: 40 }}
+                            to={{ opacity: 1, y: 0 }}
+                            threshold={0.1}
+                            rootMargin="-50px"
                             textAlign="center"
                         />
                     </div>
@@ -209,9 +211,11 @@ function Hero() {
                     {heroSettings.description || "I create premium digital experiences with modern UI/UX design, scalable React development, smooth interactions and high-performance websites."}
                 </motion.p>
 
+
+
             </div>
         </section>
     );
 }
 
-export default memo(Hero);
+export default Hero;

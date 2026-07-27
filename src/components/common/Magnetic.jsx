@@ -1,27 +1,24 @@
-import { useRef, memo } from "react";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion } from "framer-motion";
 
-const springConfig = { stiffness: 120, damping: 14, mass: 0.1 };
-
-const Magnetic = memo(function Magnetic({ children, strength = 0.3 }) {
+export default function Magnetic({ children, strength = 0.3 }) {
   const ref = useRef(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const springX = useSpring(x, springConfig);
-  const springY = useSpring(y, springConfig);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e) => {
     if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    x.set((e.clientX - centerX) * strength);
-    y.set((e.clientY - centerY) * strength);
+    const { clientX, clientY } = e;
+    const { left, top, width, height } = ref.current.getBoundingClientRect();
+    const centerX = left + width / 2;
+    const centerY = top + height / 2;
+    const distanceX = clientX - centerX;
+    const distanceY = clientY - centerY;
+
+    setPosition({ x: distanceX * strength, y: distanceY * strength });
   };
 
   const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
+    setPosition({ x: 0, y: 0 });
   };
 
   return (
@@ -29,11 +26,11 @@ const Magnetic = memo(function Magnetic({ children, strength = 0.3 }) {
       ref={ref}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{ x: springX, y: springY, display: "inline-block" }}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: "spring", stiffness: 120, damping: 14, mass: 0.1 }}
+      style={{ display: "inline-block" }}
     >
       {children}
     </motion.div>
   );
-});
-
-export default Magnetic;
+}
