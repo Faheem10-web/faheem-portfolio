@@ -74,19 +74,15 @@ export default function Loader({ onComplete, isLoading }) {
 
   return (
     <motion.div
-      className="custom-light-loader"
+      className="custom-dark-loader"
       variants={containerVariants}
       initial="initial"
       animate="animate"
       exit="exit"
     >
       <div className="loader-box">
-        {/* Brand Logo & Name */}
+        {/* Brand Name (Logo icon removed as requested) */}
         <div className="loader-brand-header">
-          <div className="loader-brand-icon" aria-hidden="true">
-            <span className="squircle squircle-1"></span>
-            <span className="squircle squircle-2"></span>
-          </div>
           <h1 className="loader-brand-name">
             {portfolioName}<span className="brand-dot">.</span>
           </h1>

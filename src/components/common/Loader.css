@@ -1,9 +1,9 @@
-/* Light Mode Minimalist Brand Loader */
-.custom-light-loader {
+/* Sleek Dark Mode Minimalist Brand Loader */
+.custom-dark-loader {
     position: fixed;
     inset: 0;
     z-index: 999999;
-    background: #ffffff;
+    background: #09090b;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -22,58 +22,25 @@
     max-width: 420px;
 }
 
-/* Brand Header: Icon + Name */
+/* Brand Header: Name without Icon */
 .loader-brand-header {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-/* Dual Overlapping Squircle Icon */
-.loader-brand-icon {
-    position: relative;
-    width: 42px;
-    height: 42px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.squircle {
-    position: absolute;
-    border-radius: 10px;
-}
-
-.squircle-1 {
-    width: 28px;
-    height: 28px;
-    top: 2px;
-    left: 2px;
-    border: 3.5px solid #8b5cf6;
-    background: transparent;
-}
-
-.squircle-2 {
-    width: 26px;
-    height: 26px;
-    bottom: 2px;
-    right: 2px;
-    background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
-    box-shadow: 0 4px 14px rgba(168, 85, 247, 0.35);
-}
-
 .loader-brand-name {
     font-family: var(--font-heading, "Inter", -apple-system, BlinkMacSystemFont, sans-serif);
-    font-size: clamp(2.4rem, 5vw, 3.2rem);
+    font-size: clamp(2.4rem, 5vw, 3.4rem);
     font-weight: 800;
-    color: #111827;
+    color: #ffffff;
     letter-spacing: -0.04em;
     margin: 0;
     line-height: 1;
 }
 
 .brand-dot {
-    color: #ec4899;
+    color: #ff4e50;
     font-size: 1.1em;
 }
 
@@ -81,8 +48,8 @@
 .loader-line-track {
     width: 100%;
     max-width: 320px;
-    height: 3px;
-    background: rgba(0, 0, 0, 0.08);
+    height: 3.5px;
+    background: rgba(255, 255, 255, 0.12);
     border-radius: 99px;
     overflow: hidden;
     position: relative;
@@ -90,10 +57,10 @@
 
 .loader-line-fill {
     height: 100%;
-    background: linear-gradient(90deg, #8b5cf6 0%, #a855f7 50%, #ec4899 100%);
+    background: linear-gradient(90deg, #ff4e50 0%, #f9d423 50%, #a855f7 100%);
     border-radius: 99px;
     transition: width 0.08s linear;
-    box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+    box-shadow: 0 0 12px rgba(255, 78, 80, 0.5);
 }
 
 /* Percentage Text */
@@ -101,25 +68,13 @@
     font-family: var(--font-mono, "JetBrains Mono", monospace);
     font-size: 14px;
     font-weight: 700;
-    color: #4b5563;
+    color: rgba(255, 255, 255, 0.65);
     letter-spacing: 0.05em;
 }
 
 @media (max-width: 480px) {
     .loader-brand-name {
-        font-size: 2.4rem;
-    }
-    .loader-brand-icon {
-        width: 36px;
-        height: 36px;
-    }
-    .squircle-1 {
-        width: 24px;
-        height: 24px;
-    }
-    .squircle-2 {
-        width: 22px;
-        height: 22px;
+        font-size: 2.6rem;
     }
     .loader-line-track {
         max-width: 260px;
