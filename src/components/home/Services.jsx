@@ -91,20 +91,20 @@ function Services() {
                 <div className="services-intro">
                     <motion.h2 
                         className="services-title"
-                        initial={{ opacity: 0, y: 25 }}
+                        initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
+                        viewport={{ once: true, margin: "-40px" }}
+                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                     >
                         How Can I Assist You?
                     </motion.h2>
 
                     <motion.p 
                         className="services-description"
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 15 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+                        viewport={{ once: true, margin: "-40px" }}
+                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
                     >
                         I create intuitive digital experiences through UI/UX design, web development and branding solutions.
                     </motion.p>
@@ -124,10 +124,10 @@ function Services() {
                                 style={{
                                     '--card-accent-color': service.color || '#8B5CF6'
                                 }}
-                                initial={{ opacity: 0, y: 25 }}
+                                initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true, margin: "-80px" }}
-                                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: index * 0.08 }}
+                                viewport={{ once: true, margin: "-40px" }}
+                                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: index * 0.06 }}
                             >
                                 <div className="card-bg-pattern"></div>
                                 
