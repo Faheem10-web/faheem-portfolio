@@ -385,11 +385,17 @@ export default function CaseStudyPage() {
     ? [...card1RawList, newCloudinarySlide2]
     : card1RawList;
 
-  const card2RawImages = getArrayFromImages(project.solutionImage, project.challengeImage, project.solutionImages || project.challengeImages);
-  const card2SliderImages = card2RawImages.filter(img => !card1SliderImages.includes(img));
+  // Card 2: Only show if explicit solutionImages array or solutionImage string exists and is not in Card 1
+  const card2RawImages = Array.isArray(project.solutionImages) && project.solutionImages.length > 0
+    ? getArrayFromImages(null, null, project.solutionImages)
+    : (project.solutionImage ? [getSingleImageSrc(project.solutionImage, null, null)] : []);
+  const card2SliderImages = card2RawImages.filter(img => img && typeof img === 'string' && img.trim() && !card1SliderImages.includes(img));
 
-  const card3RawImages = getArrayFromImages(project.conclusionImage || project.resultImage, null, project.resultImages || project.conclusionImages);
-  const card3SliderImages = card3RawImages.filter(img => !card1SliderImages.includes(img) && !card2SliderImages.includes(img));
+  // Card 3: Only show if explicit resultImages array or conclusionImage string exists and is not in Card 1 or Card 2
+  const card3RawImages = Array.isArray(project.resultImages) && project.resultImages.length > 0
+    ? getArrayFromImages(null, null, project.resultImages)
+    : (project.conclusionImage || project.resultImage ? [getSingleImageSrc(project.conclusionImage, project.resultImage, null)] : []);
+  const card3SliderImages = card3RawImages.filter(img => img && typeof img === 'string' && img.trim() && !card1SliderImages.includes(img) && !card2SliderImages.includes(img));
 
   return (
     <div className="case-study-root" style={{ paddingTop: '120px', paddingBottom: '140px', background: '#FFFFFF', minHeight: '100vh', color: '#111827' }}>
