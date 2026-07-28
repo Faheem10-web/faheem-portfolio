@@ -261,14 +261,7 @@ export default function CaseStudyPage() {
               <span className="cs-card-col-value">{roleVal}</span>
             </div>
 
-            {/* Duration */}
-            <div className="cs-hero-card-col">
-              <div className="cs-card-icon-wrapper">
-                <FiCalendar className="cs-card-icon" />
-              </div>
-              <span className="cs-card-col-label">DURATION</span>
-              <span className="cs-card-col-value">{timelineVal}</span>
-            </div>
+
 
             {/* Tools */}
             <div className="cs-hero-card-col">

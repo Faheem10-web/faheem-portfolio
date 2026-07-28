@@ -169,7 +169,7 @@
   text-align: center;
 }
 
-/* 4-Metric Floating Card Container */
+/* 3-Metric Floating Card Container */
 .cs-hero-card-panel {
   width: 100%;
   max-width: 1040px;
@@ -178,7 +178,7 @@
   border-radius: 24px;
   padding: 32px 0;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 0;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
   box-sizing: border-box;
