@@ -432,6 +432,7 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
       challengeImage: typeof challengeImage === 'object' ? challengeImage.url : challengeImage,
       solutionImage: typeof solutionImage === 'object' ? solutionImage.url : solutionImage,
       conclusionImage: typeof conclusionImage === 'object' ? conclusionImage.url : conclusionImage,
+      resultImage: typeof conclusionImage === 'object' ? conclusionImage.url : conclusionImage,
 
       client,
       year,

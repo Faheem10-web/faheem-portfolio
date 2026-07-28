@@ -122,13 +122,28 @@ export default function CaseStudyPage() {
     );
   }
 
-  // Fallback calculations for backward compatibility
+  // Helper to extract image URL from string, object, or array
+  const getSingleImageSrc = (primary, secondary, galleryArray) => {
+    if (primary && typeof primary === 'string' && primary.trim()) return primary;
+    if (primary && typeof primary === 'object' && primary.url) return primary.url;
+    if (secondary && typeof secondary === 'string' && secondary.trim()) return secondary;
+    if (secondary && typeof secondary === 'object' && secondary.url) return secondary.url;
+    if (Array.isArray(galleryArray) && galleryArray.length > 0) {
+      const item = galleryArray[0];
+      if (typeof item === 'string' && item.trim()) return item;
+      if (typeof item === 'object' && item.url) return item.url;
+    }
+    return '';
+  };
+
+  const challengeImgSrc = getSingleImageSrc(project.challengeImage, null, project.challengeImages);
+  const solutionImgSrc = getSingleImageSrc(project.solutionImage, null, project.solutionImages);
+  const conclusionImgSrc = getSingleImageSrc(project.conclusionImage, project.resultImage, project.resultImages);
+
   const titleText = project.name || project.title || 'Untitled Case Study';
   const heroImageSrc = project.heroImage || project.bannerImage || project.coverImage || '';
   const taglineText = project.heroConfig?.tagline || project.shortDesc || project.subtitle || '';
-  const breadcrumbText = project.heroConfig?.breadcrumb || `Home / Work Details / ${titleText}`;
 
-  // Info Config
   const clientVal = project.client || 'Digital Client';
   const yearVal = project.year || '2026';
   const categoryVal = project.category || 'Product Design';
@@ -136,8 +151,6 @@ export default function CaseStudyPage() {
   const industryVal = project.infoConfig?.industry || 'Digital Product Experience';
   const timelineVal = project.infoConfig?.timeline || '2 - 3 Weeks';
   const roleVal = project.infoConfig?.role || 'Lead UI/UX Designer & Webflow Developer';
-  const teamVal = project.infoConfig?.team || 'Solo Design & Engineering';
-  const platformVal = project.infoConfig?.platform || 'Web & Mobile';
   const toolsArray = project.infoConfig?.tools && project.infoConfig.tools.length > 0 
     ? project.infoConfig.tools 
     : (project.technologies && project.technologies.length > 0 ? project.technologies : ['Figma', 'React', 'Framer Motion', 'Webflow']);
@@ -149,12 +162,6 @@ export default function CaseStudyPage() {
   const liveUrl = project.links?.liveProject || project.liveUrl;
   const githubUrl = project.links?.github || project.githubUrl;
   const figmaUrl = project.links?.figma;
-  const prototypeUrl = project.links?.prototype;
-
-  // Other Projects for "More Works"
-  const otherProjects = (projects || [])
-    .filter(p => (p.slug !== id && p._id !== id && p.enabled !== false))
-    .slice(0, 2);
 
   const handleOpenLightbox = (src) => {
     if (src) setLightboxImg(src);
