@@ -1,4 +1,4 @@
-/* Premium 2026 Minimal Page Loader (Apple / Linear / Framer / Stripe Style) */
+/* Premium 2026 Minimal Preloader (Apple / Linear / Framer Luxury Style) */
 .minimal-white-loader {
   position: fixed;
   inset: 0;
@@ -16,26 +16,26 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 18px;
+  gap: 16px;
   padding: 24px;
 }
 
-/* Small Centered Brand Logo / Text */
+/* Centered FAHEEM Brand Text (No logo image) */
 .minimal-loader-brand {
-  font-family: var(--font-heading, "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif);
+  font-family: "Geist", "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
   font-size: 14px;
   font-weight: 700;
   color: #000000;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
   margin: 0;
   line-height: 1;
-  transform: translateX(0.12em); /* Center alignment correction for letter-spacing */
+  transform: translateX(0.13em); /* Visual center correction for letter-spacing */
 }
 
-/* Thin 2px Loading Line Track */
+/* Thin 2px Animated Loading Bar Track */
 .minimal-loader-track {
-  width: 130px;
+  width: 120px;
   height: 2px;
   background: rgba(0, 0, 0, 0.08);
   border-radius: 99px;
@@ -43,11 +43,22 @@
   position: relative;
 }
 
-/* Thin 2px Loading Fill Line */
+/* Thin 2px Animated Loading Fill Bar */
 .minimal-loader-fill {
   height: 100%;
   background: #000000;
   border-radius: 99px;
   transition: width 0.08s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: width;
+}
+
+/* Subtle Minimal Luxury Progress Value (0-100%) */
+.minimal-loader-progress {
+  font-family: "Geist", "Inter", -apple-system, BlinkMacSystemFont, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  margin-top: -2px;
 }

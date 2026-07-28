@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import "./Loader.css";
-import { useAdmin } from "../../context/AdminContext";
 
 const containerVariants = {
   initial: { opacity: 1 },
@@ -16,35 +15,32 @@ const containerVariants = {
 };
 
 export default function Loader({ onComplete, isLoading }) {
-  const { siteSettings } = useAdmin();
   const [progress, setProgress] = useState(0);
   const animationFrameRef = useRef(null);
   const startTimeRef = useRef(null);
   const completedRef = useRef(false);
 
-  const brandText = siteSettings?.navbar?.logoText || siteSettings?.global?.portfolioName || "FAHEEM";
-
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (mediaQuery.matches) {
+    if (mediaQuery.matches || !isLoading) {
       if (onComplete) onComplete();
       return;
     }
 
-    const DURATION = 5000; // Exactly 5 seconds sequence
+    const DURATION = 220; // Ultra-fast under 300ms sequence
 
     const updateProgress = (timestamp) => {
       if (!startTimeRef.current) startTimeRef.current = timestamp;
       const elapsed = timestamp - startTimeRef.current;
       const linearRatio = Math.min(elapsed / DURATION, 1);
 
-      // Smooth soft easing curve over 5 seconds
+      // Smooth soft easing curve (cubic ease-out)
       const easedRatio = 1 - Math.pow(1 - linearRatio, 3);
       const currentVal = easedRatio * 100;
 
       setProgress(currentVal);
 
-      if (currentVal >= 100 || elapsed >= DURATION) {
+      if (currentVal >= 100 || !isLoading) {
         if (!completedRef.current) {
           completedRef.current = true;
           if (onComplete) onComplete();
@@ -61,7 +57,7 @@ export default function Loader({ onComplete, isLoading }) {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [onComplete]);
+  }, [isLoading, onComplete]);
 
   return (
     <motion.div
@@ -72,18 +68,23 @@ export default function Loader({ onComplete, isLoading }) {
       exit="exit"
     >
       <div className="minimal-loader-content">
-        {/* Small Centered Brand Logo/Text */}
+        {/* Centered FAHEEM Text Only (No Logo Image) */}
         <h1 className="minimal-loader-brand">
-          {brandText}
+          FAHEEM
         </h1>
 
-        {/* Thin 2px Animated Loading Line */}
+        {/* Thin 2px Animated Loading Bar */}
         <div className="minimal-loader-track">
           <div
             className="minimal-loader-fill"
             style={{ width: `${progress}%` }}
           />
         </div>
+
+        {/* Subtle Minimal Luxury Progress Value (0-100%) */}
+        <span className="minimal-loader-progress">
+          {Math.round(progress)}%
+        </span>
       </div>
     </motion.div>
   );
