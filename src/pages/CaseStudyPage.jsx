@@ -330,15 +330,19 @@ export default function CaseStudyPage() {
     : card1RawList;
 
   // Card 2 Slider (Middle Featured Showcase Card below THE CHALLENGE)
+  // STRICT: ONLY renders if admin has explicitly added solutionImages[] array in the CMS.
+  // Single solutionImage field is intentionally excluded — it is the same image as heroImage and would duplicate below slider.
   const card2RawImages = Array.isArray(project.solutionImages) && project.solutionImages.length > 0
     ? getArrayFromImages(null, null, project.solutionImages)
-    : (project.solutionImage ? [getSingleImageSrc(project.solutionImage, null, null)] : []);
+    : [];
   const card2SliderImages = card2RawImages.filter(img => img && typeof img === 'string' && img.trim() && !card1SliderImages.includes(img));
 
   // Card 3 Slider (Bottom Outcome Showcase Card below FINAL OUTCOME)
+  // STRICT: ONLY renders if admin has explicitly added resultImages[] array in the CMS.
+  // Single conclusionImage/resultImage fields are intentionally excluded — same reason as above.
   const card3RawImages = Array.isArray(project.resultImages) && project.resultImages.length > 0
     ? getArrayFromImages(null, null, project.resultImages)
-    : (project.conclusionImage || project.resultImage ? [getSingleImageSrc(project.conclusionImage, project.resultImage, null)] : []);
+    : [];
   const card3SliderImages = card3RawImages.filter(img => img && typeof img === 'string' && img.trim() && !card1SliderImages.includes(img) && !card2SliderImages.includes(img));
 
   return (
