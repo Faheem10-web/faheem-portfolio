@@ -211,19 +211,19 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
       conclusion: resultsText,
 
       // Unlimited Card 1 Slider Images
-      heroImages: validCard1,
+      heroImages: validCard1.map(url => typeof url === 'string' ? { url, alt: projectName } : url),
       heroImage: validCard1[0] || '',
       bannerImage: validCard1[0] || '',
 
       // Unlimited Card 2 Slider Images
-      solutionImages: validCard2,
-      challengeImages: validCard2,
+      solutionImages: validCard2.map(url => typeof url === 'string' ? { url, alt: projectName } : url),
+      challengeImages: validCard2.map(url => typeof url === 'string' ? { url, alt: projectName } : url),
       solutionImage: validCard2[0] || '',
       challengeImage: validCard2[0] || '',
 
       // Unlimited Card 3 Slider Images
-      resultImages: validCard3,
-      conclusionImages: validCard3,
+      resultImages: validCard3.map(url => typeof url === 'string' ? { url, alt: projectName } : url),
+      conclusionImages: validCard3.map(url => typeof url === 'string' ? { url, alt: projectName } : url),
       conclusionImage: validCard3[0] || '',
       resultImage: validCard3[0] || ''
     };
