@@ -199,7 +199,7 @@ export default function CaseStudyPage() {
       >
         <div className="cs-hero-container">
           
-          {/* Top Bar with Back Link & Category */}
+          {/* Top Bar with Back Link */}
           <div className="cs-hero-top-bar">
             <Link to="/projects" className="cs-hero-back-link">
               <FiArrowLeft size={16} /> Back to Work
@@ -207,15 +207,15 @@ export default function CaseStudyPage() {
             <span className="cs-hero-category-label">{categoryVal.toUpperCase()}</span>
           </div>
 
-          {/* Small Centered Project Name (Image 1 "Punto Pago" label style) */}
-          <motion.span 
+          {/* Small Centered Project Name (Exact Punto Pago label style) */}
+          <motion.div 
             className="cs-hero-small-label"
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
           >
             {titleText}
-          </motion.span>
+          </motion.div>
 
           {/* Massive Centered Editorial Title/Headline (Image 1 "The First Super-App in Latin America" style) */}
           <motion.h1 

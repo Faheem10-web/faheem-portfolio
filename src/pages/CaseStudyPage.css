@@ -66,14 +66,14 @@
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
-   1. CUBERTO-STYLE EDITORIAL TYPOGRAPHY HERO (Centered Punto Pago Layout)
+   1. CUBERTO-STYLE EDITORIAL TYPOGRAPHY HERO (Exact Punto Pago Reference Match)
    ────────────────────────────────────────────────────────────────────────── */
 .cs-typography-hero {
   background-color: #FFFFFF;
-  color: #0D0D12;
+  color: #000000;
   width: 100%;
-  padding-top: 130px;
-  padding-bottom: 72px;
+  padding-top: 145px;
+  padding-bottom: 76px;
   border-bottom: 1px solid #E5E7EB;
   box-sizing: border-box;
 }
@@ -95,7 +95,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 48px;
+  margin-bottom: 36px;
 }
 
 .cs-hero-back-link {
@@ -110,7 +110,7 @@
 }
 
 .cs-hero-back-link:hover {
-  color: #0D0D12;
+  color: #000000;
   transform: translateX(-4px);
 }
 
@@ -125,26 +125,27 @@
   border-radius: 100px;
 }
 
-/* Small Centered Project Label (Punto Pago style) */
+/* Small Centered Project Label (Exact Punto Pago style) */
 .cs-hero-small-label {
   font-family: var(--font-heading, 'Inter', -apple-system, sans-serif);
-  font-size: clamp(15px, 1.8vw, 20px);
-  font-weight: 600;
-  color: #18181B;
-  margin-bottom: 20px;
+  font-size: clamp(16px, 2vw, 22px);
+  font-weight: 500;
+  color: #111111;
+  margin-bottom: 24px;
   letter-spacing: -0.01em;
+  text-align: center;
 }
 
-/* Giant Centered Headline (The First Super-App in Latin America style) */
+/* Giant Centered Headline (Exact "The First Super-App in Latin America" typography style) */
 .cs-hero-editorial-headline {
   font-family: var(--font-heading, 'Inter', -apple-system, sans-serif);
-  font-size: clamp(44px, 7.5vw, 96px);
+  font-size: clamp(48px, 8.2vw, 105px);
   font-weight: 800;
-  line-height: 1.04;
-  letter-spacing: -0.04em;
-  color: #0D0D12;
-  margin: 0 0 28px 0;
-  max-width: 980px;
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+  color: #000000;
+  margin: 0 auto 32px auto;
+  max-width: 960px;
   text-align: center;
 }
 
@@ -153,8 +154,8 @@
   font-weight: 400;
   line-height: 1.6;
   color: #52525B;
-  margin: 0 auto 56px auto;
-  max-width: 760px;
+  margin: 0 auto 60px auto;
+  max-width: 780px;
   text-align: center;
 }
 
