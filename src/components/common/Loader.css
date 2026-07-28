@@ -1,4 +1,4 @@
-/* Premium 2026 Glassmorphism Preloader (Apple / Linear / Framer Luxury Style) */
+/* World-Class 2026 Glassmorphism Preloader (Apple / Linear / Framer / Awwwards Standard) */
 .glass-loader-root {
   position: fixed;
   inset: 0;
@@ -9,9 +9,12 @@
   justify-content: center;
   overflow: hidden;
   user-select: none;
+  contain: strict;
+  transform: translateZ(0);
+  will-change: opacity;
 }
 
-/* Floating Glassmorphism Card */
+/* Floating Precision Glass Container */
 .glass-loader-card {
   display: flex;
   flex-direction: column;
@@ -19,17 +22,22 @@
   justify-content: center;
   gap: 16px;
   padding: 32px 52px;
-  background: rgba(255, 255, 255, 0.55);
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.02);
+  background: rgba(255, 255, 255, 0.65);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 
+    0 20px 48px -12px rgba(0, 0, 0, 0.04),
+    0 4px 16px rgba(0, 0, 0, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
   border-radius: 22px;
+  transform: translateZ(0);
+  will-change: transform, opacity;
 }
 
-/* Semi-bold FAHEEM Brand Text */
+/* Semi-bold FAHEEM Brand Typography */
 .glass-loader-brand {
-  font-family: "Geist", "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+  font-family: "Geist", "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
   font-size: 15px;
   font-weight: 600;
   color: #000000;
@@ -38,6 +46,8 @@
   margin: 0;
   line-height: 1;
   transform: translateX(0.14em); /* Visual alignment correction for letter-spacing */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Thin 2px Animated Loading Bar Track */
@@ -48,13 +58,28 @@
   border-radius: 99px;
   overflow: hidden;
   position: relative;
+  transform: translateZ(0);
 }
 
-/* Thin 2px Animated Loading Bar Fill */
+/* Thin 2px Animated Loading Fill Line */
 .glass-loader-fill {
   height: 100%;
   background: #000000;
   border-radius: 99px;
   transition: width 0.08s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: width;
+}
+
+@media (max-width: 480px) {
+  .glass-loader-card {
+    padding: 26px 40px;
+    border-radius: 18px;
+  }
+  .glass-loader-brand {
+    font-size: 14px;
+    letter-spacing: 0.24em;
+  }
+  .glass-loader-track {
+    width: 100px;
+  }
 }

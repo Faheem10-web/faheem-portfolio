@@ -71,21 +71,21 @@ function AppContent() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
 
-  // Immediately consider data ready if cached settings and projects are available
-  const isDataReady = !isSettingsLoading && !isProjectsLoading;
-  const [loading, setLoading] = useState(!isDataReady && !isAdminRoute);
+  // Track initial application loading lifecycle pass
+  const [hasCompletedInitialLoad, setHasCompletedInitialLoad] = useState(false);
+  const isDataLoading = isSettingsLoading || isProjectsLoading;
+  const showLoader = !hasCompletedInitialLoad && !isAdminRoute;
 
   useEffect(() => {
-    if (isAdminRoute || isDataReady) {
-      setLoading(false);
+    if (isAdminRoute) {
+      setHasCompletedInitialLoad(true);
       setIsSiteLoaded(true);
     }
-  }, [isAdminRoute, isDataReady, setIsSiteLoaded]);
+  }, [isAdminRoute, setIsSiteLoaded]);
 
   // Strict maintenance mode check: ONLY true if explicitly enabled by admin in database/CMS settings
   const isMaintenanceMode = siteSettings?.global?.maintenanceMode === true;
   const isAdmin = !!token;
-  const showLoader = loading && !isAdminRoute;
 
   // Toggle body class for admin routes so native mouse cursors are properly restored
   useEffect(() => {
@@ -239,14 +239,14 @@ function AppContent() {
   return (
     <>
       <ScrollToTop />
-      {/* Fast Minimalist Loader Overlay */}
-      <AnimatePresence>
+      {/* World-Class 2026 Glassmorphism Preloader */}
+      <AnimatePresence mode="wait">
         {showLoader && (
           <Loader 
             key="site-loader" 
-            isLoading={isSettingsLoading || isProjectsLoading || isProfileLoading} 
+            isLoading={isDataLoading} 
             onComplete={() => {
-              setLoading(false);
+              setHasCompletedInitialLoad(true);
               setIsSiteLoaded(true);
             }} 
           />

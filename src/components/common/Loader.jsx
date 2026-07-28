@@ -15,7 +15,7 @@ const containerVariants = {
 };
 
 const cardVariants = {
-  initial: { opacity: 0, scale: 0.96, y: 8 },
+  initial: { opacity: 0, scale: 0.96, y: 6 },
   animate: { opacity: 1, scale: 1, y: 0 },
   exit: { opacity: 0, scale: 0.96, y: -6 },
 };
@@ -27,26 +27,27 @@ export default function Loader({ onComplete, isLoading }) {
   const completedRef = useRef(false);
 
   useEffect(() => {
+    // Respect prefers-reduced-motion
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (mediaQuery.matches || !isLoading) {
+    if (mediaQuery.matches) {
       if (onComplete) onComplete();
       return;
     }
 
-    const DURATION = 220; // Ultra-fast under-300ms 60 FPS animation
+    const DURATION = 220; // 60 FPS sub-300ms responsive fill
 
     const updateProgress = (timestamp) => {
       if (!startTimeRef.current) startTimeRef.current = timestamp;
       const elapsed = timestamp - startTimeRef.current;
       const linearRatio = Math.min(elapsed / DURATION, 1);
 
-      // Soft cubic ease-out curve
+      // Silky cubic ease-out curve
       const easedRatio = 1 - Math.pow(1 - linearRatio, 3);
       const currentVal = easedRatio * 100;
 
       setProgress(currentVal);
 
-      if (currentVal >= 100 || !isLoading) {
+      if (currentVal >= 100 || (!isLoading && elapsed >= 120)) {
         if (!completedRef.current) {
           completedRef.current = true;
           if (onComplete) onComplete();
@@ -72,6 +73,9 @@ export default function Loader({ onComplete, isLoading }) {
       initial="initial"
       animate="animate"
       exit="exit"
+      role="status"
+      aria-live="polite"
+      aria-label="Loading portfolio"
     >
       {/* Floating Glassmorphism Card */}
       <motion.div
@@ -84,7 +88,7 @@ export default function Loader({ onComplete, isLoading }) {
           FAHEEM
         </h1>
 
-        {/* Thin 2px Animated Loading Bar */}
+        {/* Thin 2px Animated Loading Line */}
         <div className="glass-loader-track">
           <div
             className="glass-loader-fill"
