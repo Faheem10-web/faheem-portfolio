@@ -234,7 +234,7 @@
     display: grid;
     grid-template-columns: 280px 1fr;
     gap: 40px;
-    border-top: 1px solid var(--border-glass);
+    border-top: none;
     padding-top: 80px;
     padding-bottom: 80px;
 }
@@ -244,7 +244,7 @@
     flex-direction: column;
     align-items: center;
     gap: 48px;
-    border-top: 1px solid var(--border-glass);
+    border-top: none;
     padding-top: 80px;
     padding-bottom: 80px;
     width: 100%;
