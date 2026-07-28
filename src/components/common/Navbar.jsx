@@ -120,12 +120,13 @@ function Navbar() {
     const navSettings = siteSettings?.navbar || {};
 
     const isLinkActive = (link) => {
+        if (link.label === "Home") {
+            return isHomePage;
+        }
         if (link.isRouter) {
             return location.pathname === link.href;
-        } else {
-            const targetId = link.href.includes("#") ? link.href.split("#")[1] : null;
-            return isHomePage && activeSection === targetId;
         }
+        return false;
     };
 
     const logoType = navSettings.logoType || (navSettings.logoImage ? 'image' : 'text');
