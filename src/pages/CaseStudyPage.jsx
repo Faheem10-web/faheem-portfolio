@@ -27,11 +27,13 @@ function MockupSliderCard({ images = [], onOpenLightbox }) {
   if (validImages.length === 0) return null;
 
   const handlePrev = (e) => {
+    e.preventDefault();
     e.stopPropagation();
     setCurrentIndex((prev) => (prev === 0 ? validImages.length - 1 : prev - 1));
   };
 
   const handleNext = (e) => {
+    e.preventDefault();
     e.stopPropagation();
     setCurrentIndex((prev) => (prev === validImages.length - 1 ? 0 : prev + 1));
   };
@@ -41,6 +43,8 @@ function MockupSliderCard({ images = [], onOpenLightbox }) {
       style={{ 
         position: 'relative', 
         width: '100%', 
+        minHeight: '340px',
+        aspectRatio: '16 / 9',
         borderRadius: '16px', 
         overflow: 'hidden', 
         background: '#F4F4F6',
@@ -52,16 +56,16 @@ function MockupSliderCard({ images = [], onOpenLightbox }) {
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => onOpenLightbox(validImages[currentIndex])}
     >
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="popLayout">
         <motion.img
           key={currentIndex}
           src={getOptimizedImageUrl(validImages[currentIndex], { width: 1920 })}
           alt={`Mockup Slide ${currentIndex + 1}`}
-          initial={{ opacity: 0, scale: 0.98 }}
+          initial={{ opacity: 0, scale: 0.99 }}
           animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.98 }}
-          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          style={{ width: '100%', height: 'auto', maxHeight: '640px', objectFit: 'cover', display: 'block', borderRadius: '16px' }}
+          exit={{ opacity: 0, scale: 0.99 }}
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', borderRadius: '16px' }}
         />
       </AnimatePresence>
 
@@ -141,7 +145,11 @@ function MockupSliderCard({ images = [], onOpenLightbox }) {
             {validImages.map((_, idx) => (
               <span
                 key={idx}
-                onClick={(e) => { e.stopPropagation(); setCurrentIndex(idx); }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setCurrentIndex(idx);
+                }}
                 style={{
                   width: idx === currentIndex ? '22px' : '8px',
                   height: '8px',
