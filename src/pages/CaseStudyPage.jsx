@@ -338,26 +338,36 @@ export default function CaseStudyPage() {
     return list.some(item => getCloudinaryPublicId(item) === targetId);
   };
 
-  const newCloudinarySlide2 = "https://res.cloudinary.com/ddluoarzr/image/upload/v1783776334/cromic/zrr6xsayvilo9cpqxbqu.png";
-
   // Card 1 Slider (Top Main Cover Showcase Card)
-  const card1RawList = getArrayFromImages(project.heroImage || project.bannerImage || project.coverImage, null, project.heroImages);
-  const card1SliderImages = card1RawList.length === 1 && !card1RawList.includes(newCloudinarySlide2)
-    ? [...card1RawList, newCloudinarySlide2]
-    : card1RawList;
+  // STRICT: Uses ONLY hero/banner images. No fallback to coverImage unless no hero/banner images exist.
+  const card1RawList = getArrayFromImages(
+    project.heroImage || project.bannerImage, 
+    null, 
+    project.heroImages
+  );
+  // If no explicit hero images exist, fall back to coverImage
+  const card1SliderImages = card1RawList.length > 0 
+    ? card1RawList 
+    : (project.coverImage ? [getSingleImageSrc(project.coverImage, null, null)] : []);
 
   // Card 2 Slider (Middle Featured Showcase Card below THE CHALLENGE)
-  const card2RawImages = Array.isArray(project.solutionImages) && project.solutionImages.length > 0
-    ? getArrayFromImages(null, null, project.solutionImages)
-    : (project.solutionImage ? [getSingleImageSrc(project.solutionImage, null, null)] : []);
+  // STRICT: Uses ONLY challenge and solution images from the CMS.
+  const card2RawImages = getArrayFromImages(
+    project.challengeImage || project.solutionImage, 
+    null, 
+    [...(project.challengeImages || []), ...(project.solutionImages || [])]
+  );
   const card2SliderImages = card2RawImages.filter(img => 
     img && typeof img === 'string' && img.trim() && !isDuplicateImage(img, card1SliderImages)
   );
 
   // Card 3 Slider (Bottom Outcome Showcase Card below FINAL OUTCOME)
-  const card3RawImages = Array.isArray(project.resultImages) && project.resultImages.length > 0
-    ? getArrayFromImages(null, null, project.resultImages)
-    : (project.conclusionImage || project.resultImage ? [getSingleImageSrc(project.conclusionImage, project.resultImage, null)] : []);
+  // STRICT: Uses ONLY result and conclusion images from the CMS.
+  const card3RawImages = getArrayFromImages(
+    project.resultImage || project.conclusionImage, 
+    null, 
+    [...(project.resultImages || []), ...(project.conclusionImages || [])]
+  );
   const card3SliderImages = card3RawImages.filter(img => 
     img && typeof img === 'string' && img.trim() && !isDuplicateImage(img, card1SliderImages) && !isDuplicateImage(img, card2SliderImages)
   );
