@@ -295,26 +295,68 @@ export default function CaseStudyPage() {
 
       <div className="case-study-content-wrap">
 
-        {/* ── 3. PROJECT OVERVIEW ── */}
+        {/* ── 2. FULL-WIDTH FEATURED BANNER IMAGE (Matching Image 1) ── */}
+        {heroImageSrc && (
+          <motion.div 
+            className="cs-featured-banner-wrapper"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <img 
+              src={getOptimizedImageUrl(heroImageSrc, { width: 1920 })} 
+              alt={titleText} 
+              className="cs-featured-banner-img"
+              onClick={() => handleOpenLightbox(heroImageSrc)}
+            />
+          </motion.div>
+        )}
+
+        {/* ── 3. THE CHALLENGE / OVERVIEW (2-Column Editorial Layout matching Image 1) ── */}
         <motion.section 
-          className="cs-editorial-section"
-          initial={{ opacity: 0, y: 20 }}
+          className="cs-editorial-split-section"
+          initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="cs-section-header">
-            <h2 className="cs-section-title">
-              {project.overviewConfig?.heading || `${titleText}: Elevating ${industryVal}`}
-            </h2>
-            
-            <p className="cs-body-paragraph">
-              <strong>{titleText}</strong> {project.overviewConfig?.intro || "is a premium digital experience platform crafted to bridge the gap between aesthetic inspiration and architectural execution. The objective was to develop a sophisticated, high-performance web experience that showcases luxury spaces while providing an effortless navigation system for potential clients. We implemented a clean, grid-based design language to emphasize visual storytelling and high-resolution imagery."}
-            </p>
+          {/* Left Column: Section Title (THE CHALLENGE) */}
+          <div className="cs-split-left-col">
+            <span className="cs-split-section-tag">THE CHALLENGE</span>
+          </div>
 
-            <p className="cs-body-paragraph">
-              {project.overviewConfig?.secondaryDesc || "The final product delivers a seamless browsing experience tailored for high-end clientele. The result is a refined digital presence that balances artistic expression with functional lead generation."}
-            </p>
+          {/* Right Column: Paragraph Content & Underlined Action Links */}
+          <div className="cs-split-right-col">
+            {renderFormattedSectionContent(
+              project.challenge,
+              project.challengeIntro || `For several years we've been helping ${titleText} explore new digital product niches. During this time we worked from establishing core utility flows to launching an integrated digital product ecosystem with high-performance UI architecture.`,
+              project.challengePoints || [
+                "Cluttered navigation affecting user engagement and brand perception.",
+                "Slow load times for high-resolution visual gallery assets.",
+                "Inconsistent user journeys from initial discovery to conversion."
+              ],
+              project.challengeConclusion || "We engineered a lightweight CMS structure that prioritizes performance and clarity, ensuring that the design work remains the focal point for every visitor."
+            )}
+
+            {/* Underlined Action Links Row (Matching Image 1) */}
+            <div className="cs-editorial-links-row">
+              {liveUrl && (
+                <a href={liveUrl} target="_blank" rel="noreferrer" className="cs-editorial-underlined-link">
+                  Launch project
+                </a>
+              )}
+              {githubUrl && (
+                <a href={githubUrl} target="_blank" rel="noreferrer" className="cs-editorial-underlined-link">
+                  GitHub Repository
+                </a>
+              )}
+              {figmaUrl && (
+                <a href={figmaUrl} target="_blank" rel="noreferrer" className="cs-editorial-underlined-link">
+                  Figma Prototype
+                </a>
+              )}
+            </div>
           </div>
         </motion.section>
 
@@ -350,52 +392,19 @@ export default function CaseStudyPage() {
           </motion.div>
         )}
 
-        {/* ── 5. THE CHALLENGE SECTION ── */}
+        {/* ── 5. THE SOLUTION SECTION (2-Column Editorial Layout) ── */}
         <motion.section 
-          className="cs-editorial-section"
+          className="cs-editorial-split-section"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="cs-section-header">
-            <h2 className="cs-section-title">The Challenge</h2>
-            
-            {renderFormattedSectionContent(
-              project.challenge,
-              project.challengeIntro || `The primary hurdle for the ${titleText} project was presenting a vast portfolio of diverse design styles without overwhelming the user. We needed to organize complex architectural data into an intuitive interface that maintains a sense of luxury and space.`,
-              project.challengePoints || [
-                "Cluttered navigation is affecting high-end brand perception.",
-                "Slow load times for high-resolution gallery assets.",
-                "Inconsistent user journeys from inspiration to booking."
-              ],
-              project.challengeConclusion || "We engineered a lightweight CMS structure that prioritizes performance and clarity. The visual hierarchy was elevated with minimalist UI elements, ensuring that the design work remains the focal point for every visitor."
-            )}
+          <div className="cs-split-left-col">
+            <span className="cs-split-section-tag">THE SOLUTION</span>
           </div>
 
-          {project.challengeImage && (
-            <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.challengeImage)}>
-              <img 
-                src={getOptimizedImageUrl(project.challengeImage, { width: 1600 })} 
-                alt="The Challenge Mockup" 
-                className="cs-mockup-img"
-                loading="lazy"
-              />
-            </div>
-          )}
-        </motion.section>
-
-        {/* ── 6. THE SOLUTION SECTION ── */}
-        <motion.section 
-          className="cs-editorial-section"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="cs-section-header">
-            <h2 className="cs-section-title">The Solution</h2>
-            
+          <div className="cs-split-right-col">
             {renderFormattedSectionContent(
               project.solution,
               project.solutionIntro || 'Our solution centered on a "Visual-First" philosophy, simplifying the user’s path to discovery through thoughtful interaction design. We created streamlined user flows that make exploring design concepts and scheduling consultations effortless.',
@@ -408,44 +417,36 @@ export default function CaseStudyPage() {
               null
             )}
           </div>
-
-          {project.solutionImage && (
-            <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.solutionImage)}>
-              <img 
-                src={getOptimizedImageUrl(project.solutionImage, { width: 1600 })} 
-                alt="The Solution Mockup" 
-                className="cs-mockup-img"
-                loading="lazy"
-              />
-            </div>
-          )}
         </motion.section>
 
-
-        {/* ── 8. RESULTS & CONCLUSION ── */}
+        {/* ── 6. RESULTS & IMPACT SECTION ── */}
         <motion.section 
-          className="cs-editorial-section"
+          className="cs-editorial-split-section"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="cs-section-title">Results & Impact</h2>
-          <p className="cs-body-paragraph">
-            {project.results || project.conclusion || "The result is a highly optimized, SEO-friendly digital product that exceeds client expectations and performance benchmarks."}
-          </p>
+          <div className="cs-split-left-col">
+            <span className="cs-split-section-tag">RESULTS & IMPACT</span>
+          </div>
 
-          {project.conclusionImage && (
-            <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.conclusionImage)}>
-              <img 
-                src={getOptimizedImageUrl(project.conclusionImage, { width: 1600 })} 
-                alt="Conclusion Mockup" 
-                className="cs-mockup-img"
-                loading="lazy"
-              />
-            </div>
-          )}
+          <div className="cs-split-right-col">
+            <p className="cs-body-paragraph">
+              {project.results || project.conclusion || "The result is a highly optimized, SEO-friendly digital product that exceeds client expectations and performance benchmarks."}
+            </p>
+
+            {project.conclusionImage && (
+              <div className="cs-mockup-frame" style={{ marginTop: '24px' }} onClick={() => handleOpenLightbox(project.conclusionImage)}>
+                <img 
+                  src={getOptimizedImageUrl(project.conclusionImage, { width: 1600 })} 
+                  alt="Conclusion Mockup" 
+                  className="cs-mockup-img"
+                  loading="lazy"
+                />
+              </div>
+            )}
+          </div>
         </motion.section>
-
       </div>
 
       {/* ── LIGHTBOX FULLSCREEN MODAL ── */}

@@ -410,32 +410,130 @@
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
-   3. EDITORIAL SECTION BASE
+   2. FEATURED BANNER & 2-COLUMN EDITORIAL SECTIONS (Punto Pago Reference Match)
    ────────────────────────────────────────────────────────────────────────── */
-.cs-editorial-section {
-  margin-bottom: 80px;
+.case-study-content-wrap {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 64px 32px 120px 32px;
+  box-sizing: border-box;
 }
 
-.cs-section-header {
-  margin-bottom: 32px;
+/* Full Width Featured Banner Image */
+.cs-featured-banner-wrapper {
+  width: 100%;
+  border-radius: 28px;
+  overflow: hidden;
+  margin-bottom: 96px;
+  background: #F4F4F6;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
 }
 
-.cs-section-title {
-  font-size: clamp(26px, 3.5vw, 42px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  margin: 0 0 16px 0;
-  color: var(--cs-text-primary);
-  line-height: 1.15;
-  font-family: var(--font-heading, 'Inter', sans-serif);
+.cs-featured-banner-img {
+  width: 100%;
+  height: auto;
+  max-height: 680px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.cs-section-subtitle {
-  font-size: clamp(16px, 1.6vw, 20px);
-  color: var(--cs-text-secondary);
-  line-height: 1.6;
+.cs-featured-banner-wrapper:hover .cs-featured-banner-img {
+  transform: scale(1.02);
+}
+
+/* 2-Column Split Section Layout */
+.cs-editorial-split-section {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 64px;
+  margin-bottom: 96px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cs-split-left-col {
+  width: 260px;
+  flex-shrink: 0;
+  padding-top: 6px;
+}
+
+.cs-split-section-tag {
+  font-family: var(--font-heading, 'Inter', -apple-system, sans-serif);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #18181B;
+  display: inline-block;
+}
+
+.cs-split-right-col {
+  flex: 1;
+  max-width: 780px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cs-body-paragraph {
+  font-size: 17.5px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: #27272A;
   margin: 0;
-  max-width: 800px;
+}
+
+.cs-editorial-disc-list {
+  margin: 8px 0 16px 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: #3F3F46;
+}
+
+.cs-editorial-disc-list li {
+  font-size: 16.5px;
+  line-height: 1.6;
+}
+
+/* Underlined Action Links Row (Matching Image 1) */
+.cs-editorial-links-row {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.cs-editorial-underlined-link {
+  font-size: 15px;
+  font-weight: 600;
+  color: #000000;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-thickness: 1.5px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.cs-editorial-underlined-link:hover {
+  color: #7C3AED;
+  text-decoration-color: #7C3AED;
+}
+
+@media (max-width: 868px) {
+  .cs-editorial-split-section {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .cs-split-left-col {
+    width: 100%;
+  }
 }
 
 .cs-body-paragraph {
