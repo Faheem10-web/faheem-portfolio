@@ -9,6 +9,7 @@ import {
 import { useAdmin } from "../context/AdminContext";
 import { API_BASE } from "../config/api";
 import { getOptimizedImageUrl } from "../utils/imageOptimizer";
+
 function MockupSliderCard({ images = [], onOpenLightbox }) {
   const validImages = images.filter(img => typeof img === 'string' && img.trim().length > 0);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -171,13 +172,11 @@ export default function CaseStudyPage() {
   const { id } = useParams();
   const { projects } = useAdmin();
   
-  // Instant synchronous lookup from context or cached projects array for 0ms lag
   const contextProject = (projects || []).find(p => p.slug === id || p._id === id || p.id === id);
   const [project, setProject] = useState(contextProject || null);
   const [loading, setLoading] = useState(!contextProject && !project);
   const [lightboxImg, setLightboxImg] = useState(null);
 
-  // Synchronously update local project state whenever context projects change (0ms lag!)
   useEffect(() => {
     if (contextProject) {
       setProject(contextProject);
@@ -189,7 +188,6 @@ export default function CaseStudyPage() {
     let isCancelled = false;
 
     const loadProject = async () => {
-      // Only trigger loading UI if we have no project data at all
       if (!contextProject && !project) {
         setLoading(true);
       }
@@ -223,22 +221,20 @@ export default function CaseStudyPage() {
     };
 
     loadProject();
+    return () => { isCancelled = true; };
+  }, [id, contextProject, projects]);
 
-    return () => {
-      isCancelled = true;
-    };
-  }, [id, contextProject]);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [id]);
+  const handleOpenLightbox = (imgUrl) => {
+    if (imgUrl) {
+      setLightboxImg(imgUrl);
+    }
+  };
 
   if (loading && !project) {
     return (
-      <div className="case-study-root" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '80vh' }}>
-        <div style={{ fontSize: '18px', fontWeight: '600', color: 'var(--cs-text-muted)' }}>
-          Loading 2026 Case Study...
-        </div>
+      <div className="case-study-root" style={{ textAlign: 'center', paddingTop: '160px', minHeight: '80vh' }}>
+        <div className="cs-loading-spinner" style={{ margin: '0 auto 20px' }}></div>
+        <p style={{ color: 'var(--cs-text-secondary, #9CA3AF)', fontSize: '15px' }}>Loading case study experience...</p>
       </div>
     );
   }
@@ -278,7 +274,6 @@ export default function CaseStudyPage() {
     );
   }
 
-  // Helper to extract image URL from string, object, or array
   const getSingleImageSrc = (primary, secondary, galleryArray) => {
     if (primary && typeof primary === 'string' && primary.trim()) return primary;
     if (primary && typeof primary === 'object' && primary.url) return primary.url;
@@ -292,97 +287,15 @@ export default function CaseStudyPage() {
     return '';
   };
 
-  const challengeImgSrc = getSingleImageSrc(project.challengeImage, null, project.challengeImages);
-  const solutionImgSrc = getSingleImageSrc(project.solutionImage, null, project.solutionImages);
-  const conclusionImgSrc = getSingleImageSrc(project.conclusionImage, project.resultImage, project.resultImages);
-
   const titleText = project.name || project.title || 'Untitled Case Study';
-  const heroImageSrc = project.heroImage || project.bannerImage || project.coverImage || '';
   const taglineText = project.heroConfig?.tagline || project.shortDesc || project.subtitle || '';
 
   const clientVal = project.client || 'Digital Client';
   const yearVal = project.year || '2026';
   const categoryVal = project.category || 'Product Design';
-  const statusVal = project.status || 'Completed';
-  const industryVal = project.infoConfig?.industry || 'Digital Product Experience';
-  const timelineVal = project.infoConfig?.timeline || '2 - 3 Weeks';
   const roleVal = project.infoConfig?.role || 'Lead UI/UX Designer & Webflow Developer';
-  const toolsArray = project.infoConfig?.tools && project.infoConfig.tools.length > 0 
-    ? project.infoConfig.tools 
-    : (project.technologies && project.technologies.length > 0 ? project.technologies : ['Figma', 'React', 'Framer Motion', 'Webflow']);
-
-  const displayTools = Array.isArray(toolsArray) && toolsArray.length > 0 
-    ? toolsArray.join(', ') 
-    : (typeof toolsArray === 'string' && toolsArray.trim() ? toolsArray : 'Figma, React, Webflow');
 
   const liveUrl = project.links?.liveProject || project.liveUrl;
-  const githubUrl = project.links?.github || project.githubUrl;
-  const figmaUrl = project.links?.figma;
-
-  const handleOpenLightbox = (src) => {
-    if (src) setLightboxImg(src);
-  };
-
-  const renderFormattedSectionContent = (customText, fallbackIntro, fallbackPoints, fallbackConclusion) => {
-    if (customText && customText.trim().length > 0) {
-      const lines = customText.split('\n').map(l => l.trim()).filter(Boolean);
-      const bulletLines = [];
-      const normalParagraphs = [];
-
-      lines.forEach(line => {
-        if (line.startsWith('•') || line.startsWith('-') || line.startsWith('*')) {
-          const cleanText = line.replace(/^[•\-\*]\s*/, '');
-          bulletLines.push(cleanText);
-        } else {
-          normalParagraphs.push(line);
-        }
-      });
-
-      return (
-        <>
-          {normalParagraphs.map((para, idx) => (
-            <p key={idx} className="cs-body-paragraph">{para}</p>
-          ))}
-
-          {bulletLines.length > 0 && (
-            <ul className="cs-editorial-disc-list">
-              {bulletLines.map((bullet, idx) => {
-                const parts = bullet.split(/:\s*(.+)/);
-                if (parts.length > 1) {
-                  return (
-                    <li key={idx}>
-                      <strong>{parts[0]}:</strong> {parts[1]}
-                    </li>
-                  );
-                }
-                return <li key={idx}>{bullet}</li>;
-              })}
-            </ul>
-          )}
-        </>
-      );
-    }
-
-    return (
-      <>
-        {fallbackIntro && <p className="cs-body-paragraph">{fallbackIntro}</p>}
-        {fallbackPoints && fallbackPoints.length > 0 && (
-          <ul className="cs-editorial-disc-list">
-            {fallbackPoints.map((item, idx) => (
-              <li key={idx}>
-                {typeof item === 'string' ? item : (
-                  <>
-                    <strong>{item.title}:</strong> {item.desc}
-                  </>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
-        {fallbackConclusion && <p className="cs-body-paragraph">{fallbackConclusion}</p>}
-      </>
-    );
-  };
 
   const getArrayFromImages = (primary, secondary, arr) => {
     const list = [];
@@ -406,57 +319,17 @@ export default function CaseStudyPage() {
     ? [...card1RawList, newCloudinarySlide2]
     : card1RawList;
 
-        {/* ── 4. THE CHALLENGE SECTION ── */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '32px', marginBottom: '56px' }}
-        >
-          <div style={{ flex: '0 0 160px' }}>
-            <span style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '0.12em', color: '#4B5563', textTransform: 'uppercase' }}>
-              THE CHALLENGE
-            </span>
-          </div>
+  // Card 2: Solution images (fallback to solutionImage)
+  const card2RawImages = Array.isArray(project.solutionImages) && project.solutionImages.length > 0
+    ? getArrayFromImages(null, null, project.solutionImages)
+    : (project.solutionImage ? [getSingleImageSrc(project.solutionImage, null, null)] : []);
+  const card2SliderImages = card2RawImages.filter(img => img && typeof img === 'string' && img.trim() && !card1SliderImages.includes(img));
 
-          <div style={{ flex: '1 1 540px', maxWidth: '680px' }}>
-            <p style={{ fontSize: '15px', lineHeight: '1.7', color: '#374151', margin: 0, whiteSpace: 'pre-line' }}>
-              {project.challenge || project.challengeIntro || `The client struggled with a complex product that overwhelmed users with dense data and inconsistent layouts. Key insights were buried behind poor hierarchy, unclear navigation, and fragmented components.\n\nAdditionally, the product needed to scale rapidly while maintaining usability.`}
-            </p>
-          </div>
-        </motion.div>
-
-        {/* ── 5. CARD 2 SLIDER (Middle Featured Showcase Card) ── */}
-        {card2SliderImages.length > 0 && (
-          <MockupSliderCard images={card2SliderImages} onOpenLightbox={handleOpenLightbox} />
-        )}
-
-        {/* ── 6. FINAL OUTCOME SECTION ── */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '32px', marginBottom: '40px' }}
-        >
-          <div style={{ flex: '0 0 160px' }}>
-            <span style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '0.12em', color: '#4B5563', textTransform: 'uppercase' }}>
-              FINAL OUTCOME
-            </span>
-          </div>
-
-          <div style={{ flex: '1 1 540px', maxWidth: '680px' }}>
-            <p style={{ fontSize: '15px', lineHeight: '1.7', color: '#374151', margin: 0, whiteSpace: 'pre-line' }}>
-              {project.results || project.conclusion || `A clear dashboard structure was introduced with consistent components, improved data hierarchy, and simplified navigation patterns that made insights easier to access.\n\nThe new design system reduced design debt, improved usability, and allowed the team to ship new features faster.`}
-            </p>
-          </div>
-        </motion.div>
-
-        {/* ── 7. CARD 3 SLIDER (Bottom Outcome Showcase Card) ── */}
-        {card3SliderImages.length > 0 && (
-          <MockupSliderCard images={card3SliderImages} onOpenLightbox={handleOpenLightbox} />
-        )}
+  // Card 3: Result/conclusion images (fallback to conclusionImage/resultImage)
+  const card3RawImages = Array.isArray(project.resultImages) && project.resultImages.length > 0
+    ? getArrayFromImages(null, null, project.resultImages)
+    : (project.conclusionImage || project.resultImage ? [getSingleImageSrc(project.conclusionImage, project.resultImage, null)] : []);
+  const card3SliderImages = card3RawImages.filter(img => img && typeof img === 'string' && img.trim() && !card1SliderImages.includes(img) && !card2SliderImages.includes(img));
 
   return (
     <div className="case-study-root" style={{ paddingTop: '120px', paddingBottom: '140px', background: '#FFFFFF', minHeight: '100vh', color: '#111827' }}>
