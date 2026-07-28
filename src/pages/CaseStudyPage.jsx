@@ -3,13 +3,148 @@ import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   FiExternalLink, FiGithub, FiFigma, FiCheck, 
-  FiX, FiChevronRight, FiArrowLeft, FiMaximize2,
+  FiX, FiChevronRight, FiChevronLeft, FiArrowLeft, FiMaximize2,
   FiUser, FiCalendar, FiEdit3, FiClock
 } from "react-icons/fi";
 import { useAdmin } from "../context/AdminContext";
 import { API_BASE } from "../config/api";
 import { getOptimizedImageUrl } from "../utils/imageOptimizer";
-import "./CaseStudyPage.css";
+function MockupSliderCard({ images = [], onOpenLightbox }) {
+  const validImages = images.filter(img => typeof img === 'string' && img.trim().length > 0);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  if (validImages.length === 0) return null;
+
+  const handlePrev = (e) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev === 0 ? validImages.length - 1 : prev - 1));
+  };
+
+  const handleNext = (e) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev === validImages.length - 1 ? 0 : prev + 1));
+  };
+
+  return (
+    <div 
+      style={{ 
+        position: 'relative', 
+        width: '100%', 
+        borderRadius: '16px', 
+        overflow: 'hidden', 
+        background: '#F4F4F6',
+        cursor: 'pointer',
+        boxShadow: '0 8px 30px rgba(0,0,0,0.06)',
+        marginBottom: '56px'
+      }}
+      onClick={() => onOpenLightbox(validImages[currentIndex])}
+    >
+      <AnimatePresence mode="wait">
+        <motion.img
+          key={currentIndex}
+          src={getOptimizedImageUrl(validImages[currentIndex], { width: 1920 })}
+          alt={`Mockup Slide ${currentIndex + 1}`}
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.98 }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          style={{ width: '100%', height: 'auto', maxHeight: '640px', objectFit: 'cover', display: 'block', borderRadius: '16px' }}
+        />
+      </AnimatePresence>
+
+      {validImages.length > 1 && (
+        <>
+          <button
+            type="button"
+            onClick={handlePrev}
+            aria-label="Previous Slide"
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '16px',
+              transform: 'translateY(-50%)',
+              background: 'rgba(17, 24, 39, 0.7)',
+              backdropFilter: 'blur(8px)',
+              color: '#FFFFFF',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              borderRadius: '50%',
+              width: '44px',
+              height: '44px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              zIndex: 10,
+              boxShadow: '0 4px 14px rgba(0,0,0,0.25)',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <FiChevronLeft size={22} />
+          </button>
+
+          <button
+            type="button"
+            onClick={handleNext}
+            aria-label="Next Slide"
+            style={{
+              position: 'absolute',
+              top: '50%',
+              right: '16px',
+              transform: 'translateY(-50%)',
+              background: 'rgba(17, 24, 39, 0.7)',
+              backdropFilter: 'blur(8px)',
+              color: '#FFFFFF',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              borderRadius: '50%',
+              width: '44px',
+              height: '44px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              zIndex: 10,
+              boxShadow: '0 4px 14px rgba(0,0,0,0.25)',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <FiChevronRight size={22} />
+          </button>
+
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '16px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              gap: '8px',
+              background: 'rgba(17, 24, 39, 0.65)',
+              backdropFilter: 'blur(10px)',
+              padding: '6px 14px',
+              borderRadius: '20px',
+              zIndex: 10
+            }}
+          >
+            {validImages.map((_, idx) => (
+              <span
+                key={idx}
+                onClick={(e) => { e.stopPropagation(); setCurrentIndex(idx); }}
+                style={{
+                  width: idx === currentIndex ? '22px' : '8px',
+                  height: '8px',
+                  borderRadius: '4px',
+                  background: idx === currentIndex ? '#00E676' : 'rgba(255, 255, 255, 0.45)',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+                }}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 export default function CaseStudyPage() {
   const { id } = useParams();
@@ -228,12 +363,14 @@ export default function CaseStudyPage() {
     );
   };
 
+  const allSliderImages = Array.from(new Set([heroImageSrc, challengeImgSrc, solutionImgSrc, conclusionImgSrc].filter(Boolean)));
+
   return (
     <div className="case-study-root" style={{ paddingTop: '120px', paddingBottom: '140px', background: '#FFFFFF', minHeight: '100vh', color: '#111827' }}>
       
       <div style={{ maxWidth: '1040px', margin: '0 auto', padding: '0 24px' }}>
         
-        {/* ── 1. CENTERED PROJECT TITLE (At the VERY TOP matching screenshot 1000%) ── */}
+        {/* ── 1. CENTERED PROJECT TITLE ── */}
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
@@ -252,21 +389,9 @@ export default function CaseStudyPage() {
           </motion.h1>
         </div>
 
-        {/* ── 2. MAIN COVER SHOWCASE IMAGE (Directly Below Title matching screenshot 1000%) ── */}
-        {heroImageSrc && (
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            style={{ width: '100%', marginBottom: '56px', cursor: 'pointer', background: '#F4F4F6', borderRadius: '16px', overflow: 'hidden' }}
-            onClick={() => handleOpenLightbox(heroImageSrc)}
-          >
-            <img 
-              src={getOptimizedImageUrl(heroImageSrc, { width: 1920 })} 
-              alt={project.name || titleText} 
-              style={{ width: '100%', height: 'auto', maxHeight: '640px', objectFit: 'cover', display: 'block', borderRadius: '16px' }}
-            />
-          </motion.div>
+        {/* ── 2. INTERACTIVE MOCKUP SLIDER SHOWCASE (4 Images Carousel) ── */}
+        {allSliderImages.length > 0 && (
+          <MockupSliderCard images={allSliderImages} onOpenLightbox={handleOpenLightbox} />
         )}
 
         {/* ── 3. OVERVIEW BLOCK (Directly Below Main Cover Image matching screenshot 1000%) ── */}
