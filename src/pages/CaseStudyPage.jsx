@@ -190,87 +190,95 @@ export default function CaseStudyPage() {
 
   return (
     <div className="case-study-root">
-      {/* ── 1. PREMIUM HERO SECTION — Full screen, behind navbar ── */}
-      <motion.div 
-        className="cs-hero-wrapper"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
+      {/* ── 1. CUBERTO-STYLE EDITORIAL TYPOGRAPHY HERO (No Hero Image, Pure White Background) ── */}
+      <motion.section 
+        className="cs-typography-hero"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       >
-        <div className="cs-hero-img-container">
-          {heroImageSrc && (
-            <img 
-              src={getOptimizedImageUrl(heroImageSrc, { width: 1920 })} 
-              alt={titleText} 
-              className="cs-hero-img"
-            />
-          )}
-          <div 
-            className="cs-hero-overlay" 
-            style={{ opacity: project.heroConfig?.overlayOpacity ?? 0.45 }}
-          />
+        <div className="cs-hero-container">
           
-          <div className="cs-hero-content">
-            <div className="cs-hero-title-group">
-              <h1 className="cs-hero-dot-title">
-                <span className="cs-title-dot" />
-                {titleText}
-              </h1>
-              {taglineText && <p className="cs-hero-tagline">{taglineText}</p>}
+          {/* Category Badge & Back Link */}
+          <div className="cs-hero-top-bar">
+            <Link to="/projects" className="cs-hero-back-link">
+              <FiArrowLeft size={16} /> Back to Work
+            </Link>
+            <span className="cs-hero-category-label">{categoryVal.toUpperCase()}</span>
+          </div>
+
+          {/* Massive Project Name */}
+          <motion.h1 
+            className="cs-hero-project-title"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {titleText}
+          </motion.h1>
+
+          {/* Large Editorial Headline */}
+          <motion.h2 
+            className="cs-hero-editorial-headline"
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {taglineText || `${titleText} — Redefining Digital Product Experience`}
+          </motion.h2>
+
+          {/* 1–2 Line Short Description */}
+          <motion.p 
+            className="cs-hero-description"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {project.shortDesc || project.overviewConfig?.intro || `A comprehensive design and engineering case study for ${titleText}, built with modern UI/UX architecture.`}
+          </motion.p>
+
+          {/* Bottom Information Grid (Role, Duration, Tools, Year, Live Preview) */}
+          <motion.div 
+            className="cs-hero-info-grid"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="cs-hero-info-cell">
+              <span className="cs-info-cell-label">Role</span>
+              <span className="cs-info-cell-value">{roleVal}</span>
             </div>
 
-            <div className="cs-hero-breadcrumb">
-              <Link to="/" className="cs-breadcrumb-link">Home</Link>
-              <FiChevronRight size={12} />
-              <Link to="/projects" className="cs-breadcrumb-link">Work Details</Link>
+            <div className="cs-hero-info-cell">
+              <span className="cs-info-cell-label">Duration</span>
+              <span className="cs-info-cell-value">{timelineVal}</span>
             </div>
-          </div>
+
+            <div className="cs-hero-info-cell">
+              <span className="cs-info-cell-label">Tools</span>
+              <span className="cs-info-cell-value">
+                {Array.isArray(toolsArray) ? toolsArray.join(', ') : toolsArray}
+              </span>
+            </div>
+
+            <div className="cs-hero-info-cell">
+              <span className="cs-info-cell-label">Year</span>
+              <span className="cs-info-cell-value">{yearVal}</span>
+            </div>
+
+            {liveUrl && (
+              <div className="cs-hero-info-cell cs-hero-info-cell--action">
+                <a href={liveUrl} target="_blank" rel="noreferrer" className="cs-hero-live-btn">
+                  Live Preview <FiExternalLink size={14} />
+                </a>
+              </div>
+            )}
+          </motion.div>
+
         </div>
-      </motion.div>
+      </motion.section>
 
       <div className="case-study-content-wrap">
-
-        <motion.div 
-          className="cs-info-grid-panel"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          {/* Project Name — leftmost cell */}
-          <div className="cs-info-item cs-info-item--name">
-            <span className="cs-info-label">Project</span>
-            <span className="cs-info-name-text">{titleText}</span>
-          </div>
-
-          <div className="cs-info-item">
-            <span className="cs-info-label">Client</span>
-            <span className="cs-info-value">{clientVal}</span>
-          </div>
-
-          <div className="cs-info-item">
-            <span className="cs-info-label">Duration</span>
-            <span className="cs-info-value">{timelineVal}</span>
-          </div>
-
-          <div className="cs-info-item">
-            <span className="cs-info-label">Published</span>
-            <span className="cs-info-value">{yearVal}</span>
-          </div>
-
-          <div className="cs-info-item">
-            <span className="cs-info-label">Category</span>
-            <span className="cs-info-value">{categoryVal}</span>
-          </div>
-
-          {/* Live Preview — rightmost action cell */}
-          {liveUrl && (
-            <div className="cs-info-item cs-info-item--action">
-              <a href={liveUrl} target="_blank" rel="noreferrer" className="cs-info-action-btn">
-                Live Preview <FiExternalLink size={13} />
-              </a>
-            </div>
-          )}
-        </motion.div>
 
         {/* ── 3. PROJECT OVERVIEW ── */}
         <motion.section 
