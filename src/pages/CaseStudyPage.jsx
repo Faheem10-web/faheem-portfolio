@@ -12,6 +12,17 @@ import { getOptimizedImageUrl } from "../utils/imageOptimizer";
 function MockupSliderCard({ images = [], onOpenLightbox }) {
   const validImages = images.filter(img => typeof img === 'string' && img.trim().length > 0);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    if (validImages.length <= 1 || isHovered) return;
+
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev === validImages.length - 1 ? 0 : prev + 1));
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [validImages.length, isHovered]);
 
   if (validImages.length === 0) return null;
 
@@ -37,6 +48,8 @@ function MockupSliderCard({ images = [], onOpenLightbox }) {
         boxShadow: '0 8px 30px rgba(0,0,0,0.06)',
         marginBottom: '56px'
       }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       onClick={() => onOpenLightbox(validImages[currentIndex])}
     >
       <AnimatePresence mode="wait">
