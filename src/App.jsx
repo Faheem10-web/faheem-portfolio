@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useState, useEffect, useLayoutEffect, lazy, Suspense } from "react";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import Navbar from "./components/common/Navbar";
@@ -36,8 +36,10 @@ const pageVariants = {
 };
 
 const PageWrapper = ({ children }) => {
-  useEffect(() => {
+  useLayoutEffect(() => {
     window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
     if (window.lenis) {
       window.lenis.scrollTo(0, { immediate: true });
     }
