@@ -12,11 +12,20 @@ const MotionLink = motion(Link);
 // Refactored Subcomponent for Home Page Project Card to handle direct mouse follow
 const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverImg, cardTitle, navigate }) {
     const buttonsRef = useRef(null);
+    const rectRef = useRef(null);
     const hasCaseStudy = project.hasCaseStudy !== false;
+
+    const handleMouseEnter = (e) => {
+        rectRef.current = e.currentTarget.getBoundingClientRect();
+    };
 
     const handleMouseMove = (e) => {
         if (!buttonsRef.current) return;
-        const rect = e.currentTarget.getBoundingClientRect();
+        if (!rectRef.current) {
+            rectRef.current = e.currentTarget.getBoundingClientRect();
+        }
+        const rect = rectRef.current;
+        if (!rect || !rect.width || !rect.height) return;
         
         // Calculate offset from center in range [-0.5, 0.5]
         const x = (e.clientX - rect.left) / rect.width - 0.5;
@@ -30,6 +39,7 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
     };
 
     const handleMouseLeave = () => {
+        rectRef.current = null;
         if (!buttonsRef.current) return;
         buttonsRef.current.style.transform = 'translate3d(0px, 0px, 0)';
     };
@@ -55,6 +65,7 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: index * 0.06 }}
             onClick={handleCardClick}
             style={{ cursor: hasCaseStudy || project.liveUrl ? 'pointer' : 'default' }}
+            onMouseEnter={handleMouseEnter}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
         >

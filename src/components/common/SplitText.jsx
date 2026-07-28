@@ -114,7 +114,7 @@ const SplitText = ({
           <span
             key={cIdx}
             className="split-item split-char"
-            style={{ display: 'inline-block', willChange: 'transform, opacity' }}
+            style={{ display: 'inline-block' }}
           >
             {char}
           </span>
@@ -132,8 +132,7 @@ const SplitText = ({
         textAlign,
         display: 'inline-block',
         whiteSpace: 'normal',
-        wordWrap: 'break-word',
-        willChange: 'transform, opacity'
+        wordWrap: 'break-word'
       }}
     >
       {renderContent()}

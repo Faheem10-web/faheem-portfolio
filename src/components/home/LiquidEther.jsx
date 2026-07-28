@@ -133,14 +133,25 @@ export default function LiquidEther({
         this.takeoverFrom = new THREE.Vector2();
         this.takeoverTo = new THREE.Vector2();
         this.onInteract = null;
+        this.cachedRect = null;
         this._onMouseMove = this.onDocumentMouseMove.bind(this);
         this._onTouchStart = this.onDocumentTouchStart.bind(this);
         this._onTouchMove = this.onDocumentTouchMove.bind(this);
         this._onTouchEnd = this.onTouchEnd.bind(this);
         this._onDocumentLeave = this.onDocumentLeave.bind(this);
       }
+      getRect() {
+        if (!this.cachedRect && this.container) {
+          this.cachedRect = this.container.getBoundingClientRect();
+        }
+        return this.cachedRect;
+      }
+      resetRect() {
+        this.cachedRect = null;
+      }
       init(container) {
         this.container = container;
+        this.cachedRect = null;
         this.docTarget = container.ownerDocument || null;
         const defaultView =
           (this.docTarget && this.docTarget.defaultView) || (typeof window !== 'undefined' ? window : null);
@@ -167,11 +178,11 @@ export default function LiquidEther({
         this.listenerTarget = null;
         this.docTarget = null;
         this.container = null;
+        this.cachedRect = null;
       }
       isPointInside(clientX, clientY) {
-        if (!this.container) return false;
-        const rect = this.container.getBoundingClientRect();
-        if (rect.width === 0 || rect.height === 0) return false;
+        const rect = this.getRect();
+        if (!rect || rect.width === 0 || rect.height === 0) return false;
         return clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom;
       }
       updateHoverState(clientX, clientY) {
@@ -181,8 +192,8 @@ export default function LiquidEther({
       setCoords(x, y) {
         if (!this.container) return;
         if (this.timer) window.clearTimeout(this.timer);
-        const rect = this.container.getBoundingClientRect();
-        if (rect.width === 0 || rect.height === 0) return;
+        const rect = this.getRect();
+        if (!rect || rect.width === 0 || rect.height === 0) return;
         const nx = (x - rect.left) / rect.width;
         const ny = (y - rect.top) / rect.height;
         this.coords.set(nx * 2 - 1, -(ny * 2 - 1));
@@ -199,9 +210,8 @@ export default function LiquidEther({
         if (!this.updateHoverState(event.clientX, event.clientY)) return;
         if (this.onInteract) this.onInteract();
         if (this.isAutoActive && !this.hasUserControl && !this.takeoverActive) {
-          if (!this.container) return;
-          const rect = this.container.getBoundingClientRect();
-          if (rect.width === 0 || rect.height === 0) return;
+          const rect = this.getRect();
+          if (!rect || rect.width === 0 || rect.height === 0) return;
           const nx = (event.clientX - rect.left) / rect.width;
           const ny = (event.clientY - rect.top) / rect.height;
           this.takeoverFrom.copy(this.coords);
