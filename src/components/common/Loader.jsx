@@ -8,7 +8,7 @@ const containerVariants = {
   exit: {
     opacity: 0,
     transition: {
-      duration: 0.45,
+      duration: 0.35,
       ease: [0.16, 1, 0.3, 1],
     },
   },
@@ -27,20 +27,23 @@ export default function Loader({ onComplete, isLoading }) {
       return;
     }
 
-    const DURATION = 850; // Smooth ~0.85s premium sequence
+    const MIN_DURATION = 400; // Guaranteed 400ms minimum perception window (350-500ms range)
 
     const updateProgress = (timestamp) => {
       if (!startTimeRef.current) startTimeRef.current = timestamp;
       const elapsed = timestamp - startTimeRef.current;
-      const linearRatio = Math.min(elapsed / DURATION, 1);
+      const linearRatio = Math.min(elapsed / MIN_DURATION, 1);
 
-      // Smooth soft easing curve (cubic ease-out)
+      // Smooth cubic ease-out curve
       const easedRatio = 1 - Math.pow(1 - linearRatio, 3);
       const currentVal = easedRatio * 100;
 
       setProgress(currentVal);
 
-      if (currentVal >= 100 || (!isLoading && elapsed >= 700)) {
+      // Only finish after reaching the 400ms minimum perception duration AND data loading is complete
+      const isReadyToComplete = elapsed >= MIN_DURATION && (!isLoading || currentVal >= 100);
+
+      if (isReadyToComplete) {
         if (!completedRef.current) {
           completedRef.current = true;
           if (onComplete) onComplete();
@@ -71,7 +74,7 @@ export default function Loader({ onComplete, isLoading }) {
       aria-label="Loading portfolio"
     >
       <div className="minimal-loader-content">
-        {/* Centered "Faheem" Text (First letter capital) */}
+        {/* Centered "Faheem" Text */}
         <h1 className="minimal-loader-brand">
           Faheem
         </h1>
