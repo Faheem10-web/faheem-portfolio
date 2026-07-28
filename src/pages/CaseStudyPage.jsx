@@ -227,17 +227,7 @@ export default function CaseStudyPage() {
             {taglineText || `${titleText} — Redefining Digital Experience`}
           </motion.h1>
 
-          {/* 1–2 Line Centered Description */}
-          {project.shortDesc && (
-            <motion.p 
-              className="cs-hero-description"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {project.shortDesc}
-            </motion.p>
-          )}
+
 
           {/* Centered Bottom Info Grid (Role, Duration, Tools, Year, Live Preview) */}
           <motion.div 
