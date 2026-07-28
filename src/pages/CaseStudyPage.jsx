@@ -321,16 +321,25 @@ export default function CaseStudyPage() {
     return Array.from(new Set(list.filter(Boolean)));
   };
 
-  // Combine ALL project images into the main top showcase slider
-  const card1SliderImages = getArrayFromImages(
-    project.heroImage || project.bannerImage || project.coverImage, 
-    project.solutionImage || project.conclusionImage || project.resultImage, 
-    [...(project.heroImages || []), ...(project.solutionImages || []), ...(project.resultImages || [])]
-  );
+  const newCloudinarySlide2 = "https://res.cloudinary.com/ddluoarzr/image/upload/v1783776334/cromic/zrr6xsayvilo9cpqxbqu.png";
 
-  // Secondary card arrays are explicitly empty so no images render below the main hero slider
-  const card2SliderImages = [];
-  const card3SliderImages = [];
+  // Card 1 Slider (Top Main Cover Showcase Card)
+  const card1RawList = getArrayFromImages(project.heroImage || project.bannerImage || project.coverImage, null, project.heroImages);
+  const card1SliderImages = card1RawList.length === 1 && !card1RawList.includes(newCloudinarySlide2)
+    ? [...card1RawList, newCloudinarySlide2]
+    : card1RawList;
+
+  // Card 2 Slider (Middle Featured Showcase Card below THE CHALLENGE)
+  const card2RawImages = Array.isArray(project.solutionImages) && project.solutionImages.length > 0
+    ? getArrayFromImages(null, null, project.solutionImages)
+    : (project.solutionImage ? [getSingleImageSrc(project.solutionImage, null, null)] : []);
+  const card2SliderImages = card2RawImages.filter(img => img && typeof img === 'string' && img.trim() && !card1SliderImages.includes(img));
+
+  // Card 3 Slider (Bottom Outcome Showcase Card below FINAL OUTCOME)
+  const card3RawImages = Array.isArray(project.resultImages) && project.resultImages.length > 0
+    ? getArrayFromImages(null, null, project.resultImages)
+    : (project.conclusionImage || project.resultImage ? [getSingleImageSrc(project.conclusionImage, project.resultImage, null)] : []);
+  const card3SliderImages = card3RawImages.filter(img => img && typeof img === 'string' && img.trim() && !card1SliderImages.includes(img) && !card2SliderImages.includes(img));
 
   return (
     <div className="case-study-root" style={{ paddingTop: '120px', paddingBottom: '140px', background: '#FFFFFF', minHeight: '100vh', color: '#111827' }}>
