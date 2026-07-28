@@ -321,18 +321,12 @@ export default function CaseStudyPage() {
     return Array.from(new Set(list.filter(Boolean)));
   };
 
-  const newCloudinarySlide2 = "https://res.cloudinary.com/ddluoarzr/image/upload/v1783776334/cromic/zrr6xsayvilo9cpqxbqu.png";
-
   // Combine ALL project images into the main top showcase slider
-  const card1RawList = getArrayFromImages(
+  const card1SliderImages = getArrayFromImages(
     project.heroImage || project.bannerImage || project.coverImage, 
     project.solutionImage || project.conclusionImage || project.resultImage, 
     [...(project.heroImages || []), ...(project.solutionImages || []), ...(project.resultImages || [])]
   );
-  
-  const card1SliderImages = card1RawList.length === 1 && !card1RawList.includes(newCloudinarySlide2)
-    ? [...card1RawList, newCloudinarySlide2]
-    : card1RawList;
 
   // Secondary card arrays are explicitly empty so no images render below the main hero slider
   const card2SliderImages = [];
