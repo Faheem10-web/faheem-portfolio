@@ -230,7 +230,8 @@ export default function CaseStudyPage() {
 
   return (
     <div className="case-study-root">
-      {/* ── 1. PREMIUM 2026 EDITORIAL HERO CARD (Exact Mockup Match) ── */}
+      
+      {/* ── 01. EDITORIAL HERO ── */}
       <motion.section 
         className="cs-typography-hero"
         initial={{ opacity: 0, y: 20 }}
@@ -249,9 +250,6 @@ export default function CaseStudyPage() {
 
           {/* Hero Main Editorial Block */}
           <div className="cs-hero-main-block">
-
-
-            {/* Massive Editorial Headline */}
             <motion.h1 
               className="cs-hero-editorial-headline"
               initial={{ opacity: 0, y: 25 }}
@@ -261,18 +259,17 @@ export default function CaseStudyPage() {
               {taglineText || `${titleText} — Redefining Digital Product Experience`}
             </motion.h1>
 
-            {/* Short Sub-Description */}
             <motion.p 
               className="cs-hero-sub-description"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
             >
-              {project.shortDesc || project.overviewConfig?.intro || `${titleText} is a revolutionary digital experience platform that brings essential services into one seamless interface.`}
+              {project.shortDesc || project.overviewConfig?.intro || `${titleText} is a premium digital experience platform engineered for high-performance interaction and aesthetic excellence.`}
             </motion.p>
           </div>
 
-          {/* 4-Metric Floating Card Container */}
+          {/* Project Information Card */}
           <motion.div 
             className="cs-hero-card-panel"
             initial={{ opacity: 0, y: 25 }}
@@ -287,8 +284,6 @@ export default function CaseStudyPage() {
               <span className="cs-card-col-label">ROLE</span>
               <span className="cs-card-col-value">{roleVal}</span>
             </div>
-
-
 
             {/* Tools */}
             <div className="cs-hero-card-col">
@@ -307,7 +302,8 @@ export default function CaseStudyPage() {
               <span className="cs-card-col-label">YEAR</span>
               <span className="cs-card-col-value">{yearVal}</span>
             </div>
-            {/* Live Link (Far Right inside Box) */}
+
+            {/* Live Preview Button */}
             {liveUrl && (
               <div className="cs-hero-card-col cs-hero-card-col--action">
                 <a href={liveUrl} target="_blank" rel="noreferrer" className="cs-hero-live-btn">
@@ -322,7 +318,7 @@ export default function CaseStudyPage() {
 
       <div className="case-study-content-wrap">
 
-        {/* ── 2. FULL-WIDTH FEATURED BANNER IMAGE (Matching Image 1) ── */}
+        {/* ── 02. FULL WIDTH HERO SHOWCASE ── */}
         {heroImageSrc && (
           <motion.div 
             className="cs-featured-banner-wrapper"
@@ -340,7 +336,7 @@ export default function CaseStudyPage() {
           </motion.div>
         )}
 
-        {/* ── 3. THE CHALLENGE / OVERVIEW (2-Column Editorial Layout matching Image 1) ── */}
+        {/* ── 03. THE CHALLENGE ── */}
         <motion.section 
           className="cs-editorial-split-section"
           initial={{ opacity: 0, y: 25 }}
@@ -348,29 +344,27 @@ export default function CaseStudyPage() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          {/* Left Column: Section Title (THE CHALLENGE) */}
           <div className="cs-split-left-col">
             <span className="cs-split-section-tag">THE CHALLENGE</span>
           </div>
 
-          {/* Right Column: Paragraph Content & Underlined Action Links */}
           <div className="cs-split-right-col">
             {renderFormattedSectionContent(
               project.challenge,
-              project.challengeIntro || `For several years we've been helping ${titleText} explore new digital product niches. During this time we worked from establishing core utility flows to launching an integrated digital product ecosystem with high-performance UI architecture.`,
+              project.challengeIntro || `The primary challenge for ${titleText} was creating an intuitive digital interface that presents complex product variations without sacrificing performance or brand elegance.`,
               project.challengePoints || [
-                "Cluttered navigation affecting user engagement and brand perception.",
-                "Slow load times for high-resolution visual gallery assets.",
-                "Inconsistent user journeys from initial discovery to conversion."
+                "Cluttered layout structures impacting high-end brand perception.",
+                "Slow asset loading for high-resolution visual collections.",
+                "Inconsistent user journeys from initial discovery to checkout conversion."
               ],
-              project.challengeConclusion || "We engineered a lightweight CMS structure that prioritizes performance and clarity, ensuring that the design work remains the focal point for every visitor."
+              project.challengeConclusion || "We engineered a clean layout architecture prioritizing speed, visual clarity, and seamless user interaction."
             )}
 
-            {/* Underlined Action Links Row (Matching Image 1) */}
+            {/* Action Links */}
             <div className="cs-editorial-links-row">
               {liveUrl && (
                 <a href={liveUrl} target="_blank" rel="noreferrer" className="cs-editorial-underlined-link">
-                  Launch project
+                  Launch project ↗
                 </a>
               )}
               {githubUrl && (
@@ -387,42 +381,30 @@ export default function CaseStudyPage() {
           </div>
         </motion.section>
 
-        {/* ── 4. EDITORIAL GALLERY (2-COLUMN GRID) ── */}
-        {(project.challengeImage || project.solutionImage) && (
+        {/* ── 04. LARGE SHOWCASE IMAGE ── */}
+        {challengeImgSrc && (
           <motion.div 
-            className="cs-double-mockup-grid"
-            initial={{ opacity: 0, y: 20 }}
+            className="cs-large-showcase-wrapper"
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8 }}
           >
-            {project.challengeImage && (
-              <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.challengeImage)}>
-                <img 
-                  src={getOptimizedImageUrl(project.challengeImage, { width: 1200 })} 
-                  alt="Challenge Preview" 
-                  className="cs-mockup-img"
-                  loading="lazy"
-                />
-              </div>
-            )}
-            {project.solutionImage && (
-              <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.solutionImage)}>
-                <img 
-                  src={getOptimizedImageUrl(project.solutionImage, { width: 1200 })} 
-                  alt="Solution Preview" 
-                  className="cs-mockup-img"
-                  loading="lazy"
-                />
-              </div>
-            )}
+            <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(challengeImgSrc)}>
+              <img 
+                src={getOptimizedImageUrl(challengeImgSrc, { width: 1600 })} 
+                alt="Challenge Showcase" 
+                className="cs-mockup-img"
+                loading="lazy"
+              />
+            </div>
           </motion.div>
         )}
 
-        {/* ── 5. THE SOLUTION SECTION (2-Column Editorial Layout) ── */}
+        {/* ── 05. THE SOLUTION ── */}
         <motion.section 
           className="cs-editorial-split-section"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
@@ -434,39 +416,118 @@ export default function CaseStudyPage() {
           <div className="cs-split-right-col">
             {renderFormattedSectionContent(
               project.solution,
-              project.solutionIntro || 'Our solution centered on a "Visual-First" philosophy, simplifying the user’s path to discovery through thoughtful interaction design. We created streamlined user flows that make exploring design concepts and scheduling consultations effortless.',
+              project.solutionIntro || 'Our solution centered on a "Visual-First" design philosophy, establishing clean interaction paths and adaptive component hierarchies.',
               project.solutionPoints || [
-                { title: "Adaptive Masonry Grid", desc: "To showcase projects of varying scales and orientations." },
-                { title: "Seamless CMS Integration", desc: "For easy portfolio updates and category filtering." },
-                { title: "Interactive Style Quiz", desc: "To guide users toward their preferred aesthetic." },
-                { title: "Optimized Performance", desc: "Ensuring 99th percentile load speeds for media-heavy pages." }
+                { title: "Adaptive Grid Layouts", desc: "Showcasing products with high visual impact." },
+                { title: "Optimized Performance", desc: "Ensuring 99th percentile load speeds for rich media." },
+                { title: "Seamless Navigation", desc: "Guiding users effortlessly toward conversion." }
               ],
               null
             )}
           </div>
         </motion.section>
 
-        {/* ── 6. RESULTS & IMPACT SECTION ── */}
+        {/* ── 06. FULL WIDTH MOCKUP ── */}
+        {solutionImgSrc && (
+          <motion.div 
+            className="cs-full-width-mockup-wrapper"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(solutionImgSrc)}>
+              <img 
+                src={getOptimizedImageUrl(solutionImgSrc, { width: 1920 })} 
+                alt="Full Width Solution Mockup" 
+                className="cs-mockup-img"
+                loading="lazy"
+              />
+            </div>
+          </motion.div>
+        )}
+
+        {/* ── 07. PRODUCT GALLERY (Alternating Grid Layout) ── */}
+        {Array.isArray(project.gallery) && project.gallery.length > 0 && (
+          <motion.section 
+            className="cs-product-gallery-section"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="cs-gallery-header">
+              <span className="cs-split-section-tag">VISUAL GALLERY</span>
+            </div>
+            <div className="cs-alternating-gallery-grid">
+              {project.gallery.map((imgItem, idx) => {
+                const imgUrl = typeof imgItem === 'string' ? imgItem : imgItem?.url;
+                if (!imgUrl) return null;
+                const isLarge = idx % 3 === 0;
+                return (
+                  <div 
+                    key={idx} 
+                    className={`cs-gallery-item ${isLarge ? 'cs-gallery-item--large' : 'cs-gallery-item--half'}`}
+                    onClick={() => handleOpenLightbox(imgUrl)}
+                  >
+                    <img 
+                      src={getOptimizedImageUrl(imgUrl, { width: isLarge ? 1600 : 1000 })} 
+                      alt={`Gallery ${idx + 1}`} 
+                      className="cs-gallery-img"
+                      loading="lazy"
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </motion.section>
+        )}
+
+        {/* ── 08. RESPONSIVE EXPERIENCE ── */}
         <motion.section 
-          className="cs-editorial-split-section"
-          initial={{ opacity: 0, y: 20 }}
+          className="cs-responsive-experience-section"
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
         >
           <div className="cs-split-left-col">
-            <span className="cs-split-section-tag">RESULTS & IMPACT</span>
+            <span className="cs-split-section-tag">RESPONSIVE DESIGN</span>
+          </div>
+          <div className="cs-split-right-col">
+            <p className="cs-body-paragraph">
+              Engineered with fluid responsiveness across desktop, tablet, and mobile touch surfaces for flawless usability at any viewport width.
+            </p>
+            <div className="cs-responsive-badges-row">
+              <span className="cs-responsive-badge">💻 Desktop (1920px+)</span>
+              <span className="cs-responsive-badge">📱 Tablet (768px)</span>
+              <span className="cs-responsive-badge">📲 Mobile (320px)</span>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* ── 09. FINAL OUTCOME ── */}
+        <motion.section 
+          className="cs-editorial-split-section"
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="cs-split-left-col">
+            <span className="cs-split-section-tag">FINAL OUTCOME</span>
           </div>
 
           <div className="cs-split-right-col">
             <p className="cs-body-paragraph">
-              {project.results || project.conclusion || "The result is a highly optimized, SEO-friendly digital product that exceeds client expectations and performance benchmarks."}
+              {project.results || project.conclusion || "The result is a highly optimized, SEO-friendly digital product that exceeds performance benchmarks and delivers an extraordinary user experience."}
             </p>
 
-            {project.conclusionImage && (
-              <div className="cs-mockup-frame" style={{ marginTop: '24px' }} onClick={() => handleOpenLightbox(project.conclusionImage)}>
+            {conclusionImgSrc && (
+              <div className="cs-mockup-frame" style={{ marginTop: '32px' }} onClick={() => handleOpenLightbox(conclusionImgSrc)}>
                 <img 
-                  src={getOptimizedImageUrl(project.conclusionImage, { width: 1600 })} 
-                  alt="Conclusion Mockup" 
+                  src={getOptimizedImageUrl(conclusionImgSrc, { width: 1600 })} 
+                  alt="Final Outcome Showcase" 
                   className="cs-mockup-img"
                   loading="lazy"
                 />
@@ -475,50 +536,31 @@ export default function CaseStudyPage() {
           </div>
         </motion.section>
 
-        {/* ── 7. NEXT CASE STUDY / EXPLORE MORE WORKS (2026 Editorial Footer) ── */}
-        {otherProjects.length > 0 && (
-          <motion.section 
-            className="cs-next-works-section"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="cs-next-works-header">
-              <div>
-                <span className="cs-split-section-tag">MORE CASE STUDIES</span>
-                <h3 className="cs-next-works-title">Explore Next Projects</h3>
-              </div>
-              <Link to="/projects" className="cs-editorial-underlined-link" style={{ fontSize: '15px', fontWeight: '700' }}>
-                View All Works →
-              </Link>
-            </div>
+        {/* ── 10. NEXT PROJECT ── */}
+        {(() => {
+          const nextProject = (projects || []).find(p => (p.slug !== id && p._id !== id && p.enabled !== false));
+          if (!nextProject) return null;
+          const nextSlug = nextProject.slug || nextProject._id;
+          const nextTitle = nextProject.name || 'Next Case Study';
+          const nextCategory = nextProject.category || 'Featured Work';
 
-            <div className="cs-next-works-grid">
-              {otherProjects.map((item) => (
-                <Link 
-                  to={`/projects/${item.slug || item._id}`} 
-                  key={item._id || item.slug}
-                  className="cs-next-card"
-                >
-                  <div className="cs-next-card-thumb-wrap">
-                    <img 
-                      src={getOptimizedImageUrl(item.coverImage || item.bannerImage || item.thumbnailImage, { width: 800 })} 
-                      alt={item.name} 
-                      className="cs-next-card-img"
-                    />
-                    <div className="cs-next-card-badge">{item.category || 'Case Study'}</div>
-                  </div>
-                  <div className="cs-next-card-info">
-                    <h4 className="cs-next-card-name">{item.name}</h4>
-                    <p className="cs-next-card-desc">{item.shortDesc}</p>
-                    <span className="cs-next-card-link">Read Case Study ↗</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </motion.section>
-        )}
+          return (
+            <motion.div 
+              className="cs-next-project-footer"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <Link to={`/projects/${nextSlug}`} className="cs-next-project-card">
+                <span className="cs-next-project-label">NEXT PROJECT ↗</span>
+                <h3 className="cs-next-project-title">{nextTitle}</h3>
+                <span className="cs-next-project-category">{nextCategory}</span>
+              </Link>
+            </motion.div>
+          );
+        })()}
+
       </div>
 
       {/* ── LIGHTBOX FULLSCREEN MODAL ── */}

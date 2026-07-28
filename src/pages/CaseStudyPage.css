@@ -634,31 +634,146 @@
   font-weight: 500;
 }
 
-/* Multi-Column Gallery Layouts (100% Uniform Card Heights) */
-.cs-gallery-grid-2 {
+/* ── 04 & 06 Large Showcase & Full Width Mockups ── */
+.cs-large-showcase-wrapper,
+.cs-full-width-mockup-wrapper {
+  width: 100%;
+  margin-bottom: 96px;
+}
+
+.cs-large-showcase-wrapper .cs-mockup-frame,
+.cs-full-width-mockup-wrapper .cs-mockup-frame {
+  margin: 0;
+  border-radius: 28px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04);
+}
+
+/* ── 07 Product Gallery (Alternating Layout) ── */
+.cs-product-gallery-section {
+  width: 100%;
+  margin-bottom: 96px;
+}
+
+.cs-gallery-header {
+  margin-bottom: 32px;
+}
+
+.cs-alternating-gallery-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-  width: 100%;
+  gap: 28px;
 }
 
-.cs-gallery-grid-2 .cs-mockup-frame {
+.cs-gallery-item {
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid #EAEAEA;
+  background: #F4F4F6;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.cs-gallery-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+.cs-gallery-item--large {
+  grid-column: 1 / -1;
+  aspect-ratio: 16 / 9;
+}
+
+.cs-gallery-item--half {
   aspect-ratio: 4 / 3;
-  margin: 0;
-  width: 100%;
 }
 
-.cs-gallery-grid-3 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+.cs-gallery-img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.cs-gallery-grid-3 .cs-mockup-frame {
-  aspect-ratio: 4 / 3;
-  margin: 0;
+/* ── 08 Responsive Design Section ── */
+.cs-responsive-experience-section {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 64px;
+  margin-bottom: 96px;
   width: 100%;
+  box-sizing: border-box;
+}
+
+.cs-responsive-badges-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.cs-responsive-badge {
+  padding: 10px 20px;
+  background: #F4F4F6;
+  border: 1px solid #E5E7EB;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #18181B;
+}
+
+/* ── 10 Next Project Navigation Card ── */
+.cs-next-project-footer {
+  width: 100%;
+  margin-top: 80px;
+  margin-bottom: 40px;
+}
+
+.cs-next-project-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 64px 32px;
+  background: #FFFFFF;
+  border: 1px solid #EAEAEA;
+  border-radius: 32px;
+  text-decoration: none;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cs-next-project-card:hover {
+  transform: translateY(-6px);
+  border-color: #7C3AED;
+  box-shadow: 0 20px 50px rgba(124, 58, 237, 0.1);
+}
+
+.cs-next-project-label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #7C3AED;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.cs-next-project-title {
+  font-size: clamp(32px, 4vw, 56px);
+  font-weight: 800;
+  color: #0A0A0D;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.02em;
+}
+
+.cs-next-project-category {
+  font-size: 15px;
+  font-weight: 600;
+  color: #71717A;
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
@@ -877,121 +992,6 @@
 /* ──────────────────────────────────────────────────────────────────────────
    RESPONSIVE BREAKPOINTS (320px to 1024px)
    ────────────────────────────────────────────────────────────────────────── */
-.cs-next-works-section {
-  margin-top: 100px;
-  padding-top: 64px;
-  border-top: 1px solid #EAEAEA;
-  width: 100%;
-}
-
-.cs-next-works-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 40px;
-}
-
-.cs-next-works-title {
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: #09090B;
-  margin: 6px 0 0 0;
-}
-
-.cs-next-works-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 32px;
-}
-
-.cs-next-card {
-  text-decoration: none;
-  background: #FFFFFF;
-  border: 1px solid #EAEAEA;
-  border-radius: 20px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-}
-
-.cs-next-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 40px rgba(124, 58, 237, 0.08);
-  border-color: #DDD6FE;
-}
-
-.cs-next-card-thumb-wrap {
-  width: 100%;
-  height: 240px;
-  overflow: hidden;
-  position: relative;
-  background: #F4F4F6;
-}
-
-.cs-next-card-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.cs-next-card:hover .cs-next-card-img {
-  transform: scale(1.05);
-}
-
-.cs-next-card-badge {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(10px);
-  padding: 6px 14px;
-  border-radius: 100px;
-  font-size: 11px;
-  font-weight: 700;
-  color: #6D28D9;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.cs-next-card-info {
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.cs-next-card-name {
-  font-size: 20px;
-  font-weight: 800;
-  color: #09090B;
-  margin: 0;
-  letter-spacing: -0.01em;
-}
-
-.cs-next-card-desc {
-  font-size: 14px;
-  color: #71717A;
-  margin: 0;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.cs-next-card-link {
-  font-size: 13px;
-  font-weight: 700;
-  color: #7C3AED;
-  margin-top: 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
 @media (max-width: 768px) {
   .cs-hero-card-panel {
     grid-template-columns: repeat(2, 1fr);
