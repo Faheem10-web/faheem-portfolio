@@ -290,6 +290,8 @@ export default function ProjectManager() {
   const [liveUrl, setLiveUrl] = useState('');
   const [caseStudyUrl, setCaseStudyUrl] = useState('');
   const [githubUrl, setGithubUrl] = useState('');
+  const [role, setRole] = useState('Lead UI/UX Designer & Webflow Developer');
+  const [timeline, setTimeline] = useState('2 - 3 Weeks');
   const [coverImage, setCoverImage] = useState('');
   const [thumbnailImage, setThumbnailImage] = useState('');
   const [bannerImage, setBannerImage] = useState('');
@@ -323,6 +325,8 @@ export default function ProjectManager() {
     setYear('2026');
     setClient('Faheem');
     setStatus('Completed');
+    setRole('Lead UI/UX Designer & Webflow Developer');
+    setTimeline('2 - 3 Weeks');
     setTechnologies('React, Figma, TailwindCSS');
     setShortDesc('');
     setLongDesc('');
@@ -359,6 +363,8 @@ export default function ProjectManager() {
     setYear(proj.year);
     setClient(proj.client || 'Faheem');
     setStatus(proj.status || 'Completed');
+    setRole(proj.infoConfig?.role || proj.role || 'Lead UI/UX Designer & Webflow Developer');
+    setTimeline(proj.infoConfig?.timeline || proj.timeline || '2 - 3 Weeks');
     setTechnologies(proj.technologies ? proj.technologies.join(', ') : '');
     setShortDesc(proj.shortDesc);
     setLongDesc(proj.longDesc || '');
@@ -420,6 +426,8 @@ export default function ProjectManager() {
     const formattedTechs = technologies.split(',').map(t => t.trim()).filter(Boolean);
     const formattedGallery = gallery.split(',').map(g => g.trim()).filter(Boolean);
 
+    const targetProj = (projectsCrud.data || []).find(p => p._id === currentId);
+
     const projectData = {
       name, slug, category, year, client, status, shortDesc, longDesc,
       liveUrl, caseStudyUrl, githubUrl, coverImage, thumbnailImage, bannerImage,
@@ -427,7 +435,12 @@ export default function ProjectManager() {
       challengeImages, solutionImages, resultImages,
       process, hasCaseStudy, isFeatured, showOnHome, enabled, order,
       technologies: formattedTechs,
-      gallery: formattedGallery
+      gallery: formattedGallery,
+      infoConfig: {
+        ...(targetProj?.infoConfig || {}),
+        role,
+        timeline
+      }
     };
 
     let res;
@@ -521,6 +534,17 @@ export default function ProjectManager() {
               <div className="admin-form-group">
                 <label className="admin-label">Year</label>
                 <input type="text" className="admin-input" value={year} onChange={e => setYear(e.target.value)} placeholder="e.g. 2026" required />
+              </div>
+            </div>
+
+            <div className="admin-form-row">
+              <div className="admin-form-group">
+                <label className="admin-label">Project Role (Hero Card Column 1)</label>
+                <input type="text" className="admin-input" value={role} onChange={e => setRole(e.target.value)} placeholder="e.g. Lead UI/UX Designer & Webflow Developer" />
+              </div>
+              <div className="admin-form-group">
+                <label className="admin-label">Duration / Timeline</label>
+                <input type="text" className="admin-input" value={timeline} onChange={e => setTimeline(e.target.value)} placeholder="e.g. 2 - 3 Weeks" />
               </div>
             </div>
 
