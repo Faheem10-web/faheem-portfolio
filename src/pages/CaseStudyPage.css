@@ -877,16 +877,50 @@
 /* ──────────────────────────────────────────────────────────────────────────
    RESPONSIVE BREAKPOINTS (320px to 1024px)
    ────────────────────────────────────────────────────────────────────────── */
-@media (max-width: 900px) {
-  .case-study-root {
-    padding-top: 80px;
+@media (max-width: 768px) {
+  .cs-hero-card-panel {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 24px 12px;
+    gap: 20px 0;
+    border-radius: 20px;
   }
 
-  .cs-hero-content {
-    padding: 24px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+  .cs-hero-card-col {
+    padding: 12px 10px;
+  }
+
+  .cs-hero-card-col:not(:last-child)::after {
+    display: none;
+  }
+
+  .cs-hero-card-col:nth-child(odd) {
+    position: relative;
+  }
+
+  .cs-hero-card-col:nth-child(odd)::after {
+    content: '';
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 10%;
+    height: 80%;
+    width: 1px;
+    background-color: #F0F0F4;
+  }
+
+  .cs-hero-card-col:nth-child(-n+2) {
+    border-bottom: 1px solid #F0F0F4;
+    padding-bottom: 20px;
+  }
+
+  .cs-hero-card-col:nth-child(n+3) {
+    padding-top: 12px;
+  }
+
+  .cs-hero-live-btn {
+    padding: 11px 20px;
+    font-size: 13px;
+    white-space: nowrap;
   }
 
   .cs-more-works-grid {
@@ -903,7 +937,47 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 425px) {
+  .cs-hero-card-panel {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 20px 6px;
+    gap: 16px 0;
+    border-radius: 18px;
+  }
+
+  .cs-hero-card-col {
+    padding: 8px 6px;
+  }
+
+  .cs-card-icon-wrapper {
+    width: 42px;
+    height: 42px;
+    margin-bottom: 10px;
+  }
+
+  .cs-card-icon,
+  .cs-card-icon-wrapper svg {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+  }
+
+  .cs-card-col-label {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+
+  .cs-card-col-value {
+    font-size: 12.5px;
+    line-height: 1.35;
+  }
+
+  .cs-hero-live-btn {
+    padding: 10px 14px;
+    font-size: 12px;
+    gap: 4px;
+  }
+
   .cs-info-grid-panel {
     grid-template-columns: 1fr;
   }
