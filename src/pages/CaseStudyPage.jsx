@@ -229,97 +229,176 @@ export default function CaseStudyPage() {
   };
 
   return (
-    <div className="case-study-root" style={{ paddingTop: '140px', paddingBottom: '120px', background: '#FFFFFF', minHeight: '100vh' }}>
+    <div className="case-study-root" style={{ paddingTop: '120px', paddingBottom: '140px', background: '#FFFFFF', minHeight: '100vh', color: '#111827' }}>
       
-      {/* ── 1. CLEAN MINIMALIST HEADER & CENTERED PROJECT TITLE (Matching Image 2) ── */}
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 32px 48px 32px', textAlign: 'center' }}>
-        <motion.h1 
+      <div style={{ maxWidth: '1040px', margin: '0 auto', padding: '0 24px' }}>
+        
+        {/* ── 1. TOP HEADER OVERVIEW BLOCK (Matching Image 2 Top) ── */}
+        <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          style={{ 
-            fontSize: 'clamp(36px, 5.5vw, 68px)', 
-            fontWeight: '700', 
-            color: '#0D0D0D', 
-            letterSpacing: '-0.03em',
-            lineHeight: '1.1',
-            margin: 0
-          }}
+          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '40px', marginBottom: '64px' }}
         >
-          {project.name || titleText}
-        </motion.h1>
-      </div>
+          {/* Left Column: Short Description & Neon Green Visit Website Button */}
+          <div style={{ flex: '1 1 380px', maxWidth: '460px' }}>
+            <p style={{ fontSize: '15px', lineHeight: '1.65', color: '#374151', margin: '0 0 24px 0', fontWeight: '400' }}>
+              {project.shortDesc || project.overviewConfig?.intro || `${titleText} is a modern digital product designed to deliver exceptional user experience, high performance, and scalable interface architecture.`}
+            </p>
 
-      {/* ── 2. EXACT MATCH IMAGE CARD SHOWCASE STACK (Matching Reference Screenshot) ── */}
-      <div style={{ maxWidth: '1040px', margin: '0 auto', padding: '0 24px', display: 'flex', flexDirection: 'column', gap: '40px' }}>
-        
-        {/* Main Hero / Cover Showcase Image */}
+            {liveUrl && (
+              <a 
+                href={liveUrl} 
+                target="_blank" 
+                rel="noreferrer" 
+                style={{ 
+                  display: 'inline-flex', 
+                  alignItems: 'center', 
+                  gap: '8px', 
+                  background: '#00E676', 
+                  color: '#000000', 
+                  fontSize: '14px', 
+                  fontWeight: '600', 
+                  padding: '11px 22px', 
+                  borderRadius: '30px', 
+                  textDecoration: 'none',
+                  boxShadow: '0 4px 14px rgba(0,230,118,0.25)',
+                  transition: 'transform 0.2s ease'
+                }}
+              >
+                Visit website <FiExternalLink size={15} />
+              </a>
+            )}
+          </div>
+
+          {/* Right Column: 4-Item Metadata Grid (Category, Services, Client, Date) */}
+          <div style={{ flex: '1 1 420px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))', gap: '24px' }}>
+            <div>
+              <span style={{ display: 'block', fontSize: '12px', color: '#6B7280', marginBottom: '6px', fontWeight: '500' }}>Category</span>
+              <strong style={{ fontSize: '15px', color: '#111827', fontWeight: '600' }}>{categoryVal}</strong>
+            </div>
+
+            <div>
+              <span style={{ display: 'block', fontSize: '12px', color: '#6B7280', marginBottom: '6px', fontWeight: '500' }}>Services</span>
+              <strong style={{ fontSize: '15px', color: '#111827', fontWeight: '600' }}>{roleVal}</strong>
+            </div>
+
+            <div>
+              <span style={{ display: 'block', fontSize: '12px', color: '#6B7280', marginBottom: '6px', fontWeight: '500' }}>Client</span>
+              <strong style={{ fontSize: '15px', color: '#111827', fontWeight: '600' }}>{clientVal}</strong>
+            </div>
+
+            <div>
+              <span style={{ display: 'block', fontSize: '12px', color: '#6B7280', marginBottom: '6px', fontWeight: '500' }}>Date</span>
+              <strong style={{ fontSize: '15px', color: '#111827', fontWeight: '600' }}>{yearVal}</strong>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ── 2. THE CHALLENGE SECTION (Matching Image 2 Section 2) ── */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '32px', marginBottom: '64px' }}
+        >
+          <div style={{ flex: '0 0 160px' }}>
+            <span style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '0.12em', color: '#4B5563', textTransform: 'uppercase' }}>
+              THE CHALLENGE
+            </span>
+          </div>
+
+          <div style={{ flex: '1 1 540px', maxWidth: '680px' }}>
+            <p style={{ fontSize: '15px', lineHeight: '1.7', color: '#374151', margin: 0, whiteSpace: 'pre-line' }}>
+              {project.challenge || project.challengeIntro || `The client struggled with a complex product that overwhelmed users with dense data and inconsistent layouts. Key insights were buried behind poor hierarchy, unclear navigation, and fragmented components.\n\nAdditionally, the product needed to scale rapidly while maintaining usability.`}
+            </p>
+          </div>
+        </motion.div>
+
+        {/* ── 3. FEATURED LARGE SHOWCASE IMAGE (Matching Image 2 Main Image) ── */}
         {heroImageSrc && (
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            style={{ width: '100%', cursor: 'pointer', background: '#F4F4F6' }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            style={{ width: '100%', marginBottom: '40px', cursor: 'pointer', borderRadius: '12px', overflow: 'hidden', background: '#F4F4F6' }}
             onClick={() => handleOpenLightbox(heroImageSrc)}
           >
             <img 
               src={getOptimizedImageUrl(heroImageSrc, { width: 1920 })} 
               alt={project.name || titleText} 
-              style={{ width: '100%', height: 'auto', maxHeight: '680px', objectFit: 'cover', display: 'block', borderRadius: '0px' }}
+              style={{ width: '100%', height: 'auto', maxHeight: '650px', objectFit: 'cover', display: 'block', borderRadius: '12px' }}
             />
           </motion.div>
         )}
 
-        {/* Challenge Showcase Image */}
-        {challengeImgSrc && challengeImgSrc !== heroImageSrc && (
+        {/* ── 4. DOUBLE MOCKUP GRID (Matching Image 2 Side-by-Side Images) ── */}
+        {(challengeImgSrc || solutionImgSrc) && (
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            style={{ width: '100%', cursor: 'pointer', background: '#F4F4F6' }}
-            onClick={() => handleOpenLightbox(challengeImgSrc)}
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', marginBottom: '64px' }}
           >
-            <img 
-              src={getOptimizedImageUrl(challengeImgSrc, { width: 1920 })} 
-              alt="Challenge Mockup" 
-              style={{ width: '100%', height: 'auto', maxHeight: '680px', objectFit: 'cover', display: 'block', borderRadius: '0px' }}
-            />
+            {challengeImgSrc && (
+              <div style={{ borderRadius: '12px', overflow: 'hidden', cursor: 'pointer', background: '#F4F4F6' }} onClick={() => handleOpenLightbox(challengeImgSrc)}>
+                <img 
+                  src={getOptimizedImageUrl(challengeImgSrc, { width: 1200 })} 
+                  alt="Challenge Mockup" 
+                  style={{ width: '100%', height: '100%', maxHeight: '480px', objectFit: 'cover', display: 'block', borderRadius: '12px' }}
+                />
+              </div>
+            )}
+            {solutionImgSrc && (
+              <div style={{ borderRadius: '12px', overflow: 'hidden', cursor: 'pointer', background: '#F4F4F6' }} onClick={() => handleOpenLightbox(solutionImgSrc)}>
+                <img 
+                  src={getOptimizedImageUrl(solutionImgSrc, { width: 1200 })} 
+                  alt="Solution Mockup" 
+                  style={{ width: '100%', height: '100%', maxHeight: '480px', objectFit: 'cover', display: 'block', borderRadius: '12px' }}
+                />
+              </div>
+            )}
           </motion.div>
         )}
 
-        {/* Solution Showcase Image */}
-        {solutionImgSrc && solutionImgSrc !== heroImageSrc && solutionImgSrc !== challengeImgSrc && (
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            style={{ width: '100%', cursor: 'pointer', background: '#F4F4F6' }}
-            onClick={() => handleOpenLightbox(solutionImgSrc)}
-          >
-            <img 
-              src={getOptimizedImageUrl(solutionImgSrc, { width: 1920 })} 
-              alt="Solution Mockup" 
-              style={{ width: '100%', height: 'auto', maxHeight: '680px', objectFit: 'cover', display: 'block', borderRadius: '0px' }}
-            />
-          </motion.div>
-        )}
+        {/* ── 5. FINAL OUTCOME SECTION (Matching Image 2 Bottom Section) ── */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '32px', marginBottom: '40px' }}
+        >
+          <div style={{ flex: '0 0 160px' }}>
+            <span style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '0.12em', color: '#4B5563', textTransform: 'uppercase' }}>
+              FINAL OUTCOME
+            </span>
+          </div>
 
-        {/* Conclusion / Result Showcase Image */}
+          <div style={{ flex: '1 1 540px', maxWidth: '680px' }}>
+            <p style={{ fontSize: '15px', lineHeight: '1.7', color: '#374151', margin: 0, whiteSpace: 'pre-line' }}>
+              {project.results || project.conclusion || `A clear dashboard structure was introduced with consistent components, improved data hierarchy, and simplified navigation patterns that made insights easier to access.\n\nThe new design system reduced design debt, improved usability, and allowed the team to ship new features faster.`}
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Conclusion / Result Image */}
         {conclusionImgSrc && conclusionImgSrc !== heroImageSrc && conclusionImgSrc !== challengeImgSrc && conclusionImgSrc !== solutionImgSrc && (
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            style={{ width: '100%', cursor: 'pointer', background: '#F4F4F6' }}
+            style={{ width: '100%', cursor: 'pointer', borderRadius: '12px', overflow: 'hidden', background: '#F4F4F6' }}
             onClick={() => handleOpenLightbox(conclusionImgSrc)}
           >
             <img 
               src={getOptimizedImageUrl(conclusionImgSrc, { width: 1920 })} 
               alt="Result Mockup" 
-              style={{ width: '100%', height: 'auto', maxHeight: '680px', objectFit: 'cover', display: 'block', borderRadius: '0px' }}
+              style={{ width: '100%', height: 'auto', maxHeight: '650px', objectFit: 'cover', display: 'block', borderRadius: '12px' }}
             />
           </motion.div>
         )}
