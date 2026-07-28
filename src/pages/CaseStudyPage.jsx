@@ -272,54 +272,71 @@ export default function CaseStudyPage() {
 
       <div className="case-study-content-wrap">
 
-        {/* ── 3. PROJECT OVERVIEW ── */}
+        {/* ── 2. PRIMARY FEATURE SHOWCASE BANNER IMAGE (Full-Width Banner Showcase) ── */}
+        {heroImageSrc && (
+          <motion.div 
+            className="cs-primary-banner-frame"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            onClick={() => handleOpenLightbox(heroImageSrc)}
+          >
+            <img 
+              src={getOptimizedImageUrl(heroImageSrc, { width: 1920 })} 
+              alt={titleText} 
+              className="cs-primary-banner-img"
+            />
+          </motion.div>
+        )}
+
+        {/* ── 3. SECTION 1: PRODUCT GOALS & OVERVIEW (2-Column Editorial) ── */}
         <motion.section 
-          className="cs-editorial-section"
+          className="cs-editorial-block"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="cs-section-header">
-            <h2 className="cs-section-title">
-              {project.overviewConfig?.heading || `${titleText}: Elevating ${industryVal}`}
+          <div className="cs-block-left">
+            <h2 className="cs-block-title">
+              {project.overviewConfig?.heading || `Product goals and objectives`}
             </h2>
-            
+          </div>
+          <div className="cs-block-right">
             <p className="cs-body-paragraph">
-              <strong>{titleText}</strong> {project.overviewConfig?.intro || "is a premium digital experience platform crafted to bridge the gap between aesthetic inspiration and architectural execution. The objective was to develop a sophisticated, high-performance web experience that showcases luxury spaces while providing an effortless navigation system for potential clients. We implemented a clean, grid-based design language to emphasize visual storytelling and high-resolution imagery."}
+              <strong>{titleText}</strong> {project.overviewConfig?.intro || "is a premium digital experience platform crafted to bridge the gap between aesthetic inspiration and architectural execution. The objective was to develop a sophisticated, high-performance web experience that showcases luxury spaces while providing an effortless navigation system for potential clients."}
             </p>
-
             <p className="cs-body-paragraph">
               {project.overviewConfig?.secondaryDesc || "The final product delivers a seamless browsing experience tailored for high-end clientele. The result is a refined digital presence that balances artistic expression with functional lead generation."}
             </p>
           </div>
         </motion.section>
 
-        {/* ── 4. EDITORIAL GALLERY (2-COLUMN GRID) ── */}
+        {/* ── 4. BENTO MOCKUP GRID SHOWCASE 1 ── */}
         {(project.challengeImage || project.solutionImage) && (
           <motion.div 
-            className="cs-double-mockup-grid"
+            className="cs-bento-grid-2col"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
             {project.challengeImage && (
-              <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.challengeImage)}>
+              <div className="cs-bento-card" onClick={() => handleOpenLightbox(project.challengeImage)}>
                 <img 
                   src={getOptimizedImageUrl(project.challengeImage, { width: 1200 })} 
                   alt="Challenge Preview" 
-                  className="cs-mockup-img"
+                  className="cs-bento-img"
                   loading="lazy"
                 />
               </div>
             )}
             {project.solutionImage && (
-              <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.solutionImage)}>
+              <div className="cs-bento-card" onClick={() => handleOpenLightbox(project.solutionImage)}>
                 <img 
                   src={getOptimizedImageUrl(project.solutionImage, { width: 1200 })} 
                   alt="Solution Preview" 
-                  className="cs-mockup-img"
+                  className="cs-bento-img"
                   loading="lazy"
                 />
               </div>
@@ -327,101 +344,127 @@ export default function CaseStudyPage() {
           </motion.div>
         )}
 
-        {/* ── 5. THE CHALLENGE SECTION ── */}
+        {/* ── 5. SECTION 2: MULTI-SERVICE PLATFORM & CHALLENGE ── */}
         <motion.section 
-          className="cs-editorial-section"
+          className="cs-editorial-block"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="cs-section-header">
-            <h2 className="cs-section-title">The Challenge</h2>
-            
+          <div className="cs-block-left">
+            <h2 className="cs-block-title">Multi-service platform & challenge</h2>
+          </div>
+          <div className="cs-block-right">
             {renderFormattedSectionContent(
               project.challenge,
               project.challengeIntro || `The primary hurdle for the ${titleText} project was presenting a vast portfolio of diverse design styles without overwhelming the user. We needed to organize complex architectural data into an intuitive interface that maintains a sense of luxury and space.`,
               project.challengePoints || [
-                "Cluttered navigation is affecting high-end brand perception.",
+                "Cluttered navigation affecting high-end brand perception.",
                 "Slow load times for high-resolution gallery assets.",
-                "Inconsistent user journeys from inspiration to booking."
+                "Inconsistent user journeys from inspiration to conversion."
               ],
-              project.challengeConclusion || "We engineered a lightweight CMS structure that prioritizes performance and clarity. The visual hierarchy was elevated with minimalist UI elements, ensuring that the design work remains the focal point for every visitor."
+              project.challengeConclusion || "We engineered a lightweight CMS structure that prioritizes performance and clarity, ensuring that the design work remains the focal point for every visitor."
             )}
           </div>
-
-          {project.challengeImage && (
-            <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.challengeImage)}>
-              <img 
-                src={getOptimizedImageUrl(project.challengeImage, { width: 1600 })} 
-                alt="The Challenge Mockup" 
-                className="cs-mockup-img"
-                loading="lazy"
-              />
-            </div>
-          )}
         </motion.section>
 
-        {/* ── 6. THE SOLUTION SECTION ── */}
+        {/* ── 6. FULL-WIDTH SHOWCASE BANNER 2 ── */}
+        {project.solutionImage && (
+          <motion.div 
+            className="cs-full-card-banner"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            onClick={() => handleOpenLightbox(project.solutionImage)}
+          >
+            <img 
+              src={getOptimizedImageUrl(project.solutionImage, { width: 1600 })} 
+              alt="Solution Showcase" 
+              className="cs-full-banner-img"
+              loading="lazy"
+            />
+          </motion.div>
+        )}
+
+        {/* ── 7. SECTION 3: DEVELOPMENT & SOLUTION ── */}
         <motion.section 
-          className="cs-editorial-section"
+          className="cs-editorial-block"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="cs-section-header">
-            <h2 className="cs-section-title">The Solution</h2>
-            
+          <div className="cs-block-left">
+            <h2 className="cs-block-title">Development app for Web & Mobile</h2>
+          </div>
+          <div className="cs-block-right">
             {renderFormattedSectionContent(
               project.solution,
-              project.solutionIntro || 'Our solution centered on a "Visual-First" philosophy, simplifying the user’s path to discovery through thoughtful interaction design. We created streamlined user flows that make exploring design concepts and scheduling consultations effortless.',
+              project.solutionIntro || 'Our solution centered on a "Visual-First" philosophy, simplifying the user’s path to discovery through thoughtful interaction design. We created streamlined user flows that make exploring design concepts effortless.',
               project.solutionPoints || [
-                { title: "Adaptive Masonry Grid", desc: "To showcase projects of varying scales and orientations." },
+                { title: "Adaptive Grid System", desc: "To showcase projects of varying scales and orientations." },
                 { title: "Seamless CMS Integration", desc: "For easy portfolio updates and category filtering." },
-                { title: "Interactive Style Quiz", desc: "To guide users toward their preferred aesthetic." },
                 { title: "Optimized Performance", desc: "Ensuring 99th percentile load speeds for media-heavy pages." }
               ],
               null
             )}
           </div>
-
-          {project.solutionImage && (
-            <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.solutionImage)}>
-              <img 
-                src={getOptimizedImageUrl(project.solutionImage, { width: 1600 })} 
-                alt="The Solution Mockup" 
-                className="cs-mockup-img"
-                loading="lazy"
-              />
-            </div>
-          )}
         </motion.section>
 
-
-        {/* ── 8. RESULTS & CONCLUSION ── */}
+        {/* ── 8. SECTION 4: CONTROL PANEL & RESULTS ── */}
         <motion.section 
-          className="cs-editorial-section"
+          className="cs-editorial-block"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="cs-section-title">Results & Impact</h2>
-          <p className="cs-body-paragraph">
-            {project.results || project.conclusion || "The result is a highly optimized, SEO-friendly digital product that exceeds client expectations and performance benchmarks."}
-          </p>
-
-          {project.conclusionImage && (
-            <div className="cs-mockup-frame" onClick={() => handleOpenLightbox(project.conclusionImage)}>
-              <img 
-                src={getOptimizedImageUrl(project.conclusionImage, { width: 1600 })} 
-                alt="Conclusion Mockup" 
-                className="cs-mockup-img"
-                loading="lazy"
-              />
-            </div>
-          )}
+          <div className="cs-block-left">
+            <h2 className="cs-block-title">Analysis, strategy & impact</h2>
+          </div>
+          <div className="cs-block-right">
+            <p className="cs-body-paragraph">
+              {project.results || project.conclusion || "The result is a highly optimized, SEO-friendly digital product that exceeds client expectations and performance benchmarks."}
+            </p>
+          </div>
         </motion.section>
+
+        {project.conclusionImage && (
+          <motion.div 
+            className="cs-full-card-banner"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            onClick={() => handleOpenLightbox(project.conclusionImage)}
+          >
+            <img 
+              src={getOptimizedImageUrl(project.conclusionImage, { width: 1600 })} 
+              alt="Conclusion Showcase" 
+              className="cs-full-banner-img"
+              loading="lazy"
+            />
+          </motion.div>
+        )}
+
+        {/* ── 9. NEXT PROJECT TICKER MARQUEE BANNER (Punto Pago Reference Bottom Banner) ── */}
+        {otherProjects.length > 0 && (
+          <motion.div 
+            className="cs-next-project-section"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <div className="cs-next-project-header">Next Project</div>
+            <Link 
+              to={`/case-study/${otherProjects[0].slug || otherProjects[0]._id || otherProjects[0].id}`} 
+              className="cs-next-project-link"
+            >
+              <span className="cs-next-project-title">{otherProjects[0].name || otherProjects[0].title}</span>
+              <FiChevronRight className="cs-next-project-arrow" />
+            </Link>
+          </motion.div>
+        )}
 
       </div>
 

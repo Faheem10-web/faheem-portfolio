@@ -3,53 +3,37 @@
    ========================================================================== */
 
 :root {
-  --cs-bg: var(--bg-primary, #0A0A0A);
-  --cs-bg-subtle: var(--bg-secondary, #141417);
-  --cs-bg-card: rgba(255, 255, 255, 0.04);
-  --cs-border: var(--border-glass, rgba(255, 255, 255, 0.12));
-  --cs-border-subtle: rgba(255, 255, 255, 0.08);
-  --cs-text-primary: var(--color-text-main, #FFFFFF);
-  --cs-text-secondary: var(--color-text-muted, #A1A1AA);
-  --cs-text-muted: var(--color-text-dark, #71717A);
-  --cs-accent: var(--color-primary, #8B5CF6);
+  --cs-bg: #FFFFFF;
+  --cs-bg-subtle: #F4F4F7;
+  --cs-bg-card: #FFFFFF;
+  --cs-border: #E5E7EB;
+  --cs-border-subtle: #F3F4F6;
+  --cs-text-primary: #0D0D12;
+  --cs-text-secondary: #3F3F46;
+  --cs-text-muted: #71717A;
+  --cs-accent: #2563EB;
   --cs-accent-green: #10B981;
-  --cs-accent-indigo: #8B5CF6;
+  --cs-accent-indigo: #6366F1;
   --cs-radius-lg: 24px;
   --cs-radius-md: 16px;
   --cs-radius-sm: 10px;
-  --cs-shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.3);
-  --cs-shadow-hover: 0 20px 50px rgba(0, 0, 0, 0.5);
-}
-
-:root[data-theme='light'] {
-  --cs-bg: var(--bg-primary, #F5F5F7);
-  --cs-bg-subtle: var(--bg-secondary, #EEEEF2);
-  --cs-bg-card: #FFFFFF;
-  --cs-border: var(--border-glass, rgba(0, 0, 0, 0.1));
-  --cs-border-subtle: rgba(0, 0, 0, 0.06);
-  --cs-text-primary: var(--color-text-main, #18181B);
-  --cs-text-secondary: var(--color-text-muted, #52525B);
-  --cs-text-muted: var(--color-text-dark, #71717A);
-  --cs-accent: var(--color-primary, #7C3AED);
-  --cs-accent-indigo: #6366F1;
   --cs-shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.04);
   --cs-shadow-hover: 0 20px 50px rgba(0, 0, 0, 0.08);
 }
 
 .case-study-root {
-  background-color: var(--cs-bg);
-  color: var(--cs-text-primary);
-  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  background-color: #FFFFFF !important;
+  color: #0D0D12 !important;
+  font-family: var(--font-body, 'Plus Jakarta Sans', -apple-system, sans-serif);
   min-height: 100vh;
   padding-top: 0;
-  padding-bottom: 120px;
+  padding-bottom: 80px;
   overflow-x: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .case-study-container {
   width: 100%;
-  max-width: 1280px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
   box-sizing: border-box;
@@ -58,7 +42,7 @@
 /* Container with top padding for content below hero */
 .case-study-content-wrap {
   width: 100%;
-  max-width: 1280px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
   box-sizing: border-box;
