@@ -233,14 +233,51 @@ export default function CaseStudyPage() {
       
       <div style={{ maxWidth: '1040px', margin: '0 auto', padding: '0 24px' }}>
         
-        {/* ── 1. TOP HEADER OVERVIEW BLOCK (Matching Image 2 Top) ── */}
+        {/* ── 1. CENTERED PROJECT TITLE (At the VERY TOP matching screenshot 1000%) ── */}
+        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            style={{ 
+              fontSize: 'clamp(36px, 5.5vw, 64px)', 
+              fontWeight: '700', 
+              color: '#0D0D0D', 
+              letterSpacing: '-0.03em',
+              lineHeight: '1.1',
+              margin: 0
+            }}
+          >
+            {project.name || titleText}
+          </motion.h1>
+        </div>
+
+        {/* ── 2. MAIN COVER SHOWCASE IMAGE (Directly Below Title matching screenshot 1000%) ── */}
+        {heroImageSrc && (
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            style={{ width: '100%', marginBottom: '56px', cursor: 'pointer', background: '#F4F4F6' }}
+            onClick={() => handleOpenLightbox(heroImageSrc)}
+          >
+            <img 
+              src={getOptimizedImageUrl(heroImageSrc, { width: 1920 })} 
+              alt={project.name || titleText} 
+              style={{ width: '100%', height: 'auto', maxHeight: '640px', objectFit: 'cover', display: 'block', borderRadius: '0px' }}
+            />
+          </motion.div>
+        )}
+
+        {/* ── 3. OVERVIEW BLOCK (Directly Below Main Cover Image matching screenshot 1000%) ── */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '40px', marginBottom: '64px' }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '40px', marginBottom: '56px' }}
         >
-          {/* Left Column: Short Description & Neon Green Visit Website Button */}
+          {/* Left Column: Short Description & Purple Glossy Visit Website Button */}
           <div style={{ flex: '1 1 380px', maxWidth: '460px' }}>
             <p style={{ fontSize: '15px', lineHeight: '1.65', color: '#374151', margin: '0 0 24px 0', fontWeight: '400' }}>
               {project.shortDesc || project.overviewConfig?.intro || `${titleText} is a modern digital product designed to deliver exceptional user experience, high performance, and scalable interface architecture.`}
@@ -297,13 +334,13 @@ export default function CaseStudyPage() {
           </div>
         </motion.div>
 
-        {/* ── 2. THE CHALLENGE SECTION (Matching Image 2 Section 2) ── */}
+        {/* ── 4. THE CHALLENGE SECTION (Matching Screenshot 1000%) ── */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '32px', marginBottom: '64px' }}
+          style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '32px', marginBottom: '56px' }}
         >
           <div style={{ flex: '0 0 160px' }}>
             <span style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '0.12em', color: '#4B5563', textTransform: 'uppercase' }}>
@@ -318,55 +355,55 @@ export default function CaseStudyPage() {
           </div>
         </motion.div>
 
-        {/* ── 3. FEATURED LARGE SHOWCASE IMAGE (Matching Image 2 Main Image) ── */}
-        {heroImageSrc && (
+        {/* ── 5. FEATURED SHOWCASE IMAGE (Matching Screenshot 1000%) ── */}
+        {solutionImgSrc && solutionImgSrc !== heroImageSrc && (
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            style={{ width: '100%', marginBottom: '40px', cursor: 'pointer', borderRadius: '12px', overflow: 'hidden', background: '#F4F4F6' }}
-            onClick={() => handleOpenLightbox(heroImageSrc)}
+            style={{ width: '100%', marginBottom: '32px', cursor: 'pointer', background: '#F4F4F6' }}
+            onClick={() => handleOpenLightbox(solutionImgSrc)}
           >
             <img 
-              src={getOptimizedImageUrl(heroImageSrc, { width: 1920 })} 
-              alt={project.name || titleText} 
-              style={{ width: '100%', height: 'auto', maxHeight: '650px', objectFit: 'cover', display: 'block', borderRadius: '12px' }}
+              src={getOptimizedImageUrl(solutionImgSrc, { width: 1920 })} 
+              alt="Featured Showcase" 
+              style={{ width: '100%', height: 'auto', maxHeight: '640px', objectFit: 'cover', display: 'block', borderRadius: '0px' }}
             />
           </motion.div>
         )}
 
-        {/* ── 4. DOUBLE MOCKUP GRID (Matching Image 2 Side-by-Side Images) ── */}
-        {(challengeImgSrc || solutionImgSrc) && (
+        {/* ── 6. DOUBLE MOCKUP GRID (Matching Screenshot 1000%) ── */}
+        {(challengeImgSrc || solutionImgSrc || conclusionImgSrc) && (
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px', marginBottom: '64px' }}
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginBottom: '56px' }}
           >
-            {challengeImgSrc && (
-              <div style={{ borderRadius: '12px', overflow: 'hidden', cursor: 'pointer', background: '#F4F4F6' }} onClick={() => handleOpenLightbox(challengeImgSrc)}>
+            {challengeImgSrc && challengeImgSrc !== heroImageSrc && (
+              <div style={{ overflow: 'hidden', cursor: 'pointer', background: '#F4F4F6' }} onClick={() => handleOpenLightbox(challengeImgSrc)}>
                 <img 
                   src={getOptimizedImageUrl(challengeImgSrc, { width: 1200 })} 
                   alt="Challenge Mockup" 
-                  style={{ width: '100%', height: '100%', maxHeight: '480px', objectFit: 'cover', display: 'block', borderRadius: '12px' }}
+                  style={{ width: '100%', height: '100%', maxHeight: '480px', objectFit: 'cover', display: 'block', borderRadius: '0px' }}
                 />
               </div>
             )}
-            {solutionImgSrc && (
-              <div style={{ borderRadius: '12px', overflow: 'hidden', cursor: 'pointer', background: '#F4F4F6' }} onClick={() => handleOpenLightbox(solutionImgSrc)}>
+            {conclusionImgSrc && conclusionImgSrc !== heroImageSrc && conclusionImgSrc !== challengeImgSrc && (
+              <div style={{ overflow: 'hidden', cursor: 'pointer', background: '#F4F4F6' }} onClick={() => handleOpenLightbox(conclusionImgSrc)}>
                 <img 
-                  src={getOptimizedImageUrl(solutionImgSrc, { width: 1200 })} 
-                  alt="Solution Mockup" 
-                  style={{ width: '100%', height: '100%', maxHeight: '480px', objectFit: 'cover', display: 'block', borderRadius: '12px' }}
+                  src={getOptimizedImageUrl(conclusionImgSrc, { width: 1200 })} 
+                  alt="Result Mockup" 
+                  style={{ width: '100%', height: '100%', maxHeight: '480px', objectFit: 'cover', display: 'block', borderRadius: '0px' }}
                 />
               </div>
             )}
           </motion.div>
         )}
 
-        {/* ── 5. FINAL OUTCOME SECTION (Matching Image 2 Bottom Section) ── */}
+        {/* ── 7. FINAL OUTCOME SECTION (Matching Screenshot 1000%) ── */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -386,24 +423,6 @@ export default function CaseStudyPage() {
             </p>
           </div>
         </motion.div>
-
-        {/* Conclusion / Result Image */}
-        {conclusionImgSrc && conclusionImgSrc !== heroImageSrc && conclusionImgSrc !== challengeImgSrc && conclusionImgSrc !== solutionImgSrc && (
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            style={{ width: '100%', cursor: 'pointer', borderRadius: '12px', overflow: 'hidden', background: '#F4F4F6' }}
-            onClick={() => handleOpenLightbox(conclusionImgSrc)}
-          >
-            <img 
-              src={getOptimizedImageUrl(conclusionImgSrc, { width: 1920 })} 
-              alt="Result Mockup" 
-              style={{ width: '100%', height: 'auto', maxHeight: '650px', objectFit: 'cover', display: 'block', borderRadius: '12px' }}
-            />
-          </motion.div>
-        )}
 
       </div>
 
