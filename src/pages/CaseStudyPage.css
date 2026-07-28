@@ -217,17 +217,24 @@
   height: 48px;
   border-radius: 50%;
   background-color: #F3E8FF;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 16px auto;
   flex-shrink: 0;
+  line-height: 0;
+  box-sizing: border-box;
 }
 
-.cs-card-icon {
+.cs-card-icon,
+.cs-card-icon-wrapper svg {
+  width: 20px;
+  height: 20px;
   font-size: 20px;
   color: #7C3AED;
   display: block;
+  margin: 0 auto;
+  flex-shrink: 0;
 }
 
 .cs-card-col-label {
