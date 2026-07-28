@@ -37,18 +37,16 @@
 
     border-radius: 100px;
 
-    /* Floating liquid glass — 32px backdrop blur & white specular highlight */
+    /* Floating liquid glass — 32px backdrop blur & soft border */
     background: var(--bg-glass);
     backdrop-filter: blur(32px) saturate(180%) contrast(102%);
     -webkit-backdrop-filter: blur(32px) saturate(180%) contrast(102%);
-    border: 1px solid var(--border-glass);
+    border: 1px solid rgba(0, 0, 0, 0.06);
 
-    /* Liquid specular highlight rim & soft ambient lighting shadow */
+    /* Ultra-soft ambient shadow for minimal clean feel */
     box-shadow:
-        0 16px 40px -12px rgba(0, 0, 0, 0.08),
-        0 0 0 1px rgba(255, 255, 255, 0.05),
-        inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.8),
-        inset 0 -1px 2px 0 rgba(0, 0, 0, 0.05);
+        0 10px 28px -10px rgba(0, 0, 0, 0.05),
+        0 2px 8px rgba(0, 0, 0, 0.02);
 
     /* Smooth transition for scroll-driven changes */
     transition:
@@ -59,38 +57,29 @@
     isolation: isolate;
 }
 
-/* Liquid Refraction Specular Light Layer */
-.nav-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 8%;
-    right: 8%;
-    height: 1px;
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(255, 255, 255, 0.5) 30%,
-        rgba(255, 255, 255, 0.85) 50%,
-        rgba(255, 255, 255, 0.5) 70%,
-        transparent 100%
-    );
-    opacity: 0.85;
-    pointer-events: none;
-    z-index: 3;
-}
-
-/* Scrolled state — stronger glass, richer shadow, hairline border */
+/* Scrolled state — refined soft ambient shadow */
 .navbar--scrolled .nav-container {
     background: var(--bg-glass-scrolled);
     backdrop-filter: blur(32px) saturate(200%) contrast(105%);
     -webkit-backdrop-filter: blur(32px) saturate(200%) contrast(105%);
-    border-color: var(--border-glass-scrolled);
+    border-color: rgba(0, 0, 0, 0.08);
     box-shadow:
-        0 20px 48px -10px rgba(0, 0, 0, 0.32),
-        0 0 0 1px rgba(255, 255, 255, 0.08),
-        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.5),
-        inset 0 -1px 2px 0 rgba(0, 0, 0, 0.2);
+        0 12px 32px -10px rgba(0, 0, 0, 0.07),
+        0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+:root[data-theme='dark'] .nav-container {
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow:
+        0 14px 36px -12px rgba(0, 0, 0, 0.4),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+:root[data-theme='dark'] .navbar--scrolled .nav-container {
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow:
+        0 18px 44px -10px rgba(0, 0, 0, 0.5),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .logo {
