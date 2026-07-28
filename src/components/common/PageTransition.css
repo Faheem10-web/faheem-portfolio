@@ -1,0 +1,25 @@
+/* ==========================================================================
+   2026 PREMIUM GPU-ACCELERATED PAGE TRANSITION SYSTEM
+   ========================================================================== */
+
+.page-transition-curtain {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--page-transition-bg, #0B0B0F);
+  z-index: 99999;
+  pointer-events: none;
+  will-change: transform;
+  transform: translate3d(0, 100%, 0);
+  box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.4);
+}
+
+:root[data-theme='light'] .page-transition-curtain {
+  --page-transition-bg: #18181B;
+}
+
+.page-transition-wrapper {
+  width: 100%;
+  will-change: transform, opacity;
+}

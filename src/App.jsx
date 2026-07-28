@@ -17,8 +17,6 @@ import ClickSpark from "./components/common/ClickSpark";
 import CustomCursor from "./components/common/CustomCursor";
 import ScrollToTop from "./components/common/ScrollToTop";
 
-import PageTransitionOverlay from "./components/common/PageTransitionOverlay";
-
 // Lazy-loaded Admin CMS Routes for optimal initial bundle size
 const AdminLayout = lazy(() => import("./admin/AdminLayout"));
 const Login = lazy(() => import("./admin/pages/Login"));
@@ -31,55 +29,7 @@ const Profile = lazy(() => import("./admin/pages/Profile"));
 const SiteStatus = lazy(() => import("./admin/pages/SiteStatus"));
 const MaintenancePage = lazy(() => import("./pages/MaintenancePage"));
 
-const pageVariants = {
-  initial: {
-    opacity: 0,
-    y: 24,
-    scale: 0.985
-  },
-  animate: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.65,
-      delay: 0.25,
-      ease: [0.16, 1, 0.3, 1]
-    }
-  },
-  exit: {
-    opacity: 0,
-    y: -20,
-    scale: 0.985,
-    transition: {
-      duration: 0.45,
-      ease: [0.76, 0, 0.24, 1]
-    }
-  }
-};
-
-const PageWrapper = ({ children }) => {
-  useLayoutEffect(() => {
-    window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-    if (window.lenis) {
-      window.lenis.scrollTo(0, { immediate: true });
-    }
-  }, []);
-
-  return (
-    <motion.div
-      variants={pageVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      style={{ willChange: "transform, opacity" }}
-    >
-      {children}
-    </motion.div>
-  );
-};
+import { PageWrapper } from "./components/common/PageTransition";
 
 // Protected Admin Router Wrapper
 const ProtectedRoute = ({ children }) => {
@@ -315,10 +265,19 @@ function AppContent() {
           sparkCount={10}
           duration={450}
         >
-          <PageTransitionOverlay />
           <div className="app-container">
             <main className="main-content">
-              <AnimatePresence mode="wait">
+              <AnimatePresence 
+                mode="wait"
+                onExitComplete={() => {
+                  window.scrollTo(0, 0);
+                  document.documentElement.scrollTop = 0;
+                  document.body.scrollTop = 0;
+                  if (window.lenis) {
+                    window.lenis.scrollTo(0, { immediate: true });
+                  }
+                }}
+              >
                 <Routes location={location} key={location.pathname}>
                   <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
                   <Route path="/about" element={<PageWrapper><AboutPage /></PageWrapper>} />
