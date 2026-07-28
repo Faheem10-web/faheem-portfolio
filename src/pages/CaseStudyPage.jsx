@@ -280,21 +280,15 @@ export default function CaseStudyPage() {
               <span className="cs-card-col-label">YEAR</span>
               <span className="cs-card-col-value">{yearVal}</span>
             </div>
+            {/* Live Link (Far Right inside Box) */}
+            {liveUrl && (
+              <div className="cs-hero-card-col cs-hero-card-col--action">
+                <a href={liveUrl} target="_blank" rel="noreferrer" className="cs-hero-live-btn">
+                  Live Preview <FiExternalLink size={14} />
+                </a>
+              </div>
+            )}
           </motion.div>
-
-          {/* Dedicated Centered Live Preview Button */}
-          {liveUrl && (
-            <motion.div 
-              className="cs-hero-action-row"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <a href={liveUrl} target="_blank" rel="noreferrer" className="cs-hero-live-btn">
-                Live Preview <FiExternalLink size={14} />
-              </a>
-            </motion.div>
-          )}
 
         </div>
       </motion.section>
