@@ -57,7 +57,7 @@ function MockupSliderCard({ images = [], onOpenLightbox }) {
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => onOpenLightbox(validImages[currentIndex])}
     >
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="popLayout">
         <motion.img
           key={currentIndex}
           src={getOptimizedImageUrl(validImages[currentIndex], { width: 1920 })}
