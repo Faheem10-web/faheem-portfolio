@@ -3,37 +3,53 @@
    ========================================================================== */
 
 :root {
-  --cs-bg: #FFFFFF;
-  --cs-bg-subtle: #F4F4F7;
-  --cs-bg-card: #FFFFFF;
-  --cs-border: #E5E7EB;
-  --cs-border-subtle: #F3F4F6;
-  --cs-text-primary: #0D0D12;
-  --cs-text-secondary: #3F3F46;
-  --cs-text-muted: #71717A;
-  --cs-accent: #2563EB;
+  --cs-bg: var(--bg-primary, #0A0A0A);
+  --cs-bg-subtle: var(--bg-secondary, #141417);
+  --cs-bg-card: rgba(255, 255, 255, 0.04);
+  --cs-border: var(--border-glass, rgba(255, 255, 255, 0.12));
+  --cs-border-subtle: rgba(255, 255, 255, 0.08);
+  --cs-text-primary: var(--color-text-main, #FFFFFF);
+  --cs-text-secondary: var(--color-text-muted, #A1A1AA);
+  --cs-text-muted: var(--color-text-dark, #71717A);
+  --cs-accent: var(--color-primary, #8B5CF6);
   --cs-accent-green: #10B981;
-  --cs-accent-indigo: #6366F1;
+  --cs-accent-indigo: #8B5CF6;
   --cs-radius-lg: 24px;
   --cs-radius-md: 16px;
   --cs-radius-sm: 10px;
+  --cs-shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.3);
+  --cs-shadow-hover: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+:root[data-theme='light'] {
+  --cs-bg: var(--bg-primary, #F5F5F7);
+  --cs-bg-subtle: var(--bg-secondary, #EEEEF2);
+  --cs-bg-card: #FFFFFF;
+  --cs-border: var(--border-glass, rgba(0, 0, 0, 0.1));
+  --cs-border-subtle: rgba(0, 0, 0, 0.06);
+  --cs-text-primary: var(--color-text-main, #18181B);
+  --cs-text-secondary: var(--color-text-muted, #52525B);
+  --cs-text-muted: var(--color-text-dark, #71717A);
+  --cs-accent: var(--color-primary, #7C3AED);
+  --cs-accent-indigo: #6366F1;
   --cs-shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.04);
   --cs-shadow-hover: 0 20px 50px rgba(0, 0, 0, 0.08);
 }
 
 .case-study-root {
-  background-color: #FFFFFF !important;
-  color: #0D0D12 !important;
-  font-family: var(--font-body, 'Plus Jakarta Sans', -apple-system, sans-serif);
+  background-color: var(--cs-bg);
+  color: var(--cs-text-primary);
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
   min-height: 100vh;
   padding-top: 0;
-  padding-bottom: 80px;
+  padding-bottom: 120px;
   overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .case-study-container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 24px;
   box-sizing: border-box;
@@ -42,7 +58,7 @@
 /* Container with top padding for content below hero */
 .case-study-content-wrap {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 0 24px;
   box-sizing: border-box;
@@ -50,21 +66,21 @@
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
-   1. CUBERTO-STYLE EDITORIAL TYPOGRAPHY HERO (Exact Punto Pago Reference Match)
+   1. CUBERTO-STYLE EDITORIAL TYPOGRAPHY HERO (100% Exact Punto Pago Match)
    ────────────────────────────────────────────────────────────────────────── */
 .cs-typography-hero {
   background-color: #FFFFFF;
   color: #000000;
   width: 100%;
-  padding-top: 145px;
-  padding-bottom: 76px;
+  padding-top: 140px;
+  padding-bottom: 80px;
   border-bottom: 1px solid #E5E7EB;
   box-sizing: border-box;
 }
 
 .cs-hero-container {
   width: 100%;
-  max-width: 1100px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 0 32px;
   box-sizing: border-box;
@@ -79,7 +95,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 36px;
+  margin-bottom: 40px;
 }
 
 .cs-hero-back-link {
@@ -112,7 +128,7 @@
 /* Small Centered Project Label (Exact Punto Pago style) */
 .cs-hero-small-label {
   font-family: var(--font-heading, 'Inter', -apple-system, sans-serif);
-  font-size: clamp(16px, 2vw, 22px);
+  font-size: clamp(16px, 2.2vw, 22px);
   font-weight: 500;
   color: #111111;
   margin-bottom: 24px;
@@ -120,17 +136,18 @@
   text-align: center;
 }
 
-/* Giant Centered Headline (Exact "The First Super-App in Latin America" typography style) */
+/* Giant Centered Stacked Headline (Exact "The First Super-App in Latin America" 3-line block style) */
 .cs-hero-editorial-headline {
   font-family: var(--font-heading, 'Inter', -apple-system, sans-serif);
-  font-size: clamp(48px, 8.2vw, 105px);
+  font-size: clamp(52px, 8.8vw, 115px);
   font-weight: 800;
-  line-height: 0.98;
+  line-height: 0.95;
   letter-spacing: -0.045em;
   color: #000000;
-  margin: 0 auto 32px auto;
-  max-width: 960px;
+  margin: 0 auto 54px auto;
+  max-width: 720px;
   text-align: center;
+  word-break: break-word;
 }
 
 .cs-hero-description {
