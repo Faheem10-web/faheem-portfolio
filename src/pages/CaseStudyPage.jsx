@@ -123,13 +123,10 @@ export default function CaseStudyPage() {
   const figmaUrl = project.links?.figma;
   const prototypeUrl = project.links?.prototype;
 
-  // Other Projects for "More Works" & Next Project Marquee
-  const allValidProjects = (projects || []).filter(p => p.enabled !== false);
-  const currentIndex = allValidProjects.findIndex(p => p.slug === id || p._id === id || p.id === id);
-  const nextProjectIndex = (currentIndex + 1) % (allValidProjects.length || 1);
-  const nextProject = allValidProjects[nextProjectIndex] || allValidProjects[0];
-  const nextProjectSlug = nextProject?.slug || nextProject?._id || nextProject?.id;
-  const nextProjectName = nextProject?.name || nextProject?.title || 'Next Project';
+  // Other Projects for "More Works"
+  const otherProjects = (projects || [])
+    .filter(p => (p.slug !== id && p._id !== id && p.enabled !== false))
+    .slice(0, 2);
 
   const handleOpenLightbox = (src) => {
     if (src) setLightboxImg(src);
@@ -217,15 +214,7 @@ export default function CaseStudyPage() {
 
           {/* Hero Main Editorial Block */}
           <div className="cs-hero-main-block">
-            {/* Purple Accent Small Label */}
-            <motion.div 
-              className="cs-hero-purple-label"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {titleText.toUpperCase()}
-            </motion.div>
+
 
             {/* Massive Editorial Headline */}
             <motion.h1 
@@ -451,42 +440,6 @@ export default function CaseStudyPage() {
           </div>
         </motion.section>
       </div>
-
-      {/* ── 7. INFINITE MOVING MARQUEE (NEXT PROJECT TICKER) ── */}
-      {nextProjectSlug && (
-        <motion.div 
-          className="cs-next-project-marquee-wrapper"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
-          <Link to={`/case-study/${nextProjectSlug}`} className="cs-marquee-link">
-            <div className="cs-marquee-track">
-              <div className="cs-marquee-content">
-                <span>Next Project</span>
-                <span className="cs-marquee-dot">•</span>
-                <span>{nextProjectName}</span>
-                <span className="cs-marquee-dot">•</span>
-                <span>Next Project</span>
-                <span className="cs-marquee-dot">•</span>
-                <span>{nextProjectName}</span>
-                <span className="cs-marquee-dot">•</span>
-              </div>
-              <div className="cs-marquee-content" aria-hidden="true">
-                <span>Next Project</span>
-                <span className="cs-marquee-dot">•</span>
-                <span>{nextProjectName}</span>
-                <span className="cs-marquee-dot">•</span>
-                <span>Next Project</span>
-                <span className="cs-marquee-dot">•</span>
-                <span>{nextProjectName}</span>
-                <span className="cs-marquee-dot">•</span>
-              </div>
-            </div>
-          </Link>
-        </motion.div>
-      )}
 
       {/* ── LIGHTBOX FULLSCREEN MODAL ── */}
       <AnimatePresence>
