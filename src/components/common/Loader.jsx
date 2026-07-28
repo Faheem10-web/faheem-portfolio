@@ -68,23 +68,18 @@ export default function Loader({ onComplete, isLoading }) {
       exit="exit"
     >
       <div className="minimal-loader-content">
-        {/* Centered FAHEEM Text Only (No Logo Image) */}
+        {/* Bold Centered FAHEEM Text */}
         <h1 className="minimal-loader-brand">
           FAHEEM
         </h1>
 
-        {/* Thin 2px Animated Loading Bar */}
+        {/* Thin Animated Loading Bar Underneath */}
         <div className="minimal-loader-track">
           <div
             className="minimal-loader-fill"
             style={{ width: `${progress}%` }}
           />
         </div>
-
-        {/* Subtle Minimal Luxury Progress Value (0-100%) */}
-        <span className="minimal-loader-progress">
-          {Math.round(progress)}%
-        </span>
       </div>
     </motion.div>
   );
