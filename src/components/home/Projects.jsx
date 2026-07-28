@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiExternalLink } from "react-icons/fi";
 import { useAdmin } from "../../context/AdminContext";
 import { getOptimizedImageUrl } from "../../utils/imageOptimizer";
+import LazyImage from "../common/LazyImage";
 
 const MotionLink = motion(Link);
 
@@ -59,12 +60,10 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
         >
             <div className="project-card" tabIndex="0">
                 {optimizedCover ? (
-                    <img 
+                    <LazyImage 
                         src={optimizedCover} 
                         alt={cardTitle} 
                         className="project-image" 
-                        loading="lazy"
-                        decoding="async"
                     />
                 ) : (
                     <div className="project-image-placeholder" style={{ width: '100%', height: '100%', background: 'var(--admin-card-bg, #1a1b23)' }} />

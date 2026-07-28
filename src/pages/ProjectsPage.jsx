@@ -8,6 +8,7 @@ import {
 } from "react-icons/fi";
 import { useAdmin } from "../context/AdminContext";
 import { getOptimizedImageUrl } from "../utils/imageOptimizer";
+import LazyImage from "../components/common/LazyImage";
 
 // Refactored Subcomponent for Project Card to handle direct mouse follow
 function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }) {
@@ -51,12 +52,10 @@ function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }
             <div className="proj-card-inner" tabIndex="0">
                 <div className="proj-card-image-wrap">
                     {optimizedCover ? (
-                        <img 
+                        <LazyImage 
                             src={optimizedCover} 
                             alt={cardTitle} 
                             className="proj-card-image" 
-                            loading="lazy" 
-                            decoding="async" 
                         />
                     ) : (
                         <div className="proj-card-image-placeholder" style={{ width: '100%', height: '100%', background: 'var(--admin-card-bg, #1a1b23)' }} />

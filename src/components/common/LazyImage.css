@@ -1,0 +1,73 @@
+.lazy-image-container {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(15, 15, 20, 0.6);
+  border-radius: inherit;
+}
+
+/* 2026 Level Futuristic Skeleton Shimmer */
+.lazy-image-placeholder {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    110deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.08) 35%,
+    rgba(139, 92, 246, 0.16) 50%,
+    rgba(255, 255, 255, 0.08) 65%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  background-size: 200% 100%;
+  animation: lazyShimmer 1.8s infinite linear;
+  border-radius: inherit;
+  transition: opacity 0.4s ease-out;
+}
+
+.lazy-image-placeholder.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes lazyShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Actual Image with Blur-Up Reveal */
+.lazy-image-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  filter: blur(12px) scale(1.04);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, filter, transform;
+}
+
+.lazy-image-img.loaded {
+  opacity: 1;
+  filter: blur(0px) scale(1);
+}
+
+.lazy-image-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 12px;
+  font-weight: 500;
+  background-color: rgba(20, 20, 25, 0.8);
+}
