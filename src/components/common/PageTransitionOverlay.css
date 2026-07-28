@@ -1,0 +1,66 @@
+/* ==========================================================================
+   2026 CUBERTO-INSPIRED EDITORIAL PAGE TRANSITION OVERLAY
+   ========================================================================== */
+
+.cs-transition-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #0A0A0E;
+  z-index: 99999;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  will-change: transform, border-radius;
+  overflow: hidden;
+  box-shadow: 0 0 80px rgba(0, 0, 0, 0.8);
+}
+
+:root[data-theme='light'] .cs-transition-layer {
+  background-color: #111115;
+}
+
+/* Subtle accent edge glow */
+.cs-transition-edge-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #8B5CF6 50%, transparent 100%);
+  opacity: 0.85;
+}
+
+/* Center Content & Typography Badge */
+.cs-transition-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #FFFFFF;
+  font-family: var(--font-heading, 'Inter', sans-serif);
+}
+
+.cs-transition-brand {
+  font-size: clamp(14px, 2vw, 18px);
+  font-weight: 800;
+  letter-spacing: 0.25em;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+}
+
+.cs-transition-divider {
+  color: #8B5CF6;
+  font-size: 16px;
+}
+
+.cs-transition-title {
+  font-size: clamp(16px, 2.5vw, 24px);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: #FFFFFF;
+  text-transform: uppercase;
+}
