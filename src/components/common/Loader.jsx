@@ -27,7 +27,7 @@ export default function Loader({ onComplete, isLoading }) {
       return;
     }
 
-    const MIN_DURATION = 5000; // 5 seconds (5000ms) loader sequence
+    const MIN_DURATION = 3500; // 3.5 seconds (3500ms) loader sequence
 
     const updateProgress = (timestamp) => {
       if (!startTimeRef.current) startTimeRef.current = timestamp;
@@ -40,7 +40,7 @@ export default function Loader({ onComplete, isLoading }) {
 
       setProgress(currentVal);
 
-      // Only finish after reaching 5000ms AND data loading is complete
+      // Only finish after reaching 3500ms AND data loading is complete
       const isReadyToComplete = elapsed >= MIN_DURATION && (!isLoading || currentVal >= 100);
 
       if (isReadyToComplete) {
