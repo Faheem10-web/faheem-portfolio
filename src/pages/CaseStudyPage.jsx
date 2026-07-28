@@ -363,7 +363,24 @@ export default function CaseStudyPage() {
     );
   };
 
-  const allSliderImages = Array.from(new Set([heroImageSrc, challengeImgSrc, solutionImgSrc, conclusionImgSrc].filter(Boolean)));
+  const getArrayFromImages = (primary, secondary, arr) => {
+    const list = [];
+    if (primary && typeof primary === 'string' && primary.trim()) list.push(primary);
+    if (primary && typeof primary === 'object' && primary.url) list.push(primary.url);
+    if (secondary && typeof secondary === 'string' && secondary.trim()) list.push(secondary);
+    if (secondary && typeof secondary === 'object' && secondary.url) list.push(secondary.url);
+    if (Array.isArray(arr)) {
+      arr.forEach(item => {
+        if (typeof item === 'string' && item.trim()) list.push(item);
+        if (typeof item === 'object' && item.url) list.push(item.url);
+      });
+    }
+    return Array.from(new Set(list.filter(Boolean)));
+  };
+
+  const card1SliderImages = getArrayFromImages(project.heroImage || project.bannerImage || project.coverImage, null, project.heroImages);
+  const card2SliderImages = getArrayFromImages(project.solutionImage, project.challengeImage, project.solutionImages || project.challengeImages);
+  const card3SliderImages = getArrayFromImages(project.conclusionImage || project.resultImage, null, project.resultImages || project.conclusionImages);
 
   return (
     <div className="case-study-root" style={{ paddingTop: '120px', paddingBottom: '140px', background: '#FFFFFF', minHeight: '100vh', color: '#111827' }}>
@@ -389,12 +406,12 @@ export default function CaseStudyPage() {
           </motion.h1>
         </div>
 
-        {/* ── 2. INTERACTIVE MOCKUP SLIDER SHOWCASE (4 Images Carousel) ── */}
-        {allSliderImages.length > 0 && (
-          <MockupSliderCard images={allSliderImages} onOpenLightbox={handleOpenLightbox} />
+        {/* ── 2. CARD 1 SLIDER (Top Main Cover Showcase Card) ── */}
+        {card1SliderImages.length > 0 && (
+          <MockupSliderCard images={card1SliderImages} onOpenLightbox={handleOpenLightbox} />
         )}
 
-        {/* ── 3. OVERVIEW BLOCK (Directly Below Main Cover Image matching screenshot 1000%) ── */}
+        {/* ── 3. OVERVIEW BLOCK ── */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -459,7 +476,7 @@ export default function CaseStudyPage() {
           </div>
         </motion.div>
 
-        {/* ── 4. THE CHALLENGE SECTION (Matching Screenshot 1000%) ── */}
+        {/* ── 4. THE CHALLENGE SECTION ── */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -480,55 +497,12 @@ export default function CaseStudyPage() {
           </div>
         </motion.div>
 
-        {/* ── 5. FEATURED SHOWCASE IMAGE (Matching Screenshot 1000%) ── */}
-        {solutionImgSrc && solutionImgSrc !== heroImageSrc && (
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            style={{ width: '100%', marginBottom: '32px', cursor: 'pointer', background: '#F4F4F6', borderRadius: '16px', overflow: 'hidden' }}
-            onClick={() => handleOpenLightbox(solutionImgSrc)}
-          >
-            <img 
-              src={getOptimizedImageUrl(solutionImgSrc, { width: 1920 })} 
-              alt="Featured Showcase" 
-              style={{ width: '100%', height: 'auto', maxHeight: '640px', objectFit: 'cover', display: 'block', borderRadius: '16px' }}
-            />
-          </motion.div>
+        {/* ── 5. CARD 2 SLIDER (Middle Featured Showcase Card) ── */}
+        {card2SliderImages.length > 0 && (
+          <MockupSliderCard images={card2SliderImages} onOpenLightbox={handleOpenLightbox} />
         )}
 
-        {/* ── 6. DOUBLE MOCKUP GRID (Matching Screenshot 1000%) ── */}
-        {(challengeImgSrc || solutionImgSrc || conclusionImgSrc) && (
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginBottom: '56px' }}
-          >
-            {challengeImgSrc && challengeImgSrc !== heroImageSrc && (
-              <div style={{ borderRadius: '16px', overflow: 'hidden', cursor: 'pointer', background: '#F4F4F6' }} onClick={() => handleOpenLightbox(challengeImgSrc)}>
-                <img 
-                  src={getOptimizedImageUrl(challengeImgSrc, { width: 1200 })} 
-                  alt="Challenge Mockup" 
-                  style={{ width: '100%', height: '100%', maxHeight: '480px', objectFit: 'cover', display: 'block', borderRadius: '16px' }}
-                />
-              </div>
-            )}
-            {conclusionImgSrc && conclusionImgSrc !== heroImageSrc && conclusionImgSrc !== challengeImgSrc && (
-              <div style={{ borderRadius: '16px', overflow: 'hidden', cursor: 'pointer', background: '#F4F4F6' }} onClick={() => handleOpenLightbox(conclusionImgSrc)}>
-                <img 
-                  src={getOptimizedImageUrl(conclusionImgSrc, { width: 1200 })} 
-                  alt="Result Mockup" 
-                  style={{ width: '100%', height: '100%', maxHeight: '480px', objectFit: 'cover', display: 'block', borderRadius: '16px' }}
-                />
-              </div>
-            )}
-          </motion.div>
-        )}
-
-        {/* ── 7. FINAL OUTCOME SECTION (Matching Screenshot 1000%) ── */}
+        {/* ── 6. FINAL OUTCOME SECTION ── */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -548,6 +522,11 @@ export default function CaseStudyPage() {
             </p>
           </div>
         </motion.div>
+
+        {/* ── 7. CARD 3 SLIDER (Bottom Outcome Showcase Card) ── */}
+        {card3SliderImages.length > 0 && (
+          <MockupSliderCard images={card3SliderImages} onOpenLightbox={handleOpenLightbox} />
+        )}
 
       </div>
 

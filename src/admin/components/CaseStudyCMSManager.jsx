@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAdmin } from '../../context/AdminContext';
 import { 
   FiUploadCloud, FiTrash2, FiSave, FiEye, 
-  FiCheckCircle, FiLink, FiCheck, FiX 
+  FiCheckCircle, FiLink, FiCheck, FiX, FiPlus
 } from 'react-icons/fi';
 
 /**
@@ -41,34 +41,34 @@ function SimpleImageCard({ title, subtitle, imageSrc, onSaveImage, onRemoveImage
   };
 
   return (
-    <div style={{ background: '#ffffff', borderRadius: '16px', padding: '20px', border: '1px solid #EAEAEA', marginBottom: '20px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+    <div style={{ background: '#ffffff', borderRadius: '14px', padding: '16px', border: '1px solid #EAEAEA', marginBottom: '14px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
         <div>
-          <h4 style={{ margin: 0, fontSize: '15px', fontWeight: '700', color: '#111827' }}>{title}</h4>
-          <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#6B7280' }}>{subtitle}</p>
+          <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#111827' }}>{title}</h4>
+          {subtitle && <p style={{ margin: '2px 0 0 0', fontSize: '11.5px', color: '#6B7280' }}>{subtitle}</p>}
         </div>
         {imageSrc && (
           <button 
             type="button" 
             onClick={onRemoveImage} 
-            style={{ background: '#FEF2F2', color: '#DC2626', border: 'none', padding: '6px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+            style={{ background: '#FEF2F2', color: '#DC2626', border: 'none', padding: '4px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
           >
-            <FiTrash2 size={14} /> Remove Image
+            <FiTrash2 size={13} /> Remove
           </button>
         )}
       </div>
 
       {imageSrc ? (
-        <div style={{ position: 'relative', width: '100%', maxHeight: '240px', borderRadius: '12px', overflow: 'hidden', border: '1px solid #E5E7EB', background: '#F9FAFB' }}>
-          <img src={imageSrc} alt={title} style={{ width: '100%', height: '240px', objectFit: 'cover', display: 'block' }} />
+        <div style={{ position: 'relative', width: '100%', maxHeight: '180px', borderRadius: '10px', overflow: 'hidden', border: '1px solid #E5E7EB', background: '#F9FAFB' }}>
+          <img src={imageSrc} alt={title} style={{ width: '100%', height: '180px', objectFit: 'cover', display: 'block' }} />
         </div>
       ) : (
-        <div style={{ border: '2px dashed #D1D5DB', borderRadius: '12px', padding: '24px', textAlign: 'center', background: '#FAFAFA' }}>
-          <FiUploadCloud size={32} style={{ color: '#9CA3AF', marginBottom: '8px' }} />
-          <p style={{ margin: '0 0 12px 0', fontSize: '13px', color: '#4B5563', fontWeight: '500' }}>
-            {isUploading ? 'Uploading file to Cloudinary...' : 'Upload Image or enter image URL below'}
+        <div style={{ border: '2px dashed #D1D5DB', borderRadius: '10px', padding: '16px', textAlign: 'center', background: '#FAFAFA' }}>
+          <FiUploadCloud size={24} style={{ color: '#9CA3AF', marginBottom: '4px' }} />
+          <p style={{ margin: '0 0 8px 0', fontSize: '12px', color: '#4B5563', fontWeight: '500' }}>
+            {isUploading ? 'Uploading to Cloudinary...' : 'Upload Image or paste URL below'}
           </p>
-          <label style={{ display: 'inline-block', background: '#111827', color: '#FFFFFF', padding: '8px 18px', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
+          <label style={{ display: 'inline-block', background: '#111827', color: '#FFFFFF', padding: '6px 14px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}>
             Choose File
             <input type="file" onChange={handleFileUpload} style={{ display: 'none' }} accept="image/*" disabled={isUploading} />
           </label>
@@ -76,18 +76,18 @@ function SimpleImageCard({ title, subtitle, imageSrc, onSaveImage, onRemoveImage
       )}
 
       {/* Direct URL Paste Bar */}
-      <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+      <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
         <input 
           type="text" 
           value={urlInput} 
           onChange={e => setUrlInput(e.target.value)} 
           placeholder="Or paste direct image URL (https://...)" 
-          style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '12.5px', outline: 'none' }} 
+          style={{ flex: 1, padding: '7px 10px', borderRadius: '6px', border: '1px solid #D1D5DB', fontSize: '12px', outline: 'none' }} 
         />
         <button 
           type="button" 
           onClick={handleApplyUrl} 
-          style={{ background: '#F3F4F6', color: '#374151', border: '1px solid #D1D5DB', padding: '8px 14px', borderRadius: '8px', fontSize: '12.5px', fontWeight: '600', cursor: 'pointer' }}
+          style={{ background: '#F3F4F6', color: '#374151', border: '1px solid #D1D5DB', padding: '7px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}
         >
           Set URL
         </button>
@@ -119,14 +119,26 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
 
   // Text Sections
   const [challengeText, setChallengeText] = useState(project?.challenge || project?.challengeIntro || '');
-  const [solutionText, setSolutionText] = useState(project?.solution || project?.solutionIntro || '');
   const [resultsText, setResultsText] = useState(project?.results || project?.conclusion || '');
 
-  // Images
-  const [heroImage, setHeroImage] = useState(project?.heroImage || project?.bannerImage || '');
-  const [challengeImage, setChallengeImage] = useState(project?.challengeImage || '');
-  const [solutionImage, setSolutionImage] = useState(project?.solutionImage || '');
-  const [conclusionImage, setConclusionImage] = useState(project?.conclusionImage || project?.resultImage || '');
+  // 3 Separate Card Slider Image Arrays (up to 4 images each)
+  const extractList = (primary, secondary, arr) => {
+    const list = [];
+    if (primary && typeof primary === 'string' && primary.trim()) list.push(primary);
+    if (secondary && typeof secondary === 'string' && secondary.trim()) list.push(secondary);
+    if (Array.isArray(arr)) {
+      arr.forEach(item => {
+        if (typeof item === 'string' && item.trim()) list.push(item);
+        if (typeof item === 'object' && item.url) list.push(item.url);
+      });
+    }
+    while (list.length < 4) list.push('');
+    return list.slice(0, 4);
+  };
+
+  const [card1Images, setCard1Images] = useState(extractList(project?.heroImage || project?.bannerImage, null, project?.heroImages));
+  const [card2Images, setCard2Images] = useState(extractList(project?.solutionImage, project?.challengeImage, project?.solutionImages || project?.challengeImages));
+  const [card3Images, setCard3Images] = useState(extractList(project?.conclusionImage || project?.resultImage, null, project?.resultImages || project?.conclusionImages));
 
   useEffect(() => {
     if (project) {
@@ -139,18 +151,37 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
       setClient(project.client || 'Digital Client');
       setYear(project.year || '2026');
       setChallengeText(project.challenge || project.challengeIntro || '');
-      setSolutionText(project.solution || project.solutionIntro || '');
       setResultsText(project.results || project.conclusion || '');
-      setHeroImage(project.heroImage || project.bannerImage || '');
-      setChallengeImage(project.challengeImage || '');
-      setSolutionImage(project.solutionImage || '');
-      setConclusionImage(project.conclusionImage || project.resultImage || '');
+
+      setCard1Images(extractList(project.heroImage || project.bannerImage, null, project.heroImages));
+      setCard2Images(extractList(project.solutionImage, project.challengeImage, project.solutionImages || project.challengeImages));
+      setCard3Images(extractList(project.conclusionImage || project.resultImage, null, project.resultImages || project.conclusionImages));
     }
   }, [project]);
+
+  const updateCardImage = (cardIndex, slotIndex, url) => {
+    if (cardIndex === 1) {
+      const copy = [...card1Images];
+      copy[slotIndex] = url;
+      setCard1Images(copy);
+    } else if (cardIndex === 2) {
+      const copy = [...card2Images];
+      copy[slotIndex] = url;
+      setCard2Images(copy);
+    } else if (cardIndex === 3) {
+      const copy = [...card3Images];
+      copy[slotIndex] = url;
+      setCard3Images(copy);
+    }
+  };
 
   const handleSave = async () => {
     if (!project?._id && !project?.slug) return;
     setIsSaving(true);
+
+    const validCard1 = card1Images.filter(Boolean);
+    const validCard2 = card2Images.filter(Boolean);
+    const validCard3 = card3Images.filter(Boolean);
 
     const payload = {
       name: projectName,
@@ -164,23 +195,32 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
       infoConfig: { ...(project?.infoConfig || {}), role, timeline: `${year}` },
       challenge: challengeText,
       challengeIntro: challengeText,
-      solution: solutionText,
-      solutionIntro: solutionText,
       results: resultsText,
       conclusion: resultsText,
-      heroImage,
-      bannerImage: heroImage,
-      challengeImage,
-      solutionImage,
-      conclusionImage,
-      resultImage: conclusionImage
+
+      // Card 1 Slider Images
+      heroImages: validCard1,
+      heroImage: validCard1[0] || '',
+      bannerImage: validCard1[0] || '',
+
+      // Card 2 Slider Images
+      solutionImages: validCard2,
+      challengeImages: validCard2,
+      solutionImage: validCard2[0] || '',
+      challengeImage: validCard2[0] || '',
+
+      // Card 3 Slider Images
+      resultImages: validCard3,
+      conclusionImages: validCard3,
+      conclusionImage: validCard3[0] || '',
+      resultImage: validCard3[0] || ''
     };
 
     const res = await updateCaseStudy(project._id || project.slug, payload);
     setIsSaving(false);
 
     if (res.success) {
-      setToastMessage('Case Study updated & saved live to MongoDB!');
+      setToastMessage('Case Study 3-Card Sliders saved live to MongoDB!');
       setTimeout(() => setToastMessage(''), 3000);
       if (onSaveComplete) onSaveComplete(res.project);
     } else {
@@ -220,7 +260,7 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
             </button>
           </div>
           <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#6B7280' }}>
-            Ultra-simple real-time live content editor for this portfolio case study.
+            Ultra-simple live manager for 3 Interactive 4-Image Card Sliders & text content.
           </p>
         </div>
 
@@ -268,7 +308,7 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
             boxShadow: '0 2px 5px rgba(0,0,0,0.04)'
           }}
         >
-          📸 Showcase Mockup Images
+          📸 3-Card Interactive Sliders (4 Images Each)
         </button>
       </div>
 
@@ -294,7 +334,7 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
               </div>
 
               <div>
-                <label style={{ fontSize: '12px', fontWeight: '700', color: '#374151', display: 'block', marginBottom: '6px' }}>Visit Website Link (Live URL for Neon Green Button)</label>
+                <label style={{ fontSize: '12px', fontWeight: '700', color: '#374151', display: 'block', marginBottom: '6px' }}>Visit Website Link (Live URL for Glossy Purple Button)</label>
                 <input type="text" value={liveUrl} onChange={e => setLiveUrl(e.target.value)} placeholder="https://yourproject.vercel.app" style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
               </div>
 
@@ -334,7 +374,7 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
             />
           </div>
 
-          {/* Card 3: The Solution / Final Outcome Text */}
+          {/* Card 3: Final Outcome Text */}
           <div style={{ background: '#FFFFFF', borderRadius: '16px', padding: '24px', border: '1px solid #EAEAEA' }}>
             <h3 style={{ margin: '0 0 16px 0', fontSize: '15px', fontWeight: '800', color: '#111827' }}>
               🏆 FINAL OUTCOME Section Text
@@ -351,44 +391,71 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
         </div>
       )}
 
-      {/* ── TAB 2: SHOWCASE MOCKUP IMAGES (4-Slide Interactive Carousel) ── */}
+      {/* ── TAB 2: SHOWCASE MOCKUP IMAGES (3 Card Sliders - 4 Images Each) ── */}
       {activeTab === 'images' && (
-        <div>
-          <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', padding: '16px', borderRadius: '12px', marginBottom: '20px', color: '#1E40AF', fontSize: '13px', lineHeight: '1.5' }}>
-            💡 <strong>Interactive Slider Mode Active:</strong> Images uploaded across Slide 1 to 4 populate the interactive 60fps Carousel Slider Card at the top of the Case Study page (with navigation arrows & slide indicator dots)!
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+          
+          <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', padding: '16px', borderRadius: '12px', color: '#1E40AF', fontSize: '13px', lineHeight: '1.5' }}>
+            🚀 <strong>3 Interactive Card Sliders Enabled!</strong> You can now add up to 4 images per card section (Card 1 Top Showcase, Card 2 Middle Showcase, Card 3 Bottom Outcome). Each section becomes an interactive slider with navigation arrows & indicator dots on the live site!
           </div>
 
-          <SimpleImageCard 
-            title="Slide 1 Image (Main Featured Mockup)" 
-            subtitle="First slide image in the interactive showcase carousel"
-            imageSrc={heroImage}
-            onSaveImage={setHeroImage}
-            onRemoveImage={() => setHeroImage('')}
-          />
+          {/* 1. CARD 1 SLIDER GROUP (Top Main Cover) */}
+          <div style={{ background: '#FFFFFF', borderRadius: '18px', padding: '24px', border: '1px solid #EAEAEA' }}>
+            <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '800', color: '#111827' }}>
+              🎨 CARD 1 SLIDER: Top Main Cover Showcase (Up to 4 Images)
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
+              {[0, 1, 2, 3].map((slotIdx) => (
+                <SimpleImageCard 
+                  key={slotIdx}
+                  title={`Slide ${slotIdx + 1}`} 
+                  subtitle={`Card 1 Slide Image ${slotIdx + 1}`}
+                  imageSrc={card1Images[slotIdx]}
+                  onSaveImage={(url) => updateCardImage(1, slotIdx, url)}
+                  onRemoveImage={() => updateCardImage(1, slotIdx, '')}
+                />
+              ))}
+            </div>
+          </div>
 
-          <SimpleImageCard 
-            title="Slide 2 Image (Challenge Mockup)" 
-            subtitle="Second slide image in the interactive showcase carousel"
-            imageSrc={challengeImage}
-            onSaveImage={setChallengeImage}
-            onRemoveImage={() => setChallengeImage('')}
-          />
+          {/* 2. CARD 2 SLIDER GROUP (Middle Featured Showcase) */}
+          <div style={{ background: '#FFFFFF', borderRadius: '18px', padding: '24px', border: '1px solid #EAEAEA' }}>
+            <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '800', color: '#111827' }}>
+              🎯 CARD 2 SLIDER: Middle Featured Showcase (Up to 4 Images)
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
+              {[0, 1, 2, 3].map((slotIdx) => (
+                <SimpleImageCard 
+                  key={slotIdx}
+                  title={`Slide ${slotIdx + 1}`} 
+                  subtitle={`Card 2 Slide Image ${slotIdx + 1}`}
+                  imageSrc={card2Images[slotIdx]}
+                  onSaveImage={(url) => updateCardImage(2, slotIdx, url)}
+                  onRemoveImage={() => updateCardImage(2, slotIdx, '')}
+                />
+              ))}
+            </div>
+          </div>
 
-          <SimpleImageCard 
-            title="Slide 3 Image (Solution Mockup)" 
-            subtitle="Third slide image in the interactive showcase carousel"
-            imageSrc={solutionImage}
-            onSaveImage={setSolutionImage}
-            onRemoveImage={() => setSolutionImage('')}
-          />
+          {/* 3. CARD 3 SLIDER GROUP (Bottom Outcome Showcase) */}
+          <div style={{ background: '#FFFFFF', borderRadius: '18px', padding: '24px', border: '1px solid #EAEAEA' }}>
+            <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '800', color: '#111827' }}>
+              🏆 CARD 3 SLIDER: Bottom Outcome Showcase (Up to 4 Images)
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
+              {[0, 1, 2, 3].map((slotIdx) => (
+                <SimpleImageCard 
+                  key={slotIdx}
+                  title={`Slide ${slotIdx + 1}`} 
+                  subtitle={`Card 3 Slide Image ${slotIdx + 1}`}
+                  imageSrc={card3Images[slotIdx]}
+                  onSaveImage={(url) => updateCardImage(3, slotIdx, url)}
+                  onRemoveImage={() => updateCardImage(3, slotIdx, '')}
+                />
+              ))}
+            </div>
+          </div>
 
-          <SimpleImageCard 
-            title="Slide 4 Image (Final Result Mockup)" 
-            subtitle="Fourth slide image in the interactive showcase carousel"
-            imageSrc={conclusionImage}
-            onSaveImage={setConclusionImage}
-            onRemoveImage={() => setConclusionImage('')}
-          />
         </div>
       )}
 
