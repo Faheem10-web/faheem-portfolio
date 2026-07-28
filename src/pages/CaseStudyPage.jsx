@@ -14,36 +14,64 @@ import "./CaseStudyPage.css";
 export default function CaseStudyPage() {
   const { id } = useParams();
   const { projects } = useAdmin();
-  const [project, setProject] = useState(null);
-  const [loading, setLoading] = useState(true);
+  
+  // Instant synchronous lookup from context or cached projects array for 0ms lag
+  const contextProject = (projects || []).find(p => p.slug === id || p._id === id || p.id === id);
+  const [project, setProject] = useState(contextProject || null);
+  const [loading, setLoading] = useState(!contextProject && !project);
   const [lightboxImg, setLightboxImg] = useState(null);
 
+  // Synchronously update local project state whenever context projects change (0ms lag!)
   useEffect(() => {
+    if (contextProject) {
+      setProject(contextProject);
+      setLoading(false);
+    }
+  }, [contextProject]);
+
+  useEffect(() => {
+    let isCancelled = false;
+
     const loadProject = async () => {
-      setLoading(true);
+      // Only trigger loading UI if we have no project data at all
+      if (!contextProject && !project) {
+        setLoading(true);
+      }
       try {
         const res = await fetch(`${API_BASE}/case-study/${id}?t=${Date.now()}`, {
           cache: 'no-store',
-          headers: { 'Cache-Control': 'no-cache' }
+          headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' }
         });
         if (res.ok) {
           const data = await res.json();
-          setProject(data);
-        } else {
+          if (!isCancelled) {
+            setProject(data);
+          }
+        } else if (!contextProject) {
           const found = (projects || []).find(p => p.slug === id || p._id === id || p.id === id);
-          setProject(found || null);
+          if (!isCancelled) {
+            setProject(found || null);
+          }
         }
       } catch (err) {
         console.error("Failed to load case study:", err);
-        const found = (projects || []).find(p => p.slug === id || p._id === id || p.id === id);
-        setProject(found || null);
+        if (!contextProject && !isCancelled) {
+          const found = (projects || []).find(p => p.slug === id || p._id === id || p.id === id);
+          setProject(found || null);
+        }
       } finally {
-        setLoading(false);
+        if (!isCancelled) {
+          setLoading(false);
+        }
       }
     };
 
     loadProject();
-  }, [id, projects]);
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [id, contextProject]);
 
   useEffect(() => {
     window.scrollTo(0, 0);

@@ -611,6 +611,9 @@ router.delete('/experiences/:id', protect, async (req, res) => {
 /* ──────────────────────────────────────────────────────────────────────── */
 
 router.get('/projects', checkMaintenance, async (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   try {
     if (mongoose.connection.readyState !== 1) {
       return res.json([]);
@@ -626,6 +629,9 @@ router.get('/projects', checkMaintenance, async (req, res) => {
 });
 
 router.get('/projects/:idOrSlug', checkMaintenance, async (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   try {
     if (mongoose.connection.readyState !== 1) {
       return res.status(503).json({ message: 'Database connection unavailable' });
@@ -768,6 +774,9 @@ router.delete('/projects/:id', protect, async (req, res) => {
 
 // GET Case Study Details
 router.get('/case-study/:idOrSlug', checkMaintenance, async (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   try {
     if (mongoose.connection.readyState !== 1) {
       const seed = getDefaultSeedData();

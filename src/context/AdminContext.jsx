@@ -312,7 +312,11 @@ export function AdminProvider({ children }) {
                 headers: { 'Cache-Control': 'no-cache, no-store' },
                 cache: 'no-store'
             });
-            if (res.ok) stateSetter(await res.json());
+            if (res.ok) {
+                const freshData = await res.json();
+                stateSetter(freshData);
+                setCache(routeSegment, freshData);
+            }
         };
 
         return {
@@ -329,7 +333,11 @@ export function AdminProvider({ children }) {
                 if (res.ok) {
                     const createdItem = await res.json().catch(() => null);
                     if (createdItem) {
-                        stateSetter(prev => [...(prev || []), createdItem]);
+                        stateSetter(prev => {
+                            const updated = [...(prev || []), createdItem];
+                            setCache(routeSegment, updated);
+                            return updated;
+                        });
                     } else {
                         await fetchAll();
                     }
@@ -351,7 +359,11 @@ export function AdminProvider({ children }) {
                     const updatedItem = await res.json().catch(() => null);
                     if (updatedItem && (updatedItem._id || updatedItem.id)) {
                         const targetId = updatedItem._id || updatedItem.id;
-                        stateSetter(prev => (prev || []).map(existing => (existing._id === targetId || existing.id === targetId) ? { ...existing, ...updatedItem } : existing));
+                        stateSetter(prev => {
+                            const updated = (prev || []).map(existing => (existing._id === targetId || existing.id === targetId) ? { ...existing, ...updatedItem } : existing);
+                            setCache(routeSegment, updated);
+                            return updated;
+                        });
                     } else {
                         await fetchAll();
                     }
@@ -563,8 +575,12 @@ export function AdminProvider({ children }) {
             });
             const data = await safeParseJson(res);
             if (res.ok && data.project) {
-                // Update local projects array state immediately for zero-lag UI updates
-                setProjects(prev => (prev || []).map(p => (p._id === data.project._id || p.slug === data.project.slug) ? { ...p, ...data.project } : p));
+                // Update local projects array state immediately for zero-lag UI updates & sync localStorage cache
+                setProjects(prev => {
+                    const updated = (prev || []).map(p => (p._id === data.project._id || p.slug === data.project.slug) ? { ...p, ...data.project } : p);
+                    setCache('projects', updated);
+                    return updated;
+                });
                 return { success: true, project: data.project };
             }
             return { success: false, message: data.error || data.message || 'Failed to update case study' };
