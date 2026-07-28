@@ -78,7 +78,11 @@ function SimpleImageCard({ title, subtitle, imageSrc, onSaveImage, onRemoveSlot 
         <input 
           type="text" 
           value={urlInput} 
-          onChange={e => setUrlInput(e.target.value)} 
+          onChange={e => {
+            const newVal = e.target.value;
+            setUrlInput(newVal);
+            onSaveImage(newVal);
+          }} 
           placeholder="Or paste direct image URL (https://...)" 
           style={{ flex: 1, padding: '7px 10px', borderRadius: '6px', border: '1px solid #D1D5DB', fontSize: '12px', outline: 'none' }} 
         />
