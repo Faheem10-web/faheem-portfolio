@@ -71,16 +71,15 @@ function AppContent() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
 
-  // Immediately consider data ready if cached settings and projects are available
-  const isDataReady = !isSettingsLoading && !isProjectsLoading;
-  const [loading, setLoading] = useState(!isDataReady && !isAdminRoute);
+  // Display loader for 5 seconds on initial site load
+  const [loading, setLoading] = useState(!isAdminRoute);
 
   useEffect(() => {
-    if (isAdminRoute || isDataReady) {
+    if (isAdminRoute) {
       setLoading(false);
       setIsSiteLoaded(true);
     }
-  }, [isAdminRoute, isDataReady, setIsSiteLoaded]);
+  }, [isAdminRoute, setIsSiteLoaded]);
 
   // Strict maintenance mode check: ONLY true if explicitly enabled by admin in database/CMS settings
   const isMaintenanceMode = siteSettings?.global?.maintenanceMode === true;

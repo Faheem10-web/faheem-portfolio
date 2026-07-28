@@ -26,25 +26,25 @@ export default function Loader({ onComplete, isLoading }) {
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (mediaQuery.matches || !isLoading) {
+    if (mediaQuery.matches) {
       if (onComplete) onComplete();
       return;
     }
 
-    const DURATION = 220; // Fast under-300ms sequence
+    const DURATION = 5000; // Exactly 5 seconds sequence
 
     const updateProgress = (timestamp) => {
       if (!startTimeRef.current) startTimeRef.current = timestamp;
       const elapsed = timestamp - startTimeRef.current;
       const linearRatio = Math.min(elapsed / DURATION, 1);
 
-      // Smooth soft easing curve
+      // Smooth soft easing curve over 5 seconds
       const easedRatio = 1 - Math.pow(1 - linearRatio, 3);
       const currentVal = easedRatio * 100;
 
       setProgress(currentVal);
 
-      if (currentVal >= 100 || !isLoading) {
+      if (currentVal >= 100 || elapsed >= DURATION) {
         if (!completedRef.current) {
           completedRef.current = true;
           if (onComplete) onComplete();
@@ -61,7 +61,7 @@ export default function Loader({ onComplete, isLoading }) {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [isLoading, onComplete]);
+  }, [onComplete]);
 
   return (
     <motion.div
