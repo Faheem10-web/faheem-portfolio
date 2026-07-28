@@ -127,6 +127,10 @@ export function AdminProvider({ children }) {
             if (res.ok) {
                 const data = await res.json();
                 if (data.settings) {
+                    if (data.settings.footer) {
+                        delete data.settings.footer.bgVideo;
+                        data.settings.footer.bgMediaType = 'image';
+                    }
                     setSiteSettings(data.settings);
                     setCache('settings', data.settings);
                 }
