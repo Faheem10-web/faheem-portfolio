@@ -484,7 +484,7 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
   };
 
   const handleLivePreview = () => {
-    window.open(`/projects/${projectSlug}`, '_blank');
+    window.open(`/case-study/${projectSlug}`, '_blank');
   };
 
   // Helper functions for updating arrays

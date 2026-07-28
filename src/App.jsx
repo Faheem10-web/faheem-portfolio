@@ -282,8 +282,9 @@ function AppContent() {
                   <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
                   <Route path="/about" element={<PageWrapper><AboutPage /></PageWrapper>} />
                   <Route path="/projects" element={<PageWrapper><ProjectsPage /></PageWrapper>} />
-                  <Route path="/contact" element={<PageWrapper><ContactPage /></PageWrapper>} />
+                  <Route path="/projects/:id" element={<PageWrapper><CaseStudyPage /></PageWrapper>} />
                   <Route path="/case-study/:id" element={<PageWrapper><CaseStudyPage /></PageWrapper>} />
+                  <Route path="/contact" element={<PageWrapper><ContactPage /></PageWrapper>} />
                 </Routes>
               </AnimatePresence>
             </main>
