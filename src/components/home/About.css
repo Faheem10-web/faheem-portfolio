@@ -94,12 +94,7 @@
 }
 
 .about-glass-line {
-    position: absolute;
-    top: 0;
-    left: 10%;
-    right: 10%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(244, 114, 182, 0.4) 30%, rgba(192, 132, 252, 0.5) 70%, transparent 100%);
+    display: none !important;
 }
 
 /* ─── CONTAINER & GRID LAYOUT ─── */

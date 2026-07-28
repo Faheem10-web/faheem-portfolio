@@ -18,7 +18,6 @@ function About() {
                 <div className="about-glow-orb orb-2"></div>
                 <div className="about-glow-orb orb-3"></div>
                 <div className="about-grid-pattern"></div>
-                <div className="about-glass-line"></div>
             </div>
 
             <div className="about-container">
