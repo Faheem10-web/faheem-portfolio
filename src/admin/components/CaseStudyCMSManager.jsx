@@ -8,7 +8,7 @@ import {
 /**
  * Ultra-Simple Clean Image Uploader Card for Case Study CMS
  */
-function SimpleImageCard({ title, subtitle, imageSrc, onSaveImage, onRemoveImage }) {
+function SimpleImageCard({ title, subtitle, imageSrc, onSaveImage, onRemoveSlot }) {
   const { uploadCaseStudyFile } = useAdmin();
   const [isUploading, setIsUploading] = useState(false);
   const [urlInput, setUrlInput] = useState(imageSrc || '');
@@ -47,15 +47,13 @@ function SimpleImageCard({ title, subtitle, imageSrc, onSaveImage, onRemoveImage
           <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#111827' }}>{title}</h4>
           {subtitle && <p style={{ margin: '2px 0 0 0', fontSize: '11.5px', color: '#6B7280' }}>{subtitle}</p>}
         </div>
-        {imageSrc && (
-          <button 
-            type="button" 
-            onClick={onRemoveImage} 
-            style={{ background: '#FEF2F2', color: '#DC2626', border: 'none', padding: '4px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-          >
-            <FiTrash2 size={13} /> Remove
-          </button>
-        )}
+        <button 
+          type="button" 
+          onClick={onRemoveSlot} 
+          style={{ background: '#FEF2F2', color: '#DC2626', border: 'none', padding: '4px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+        >
+          <FiTrash2 size={13} /> Delete Slide
+        </button>
       </div>
 
       {imageSrc ? (
@@ -97,7 +95,7 @@ function SimpleImageCard({ title, subtitle, imageSrc, onSaveImage, onRemoveImage
 }
 
 /**
- * Ultra-Simple Clean Case Study Admin Manager
+ * Ultra-Simple Clean Case Study Admin Manager with Unlimited Card Slider Support
  */
 export default function CaseStudyCMSManager({ project, onSaveComplete }) {
   const { updateCaseStudy } = useAdmin();
@@ -121,19 +119,21 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
   const [challengeText, setChallengeText] = useState(project?.challenge || project?.challengeIntro || '');
   const [resultsText, setResultsText] = useState(project?.results || project?.conclusion || '');
 
-  // 3 Separate Card Slider Image Arrays (up to 4 images each)
+  // Unlimited Card Slider Arrays
   const extractList = (primary, secondary, arr) => {
     const list = [];
     if (primary && typeof primary === 'string' && primary.trim()) list.push(primary);
+    if (primary && typeof primary === 'object' && primary.url) list.push(primary.url);
     if (secondary && typeof secondary === 'string' && secondary.trim()) list.push(secondary);
+    if (secondary && typeof secondary === 'object' && secondary.url) list.push(secondary.url);
     if (Array.isArray(arr)) {
       arr.forEach(item => {
         if (typeof item === 'string' && item.trim()) list.push(item);
         if (typeof item === 'object' && item.url) list.push(item.url);
       });
     }
-    while (list.length < 4) list.push('');
-    return list.slice(0, 4);
+    const unique = Array.from(new Set(list.filter(Boolean)));
+    return unique.length > 0 ? unique : [''];
   };
 
   const [card1Images, setCard1Images] = useState(extractList(project?.heroImage || project?.bannerImage, null, project?.heroImages));
@@ -175,6 +175,18 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
     }
   };
 
+  const addImageSlot = (cardIndex) => {
+    if (cardIndex === 1) setCard1Images(prev => [...prev, '']);
+    if (cardIndex === 2) setCard2Images(prev => [...prev, '']);
+    if (cardIndex === 3) setCard3Images(prev => [...prev, '']);
+  };
+
+  const removeImageSlot = (cardIndex, slotIndex) => {
+    if (cardIndex === 1) setCard1Images(prev => prev.filter((_, idx) => idx !== slotIndex));
+    if (cardIndex === 2) setCard2Images(prev => prev.filter((_, idx) => idx !== slotIndex));
+    if (cardIndex === 3) setCard3Images(prev => prev.filter((_, idx) => idx !== slotIndex));
+  };
+
   const handleSave = async () => {
     if (!project?._id && !project?.slug) return;
     setIsSaving(true);
@@ -198,18 +210,18 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
       results: resultsText,
       conclusion: resultsText,
 
-      // Card 1 Slider Images
+      // Unlimited Card 1 Slider Images
       heroImages: validCard1,
       heroImage: validCard1[0] || '',
       bannerImage: validCard1[0] || '',
 
-      // Card 2 Slider Images
+      // Unlimited Card 2 Slider Images
       solutionImages: validCard2,
       challengeImages: validCard2,
       solutionImage: validCard2[0] || '',
       challengeImage: validCard2[0] || '',
 
-      // Card 3 Slider Images
+      // Unlimited Card 3 Slider Images
       resultImages: validCard3,
       conclusionImages: validCard3,
       conclusionImage: validCard3[0] || '',
@@ -220,7 +232,7 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
     setIsSaving(false);
 
     if (res.success) {
-      setToastMessage('Case Study 3-Card Sliders saved live to MongoDB!');
+      setToastMessage('Case Study Unlimited Sliders saved live to MongoDB!');
       setTimeout(() => setToastMessage(''), 3000);
       if (onSaveComplete) onSaveComplete(res.project);
     } else {
@@ -260,7 +272,7 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
             </button>
           </div>
           <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#6B7280' }}>
-            Ultra-simple live manager for 3 Interactive 4-Image Card Sliders & text content.
+            Live Manager for Unlimited Card Image Sliders & Case Study Content.
           </p>
         </div>
 
@@ -308,7 +320,7 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
             boxShadow: '0 2px 5px rgba(0,0,0,0.04)'
           }}
         >
-          📸 3-Card Interactive Sliders (4 Images Each)
+          📸 Unlimited Image Sliders (Card 1, 2 & 3)
         </button>
       </div>
 
@@ -391,28 +403,37 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
         </div>
       )}
 
-      {/* ── TAB 2: SHOWCASE MOCKUP IMAGES (3 Card Sliders - 4 Images Each) ── */}
+      {/* ── TAB 2: SHOWCASE MOCKUP IMAGES (Unlimited Card Sliders) ── */}
       {activeTab === 'images' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
           
           <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', padding: '16px', borderRadius: '12px', color: '#1E40AF', fontSize: '13px', lineHeight: '1.5' }}>
-            🚀 <strong>3 Interactive Card Sliders Enabled!</strong> You can now add up to 4 images per card section (Card 1 Top Showcase, Card 2 Middle Showcase, Card 3 Bottom Outcome). Each section becomes an interactive slider with navigation arrows & indicator dots on the live site!
+            🚀 <strong>Unlimited Card Sliders Enabled!</strong> You can add as many images as you want to Card 1, Card 2, and Card 3 by clicking <strong>"+ Add Slide Image"</strong>. Each card section becomes a smooth interactive slider on the live site!
           </div>
 
           {/* 1. CARD 1 SLIDER GROUP (Top Main Cover) */}
           <div style={{ background: '#FFFFFF', borderRadius: '18px', padding: '24px', border: '1px solid #EAEAEA' }}>
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '800', color: '#111827' }}>
-              🎨 CARD 1 SLIDER: Top Main Cover Showcase (Up to 4 Images)
-            </h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: '#111827' }}>
+                🎨 CARD 1 SLIDER: Top Main Cover Showcase ({card1Images.filter(Boolean).length} Images)
+              </h3>
+              <button 
+                type="button" 
+                onClick={() => addImageSlot(1)} 
+                style={{ background: '#111827', color: '#FFFFFF', border: 'none', padding: '6px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                <FiPlus size={14} /> Add Slide Image
+              </button>
+            </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
-              {[0, 1, 2, 3].map((slotIdx) => (
+              {card1Images.map((imgUrl, slotIdx) => (
                 <SimpleImageCard 
                   key={slotIdx}
-                  title={`Slide ${slotIdx + 1}`} 
-                  subtitle={`Card 1 Slide Image ${slotIdx + 1}`}
-                  imageSrc={card1Images[slotIdx]}
+                  title={`Card 1 Slide ${slotIdx + 1}`} 
+                  subtitle={`Top Showcase Slide Image ${slotIdx + 1}`}
+                  imageSrc={imgUrl}
                   onSaveImage={(url) => updateCardImage(1, slotIdx, url)}
-                  onRemoveImage={() => updateCardImage(1, slotIdx, '')}
+                  onRemoveSlot={() => removeImageSlot(1, slotIdx)}
                 />
               ))}
             </div>
@@ -420,18 +441,27 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
 
           {/* 2. CARD 2 SLIDER GROUP (Middle Featured Showcase) */}
           <div style={{ background: '#FFFFFF', borderRadius: '18px', padding: '24px', border: '1px solid #EAEAEA' }}>
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '800', color: '#111827' }}>
-              🎯 CARD 2 SLIDER: Middle Featured Showcase (Up to 4 Images)
-            </h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: '#111827' }}>
+                🎯 CARD 2 SLIDER: Middle Featured Showcase ({card2Images.filter(Boolean).length} Images)
+              </h3>
+              <button 
+                type="button" 
+                onClick={() => addImageSlot(2)} 
+                style={{ background: '#111827', color: '#FFFFFF', border: 'none', padding: '6px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                <FiPlus size={14} /> Add Slide Image
+              </button>
+            </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
-              {[0, 1, 2, 3].map((slotIdx) => (
+              {card2Images.map((imgUrl, slotIdx) => (
                 <SimpleImageCard 
                   key={slotIdx}
-                  title={`Slide ${slotIdx + 1}`} 
-                  subtitle={`Card 2 Slide Image ${slotIdx + 1}`}
-                  imageSrc={card2Images[slotIdx]}
+                  title={`Card 2 Slide ${slotIdx + 1}`} 
+                  subtitle={`Middle Showcase Slide Image ${slotIdx + 1}`}
+                  imageSrc={imgUrl}
                   onSaveImage={(url) => updateCardImage(2, slotIdx, url)}
-                  onRemoveImage={() => updateCardImage(2, slotIdx, '')}
+                  onRemoveSlot={() => removeImageSlot(2, slotIdx)}
                 />
               ))}
             </div>
@@ -439,18 +469,27 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
 
           {/* 3. CARD 3 SLIDER GROUP (Bottom Outcome Showcase) */}
           <div style={{ background: '#FFFFFF', borderRadius: '18px', padding: '24px', border: '1px solid #EAEAEA' }}>
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '800', color: '#111827' }}>
-              🏆 CARD 3 SLIDER: Bottom Outcome Showcase (Up to 4 Images)
-            </h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: '#111827' }}>
+                🏆 CARD 3 SLIDER: Bottom Outcome Showcase ({card3Images.filter(Boolean).length} Images)
+              </h3>
+              <button 
+                type="button" 
+                onClick={() => addImageSlot(3)} 
+                style={{ background: '#111827', color: '#FFFFFF', border: 'none', padding: '6px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                <FiPlus size={14} /> Add Slide Image
+              </button>
+            </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
-              {[0, 1, 2, 3].map((slotIdx) => (
+              {card3Images.map((imgUrl, slotIdx) => (
                 <SimpleImageCard 
                   key={slotIdx}
-                  title={`Slide ${slotIdx + 1}`} 
-                  subtitle={`Card 3 Slide Image ${slotIdx + 1}`}
-                  imageSrc={card3Images[slotIdx]}
+                  title={`Card 3 Slide ${slotIdx + 1}`} 
+                  subtitle={`Bottom Outcome Slide Image ${slotIdx + 1}`}
+                  imageSrc={imgUrl}
                   onSaveImage={(url) => updateCardImage(3, slotIdx, url)}
-                  onRemoveImage={() => updateCardImage(3, slotIdx, '')}
+                  onRemoveSlot={() => removeImageSlot(3, slotIdx)}
                 />
               ))}
             </div>
