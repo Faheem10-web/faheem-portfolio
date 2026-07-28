@@ -68,18 +68,23 @@ const ProtectedRoute = ({ children }) => {
 
 function AppContent() {
   const { siteSettings, isSettingsLoading, isProjectsLoading, token, user, isProfileLoading, setIsSiteLoaded } = useAdmin();
-  const [loading, setLoading] = useState(true);
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
 
+  // Immediately consider data ready if cached settings and projects are available
+  const isDataReady = !isSettingsLoading && !isProjectsLoading;
+  const [loading, setLoading] = useState(!isDataReady && !isAdminRoute);
+
   useEffect(() => {
-    if (isAdminRoute) {
+    if (isAdminRoute || isDataReady) {
+      setLoading(false);
       setIsSiteLoaded(true);
     }
-  }, [isAdminRoute, setIsSiteLoaded]);
+  }, [isAdminRoute, isDataReady, setIsSiteLoaded]);
 
+  // Strict maintenance mode check: ONLY true if explicitly enabled by admin in database/CMS settings
   const isMaintenanceMode = siteSettings?.global?.maintenanceMode === true;
-  const isAdmin = !!token && user?.role === 'admin';
+  const isAdmin = !!token;
   const showLoader = loading && !isAdminRoute;
 
   // Toggle body class for admin routes so native mouse cursors are properly restored
@@ -222,7 +227,8 @@ function AppContent() {
     };
   }, [isAdminRoute]);
 
-  if (isMaintenanceMode && !isAdminRoute && !isAdmin && !showLoader) {
+  // Only display MaintenancePage if maintenance mode is explicitly enabled by administrator
+  if (isMaintenanceMode === true && !isAdminRoute && !isAdmin) {
     return (
       <Suspense fallback={null}>
         <MaintenancePage />

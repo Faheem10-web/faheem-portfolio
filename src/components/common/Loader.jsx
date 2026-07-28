@@ -26,12 +26,12 @@ export default function Loader({ onComplete, isLoading }) {
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (mediaQuery.matches) {
+    if (mediaQuery.matches || !isLoading) {
       if (onComplete) onComplete();
       return;
     }
 
-    const DURATION = 1100; // Smooth 1.1s sequence
+    const DURATION = 300; // Ultra-fast responsive fill if initial fetch is pending
 
     const updateProgress = (timestamp) => {
       if (!startTimeRef.current) startTimeRef.current = timestamp;
@@ -45,19 +45,19 @@ export default function Loader({ onComplete, isLoading }) {
 
       let currentVal = easedRatio * 100;
 
-      if (isLoading && elapsed < 1200 && currentVal > 98) {
+      if (isLoading && elapsed < 320 && currentVal > 98) {
         currentVal = 98;
       }
 
       setProgress(currentVal);
 
-      if (currentVal < 100) {
-        animationFrameRef.current = requestAnimationFrame(updateProgress);
-      } else if (!completedRef.current) {
-        completedRef.current = true;
-        setTimeout(() => {
+      if (currentVal >= 100 || !isLoading) {
+        if (!completedRef.current) {
+          completedRef.current = true;
           if (onComplete) onComplete();
-        }, 120);
+        }
+      } else {
+        animationFrameRef.current = requestAnimationFrame(updateProgress);
       }
     };
 
