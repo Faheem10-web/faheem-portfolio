@@ -3,7 +3,8 @@ import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   FiExternalLink, FiGithub, FiFigma, FiCheck, 
-  FiX, FiChevronRight, FiArrowLeft, FiMaximize2 
+  FiX, FiChevronRight, FiArrowLeft, FiMaximize2,
+  FiUser, FiCalendar, FiEdit3, FiClock
 } from "react-icons/fi";
 import { useAdmin } from "../context/AdminContext";
 import { API_BASE } from "../config/api";
@@ -194,7 +195,7 @@ export default function CaseStudyPage() {
 
   return (
     <div className="case-study-root">
-      {/* ── 1. CUBERTO-STYLE EDITORIAL TYPOGRAPHY HERO (High-End Luxury 2026 Layout) ── */}
+      {/* ── 1. PREMIUM 2026 EDITORIAL HERO CARD (Exact Mockup Match) ── */}
       <motion.section 
         className="cs-typography-hero"
         initial={{ opacity: 0, y: 20 }}
@@ -213,17 +214,17 @@ export default function CaseStudyPage() {
 
           {/* Hero Main Editorial Block */}
           <div className="cs-hero-main-block">
-            {/* Small Centered Project Label */}
+            {/* Purple Accent Small Label */}
             <motion.div 
-              className="cs-hero-small-label"
+              className="cs-hero-purple-label"
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
             >
-              {titleText}
+              {titleText.toUpperCase()}
             </motion.div>
 
-            {/* Massive Centered Editorial Title/Headline */}
+            {/* Massive Editorial Headline */}
             <motion.h1 
               className="cs-hero-editorial-headline"
               initial={{ opacity: 0, y: 25 }}
@@ -232,33 +233,59 @@ export default function CaseStudyPage() {
             >
               {taglineText || `${titleText} — Redefining Digital Product Experience`}
             </motion.h1>
+
+            {/* Short Sub-Description */}
+            <motion.p 
+              className="cs-hero-sub-description"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {project.shortDesc || project.overviewConfig?.intro || `${titleText} is a revolutionary digital experience platform that brings essential services into one seamless interface.`}
+            </motion.p>
           </div>
 
-          {/* Bottom Information Grid (Role, Duration, Tools, Year) */}
+          {/* 4-Metric Floating Card Container */}
           <motion.div 
-            className="cs-hero-info-grid"
-            initial={{ opacity: 0, y: 20 }}
+            className="cs-hero-card-panel"
+            initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="cs-hero-info-cell">
-              <span className="cs-info-cell-label">Role</span>
-              <span className="cs-info-cell-value">{roleVal}</span>
+            {/* Role */}
+            <div className="cs-hero-card-col">
+              <div className="cs-card-icon-wrapper">
+                <FiUser className="cs-card-icon" />
+              </div>
+              <span className="cs-card-col-label">ROLE</span>
+              <span className="cs-card-col-value">{roleVal}</span>
             </div>
 
-            <div className="cs-hero-info-cell">
-              <span className="cs-info-cell-label">Duration</span>
-              <span className="cs-info-cell-value">{timelineVal}</span>
+            {/* Duration */}
+            <div className="cs-hero-card-col">
+              <div className="cs-card-icon-wrapper">
+                <FiCalendar className="cs-card-icon" />
+              </div>
+              <span className="cs-card-col-label">DURATION</span>
+              <span className="cs-card-col-value">{timelineVal}</span>
             </div>
 
-            <div className="cs-hero-info-cell">
-              <span className="cs-info-cell-label">Tools</span>
-              <span className="cs-info-cell-value">{displayTools}</span>
+            {/* Tools */}
+            <div className="cs-hero-card-col">
+              <div className="cs-card-icon-wrapper">
+                <FiEdit3 className="cs-card-icon" />
+              </div>
+              <span className="cs-card-col-label">TOOLS</span>
+              <span className="cs-card-col-value">{displayTools}</span>
             </div>
 
-            <div className="cs-hero-info-cell">
-              <span className="cs-info-cell-label">Year</span>
-              <span className="cs-info-cell-value">{yearVal}</span>
+            {/* Year */}
+            <div className="cs-hero-card-col">
+              <div className="cs-card-icon-wrapper">
+                <FiClock className="cs-card-icon" />
+              </div>
+              <span className="cs-card-col-label">YEAR</span>
+              <span className="cs-card-col-value">{yearVal}</span>
             </div>
           </motion.div>
 

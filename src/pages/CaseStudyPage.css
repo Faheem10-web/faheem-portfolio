@@ -66,21 +66,21 @@
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
-   1. CUBERTO-STYLE EDITORIAL TYPOGRAPHY HERO (High-End Luxury 2026 Layout)
+   1. PREMIUM 2026 EDITORIAL HERO CARD (Exact Mockup Match)
    ────────────────────────────────────────────────────────────────────────── */
 .cs-typography-hero {
   background-color: #FFFFFF;
-  color: #000000;
+  color: #0A0A0D;
   width: 100%;
-  padding-top: 140px;
-  padding-bottom: 70px;
+  padding-top: 130px;
+  padding-bottom: 72px;
   border-bottom: 1px solid #E5E7EB;
   box-sizing: border-box;
 }
 
 .cs-hero-container {
   width: 100%;
-  max-width: 1120px;
+  max-width: 1140px;
   margin: 0 auto;
   padding: 0 32px;
   box-sizing: border-box;
@@ -94,7 +94,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 48px;
+  margin-bottom: 44px;
 }
 
 .cs-hero-back-link {
@@ -114,13 +114,13 @@
 }
 
 .cs-hero-category-label {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   color: #52525B;
   background: #F4F4F5;
-  padding: 6px 16px;
+  padding: 6px 18px;
   border-radius: 100px;
 }
 
@@ -129,66 +129,111 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin-bottom: 56px;
+  margin-bottom: 48px;
   width: 100%;
 }
 
-/* Small Centered Project Label */
-.cs-hero-small-label {
+/* Purple Accent Small Label */
+.cs-hero-purple-label {
   font-family: var(--font-heading, 'Inter', -apple-system, sans-serif);
-  font-size: 16px;
-  font-weight: 600;
-  color: #18181B;
-  margin-bottom: 20px;
-  letter-spacing: 0.15em;
+  font-size: 15px;
+  font-weight: 700;
+  color: #7C3AED;
+  margin-bottom: 18px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
-/* Giant Centered Headline */
+/* Massive Editorial Headline */
 .cs-hero-editorial-headline {
   font-family: var(--font-heading, 'Inter', -apple-system, sans-serif);
-  font-size: clamp(48px, 7.5vw, 92px);
+  font-size: clamp(44px, 6.5vw, 84px);
   font-weight: 800;
-  line-height: 1.02;
-  letter-spacing: -0.045em;
-  color: #000000;
-  margin: 0 auto;
-  max-width: 860px;
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  color: #0A0A0D;
+  margin: 0 auto 20px auto;
+  max-width: 880px;
   text-align: center;
   word-break: break-word;
 }
 
-/* Centered Information Bar - Clean 4 Columns */
-.cs-hero-info-grid {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
-  padding-top: 36px;
-  border-top: 1px solid #E5E7EB;
+/* Short Sub-Description */
+.cs-hero-sub-description {
+  font-size: clamp(16px, 1.6vw, 19px);
+  font-weight: 400;
+  line-height: 1.6;
+  color: #71717A;
+  margin: 0 auto;
+  max-width: 680px;
   text-align: center;
 }
 
-.cs-hero-info-cell {
+/* 4-Metric Floating Card Container */
+.cs-hero-card-panel {
+  width: 100%;
+  max-width: 1040px;
+  background: #FFFFFF;
+  border: 1px solid #EAEAEA;
+  border-radius: 24px;
+  padding: 32px 24px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+  box-sizing: border-box;
+}
+
+.cs-hero-card-col {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  text-align: center;
+  padding: 8px 16px;
+  position: relative;
 }
 
-.cs-info-cell-label {
+.cs-hero-card-col:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 10%;
+  height: 80%;
+  width: 1px;
+  background-color: #F0F0F4;
+}
+
+/* Soft Purple Circle Icon Badge */
+.cs-card-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #F3E8FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.cs-card-icon {
+  font-size: 20px;
+  color: #7C3AED;
+}
+
+.cs-card-col-label {
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: #A1A1AA;
+  margin-bottom: 6px;
 }
 
-.cs-info-cell-value {
-  font-size: 14px;
+.cs-card-col-value {
+  font-size: 14.5px;
   font-weight: 600;
   color: #18181B;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 /* Dedicated Centered Live Preview Button Row */
@@ -203,15 +248,15 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #000000;
+  background: #09090B;
   color: #FFFFFF;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
-  padding: 12px 32px;
+  padding: 14px 36px;
   border-radius: 100px;
   text-decoration: none;
   transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 .cs-hero-live-btn:hover {
