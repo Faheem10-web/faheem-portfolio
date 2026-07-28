@@ -406,17 +406,57 @@ export default function CaseStudyPage() {
     ? [...card1RawList, newCloudinarySlide2]
     : card1RawList;
 
-  // Card 2: Only show if explicit solutionImages array has items not in Card 1
-  const card2RawImages = Array.isArray(project.solutionImages) && project.solutionImages.length > 0
-    ? getArrayFromImages(null, null, project.solutionImages)
-    : [];
-  const card2SliderImages = card2RawImages.filter(img => img && typeof img === 'string' && img.trim() && !card1SliderImages.includes(img));
+        {/* ── 4. THE CHALLENGE SECTION ── */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '32px', marginBottom: '56px' }}
+        >
+          <div style={{ flex: '0 0 160px' }}>
+            <span style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '0.12em', color: '#4B5563', textTransform: 'uppercase' }}>
+              THE CHALLENGE
+            </span>
+          </div>
 
-  // Card 3: Only show if explicit resultImages array has items not in Card 1 or Card 2
-  const card3RawImages = Array.isArray(project.resultImages) && project.resultImages.length > 0
-    ? getArrayFromImages(null, null, project.resultImages)
-    : [];
-  const card3SliderImages = card3RawImages.filter(img => img && typeof img === 'string' && img.trim() && !card1SliderImages.includes(img) && !card2SliderImages.includes(img));
+          <div style={{ flex: '1 1 540px', maxWidth: '680px' }}>
+            <p style={{ fontSize: '15px', lineHeight: '1.7', color: '#374151', margin: 0, whiteSpace: 'pre-line' }}>
+              {project.challenge || project.challengeIntro || `The client struggled with a complex product that overwhelmed users with dense data and inconsistent layouts. Key insights were buried behind poor hierarchy, unclear navigation, and fragmented components.\n\nAdditionally, the product needed to scale rapidly while maintaining usability.`}
+            </p>
+          </div>
+        </motion.div>
+
+        {/* ── 5. CARD 2 SLIDER (Middle Featured Showcase Card) ── */}
+        {card2SliderImages.length > 0 && (
+          <MockupSliderCard images={card2SliderImages} onOpenLightbox={handleOpenLightbox} />
+        )}
+
+        {/* ── 6. FINAL OUTCOME SECTION ── */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '32px', marginBottom: '40px' }}
+        >
+          <div style={{ flex: '0 0 160px' }}>
+            <span style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '0.12em', color: '#4B5563', textTransform: 'uppercase' }}>
+              FINAL OUTCOME
+            </span>
+          </div>
+
+          <div style={{ flex: '1 1 540px', maxWidth: '680px' }}>
+            <p style={{ fontSize: '15px', lineHeight: '1.7', color: '#374151', margin: 0, whiteSpace: 'pre-line' }}>
+              {project.results || project.conclusion || `A clear dashboard structure was introduced with consistent components, improved data hierarchy, and simplified navigation patterns that made insights easier to access.\n\nThe new design system reduced design debt, improved usability, and allowed the team to ship new features faster.`}
+            </p>
+          </div>
+        </motion.div>
+
+        {/* ── 7. CARD 3 SLIDER (Bottom Outcome Showcase Card) ── */}
+        {card3SliderImages.length > 0 && (
+          <MockupSliderCard images={card3SliderImages} onOpenLightbox={handleOpenLightbox} />
+        )}
 
   return (
     <div className="case-study-root" style={{ paddingTop: '120px', paddingBottom: '140px', background: '#FFFFFF', minHeight: '100vh', color: '#111827' }}>
@@ -533,7 +573,12 @@ export default function CaseStudyPage() {
           </div>
         </motion.div>
 
-        {/* ── 5. FINAL OUTCOME SECTION ── */}
+        {/* ── 5. CARD 2 SLIDER (Middle Featured Showcase Card) ── */}
+        {card2SliderImages.length > 0 && (
+          <MockupSliderCard images={card2SliderImages} onOpenLightbox={handleOpenLightbox} />
+        )}
+
+        {/* ── 6. FINAL OUTCOME SECTION ── */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -553,6 +598,11 @@ export default function CaseStudyPage() {
             </p>
           </div>
         </motion.div>
+
+        {/* ── 7. CARD 3 SLIDER (Bottom Outcome Showcase Card) ── */}
+        {card3SliderImages.length > 0 && (
+          <MockupSliderCard images={card3SliderImages} onOpenLightbox={handleOpenLightbox} />
+        )}
 
       </div>
 
