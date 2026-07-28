@@ -250,8 +250,8 @@ export default function CaseStudyPage() {
         </motion.h1>
       </div>
 
-      {/* ── 2. FULL-WIDTH SHOWCASE IMAGES STACK (Matching Image 2) ── */}
-      <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 32px', display: 'flex', flexDirection: 'column', gap: '48px' }}>
+      {/* ── 2. EXACT MATCH IMAGE CARD SHOWCASE STACK (Matching Reference Screenshot) ── */}
+      <div style={{ maxWidth: '1040px', margin: '0 auto', padding: '0 24px', display: 'flex', flexDirection: 'column', gap: '40px' }}>
         
         {/* Main Hero / Cover Showcase Image */}
         {heroImageSrc && (
@@ -259,13 +259,13 @@ export default function CaseStudyPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            style={{ width: '100%', borderRadius: '24px', overflow: 'hidden', cursor: 'pointer', background: '#F4F4F6' }}
+            style={{ width: '100%', cursor: 'pointer', background: '#F4F4F6' }}
             onClick={() => handleOpenLightbox(heroImageSrc)}
           >
             <img 
               src={getOptimizedImageUrl(heroImageSrc, { width: 1920 })} 
               alt={project.name || titleText} 
-              style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '24px' }}
+              style={{ width: '100%', height: 'auto', maxHeight: '680px', objectFit: 'cover', display: 'block', borderRadius: '0px' }}
             />
           </motion.div>
         )}
@@ -277,13 +277,13 @@ export default function CaseStudyPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            style={{ width: '100%', borderRadius: '24px', overflow: 'hidden', cursor: 'pointer', background: '#F4F4F6' }}
+            style={{ width: '100%', cursor: 'pointer', background: '#F4F4F6' }}
             onClick={() => handleOpenLightbox(challengeImgSrc)}
           >
             <img 
               src={getOptimizedImageUrl(challengeImgSrc, { width: 1920 })} 
               alt="Challenge Mockup" 
-              style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '24px' }}
+              style={{ width: '100%', height: 'auto', maxHeight: '680px', objectFit: 'cover', display: 'block', borderRadius: '0px' }}
             />
           </motion.div>
         )}
@@ -295,13 +295,13 @@ export default function CaseStudyPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            style={{ width: '100%', borderRadius: '24px', overflow: 'hidden', cursor: 'pointer', background: '#F4F4F6' }}
+            style={{ width: '100%', cursor: 'pointer', background: '#F4F4F6' }}
             onClick={() => handleOpenLightbox(solutionImgSrc)}
           >
             <img 
               src={getOptimizedImageUrl(solutionImgSrc, { width: 1920 })} 
               alt="Solution Mockup" 
-              style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '24px' }}
+              style={{ width: '100%', height: 'auto', maxHeight: '680px', objectFit: 'cover', display: 'block', borderRadius: '0px' }}
             />
           </motion.div>
         )}
@@ -313,13 +313,13 @@ export default function CaseStudyPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            style={{ width: '100%', borderRadius: '24px', overflow: 'hidden', cursor: 'pointer', background: '#F4F4F6' }}
+            style={{ width: '100%', cursor: 'pointer', background: '#F4F4F6' }}
             onClick={() => handleOpenLightbox(conclusionImgSrc)}
           >
             <img 
               src={getOptimizedImageUrl(conclusionImgSrc, { width: 1920 })} 
               alt="Result Mockup" 
-              style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '24px' }}
+              style={{ width: '100%', height: 'auto', maxHeight: '680px', objectFit: 'cover', display: 'block', borderRadius: '0px' }}
             />
           </motion.div>
         )}
