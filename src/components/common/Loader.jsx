@@ -14,6 +14,12 @@ const containerVariants = {
   },
 };
 
+const cardVariants = {
+  initial: { opacity: 0, scale: 0.96, y: 8 },
+  animate: { opacity: 1, scale: 1, y: 0 },
+  exit: { opacity: 0, scale: 0.96, y: -6 },
+};
+
 export default function Loader({ onComplete, isLoading }) {
   const [progress, setProgress] = useState(0);
   const animationFrameRef = useRef(null);
@@ -27,14 +33,14 @@ export default function Loader({ onComplete, isLoading }) {
       return;
     }
 
-    const DURATION = 220; // Ultra-fast under 300ms sequence
+    const DURATION = 220; // Ultra-fast under-300ms 60 FPS animation
 
     const updateProgress = (timestamp) => {
       if (!startTimeRef.current) startTimeRef.current = timestamp;
       const elapsed = timestamp - startTimeRef.current;
       const linearRatio = Math.min(elapsed / DURATION, 1);
 
-      // Smooth soft easing curve (cubic ease-out)
+      // Soft cubic ease-out curve
       const easedRatio = 1 - Math.pow(1 - linearRatio, 3);
       const currentVal = easedRatio * 100;
 
@@ -61,26 +67,31 @@ export default function Loader({ onComplete, isLoading }) {
 
   return (
     <motion.div
-      className="minimal-white-loader"
+      className="glass-loader-root"
       variants={containerVariants}
       initial="initial"
       animate="animate"
       exit="exit"
     >
-      <div className="minimal-loader-content">
-        {/* Bold Centered FAHEEM Text */}
-        <h1 className="minimal-loader-brand">
+      {/* Floating Glassmorphism Card */}
+      <motion.div
+        className="glass-loader-card"
+        variants={cardVariants}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      >
+        {/* Semi-bold FAHEEM Text */}
+        <h1 className="glass-loader-brand">
           FAHEEM
         </h1>
 
-        {/* Thin Animated Loading Bar Underneath */}
-        <div className="minimal-loader-track">
+        {/* Thin 2px Animated Loading Bar */}
+        <div className="glass-loader-track">
           <div
-            className="minimal-loader-fill"
+            className="glass-loader-fill"
             style={{ width: `${progress}%` }}
           />
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
