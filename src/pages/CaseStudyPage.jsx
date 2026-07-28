@@ -378,7 +378,13 @@ export default function CaseStudyPage() {
     return Array.from(new Set(list.filter(Boolean)));
   };
 
-  const card1SliderImages = getArrayFromImages(project.heroImage || project.bannerImage || project.coverImage, null, project.heroImages);
+  const newCloudinarySlide2 = "https://res.cloudinary.com/ddluoarzr/image/upload/v1783776334/cromic/zrr6xsayvilo9cpqxbqu.png";
+
+  const card1RawList = getArrayFromImages(project.heroImage || project.bannerImage || project.coverImage, null, project.heroImages);
+  const card1SliderImages = card1RawList.length === 1 && !card1RawList.includes(newCloudinarySlide2)
+    ? [...card1RawList, newCloudinarySlide2]
+    : card1RawList;
+
   const card2SliderImages = getArrayFromImages(project.solutionImage, project.challengeImage, project.solutionImages || project.challengeImages);
   const card3SliderImages = getArrayFromImages(project.conclusionImage || project.resultImage, null, project.resultImages || project.conclusionImages);
 
