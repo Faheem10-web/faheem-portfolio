@@ -251,19 +251,21 @@ export default function CaseStudyPage() {
                 href={liveUrl} 
                 target="_blank" 
                 rel="noreferrer" 
+                className="cs-visit-website-btn"
                 style={{ 
                   display: 'inline-flex', 
                   alignItems: 'center', 
                   gap: '8px', 
-                  background: '#00E676', 
-                  color: '#000000', 
-                  fontSize: '14px', 
-                  fontWeight: '600', 
-                  padding: '11px 22px', 
-                  borderRadius: '30px', 
+                  background: 'linear-gradient(135deg, #a855f7 0%, #8b5cf6 50%, #6d28d9 100%)', 
+                  color: '#ffffff', 
+                  fontSize: '14.5px', 
+                  fontWeight: '700', 
+                  padding: '12px 26px', 
+                  borderRadius: '9999px', 
                   textDecoration: 'none',
-                  boxShadow: '0 4px 14px rgba(0,230,118,0.25)',
-                  transition: 'transform 0.2s ease'
+                  border: '1px solid rgba(255, 255, 255, 0.7)',
+                  boxShadow: '0 14px 36px -6px rgba(139, 92, 246, 0.5), 0 4px 14px rgba(0, 0, 0, 0.1), inset 0 2px 2px 0 rgba(255, 255, 255, 0.95), inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.2)',
+                  transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
                 }}
               >
                 Visit website <FiExternalLink size={15} />
