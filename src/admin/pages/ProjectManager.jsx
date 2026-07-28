@@ -537,13 +537,17 @@ export default function ProjectManager() {
               </div>
             </div>
 
-            <div className="admin-form-row">
+            <div className="admin-form-row" style={{ background: 'rgba(139, 92, 246, 0.08)', padding: '14px', borderRadius: '12px', border: '1px solid rgba(139, 92, 246, 0.3)', marginBottom: '16px' }}>
               <div className="admin-form-group">
-                <label className="admin-label">Project Role (Hero Card Column 1)</label>
+                <label className="admin-label" style={{ color: '#A855F7', fontWeight: 'bold' }}>
+                  👑 Project Role (Hero Card Column 1 Text)
+                </label>
                 <input type="text" className="admin-input" value={role} onChange={e => setRole(e.target.value)} placeholder="e.g. Lead UI/UX Designer & Webflow Developer" />
               </div>
               <div className="admin-form-group">
-                <label className="admin-label">Duration / Timeline</label>
+                <label className="admin-label" style={{ color: '#A855F7', fontWeight: 'bold' }}>
+                  ⏱️ Duration / Timeline
+                </label>
                 <input type="text" className="admin-input" value={timeline} onChange={e => setTimeline(e.target.value)} placeholder="e.g. 2 - 3 Weeks" />
               </div>
             </div>

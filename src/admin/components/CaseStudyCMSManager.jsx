@@ -845,9 +845,17 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
               <input type="text" value={year} onChange={e => setYear(e.target.value)} style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
             </div>
 
-            <div>
-              <label style={{ fontSize: '12px', fontWeight: '700', color: '#374151', display: 'block', marginBottom: '6px' }}>Project Role (Hero Card Column 1)</label>
-              <input type="text" value={role} onChange={e => setRole(e.target.value)} placeholder="e.g. Lead UI/UX Designer & Developer" style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
+            <div style={{ gridColumn: '1 / -1', background: '#F5F3FF', border: '1.5px solid #8B5CF6', padding: '16px', borderRadius: '12px' }}>
+              <label style={{ fontSize: '13px', fontWeight: '800', color: '#6D28D9', display: 'block', marginBottom: '6px' }}>
+                👑 Project Role (Hero Card Column 1 Text)
+              </label>
+              <input 
+                type="text" 
+                value={role} 
+                onChange={e => setRole(e.target.value)} 
+                placeholder="e.g. Lead UI/UX Designer & Webflow Developer" 
+                style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid #C4B5FD', fontSize: '14px', fontWeight: '600', color: '#1E1B4B', outline: 'none', boxSizing: 'border-box', background: '#FFFFFF' }} 
+              />
             </div>
 
             <div>
