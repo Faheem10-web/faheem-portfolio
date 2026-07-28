@@ -366,6 +366,7 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
   const [client, setClient] = useState(project?.client || 'Digital Client');
   const [industry, setIndustry] = useState(project?.infoConfig?.industry || 'Digital Product Design');
   const [timeline, setTimeline] = useState(project?.infoConfig?.timeline || '2 - 3 Weeks');
+  const [role, setRole] = useState(project?.infoConfig?.role || 'Lead UI/UX Designer & Webflow Developer');
   const [year, setYear] = useState(project?.year || '2026');
   const [category, setCategory] = useState(project?.category || 'Product Design');
   const [liveUrl, setLiveUrl] = useState(project?.links?.liveProject || project?.liveUrl || '');
@@ -407,6 +408,7 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
       setClient(project.client || 'Digital Client');
       setIndustry(project.infoConfig?.industry || 'Digital Product Design');
       setTimeline(project.infoConfig?.timeline || '2 - 3 Weeks');
+      setRole(project.infoConfig?.role || 'Lead UI/UX Designer & Webflow Developer');
       setYear(project.year || '2026');
       setCategory(project.category || 'Product Design');
       setLiveUrl(project.links?.liveProject || project.liveUrl || '');
@@ -442,7 +444,8 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
       infoConfig: {
         ...(project?.infoConfig || {}),
         industry,
-        timeline
+        timeline,
+        role
       },
       overviewConfig: {
         ...(project?.overviewConfig || {}),
@@ -843,8 +846,13 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
             </div>
 
             <div>
-              <label style={{ fontSize: '12px', fontWeight: '700', color: '#374151', display: 'block', marginBottom: '6px' }}>Category</label>
-              <input type="text" value={category} onChange={e => setCategory(e.target.value)} style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
+              <label style={{ fontSize: '12px', fontWeight: '700', color: '#374151', display: 'block', marginBottom: '6px' }}>Project Role (Hero Card Column 1)</label>
+              <input type="text" value={role} onChange={e => setRole(e.target.value)} placeholder="e.g. Lead UI/UX Designer & Developer" style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
+            </div>
+
+            <div>
+              <label style={{ fontSize: '12px', fontWeight: '700', color: '#374151', display: 'block', marginBottom: '6px' }}>Category (Top Badge & Projects List)</label>
+              <input type="text" value={category} onChange={e => setCategory(e.target.value)} placeholder="e.g. Ui Ux+ react" style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }} />
             </div>
 
             <div>
