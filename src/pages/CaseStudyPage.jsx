@@ -258,13 +258,13 @@ export default function CaseStudyPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            style={{ width: '100%', marginBottom: '56px', cursor: 'pointer', background: '#F4F4F6' }}
+            style={{ width: '100%', marginBottom: '56px', cursor: 'pointer', background: '#F4F4F6', borderRadius: '16px', overflow: 'hidden' }}
             onClick={() => handleOpenLightbox(heroImageSrc)}
           >
             <img 
               src={getOptimizedImageUrl(heroImageSrc, { width: 1920 })} 
               alt={project.name || titleText} 
-              style={{ width: '100%', height: 'auto', maxHeight: '640px', objectFit: 'cover', display: 'block', borderRadius: '0px' }}
+              style={{ width: '100%', height: 'auto', maxHeight: '640px', objectFit: 'cover', display: 'block', borderRadius: '16px' }}
             />
           </motion.div>
         )}
@@ -362,13 +362,13 @@ export default function CaseStudyPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            style={{ width: '100%', marginBottom: '32px', cursor: 'pointer', background: '#F4F4F6' }}
+            style={{ width: '100%', marginBottom: '32px', cursor: 'pointer', background: '#F4F4F6', borderRadius: '16px', overflow: 'hidden' }}
             onClick={() => handleOpenLightbox(solutionImgSrc)}
           >
             <img 
               src={getOptimizedImageUrl(solutionImgSrc, { width: 1920 })} 
               alt="Featured Showcase" 
-              style={{ width: '100%', height: 'auto', maxHeight: '640px', objectFit: 'cover', display: 'block', borderRadius: '0px' }}
+              style={{ width: '100%', height: 'auto', maxHeight: '640px', objectFit: 'cover', display: 'block', borderRadius: '16px' }}
             />
           </motion.div>
         )}
@@ -383,20 +383,20 @@ export default function CaseStudyPage() {
             style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginBottom: '56px' }}
           >
             {challengeImgSrc && challengeImgSrc !== heroImageSrc && (
-              <div style={{ overflow: 'hidden', cursor: 'pointer', background: '#F4F4F6' }} onClick={() => handleOpenLightbox(challengeImgSrc)}>
+              <div style={{ borderRadius: '16px', overflow: 'hidden', cursor: 'pointer', background: '#F4F4F6' }} onClick={() => handleOpenLightbox(challengeImgSrc)}>
                 <img 
                   src={getOptimizedImageUrl(challengeImgSrc, { width: 1200 })} 
                   alt="Challenge Mockup" 
-                  style={{ width: '100%', height: '100%', maxHeight: '480px', objectFit: 'cover', display: 'block', borderRadius: '0px' }}
+                  style={{ width: '100%', height: '100%', maxHeight: '480px', objectFit: 'cover', display: 'block', borderRadius: '16px' }}
                 />
               </div>
             )}
             {conclusionImgSrc && conclusionImgSrc !== heroImageSrc && conclusionImgSrc !== challengeImgSrc && (
-              <div style={{ overflow: 'hidden', cursor: 'pointer', background: '#F4F4F6' }} onClick={() => handleOpenLightbox(conclusionImgSrc)}>
+              <div style={{ borderRadius: '16px', overflow: 'hidden', cursor: 'pointer', background: '#F4F4F6' }} onClick={() => handleOpenLightbox(conclusionImgSrc)}>
                 <img 
                   src={getOptimizedImageUrl(conclusionImgSrc, { width: 1200 })} 
                   alt="Result Mockup" 
-                  style={{ width: '100%', height: '100%', maxHeight: '480px', objectFit: 'cover', display: 'block', borderRadius: '0px' }}
+                  style={{ width: '100%', height: '100%', maxHeight: '480px', objectFit: 'cover', display: 'block', borderRadius: '16px' }}
                 />
               </div>
             )}
