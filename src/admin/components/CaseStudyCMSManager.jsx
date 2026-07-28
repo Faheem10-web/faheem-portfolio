@@ -351,36 +351,40 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
         </div>
       )}
 
-      {/* ── TAB 2: SHOWCASE MOCKUP IMAGES ── */}
+      {/* ── TAB 2: SHOWCASE MOCKUP IMAGES (4-Slide Interactive Carousel) ── */}
       {activeTab === 'images' && (
         <div>
+          <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', padding: '16px', borderRadius: '12px', marginBottom: '20px', color: '#1E40AF', fontSize: '13px', lineHeight: '1.5' }}>
+            💡 <strong>Interactive Slider Mode Active:</strong> Images uploaded across Slide 1 to 4 populate the interactive 60fps Carousel Slider Card at the top of the Case Study page (with navigation arrows & slide indicator dots)!
+          </div>
+
           <SimpleImageCard 
-            title="1. Main Featured Mockup Image" 
-            subtitle="Full-width hero showcase mockup displayed under The Challenge text"
+            title="Slide 1 Image (Main Featured Mockup)" 
+            subtitle="First slide image in the interactive showcase carousel"
             imageSrc={heroImage}
             onSaveImage={setHeroImage}
             onRemoveImage={() => setHeroImage('')}
           />
 
           <SimpleImageCard 
-            title="2. Left Mockup Image (Double Grid)" 
-            subtitle="Left image in the 2-column mockup grid"
+            title="Slide 2 Image (Challenge Mockup)" 
+            subtitle="Second slide image in the interactive showcase carousel"
             imageSrc={challengeImage}
             onSaveImage={setChallengeImage}
             onRemoveImage={() => setChallengeImage('')}
           />
 
           <SimpleImageCard 
-            title="3. Right Mockup Image (Double Grid)" 
-            subtitle="Right image in the 2-column mockup grid"
+            title="Slide 3 Image (Solution Mockup)" 
+            subtitle="Third slide image in the interactive showcase carousel"
             imageSrc={solutionImage}
             onSaveImage={setSolutionImage}
             onRemoveImage={() => setSolutionImage('')}
           />
 
           <SimpleImageCard 
-            title="4. Final Result Showcase Image" 
-            subtitle="Bottom mockup image displayed under Final Outcome section"
+            title="Slide 4 Image (Final Result Mockup)" 
+            subtitle="Fourth slide image in the interactive showcase carousel"
             imageSrc={conclusionImage}
             onSaveImage={setConclusionImage}
             onRemoveImage={() => setConclusionImage('')}
