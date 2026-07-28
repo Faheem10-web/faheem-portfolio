@@ -385,8 +385,11 @@ export default function CaseStudyPage() {
     ? [...card1RawList, newCloudinarySlide2]
     : card1RawList;
 
-  const card2SliderImages = getArrayFromImages(project.solutionImage, project.challengeImage, project.solutionImages || project.challengeImages);
-  const card3SliderImages = getArrayFromImages(project.conclusionImage || project.resultImage, null, project.resultImages || project.conclusionImages);
+  const card2RawImages = getArrayFromImages(project.solutionImage, project.challengeImage, project.solutionImages || project.challengeImages);
+  const card2SliderImages = card2RawImages.filter(img => !card1SliderImages.includes(img));
+
+  const card3RawImages = getArrayFromImages(project.conclusionImage || project.resultImage, null, project.resultImages || project.conclusionImages);
+  const card3SliderImages = card3RawImages.filter(img => !card1SliderImages.includes(img) && !card2SliderImages.includes(img));
 
   return (
     <div className="case-study-root" style={{ paddingTop: '120px', paddingBottom: '140px', background: '#FFFFFF', minHeight: '100vh', color: '#111827' }}>
