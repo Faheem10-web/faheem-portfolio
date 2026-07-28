@@ -57,16 +57,25 @@ function MockupSliderCard({ images = [], onOpenLightbox }) {
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => onOpenLightbox(validImages[currentIndex])}
     >
-      <AnimatePresence mode="popLayout">
+      <AnimatePresence mode="wait">
         <motion.img
           key={currentIndex}
           src={getOptimizedImageUrl(validImages[currentIndex], { width: 1920 })}
           alt={`Mockup Slide ${currentIndex + 1}`}
-          initial={{ opacity: 0, scale: 0.99 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.99 }}
-          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', borderRadius: '16px' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25, ease: 'easeInOut' }}
+          style={{ 
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%', 
+            height: '100%', 
+            objectFit: 'cover', 
+            display: 'block', 
+            borderRadius: '16px' 
+          }}
         />
       </AnimatePresence>
 
