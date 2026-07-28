@@ -533,12 +533,7 @@ export default function CaseStudyPage() {
           </div>
         </motion.div>
 
-        {/* ── 5. CARD 2 SLIDER (Middle Featured Showcase Card) ── */}
-        {card2SliderImages.length > 0 && (
-          <MockupSliderCard images={card2SliderImages} onOpenLightbox={handleOpenLightbox} />
-        )}
-
-        {/* ── 6. FINAL OUTCOME SECTION ── */}
+        {/* ── 5. FINAL OUTCOME SECTION ── */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -558,11 +553,6 @@ export default function CaseStudyPage() {
             </p>
           </div>
         </motion.div>
-
-        {/* ── 7. CARD 3 SLIDER (Bottom Outcome Showcase Card) ── */}
-        {card3SliderImages.length > 0 && (
-          <MockupSliderCard images={card3SliderImages} onOpenLightbox={handleOpenLightbox} />
-        )}
 
       </div>
 
