@@ -514,351 +514,352 @@ export default function ProjectManager() {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="admin-form-row">
-              <div className="admin-form-group">
-                <label className="admin-label">Project Name</label>
-                <input type="text" className="admin-input" value={name} onChange={e => setName(e.target.value)} required />
+          {editSubTab === 'info' ? (
+            <form onSubmit={handleSubmit}>
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">Project Name</label>
+                  <input type="text" className="admin-input" value={name} onChange={e => setName(e.target.value)} required />
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">Slug (URL friendly path)</label>
+                  <input type="text" className="admin-input" value={slug} onChange={e => setSlug(e.target.value)} placeholder="e.g. creative-agency" required />
+                </div>
               </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Slug (URL friendly path)</label>
-                <input type="text" className="admin-input" value={slug} onChange={e => setSlug(e.target.value)} placeholder="e.g. creative-agency" required />
-              </div>
-            </div>
 
-            <div className="admin-form-row">
-              <div className="admin-form-group">
-                <label className="admin-label">Category</label>
-                <input type="text" className="admin-input" value={category} onChange={e => setCategory(e.target.value)} placeholder="e.g. UX Design" required />
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">Category</label>
+                  <input type="text" className="admin-input" value={category} onChange={e => setCategory(e.target.value)} placeholder="e.g. UX Design" required />
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">Year</label>
+                  <input type="text" className="admin-input" value={year} onChange={e => setYear(e.target.value)} placeholder="e.g. 2026" required />
+                </div>
               </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Year</label>
-                <input type="text" className="admin-input" value={year} onChange={e => setYear(e.target.value)} placeholder="e.g. 2026" required />
-              </div>
-            </div>
 
-            <div className="admin-form-row" style={{ background: 'rgba(139, 92, 246, 0.08)', padding: '14px', borderRadius: '12px', border: '1px solid rgba(139, 92, 246, 0.3)', marginBottom: '16px' }}>
-              <div className="admin-form-group">
-                <label className="admin-label" style={{ color: '#A855F7', fontWeight: 'bold' }}>
-                  👑 Project Role (Hero Card Column 1 Text)
-                </label>
-                <input type="text" className="admin-input" value={role} onChange={e => setRole(e.target.value)} placeholder="e.g. Lead UI/UX Designer & Webflow Developer" />
+              <div className="admin-form-row" style={{ background: 'rgba(139, 92, 246, 0.08)', padding: '14px', borderRadius: '12px', border: '1px solid rgba(139, 92, 246, 0.3)', marginBottom: '16px' }}>
+                <div className="admin-form-group">
+                  <label className="admin-label" style={{ color: '#A855F7', fontWeight: 'bold' }}>
+                    👑 Project Role (Hero Card Column 1 Text)
+                  </label>
+                  <input type="text" className="admin-input" value={role} onChange={e => setRole(e.target.value)} placeholder="e.g. Lead UI/UX Designer & Webflow Developer" />
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label" style={{ color: '#A855F7', fontWeight: 'bold' }}>
+                    ⏱️ Duration / Timeline
+                  </label>
+                  <input type="text" className="admin-input" value={timeline} onChange={e => setTimeline(e.target.value)} placeholder="e.g. 2 - 3 Weeks" />
+                </div>
               </div>
-              <div className="admin-form-group">
-                <label className="admin-label" style={{ color: '#A855F7', fontWeight: 'bold' }}>
-                  ⏱️ Duration / Timeline
-                </label>
-                <input type="text" className="admin-input" value={timeline} onChange={e => setTimeline(e.target.value)} placeholder="e.g. 2 - 3 Weeks" />
+
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">Client</label>
+                  <input type="text" className="admin-input" value={client} onChange={e => setClient(e.target.value)} />
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">Status</label>
+                  <select className="admin-select" value={status} onChange={e => setStatus(e.target.value)}>
+                    <option value="Completed">Completed</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Concept">Concept</option>
+                  </select>
+                </div>
               </div>
-            </div>
 
-            <div className="admin-form-row">
               <div className="admin-form-group">
-                <label className="admin-label">Client</label>
-                <input type="text" className="admin-input" value={client} onChange={e => setClient(e.target.value)} />
+                <label className="admin-label">Technologies (comma separated)</label>
+                <input type="text" className="admin-input" value={technologies} onChange={e => setTechnologies(e.target.value)} placeholder="React, Node, Figma" />
               </div>
+
               <div className="admin-form-group">
-                <label className="admin-label">Status</label>
-                <select className="admin-select" value={status} onChange={e => setStatus(e.target.value)}>
-                  <option value="Completed">Completed</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="Concept">Concept</option>
-                </select>
+                <label className="admin-label">Short Description</label>
+                <input type="text" className="admin-input" value={shortDesc} onChange={e => setShortDesc(e.target.value)} required />
               </div>
-            </div>
 
-            <div className="admin-form-group">
-              <label className="admin-label">Technologies (comma separated)</label>
-              <input type="text" className="admin-input" value={technologies} onChange={e => setTechnologies(e.target.value)} placeholder="React, Node, Figma" />
-            </div>
-
-            <div className="admin-form-group">
-              <label className="admin-label">Short Description</label>
-              <input type="text" className="admin-input" value={shortDesc} onChange={e => setShortDesc(e.target.value)} required />
-            </div>
-
-            <div className="admin-form-group">
-              <label className="admin-label">Long Description (MarkDown or Text)</label>
-              <textarea className="admin-textarea" value={longDesc} onChange={e => setLongDesc(e.target.value)}></textarea>
-            </div>
-
-            {/* Links */}
-            <div className="admin-form-row">
               <div className="admin-form-group">
-                <label className="admin-label">Live Link URL</label>
-                <input type="text" className="admin-input" value={liveUrl} onChange={e => setLiveUrl(e.target.value)} />
+                <label className="admin-label">Long Description (MarkDown or Text)</label>
+                <textarea className="admin-textarea" value={longDesc} onChange={e => setLongDesc(e.target.value)}></textarea>
               </div>
-              <div className="admin-form-group">
-                <label className="admin-label">GitHub URL</label>
-                <input type="text" className="admin-input" value={githubUrl} onChange={e => setGithubUrl(e.target.value)} />
-              </div>
-            </div>
 
-            {/* Image URLs & Direct Upload Options */}
-            <div className="admin-form-row">
+              {/* Links */}
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">Live Link URL</label>
+                  <input type="text" className="admin-input" value={liveUrl} onChange={e => setLiveUrl(e.target.value)} />
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">GitHub URL</label>
+                  <input type="text" className="admin-input" value={githubUrl} onChange={e => setGithubUrl(e.target.value)} />
+                </div>
+              </div>
+
+              {/* Image URLs & Direct Upload Options */}
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">Cover Image URL</label>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <input 
+                      type="text" 
+                      className="admin-input" 
+                      value={coverImage} 
+                      onChange={e => setCoverImage(e.target.value)} 
+                      placeholder="Enter image URL or upload file" 
+                    />
+                    <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
+                      Upload File
+                      <input 
+                        type="file" 
+                        onChange={(e) => handleDirectUpload(e, setCoverImage)} 
+                        style={{ display: 'none' }} 
+                      />
+                    </label>
+                  </div>
+                  {coverImage && (
+                    <div style={{ marginTop: '8px' }}>
+                      <img 
+                        src={coverImage} 
+                        alt="Cover Preview" 
+                        style={{ maxHeight: '80px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', padding: '4px' }} 
+                      />
+                    </div>
+                  )}
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">Thumbnail Image URL</label>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <input 
+                      type="text" 
+                      className="admin-input" 
+                      value={thumbnailImage} 
+                      onChange={e => setThumbnailImage(e.target.value)} 
+                      placeholder="Enter thumbnail URL or upload file"
+                    />
+                    <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
+                      Upload File
+                      <input 
+                        type="file" 
+                        onChange={(e) => handleDirectUpload(e, setThumbnailImage)} 
+                        style={{ display: 'none' }} 
+                      />
+                    </label>
+                  </div>
+                  {thumbnailImage && (
+                    <div style={{ marginTop: '8px' }}>
+                      <img 
+                        src={thumbnailImage} 
+                        alt="Thumbnail Preview" 
+                        style={{ maxHeight: '80px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', padding: '4px' }} 
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">Case Study Banner Image URL</label>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <input 
+                      type="text" 
+                      className="admin-input" 
+                      value={bannerImage} 
+                      onChange={e => setBannerImage(e.target.value)} 
+                      placeholder="Enter banner URL or upload file" 
+                    />
+                    <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
+                      Upload File
+                      <input 
+                        type="file" 
+                        onChange={(e) => handleDirectUpload(e, setBannerImage)} 
+                        style={{ display: 'none' }} 
+                      />
+                    </label>
+                  </div>
+                  {bannerImage && (
+                    <div style={{ marginTop: '8px' }}>
+                      <img 
+                        src={bannerImage} 
+                        alt="Banner Preview" 
+                        style={{ maxHeight: '80px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', padding: '4px' }} 
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className="admin-form-group">
-                <label className="admin-label">Cover Image URL</label>
+                <label className="admin-label">Gallery Images (comma separated URLs)</label>
                 <div style={{ display: 'flex', gap: '10px' }}>
                   <input 
                     type="text" 
                     className="admin-input" 
-                    value={coverImage} 
-                    onChange={e => setCoverImage(e.target.value)} 
-                    placeholder="Enter image URL or upload file" 
+                    value={gallery} 
+                    onChange={e => setGallery(e.target.value)} 
+                    placeholder="URL list e.g. /uploads/image1.jpg, /uploads/image2.png" 
                   />
                   <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
-                    Upload File
+                    Upload & Append
                     <input 
                       type="file" 
-                      onChange={(e) => handleDirectUpload(e, setCoverImage)} 
+                      onChange={handleGalleryUpload} 
                       style={{ display: 'none' }} 
                     />
                   </label>
                 </div>
-                {coverImage && (
-                  <div style={{ marginTop: '8px' }}>
-                    <img 
-                      src={coverImage} 
-                      alt="Cover Preview" 
-                      style={{ maxHeight: '80px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', padding: '4px' }} 
-                    />
-                  </div>
-                )}
               </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Thumbnail Image URL</label>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <input 
-                    type="text" 
-                    className="admin-input" 
-                    value={thumbnailImage} 
-                    onChange={e => setThumbnailImage(e.target.value)} 
-                    placeholder="Enter thumbnail URL or upload file"
-                  />
-                  <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
-                    Upload File
-                    <input 
-                      type="file" 
-                      onChange={(e) => handleDirectUpload(e, setThumbnailImage)} 
-                      style={{ display: 'none' }} 
-                    />
-                  </label>
-                </div>
-                {thumbnailImage && (
-                  <div style={{ marginTop: '8px' }}>
-                    <img 
-                      src={thumbnailImage} 
-                      alt="Thumbnail Preview" 
-                      style={{ maxHeight: '80px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', padding: '4px' }} 
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
 
-            <div className="admin-form-row">
-              <div className="admin-form-group">
-                <label className="admin-label">Case Study Banner Image URL</label>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <input 
-                    type="text" 
-                    className="admin-input" 
-                    value={bannerImage} 
-                    onChange={e => setBannerImage(e.target.value)} 
-                    placeholder="Enter banner URL or upload file" 
-                  />
-                  <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
-                    Upload File
+              {/* Case Study Details */}
+              <div className="admin-form-group" style={{ marginTop: '24px', borderTop: '1px solid var(--admin-border)', paddingTop: '20px' }}>
+                <h3 style={{ fontSize: '15px', marginBottom: '16px' }}>Case Study Content</h3>
+                
+                <div className="admin-form-group">
+                  <label className="admin-label">The Challenge (Text)</label>
+                  <textarea className="admin-textarea" value={challenge} onChange={e => setChallenge(e.target.value)}></textarea>
+                </div>
+                <div className="admin-form-group" style={{ marginBottom: '20px' }}>
+                  <label className="admin-label">The Challenge Mockup Image URL</label>
+                  <div style={{ display: 'flex', gap: '10px' }}>
                     <input 
-                      type="file" 
-                      onChange={(e) => handleDirectUpload(e, setBannerImage)} 
-                      style={{ display: 'none' }} 
+                      type="text" 
+                      className="admin-input" 
+                      value={challengeImage} 
+                      onChange={e => setChallengeImage(e.target.value)} 
+                      placeholder="Enter challenge mockup image URL or upload file" 
                     />
+                    <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
+                      Upload File
+                      <input 
+                        type="file" 
+                        onChange={(e) => handleDirectUpload(e, setChallengeImage)} 
+                        style={{ display: 'none' }} 
+                      />
+                    </label>
+                  </div>
+                  {challengeImage && (
+                    <div style={{ marginTop: '8px' }}>
+                      <img 
+                        src={challengeImage} 
+                        alt="Challenge Preview" 
+                        style={{ maxHeight: '80px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', padding: '4px' }} 
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div className="admin-form-group" style={{ marginTop: '20px', borderTop: '1px dotted var(--admin-border)', paddingTop: '15px' }}>
+                  <label className="admin-label">The Solution (Text)</label>
+                  <textarea className="admin-textarea" value={solution} onChange={e => setSolution(e.target.value)}></textarea>
+                </div>
+                <div className="admin-form-group" style={{ marginBottom: '10px' }}>
+                  <label className="admin-label">The Solution Mockup Image URL</label>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <input 
+                      type="text" 
+                      className="admin-input" 
+                      value={solutionImage} 
+                      onChange={e => setSolutionImage(e.target.value)} 
+                      placeholder="Enter solution mockup image URL or upload file" 
+                    />
+                    <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
+                      Upload File
+                      <input 
+                        type="file" 
+                        onChange={(e) => handleDirectUpload(e, setSolutionImage)} 
+                        style={{ display: 'none' }} 
+                      />
+                    </label>
+                  </div>
+                  {solutionImage && (
+                    <div style={{ marginTop: '8px' }}>
+                      <img 
+                        src={solutionImage} 
+                        alt="Solution Preview" 
+                        style={{ maxHeight: '80px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', padding: '4px' }} 
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div className="admin-form-group" style={{ marginTop: '20px', borderTop: '1px dotted var(--admin-border)', paddingTop: '15px' }}>
+                  <label className="admin-label">The Result (Text)</label>
+                  <textarea className="admin-textarea" value={results} onChange={e => setResults(e.target.value)} placeholder="Describe the result of the project..."></textarea>
+                </div>
+                <div className="admin-form-group" style={{ marginBottom: '10px' }}>
+                  <label className="admin-label">The Result Mockup Image URL</label>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <input 
+                      type="text" 
+                      className="admin-input" 
+                      value={resultImage} 
+                      onChange={e => setResultImage(e.target.value)} 
+                      placeholder="Enter result mockup image URL or upload file" 
+                    />
+                    <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
+                      Upload File
+                      <input 
+                        type="file" 
+                        onChange={(e) => handleDirectUpload(e, setResultImage)} 
+                        style={{ display: 'none' }} 
+                      />
+                    </label>
+                  </div>
+                  {resultImage && (
+                    <div style={{ marginTop: '8px' }}>
+                      <img 
+                        src={resultImage} 
+                        alt="Result Preview" 
+                        style={{ maxHeight: '80px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', padding: '4px' }} 
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div className="admin-form-group" style={{ marginTop: '20px', borderTop: '1px dotted var(--admin-border)', paddingTop: '15px' }}>
+                  <label className="admin-label">The Process (Text)</label>
+                  <textarea className="admin-textarea" value={process} onChange={e => setProcess(e.target.value)}></textarea>
+                </div>
+              </div>
+
+              {/* Ordering and Settings */}
+              <div className="admin-form-row" style={{ marginTop: '20px' }}>
+                <div className="admin-form-group">
+                  <label className="admin-label">Display Order</label>
+                  <input type="number" className="admin-input" value={order} onChange={e => setOrder(parseInt(e.target.value) || 0)} />
+                </div>
+                <div className="admin-form-group" style={{ display: 'flex', gap: '20px', alignItems: 'center', height: '100%', flexWrap: 'wrap' }}>
+                  <label style={{ display: 'flex', gap: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: '700', color: hasCaseStudy ? '#10B981' : '#EF4444' }}>
+                    <input type="checkbox" checked={hasCaseStudy} onChange={e => setHasCaseStudy(e.target.checked)} />
+                    📖 Case Study Page ({hasCaseStudy ? 'ON' : 'OFF'})
+                  </label>
+                  <label style={{ display: 'flex', gap: '8px', cursor: 'pointer', fontSize: '14px' }}>
+                    <input type="checkbox" checked={isFeatured} onChange={e => setIsFeatured(e.target.checked)} />
+                    Featured Project
+                  </label>
+                  <label style={{ display: 'flex', gap: '8px', cursor: 'pointer', fontSize: '14px' }}>
+                    <input type="checkbox" checked={showOnHome} onChange={e => setShowOnHome(e.target.checked)} />
+                    Show on Homepage
+                  </label>
+                  <label style={{ display: 'flex', gap: '8px', cursor: 'pointer', fontSize: '14px' }}>
+                    <input type="checkbox" checked={enabled} onChange={e => setEnabled(e.target.checked)} />
+                    Enabled
                   </label>
                 </div>
-                {bannerImage && (
-                  <div style={{ marginTop: '8px' }}>
-                    <img 
-                      src={bannerImage} 
-                      alt="Banner Preview" 
-                      style={{ maxHeight: '80px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', padding: '4px' }} 
-                    />
-                  </div>
-                )}
               </div>
-            </div>
 
-            <div className="admin-form-group">
-              <label className="admin-label">Gallery Images (comma separated URLs)</label>
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <input 
-                  type="text" 
-                  className="admin-input" 
-                  value={gallery} 
-                  onChange={e => setGallery(e.target.value)} 
-                  placeholder="URL list e.g. /uploads/image1.jpg, /uploads/image2.png" 
+              <button type="submit" className="admin-btn admin-btn-primary" style={{ marginTop: '20px' }}>
+                Save Project Info
+              </button>
+            </form>
+          ) : (
+            currentId && (
+              <div style={{ marginTop: '20px' }}>
+                <CaseStudyCMSManager 
+                  project={projects.find(p => p._id === currentId || p.slug === currentId) || { _id: currentId }}
                 />
-                <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
-                  Upload & Append
-                  <input 
-                    type="file" 
-                    onChange={handleGalleryUpload} 
-                    style={{ display: 'none' }} 
-                  />
-                </label>
               </div>
-            </div>
-
-            {/* Case Study Details */}
-            <div className="admin-form-group" style={{ marginTop: '24px', borderTop: '1px solid var(--admin-border)', paddingTop: '20px' }}>
-              <h3 style={{ fontSize: '15px', marginBottom: '16px' }}>Case Study Content</h3>
-              
-              <div className="admin-form-group">
-                <label className="admin-label">The Challenge (Text)</label>
-                <textarea className="admin-textarea" value={challenge} onChange={e => setChallenge(e.target.value)}></textarea>
-              </div>
-              <div className="admin-form-group" style={{ marginBottom: '20px' }}>
-                <label className="admin-label">The Challenge Mockup Image URL</label>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <input 
-                    type="text" 
-                    className="admin-input" 
-                    value={challengeImage} 
-                    onChange={e => setChallengeImage(e.target.value)} 
-                    placeholder="Enter challenge mockup image URL or upload file" 
-                  />
-                  <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
-                    Upload File
-                    <input 
-                      type="file" 
-                      onChange={(e) => handleDirectUpload(e, setChallengeImage)} 
-                      style={{ display: 'none' }} 
-                    />
-                  </label>
-                </div>
-                {challengeImage && (
-                  <div style={{ marginTop: '8px' }}>
-                    <img 
-                      src={challengeImage} 
-                      alt="Challenge Preview" 
-                      style={{ maxHeight: '80px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', padding: '4px' }} 
-                    />
-                  </div>
-                )}
-              </div>
-
-              <div className="admin-form-group" style={{ marginTop: '20px', borderTop: '1px dotted var(--admin-border)', paddingTop: '15px' }}>
-                <label className="admin-label">The Solution (Text)</label>
-                <textarea className="admin-textarea" value={solution} onChange={e => setSolution(e.target.value)}></textarea>
-              </div>
-              <div className="admin-form-group" style={{ marginBottom: '10px' }}>
-                <label className="admin-label">The Solution Mockup Image URL</label>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <input 
-                    type="text" 
-                    className="admin-input" 
-                    value={solutionImage} 
-                    onChange={e => setSolutionImage(e.target.value)} 
-                    placeholder="Enter solution mockup image URL or upload file" 
-                  />
-                  <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
-                    Upload File
-                    <input 
-                      type="file" 
-                      onChange={(e) => handleDirectUpload(e, setSolutionImage)} 
-                      style={{ display: 'none' }} 
-                    />
-                  </label>
-                </div>
-                {solutionImage && (
-                  <div style={{ marginTop: '8px' }}>
-                    <img 
-                      src={solutionImage} 
-                      alt="Solution Preview" 
-                      style={{ maxHeight: '80px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', padding: '4px' }} 
-                    />
-                  </div>
-                )}
-              </div>
-
-              <div className="admin-form-group" style={{ marginTop: '20px', borderTop: '1px dotted var(--admin-border)', paddingTop: '15px' }}>
-                <label className="admin-label">The Result (Text)</label>
-                <textarea className="admin-textarea" value={results} onChange={e => setResults(e.target.value)} placeholder="Describe the result of the project..."></textarea>
-              </div>
-              <div className="admin-form-group" style={{ marginBottom: '10px' }}>
-                <label className="admin-label">The Result Mockup Image URL</label>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <input 
-                    type="text" 
-                    className="admin-input" 
-                    value={resultImage} 
-                    onChange={e => setResultImage(e.target.value)} 
-                    placeholder="Enter result mockup image URL or upload file" 
-                  />
-                  <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
-                    Upload File
-                    <input 
-                      type="file" 
-                      onChange={(e) => handleDirectUpload(e, setResultImage)} 
-                      style={{ display: 'none' }} 
-                    />
-                  </label>
-                </div>
-                {resultImage && (
-                  <div style={{ marginTop: '8px' }}>
-                    <img 
-                      src={resultImage} 
-                      alt="Result Preview" 
-                      style={{ maxHeight: '80px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.2)', padding: '4px' }} 
-                    />
-                  </div>
-                )}
-              </div>
-
-              <div className="admin-form-group" style={{ marginTop: '20px', borderTop: '1px dotted var(--admin-border)', paddingTop: '15px' }}>
-                <label className="admin-label">The Process (Text)</label>
-                <textarea className="admin-textarea" value={process} onChange={e => setProcess(e.target.value)}></textarea>
-              </div>
-            </div>
-
-            {/* Ordering and Settings */}
-            <div className="admin-form-row" style={{ marginTop: '20px' }}>
-              <div className="admin-form-group">
-                <label className="admin-label">Display Order</label>
-                <input type="number" className="admin-input" value={order} onChange={e => setOrder(parseInt(e.target.value) || 0)} />
-              </div>
-              <div className="admin-form-group" style={{ display: 'flex', gap: '20px', alignItems: 'center', height: '100%', flexWrap: 'wrap' }}>
-                <label style={{ display: 'flex', gap: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: '700', color: hasCaseStudy ? '#10B981' : '#EF4444' }}>
-                  <input type="checkbox" checked={hasCaseStudy} onChange={e => setHasCaseStudy(e.target.checked)} />
-                  📖 Case Study Page ({hasCaseStudy ? 'ON' : 'OFF'})
-                </label>
-                <label style={{ display: 'flex', gap: '8px', cursor: 'pointer', fontSize: '14px' }}>
-                  <input type="checkbox" checked={isFeatured} onChange={e => setIsFeatured(e.target.checked)} />
-                  Featured Project
-                </label>
-                <label style={{ display: 'flex', gap: '8px', cursor: 'pointer', fontSize: '14px' }}>
-                  <input type="checkbox" checked={showOnHome} onChange={e => setShowOnHome(e.target.checked)} />
-                  Show on Homepage
-                </label>
-                <label style={{ display: 'flex', gap: '8px', cursor: 'pointer', fontSize: '14px' }}>
-                  <input type="checkbox" checked={enabled} onChange={e => setEnabled(e.target.checked)} />
-                  Enabled
-                </label>
-              </div>
-            </div>
-
-            <button type="submit" className="admin-btn admin-btn-primary" style={{ marginTop: '20px' }}>
-              Save Project Info
-            </button>
-          </form>
-
-          {/* Case Study CMS Image & Link Manager Cards */}
-          {currentId && (
-            <div style={{ marginTop: '32px', paddingTop: '24px', borderTop: '2px solid var(--admin-border)' }}>
-              <CaseStudyCMSManager 
-                project={projects.find(p => p._id === currentId || p.slug === currentId) || { _id: currentId }}
-              />
-            </div>
+            )
           )}
         </div>
       ) : (
