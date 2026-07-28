@@ -474,6 +474,51 @@ export default function CaseStudyPage() {
             )}
           </div>
         </motion.section>
+
+        {/* ── 7. NEXT CASE STUDY / EXPLORE MORE WORKS (2026 Editorial Footer) ── */}
+        {otherProjects.length > 0 && (
+          <motion.section 
+            className="cs-next-works-section"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="cs-next-works-header">
+              <div>
+                <span className="cs-split-section-tag">MORE CASE STUDIES</span>
+                <h3 className="cs-next-works-title">Explore Next Projects</h3>
+              </div>
+              <Link to="/projects" className="cs-editorial-underlined-link" style={{ fontSize: '15px', fontWeight: '700' }}>
+                View All Works →
+              </Link>
+            </div>
+
+            <div className="cs-next-works-grid">
+              {otherProjects.map((item) => (
+                <Link 
+                  to={`/projects/${item.slug || item._id}`} 
+                  key={item._id || item.slug}
+                  className="cs-next-card"
+                >
+                  <div className="cs-next-card-thumb-wrap">
+                    <img 
+                      src={getOptimizedImageUrl(item.coverImage || item.bannerImage || item.thumbnailImage, { width: 800 })} 
+                      alt={item.name} 
+                      className="cs-next-card-img"
+                    />
+                    <div className="cs-next-card-badge">{item.category || 'Case Study'}</div>
+                  </div>
+                  <div className="cs-next-card-info">
+                    <h4 className="cs-next-card-name">{item.name}</h4>
+                    <p className="cs-next-card-desc">{item.shortDesc}</p>
+                    <span className="cs-next-card-link">Read Case Study ↗</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </motion.section>
+        )}
       </div>
 
       {/* ── LIGHTBOX FULLSCREEN MODAL ── */}
