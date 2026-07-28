@@ -27,7 +27,7 @@ export default function Loader({ onComplete, isLoading }) {
       return;
     }
 
-    const MIN_DURATION = 400; // Guaranteed 400ms minimum perception window (350-500ms range)
+    const MIN_DURATION = 5000; // 5 seconds (5000ms) loader sequence
 
     const updateProgress = (timestamp) => {
       if (!startTimeRef.current) startTimeRef.current = timestamp;
@@ -40,7 +40,7 @@ export default function Loader({ onComplete, isLoading }) {
 
       setProgress(currentVal);
 
-      // Only finish after reaching the 400ms minimum perception duration AND data loading is complete
+      // Only finish after reaching 5000ms AND data loading is complete
       const isReadyToComplete = elapsed >= MIN_DURATION && (!isLoading || currentVal >= 100);
 
       if (isReadyToComplete) {
