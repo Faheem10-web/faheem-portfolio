@@ -66,13 +66,13 @@
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
-   1. CUBERTO-STYLE EDITORIAL TYPOGRAPHY HERO (Pure White Background)
+   1. CUBERTO-STYLE EDITORIAL TYPOGRAPHY HERO (Centered Punto Pago Layout)
    ────────────────────────────────────────────────────────────────────────── */
 .cs-typography-hero {
   background-color: #FFFFFF;
   color: #0D0D12;
   width: 100%;
-  padding-top: 140px;
+  padding-top: 130px;
   padding-bottom: 72px;
   border-bottom: 1px solid #E5E7EB;
   box-sizing: border-box;
@@ -80,19 +80,22 @@
 
 .cs-hero-container {
   width: 100%;
-  max-width: 1280px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 0 32px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .cs-hero-top-bar {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 40px;
+  margin-bottom: 48px;
 }
 
 .cs-hero-back-link {
@@ -122,26 +125,27 @@
   border-radius: 100px;
 }
 
-.cs-hero-project-title {
+/* Small Centered Project Label (Punto Pago style) */
+.cs-hero-small-label {
   font-family: var(--font-heading, 'Inter', -apple-system, sans-serif);
-  font-size: clamp(48px, 8.5vw, 110px);
-  font-weight: 900;
-  line-height: 0.95;
-  letter-spacing: -0.045em;
-  color: #0D0D12;
-  margin: 0 0 24px 0;
-  text-transform: uppercase;
+  font-size: clamp(15px, 1.8vw, 20px);
+  font-weight: 600;
+  color: #18181B;
+  margin-bottom: 20px;
+  letter-spacing: -0.01em;
 }
 
+/* Giant Centered Headline (The First Super-App in Latin America style) */
 .cs-hero-editorial-headline {
   font-family: var(--font-heading, 'Inter', -apple-system, sans-serif);
-  font-size: clamp(24px, 3.8vw, 48px);
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.03em;
-  color: #18181B;
-  margin: 0 0 24px 0;
-  max-width: 960px;
+  font-size: clamp(44px, 7.5vw, 96px);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  color: #0D0D12;
+  margin: 0 0 28px 0;
+  max-width: 980px;
+  text-align: center;
 }
 
 .cs-hero-description {
@@ -149,22 +153,26 @@
   font-weight: 400;
   line-height: 1.6;
   color: #52525B;
-  margin: 0 0 64px 0;
-  max-width: 820px;
+  margin: 0 auto 56px auto;
+  max-width: 760px;
+  text-align: center;
 }
 
-/* Bottom Information Grid */
+/* Centered Information Grid */
 .cs-hero-info-grid {
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 32px 24px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 28px 24px;
   padding-top: 40px;
   border-top: 1px solid #E5E7EB;
+  text-align: center;
 }
 
 .cs-hero-info-cell {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 6px;
 }
 
@@ -184,8 +192,8 @@
 }
 
 .cs-hero-info-cell--action {
-  justify-content: flex-end;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
 }
 
 .cs-hero-live-btn {

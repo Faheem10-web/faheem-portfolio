@@ -190,7 +190,7 @@ export default function CaseStudyPage() {
 
   return (
     <div className="case-study-root">
-      {/* ── 1. CUBERTO-STYLE EDITORIAL TYPOGRAPHY HERO (No Hero Image, Pure White Background) ── */}
+      {/* ── 1. CUBERTO-STYLE EDITORIAL TYPOGRAPHY HERO (Centered Punto Pago Reference Layout) ── */}
       <motion.section 
         className="cs-typography-hero"
         initial={{ opacity: 0, y: 20 }}
@@ -199,7 +199,7 @@ export default function CaseStudyPage() {
       >
         <div className="cs-hero-container">
           
-          {/* Category Badge & Back Link */}
+          {/* Top Bar with Back Link & Category */}
           <div className="cs-hero-top-bar">
             <Link to="/projects" className="cs-hero-back-link">
               <FiArrowLeft size={16} /> Back to Work
@@ -207,42 +207,44 @@ export default function CaseStudyPage() {
             <span className="cs-hero-category-label">{categoryVal.toUpperCase()}</span>
           </div>
 
-          {/* Massive Project Name */}
-          <motion.h1 
-            className="cs-hero-project-title"
-            initial={{ opacity: 0, y: 30 }}
+          {/* Small Centered Project Name (Image 1 "Punto Pago" label style) */}
+          <motion.span 
+            className="cs-hero-small-label"
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
           >
             {titleText}
-          </motion.h1>
+          </motion.span>
 
-          {/* Large Editorial Headline */}
-          <motion.h2 
+          {/* Massive Centered Editorial Title/Headline (Image 1 "The First Super-App in Latin America" style) */}
+          <motion.h1 
             className="cs-hero-editorial-headline"
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
           >
-            {taglineText || `${titleText} — Redefining Digital Product Experience`}
-          </motion.h2>
+            {taglineText || `${titleText} — Redefining Digital Experience`}
+          </motion.h1>
 
-          {/* 1–2 Line Short Description */}
-          <motion.p 
-            className="cs-hero-description"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          >
-            {project.shortDesc || project.overviewConfig?.intro || `A comprehensive design and engineering case study for ${titleText}, built with modern UI/UX architecture.`}
-          </motion.p>
+          {/* 1–2 Line Centered Description */}
+          {project.shortDesc && (
+            <motion.p 
+              className="cs-hero-description"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {project.shortDesc}
+            </motion.p>
+          )}
 
-          {/* Bottom Information Grid (Role, Duration, Tools, Year, Live Preview) */}
+          {/* Centered Bottom Info Grid (Role, Duration, Tools, Year, Live Preview) */}
           <motion.div 
             className="cs-hero-info-grid"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="cs-hero-info-cell">
               <span className="cs-info-cell-label">Role</span>
