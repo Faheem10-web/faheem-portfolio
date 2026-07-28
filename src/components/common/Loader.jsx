@@ -8,16 +8,10 @@ const containerVariants = {
   exit: {
     opacity: 0,
     transition: {
-      duration: 0.35,
+      duration: 0.45,
       ease: [0.16, 1, 0.3, 1],
     },
   },
-};
-
-const cardVariants = {
-  initial: { opacity: 0, scale: 0.96, y: 6 },
-  animate: { opacity: 1, scale: 1, y: 0 },
-  exit: { opacity: 0, scale: 0.96, y: -6 },
 };
 
 export default function Loader({ onComplete, isLoading }) {
@@ -27,27 +21,26 @@ export default function Loader({ onComplete, isLoading }) {
   const completedRef = useRef(false);
 
   useEffect(() => {
-    // Respect prefers-reduced-motion
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (mediaQuery.matches) {
       if (onComplete) onComplete();
       return;
     }
 
-    const DURATION = 220; // 60 FPS sub-300ms responsive fill
+    const DURATION = 850; // Smooth ~0.85s premium sequence
 
     const updateProgress = (timestamp) => {
       if (!startTimeRef.current) startTimeRef.current = timestamp;
       const elapsed = timestamp - startTimeRef.current;
       const linearRatio = Math.min(elapsed / DURATION, 1);
 
-      // Silky cubic ease-out curve
+      // Smooth soft easing curve (cubic ease-out)
       const easedRatio = 1 - Math.pow(1 - linearRatio, 3);
       const currentVal = easedRatio * 100;
 
       setProgress(currentVal);
 
-      if (currentVal >= 100 || (!isLoading && elapsed >= 120)) {
+      if (currentVal >= 100 || (!isLoading && elapsed >= 700)) {
         if (!completedRef.current) {
           completedRef.current = true;
           if (onComplete) onComplete();
@@ -68,7 +61,7 @@ export default function Loader({ onComplete, isLoading }) {
 
   return (
     <motion.div
-      className="glass-loader-root"
+      className="minimal-white-loader"
       variants={containerVariants}
       initial="initial"
       animate="animate"
@@ -77,25 +70,20 @@ export default function Loader({ onComplete, isLoading }) {
       aria-live="polite"
       aria-label="Loading portfolio"
     >
-      {/* Floating Glassmorphism Card */}
-      <motion.div
-        className="glass-loader-card"
-        variants={cardVariants}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      >
-        {/* Semi-bold FAHEEM Text */}
-        <h1 className="glass-loader-brand">
-          FAHEEM
+      <div className="minimal-loader-content">
+        {/* Centered "Faheem" Text (First letter capital) */}
+        <h1 className="minimal-loader-brand">
+          Faheem
         </h1>
 
-        {/* Thin 2px Animated Loading Line */}
-        <div className="glass-loader-track">
+        {/* Thin Animated Loading Bar Underneath */}
+        <div className="minimal-loader-track">
           <div
-            className="glass-loader-fill"
+            className="minimal-loader-fill"
             style={{ width: `${progress}%` }}
           />
         </div>
-      </motion.div>
+      </div>
     </motion.div>
   );
 }

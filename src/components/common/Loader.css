@@ -1,85 +1,51 @@
-/* World-Class 2026 Glassmorphism Preloader (Apple / Linear / Framer / Awwwards Standard) */
-.glass-loader-root {
+/* Minimal White Preloader - "Faheem" (No Box, First Letter Capital) */
+.minimal-white-loader {
   position: fixed;
   inset: 0;
   z-index: 999999;
-  background: #FAFAFA;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   user-select: none;
-  contain: strict;
-  transform: translateZ(0);
-  will-change: opacity;
 }
 
-/* Floating Precision Glass Container */
-.glass-loader-card {
+.minimal-loader-content {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  padding: 32px 52px;
-  background: rgba(255, 255, 255, 0.65);
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 
-    0 20px 48px -12px rgba(0, 0, 0, 0.04),
-    0 4px 16px rgba(0, 0, 0, 0.02),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  border-radius: 22px;
-  transform: translateZ(0);
-  will-change: transform, opacity;
+  padding: 24px;
 }
 
-/* Semi-bold FAHEEM Brand Typography */
-.glass-loader-brand {
-  font-family: "Geist", "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
-  font-size: 15px;
-  font-weight: 600;
+/* Bold Centered "Faheem" Brand Text */
+.minimal-loader-brand {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+  font-size: clamp(2.4rem, 6vw, 3.4rem);
+  font-weight: 800;
   color: #000000;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
+  letter-spacing: -0.02em;
   margin: 0;
   line-height: 1;
-  transform: translateX(0.14em); /* Visual alignment correction for letter-spacing */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Thin 2px Animated Loading Bar Track */
-.glass-loader-track {
-  width: 120px;
-  height: 2px;
+/* Thin 2.5px Animated Loading Bar Track */
+.minimal-loader-track {
+  width: 150px;
+  height: 2.5px;
   background: rgba(0, 0, 0, 0.08);
   border-radius: 99px;
   overflow: hidden;
   position: relative;
-  transform: translateZ(0);
+  margin-top: 14px;
 }
 
-/* Thin 2px Animated Loading Fill Line */
-.glass-loader-fill {
+/* Thin Animated Loading Bar Fill */
+.minimal-loader-fill {
   height: 100%;
   background: #000000;
   border-radius: 99px;
   transition: width 0.08s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: width;
-}
-
-@media (max-width: 480px) {
-  .glass-loader-card {
-    padding: 26px 40px;
-    border-radius: 18px;
-  }
-  .glass-loader-brand {
-    font-size: 14px;
-    letter-spacing: 0.24em;
-  }
-  .glass-loader-track {
-    width: 100px;
-  }
 }
