@@ -448,7 +448,7 @@ export default function ProjectManager() {
   const handleDelete = async (id) => {
     if (window.confirm('Are you absolutely sure you want to delete this project?')) {
       const res = await projectsCrud.delete(id);
-      if (!res.success) alert('Failed to delete project.');
+      if (!res.success) alert(res.message || 'Failed to delete project.');
     }
   };
 

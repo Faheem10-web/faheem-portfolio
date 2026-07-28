@@ -362,17 +362,28 @@ export function AdminProvider({ children }) {
             },
             delete: async (id) => {
                 // Immediately remove from React state to prevent UI flicker or stale rendering
-                stateSetter(prev => (prev || []).filter(item => (item._id || item.id) !== id));
-                const res = await fetch(`${API_BASE}/${routeSegment}/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${token}` }
+                stateSetter(prev => {
+                    const updated = (prev || []).filter(item => (item._id || item.id) !== id && item.slug !== id);
+                    if (routeSegment === 'projects' || routeSegment === 'services' || routeSegment === 'settings') {
+                        setCache(routeSegment, updated);
+                    }
+                    return updated;
                 });
-                if (res.ok) {
-                    return { success: true };
-                } else {
-                    // Revert if request failed
+                try {
+                    const res = await fetch(`${API_BASE}/${routeSegment}/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        return { success: true, message: 'Deleted successfully' };
+                    } else {
+                        const errData = await res.json().catch(() => ({}));
+                        await fetchAll();
+                        return { success: false, message: errData.error || errData.message || 'Failed to delete item' };
+                    }
+                } catch (err) {
                     await fetchAll();
-                    return { success: false };
+                    return { success: false, message: err.message || 'Network error deleting item' };
                 }
             }
         };

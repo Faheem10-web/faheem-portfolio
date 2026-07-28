@@ -142,10 +142,18 @@ export const deleteCloudinaryAssetsFromObject = async (obj) => {
     }
   };
 
-  scan(obj);
+  try {
+    scan(obj);
 
-  for (const url of urlsToDelete) {
-    await deleteFromCloudinary(url);
+    for (const url of urlsToDelete) {
+      try {
+        await deleteFromCloudinary(url);
+      } catch (err) {
+        console.warn(`⚠️ Non-fatal Cloudinary deletion error for ${url}:`, err.message);
+      }
+    }
+  } catch (err) {
+    console.warn('⚠️ Non-fatal Cloudinary asset scan error:', err.message);
   }
 };
 

@@ -729,24 +729,36 @@ router.put('/projects/:id', protect, async (req, res) => {
 
 router.delete('/projects/:id', protect, async (req, res) => {
   try {
-    let project = null;
+    const targetId = req.params.id;
     if (mongoose.connection.readyState === 1) {
-      if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-        project = await Project.findById(req.params.id);
-      } else {
-        project = await Project.findOne({ $or: [{ slug: req.params.id }, { id: req.params.id }] });
+      let project = null;
+      if (mongoose.Types.ObjectId.isValid(targetId)) {
+        project = await Project.findById(targetId);
+      }
+      if (!project) {
+        project = await Project.findOne({ $or: [{ slug: targetId }, { id: targetId }] });
       }
 
       if (project) {
-        await deleteCloudinaryAssetsFromObject(project);
+        try {
+          await deleteCloudinaryAssetsFromObject(project);
+        } catch (cloudErr) {
+          console.warn('⚠️ Cloudinary asset deletion warning (non-fatal):', cloudErr.message);
+        }
         await Project.findByIdAndDelete(project._id);
+      } else {
+        // Fallback: direct deletion if ID is a valid ObjectId
+        if (mongoose.Types.ObjectId.isValid(targetId)) {
+          await Project.findByIdAndDelete(targetId);
+        }
       }
     }
 
     invalidateBootstrapCache();
-    res.json({ message: 'Project deleted successfully' });
+    res.json({ success: true, message: 'Project deleted successfully' });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('❌ Project Delete Error:', error);
+    res.status(500).json({ success: false, error: error.message || 'Failed to delete project' });
   }
 });
 
