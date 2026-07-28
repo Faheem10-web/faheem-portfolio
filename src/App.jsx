@@ -15,7 +15,7 @@ import Lenis from "lenis";
 import ChatWidget from "./components/common/ChatWidget";
 import ClickSpark from "./components/common/ClickSpark";
 import CustomCursor from "./components/common/CustomCursor";
-
+import ScrollToTop from "./components/common/ScrollToTop";
 
 // Lazy-loaded Admin CMS Routes for optimal initial bundle size
 const AdminLayout = lazy(() => import("./admin/AdminLayout"));
@@ -37,10 +37,14 @@ const pageVariants = {
 
 const PageWrapper = ({ children }) => {
   useEffect(() => {
-    window.lenis?.scrollTo(0, { immediate: true });
+    window.scrollTo(0, 0);
+    if (window.lenis) {
+      window.lenis.scrollTo(0, { immediate: true });
+    }
   }, []);
 
   return (
+
     <motion.div
       variants={pageVariants}
       initial="initial"
@@ -192,6 +196,8 @@ function AppContent() {
 
     rafId = requestAnimationFrame(raf);
     window.lenis = lenis;
+    window.scrollTo(0, 0);
+    lenis.scrollTo(0, { immediate: true });
 
     // Smooth anchor navigation
     const handleAnchorScroll = (e) => {
@@ -226,6 +232,7 @@ function AppContent() {
 
   return (
     <>
+      <ScrollToTop />
       {/* Fast Minimalist Loader Overlay */}
       <AnimatePresence>
         {showLoader && (
