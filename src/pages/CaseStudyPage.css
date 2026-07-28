@@ -66,28 +66,27 @@
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
-   1. CUBERTO-STYLE EDITORIAL TYPOGRAPHY HERO (100% Exact Punto Pago Match)
+   1. CUBERTO-STYLE EDITORIAL TYPOGRAPHY HERO (High-End Luxury 2026 Layout)
    ────────────────────────────────────────────────────────────────────────── */
 .cs-typography-hero {
   background-color: #FFFFFF;
   color: #000000;
   width: 100%;
   padding-top: 140px;
-  padding-bottom: 80px;
+  padding-bottom: 70px;
   border-bottom: 1px solid #E5E7EB;
   box-sizing: border-box;
 }
 
 .cs-hero-container {
   width: 100%;
-  max-width: 1000px;
+  max-width: 1120px;
   margin: 0 auto;
   padding: 0 32px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
 }
 
 .cs-hero-top-bar {
@@ -95,7 +94,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 40px;
+  margin-bottom: 48px;
 }
 
 .cs-hero-back-link {
@@ -119,54 +118,53 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: #71717A;
+  color: #52525B;
   background: #F4F4F5;
   padding: 6px 16px;
   border-radius: 100px;
 }
 
-/* Small Centered Project Label (Exact Punto Pago style) */
-.cs-hero-small-label {
-  font-family: var(--font-heading, 'Inter', -apple-system, sans-serif);
-  font-size: clamp(16px, 2.2vw, 22px);
-  font-weight: 500;
-  color: #111111;
-  margin-bottom: 24px;
-  letter-spacing: -0.01em;
+.cs-hero-main-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
+  margin-bottom: 56px;
+  width: 100%;
 }
 
-/* Giant Centered Stacked Headline (Exact "The First Super-App in Latin America" 3-line block style) */
+/* Small Centered Project Label */
+.cs-hero-small-label {
+  font-family: var(--font-heading, 'Inter', -apple-system, sans-serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: #18181B;
+  margin-bottom: 20px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* Giant Centered Headline */
 .cs-hero-editorial-headline {
   font-family: var(--font-heading, 'Inter', -apple-system, sans-serif);
-  font-size: clamp(52px, 8.8vw, 115px);
+  font-size: clamp(48px, 7.5vw, 92px);
   font-weight: 800;
-  line-height: 0.95;
+  line-height: 1.02;
   letter-spacing: -0.045em;
   color: #000000;
-  margin: 0 auto 54px auto;
-  max-width: 720px;
+  margin: 0 auto;
+  max-width: 860px;
   text-align: center;
   word-break: break-word;
 }
 
-.cs-hero-description {
-  font-size: clamp(16px, 1.8vw, 20px);
-  font-weight: 400;
-  line-height: 1.6;
-  color: #52525B;
-  margin: 0 auto 60px auto;
-  max-width: 780px;
-  text-align: center;
-}
-
-/* Centered Information Grid */
+/* Centered Information Bar - Clean 4 Columns */
 .cs-hero-info-grid {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 28px 24px;
-  padding-top: 40px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  padding-top: 36px;
   border-top: 1px solid #E5E7EB;
   text-align: center;
 }
@@ -175,42 +173,45 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .cs-info-cell-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   color: #A1A1AA;
 }
 
 .cs-info-cell-value {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: #18181B;
   line-height: 1.4;
 }
 
-.cs-hero-info-cell--action {
+/* Dedicated Centered Live Preview Button Row */
+.cs-hero-action-row {
+  margin-top: 36px;
+  display: flex;
   justify-content: center;
-  align-items: center;
+  width: 100%;
 }
 
 .cs-hero-live-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #0D0D12;
+  background: #000000;
   color: #FFFFFF;
   font-size: 14px;
   font-weight: 600;
-  padding: 12px 24px;
+  padding: 12px 32px;
   border-radius: 100px;
   text-decoration: none;
   transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 .cs-hero-live-btn:hover {

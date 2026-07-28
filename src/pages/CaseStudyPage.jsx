@@ -111,7 +111,11 @@ export default function CaseStudyPage() {
   const platformVal = project.infoConfig?.platform || 'Web & Mobile';
   const toolsArray = project.infoConfig?.tools && project.infoConfig.tools.length > 0 
     ? project.infoConfig.tools 
-    : (project.technologies || ['Figma', 'React', 'Framer Motion', 'Webflow']);
+    : (project.technologies && project.technologies.length > 0 ? project.technologies : ['Figma', 'React', 'Framer Motion', 'Webflow']);
+
+  const displayTools = Array.isArray(toolsArray) && toolsArray.length > 0 
+    ? toolsArray.join(', ') 
+    : (typeof toolsArray === 'string' && toolsArray.trim() ? toolsArray : 'Figma, React, Webflow');
 
   const liveUrl = project.links?.liveProject || project.liveUrl;
   const githubUrl = project.links?.github || project.githubUrl;
@@ -190,7 +194,7 @@ export default function CaseStudyPage() {
 
   return (
     <div className="case-study-root">
-      {/* ── 1. CUBERTO-STYLE EDITORIAL TYPOGRAPHY HERO (Centered Punto Pago Reference Layout) ── */}
+      {/* ── 1. CUBERTO-STYLE EDITORIAL TYPOGRAPHY HERO (High-End Luxury 2026 Layout) ── */}
       <motion.section 
         className="cs-typography-hero"
         initial={{ opacity: 0, y: 20 }}
@@ -199,7 +203,7 @@ export default function CaseStudyPage() {
       >
         <div className="cs-hero-container">
           
-          {/* Top Bar with Back Link */}
+          {/* Top Navigation Row */}
           <div className="cs-hero-top-bar">
             <Link to="/projects" className="cs-hero-back-link">
               <FiArrowLeft size={16} /> Back to Work
@@ -207,29 +211,30 @@ export default function CaseStudyPage() {
             <span className="cs-hero-category-label">{categoryVal.toUpperCase()}</span>
           </div>
 
-          {/* Small Centered Project Name (Exact Punto Pago label style) */}
-          <motion.div 
-            className="cs-hero-small-label"
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-          >
-            {titleText}
-          </motion.div>
+          {/* Hero Main Editorial Block */}
+          <div className="cs-hero-main-block">
+            {/* Small Centered Project Label */}
+            <motion.div 
+              className="cs-hero-small-label"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {titleText}
+            </motion.div>
 
-          {/* Massive Centered Editorial Title/Headline (Image 1 "The First Super-App in Latin America" style) */}
-          <motion.h1 
-            className="cs-hero-editorial-headline"
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-          >
-            {taglineText || `${titleText} — Redefining Digital Experience`}
-          </motion.h1>
+            {/* Massive Centered Editorial Title/Headline */}
+            <motion.h1 
+              className="cs-hero-editorial-headline"
+              initial={{ opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {taglineText || `${titleText} — Redefining Digital Product Experience`}
+            </motion.h1>
+          </div>
 
-
-
-          {/* Centered Bottom Info Grid (Role, Duration, Tools, Year, Live Preview) */}
+          {/* Bottom Information Grid (Role, Duration, Tools, Year) */}
           <motion.div 
             className="cs-hero-info-grid"
             initial={{ opacity: 0, y: 20 }}
@@ -248,24 +253,28 @@ export default function CaseStudyPage() {
 
             <div className="cs-hero-info-cell">
               <span className="cs-info-cell-label">Tools</span>
-              <span className="cs-info-cell-value">
-                {Array.isArray(toolsArray) ? toolsArray.join(', ') : toolsArray}
-              </span>
+              <span className="cs-info-cell-value">{displayTools}</span>
             </div>
 
             <div className="cs-hero-info-cell">
               <span className="cs-info-cell-label">Year</span>
               <span className="cs-info-cell-value">{yearVal}</span>
             </div>
-
-            {liveUrl && (
-              <div className="cs-hero-info-cell cs-hero-info-cell--action">
-                <a href={liveUrl} target="_blank" rel="noreferrer" className="cs-hero-live-btn">
-                  Live Preview <FiExternalLink size={14} />
-                </a>
-              </div>
-            )}
           </motion.div>
+
+          {/* Dedicated Centered Live Preview Button */}
+          {liveUrl && (
+            <motion.div 
+              className="cs-hero-action-row"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <a href={liveUrl} target="_blank" rel="noreferrer" className="cs-hero-live-btn">
+                Live Preview <FiExternalLink size={14} />
+              </a>
+            </motion.div>
+          )}
 
         </div>
       </motion.section>
