@@ -1,82 +1,53 @@
-/* Sleek Dark Mode Minimalist Brand Loader */
-.custom-dark-loader {
-    position: fixed;
-    inset: 0;
-    z-index: 999999;
-    background: #09090b;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    user-select: none;
+/* Premium 2026 Minimal Page Loader (Apple / Linear / Framer / Stripe Style) */
+.minimal-white-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  user-select: none;
 }
 
-.loader-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 24px;
-    padding: 24px;
-    width: 100%;
-    max-width: 420px;
+.minimal-loader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 24px;
 }
 
-/* Brand Header: Name without Icon */
-.loader-brand-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* Small Centered Brand Logo / Text */
+.minimal-loader-brand {
+  font-family: var(--font-heading, "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  color: #000000;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1;
+  transform: translateX(0.12em); /* Center alignment correction for letter-spacing */
 }
 
-.loader-brand-name {
-    font-family: var(--font-heading, "Inter", -apple-system, BlinkMacSystemFont, sans-serif);
-    font-size: clamp(2.4rem, 5vw, 3.4rem);
-    font-weight: 800;
-    color: #ffffff;
-    letter-spacing: -0.04em;
-    margin: 0;
-    line-height: 1;
+/* Thin 2px Loading Line Track */
+.minimal-loader-track {
+  width: 130px;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 99px;
+  overflow: hidden;
+  position: relative;
 }
 
-.brand-dot {
-    color: #ff4e50;
-    font-size: 1.1em;
-}
-
-/* Progress Track Line */
-.loader-line-track {
-    width: 100%;
-    max-width: 320px;
-    height: 3.5px;
-    background: rgba(255, 255, 255, 0.12);
-    border-radius: 99px;
-    overflow: hidden;
-    position: relative;
-}
-
-.loader-line-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #ff4e50 0%, #f9d423 50%, #a855f7 100%);
-    border-radius: 99px;
-    transition: width 0.08s linear;
-    box-shadow: 0 0 12px rgba(255, 78, 80, 0.5);
-}
-
-/* Percentage Text */
-.loader-percent-text {
-    font-family: var(--font-mono, "JetBrains Mono", monospace);
-    font-size: 14px;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.65);
-    letter-spacing: 0.05em;
-}
-
-@media (max-width: 480px) {
-    .loader-brand-name {
-        font-size: 2.6rem;
-    }
-    .loader-line-track {
-        max-width: 260px;
-    }
+/* Thin 2px Loading Fill Line */
+.minimal-loader-fill {
+  height: 100%;
+  background: #000000;
+  border-radius: 99px;
+  transition: width 0.08s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: width;
 }

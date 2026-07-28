@@ -9,7 +9,7 @@ const containerVariants = {
   exit: {
     opacity: 0,
     transition: {
-      duration: 0.4,
+      duration: 0.35,
       ease: [0.16, 1, 0.3, 1],
     },
   },
@@ -22,7 +22,7 @@ export default function Loader({ onComplete, isLoading }) {
   const startTimeRef = useRef(null);
   const completedRef = useRef(false);
 
-  const portfolioName = siteSettings?.global?.portfolioName || siteSettings?.hero?.name || "Faheem";
+  const brandText = siteSettings?.navbar?.logoText || siteSettings?.global?.portfolioName || "FAHEEM";
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -31,23 +31,16 @@ export default function Loader({ onComplete, isLoading }) {
       return;
     }
 
-    const DURATION = 300; // Ultra-fast responsive fill if initial fetch is pending
+    const DURATION = 220; // Fast under-300ms sequence
 
     const updateProgress = (timestamp) => {
       if (!startTimeRef.current) startTimeRef.current = timestamp;
       const elapsed = timestamp - startTimeRef.current;
       const linearRatio = Math.min(elapsed / DURATION, 1);
 
-      const easedRatio =
-        linearRatio < 0.5
-          ? 4 * linearRatio * linearRatio * linearRatio
-          : 1 - Math.pow(-2 * linearRatio + 2, 3) / 2;
-
-      let currentVal = easedRatio * 100;
-
-      if (isLoading && elapsed < 320 && currentVal > 98) {
-        currentVal = 98;
-      }
+      // Smooth soft easing curve
+      const easedRatio = 1 - Math.pow(1 - linearRatio, 3);
+      const currentVal = easedRatio * 100;
 
       setProgress(currentVal);
 
@@ -70,35 +63,26 @@ export default function Loader({ onComplete, isLoading }) {
     };
   }, [isLoading, onComplete]);
 
-  const formattedProgress = Math.round(progress).toString();
-
   return (
     <motion.div
-      className="custom-dark-loader"
+      className="minimal-white-loader"
       variants={containerVariants}
       initial="initial"
       animate="animate"
       exit="exit"
     >
-      <div className="loader-box">
-        {/* Brand Name (Logo icon removed as requested) */}
-        <div className="loader-brand-header">
-          <h1 className="loader-brand-name">
-            {portfolioName}<span className="brand-dot">.</span>
-          </h1>
-        </div>
+      <div className="minimal-loader-content">
+        {/* Small Centered Brand Logo/Text */}
+        <h1 className="minimal-loader-brand">
+          {brandText}
+        </h1>
 
-        {/* Gradient Progress Bar Line */}
-        <div className="loader-line-track">
+        {/* Thin 2px Animated Loading Line */}
+        <div className="minimal-loader-track">
           <div
-            className="loader-line-fill"
+            className="minimal-loader-fill"
             style={{ width: `${progress}%` }}
           />
-        </div>
-
-        {/* Percentage Counter */}
-        <div className="loader-percent-text">
-          {formattedProgress}%
         </div>
       </div>
     </motion.div>
