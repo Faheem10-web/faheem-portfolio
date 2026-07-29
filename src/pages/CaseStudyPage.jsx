@@ -573,6 +573,8 @@ export default function CaseStudyPage() {
                 <motion.div
                   variants={phoneVariants(0.1)}
                   className="cs-mobile-card"
+                  onClick={() => handleOpenLightbox(getCromicMobileScreens()[0])}
+                  style={{ cursor: 'pointer' }}
                 >
                   <img 
                     src={getCromicMobileScreens()[0]} 
@@ -586,6 +588,8 @@ export default function CaseStudyPage() {
                 <motion.div
                   variants={phoneVariants(0.25)}
                   className="cs-mobile-card"
+                  onClick={() => handleOpenLightbox(getCromicMobileScreens()[1])}
+                  style={{ cursor: 'pointer' }}
                 >
                   <img 
                     src={getCromicMobileScreens()[1]} 
