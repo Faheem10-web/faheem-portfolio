@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import "./CaseStudyPage.css";
 import { 
   FiExternalLink, FiGithub, FiFigma, FiCheck, 
   FiX, FiChevronRight, FiChevronLeft, FiArrowLeft, FiMaximize2,
@@ -338,6 +339,60 @@ export default function CaseStudyPage() {
     return list.some(item => getCloudinaryPublicId(item) === targetId);
   };
 
+  const getCromicMobileScreens = () => {
+    const defaultCromicScreens = [
+      "https://i.pinimg.com/736x/5a/c5/1a/5ac51a73d86fdfcde5935a8f9a521c10.jpg",
+      "https://i.pinimg.com/736x/72/c9/61/72c9617c4e77a7aede5c69a75fa753d6.jpg"
+    ];
+    
+    if (project.showcaseConfig?.mobileScreens?.length > 0) {
+      const cmsScreens = project.showcaseConfig.mobileScreens.map(img => typeof img === 'string' ? img : img.url).filter(Boolean);
+      if (cmsScreens.length >= 2) return cmsScreens.slice(0, 2);
+      if (cmsScreens.length > 0) {
+        return [cmsScreens[0], defaultCromicScreens[1]];
+      }
+    }
+    
+    return defaultCromicScreens;
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const fadeUpVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { type: "spring", stiffness: 100, damping: 20 }
+    }
+  };
+
+  const phoneVariants = (delay) => ({
+    hidden: { opacity: 0, y: 60, scale: 0.96 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { 
+        type: "spring", 
+        stiffness: 70, 
+        damping: 16, 
+        delay,
+        opacity: { duration: 0.6 },
+        y: { type: "spring", stiffness: 70, damping: 16 }
+      }
+    }
+  });
+
   // Card 1 Slider (Top Main Cover Showcase Card)
   // STRICT: Uses ONLY hero/banner images. No fallback to coverImage unless no hero/banner images exist.
   const card1RawList = getArrayFromImages(
@@ -490,6 +545,60 @@ export default function CaseStudyPage() {
         {/* ── 5. CARD 2 SLIDER (Middle Featured Showcase Card) ── */}
         {card2SliderImages.length > 0 && (
           <MockupSliderCard images={card2SliderImages} onOpenLightbox={handleOpenLightbox} />
+        )}
+
+        {/* ── MOBILE EXPERIENCE SECTION (CROMIC EXCLUSIVE) ── */}
+        {(project.slug === 'projects' || project.name?.toLowerCase() === 'cromic') && (
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-10% 0px" }}
+            variants={containerVariants}
+            className="cs-mobile-experience-section"
+          >
+            {/* Centered Heading */}
+            <div className="cs-mobile-exp-header">
+              <motion.span variants={fadeUpVariants} className="cs-mobile-exp-label">
+                RESPONSIVE EXPERIENCE
+              </motion.span>
+              <motion.h2 variants={fadeUpVariants} className="cs-mobile-exp-title">
+                MOBILE EXPERIENCE
+              </motion.h2>
+            </div>
+
+            {/* Right Column: Two premium same-height cards matching user provided images */}
+            <div className="cs-mobile-exp-right">
+              {/* Card 1 */}
+              {getCromicMobileScreens()[0] && (
+                <motion.div
+                  variants={phoneVariants(0.1)}
+                  className="cs-mobile-card"
+                  onClick={() => handleOpenLightbox(getCromicMobileScreens()[0])}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <img 
+                    src={getCromicMobileScreens()[0]} 
+                    alt="Mobile Experience Card 1" 
+                  />
+                </motion.div>
+              )}
+
+              {/* Card 2 */}
+              {getCromicMobileScreens()[1] && (
+                <motion.div
+                  variants={phoneVariants(0.25)}
+                  className="cs-mobile-card"
+                  onClick={() => handleOpenLightbox(getCromicMobileScreens()[1])}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <img 
+                    src={getCromicMobileScreens()[1]} 
+                    alt="Mobile Experience Card 2" 
+                  />
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
         )}
 
         {/* ── 6. FINAL OUTCOME SECTION ── */}

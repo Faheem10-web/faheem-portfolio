@@ -143,6 +143,7 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
   const [card1Images, setCard1Images] = useState(extractList(project?.heroImage || project?.bannerImage, null, project?.heroImages));
   const [card2Images, setCard2Images] = useState(extractList(project?.solutionImage, project?.challengeImage, project?.solutionImages || project?.challengeImages));
   const [card3Images, setCard3Images] = useState(extractList(project?.conclusionImage || project?.resultImage, null, project?.resultImages || project?.conclusionImages));
+  const [mobileScreens, setMobileScreens] = useState([]);
 
   useEffect(() => {
     if (project) {
@@ -160,6 +161,9 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
       setCard1Images(extractList(project.heroImage || project.bannerImage, null, project.heroImages));
       setCard2Images(extractList(project.solutionImage, project.challengeImage, project.solutionImages || project.challengeImages));
       setCard3Images(extractList(project.conclusionImage || project.resultImage, null, project.resultImages || project.conclusionImages));
+      
+      const screensList = project.showcaseConfig?.mobileScreens || [];
+      setMobileScreens(screensList.map(img => typeof img === 'string' ? img : img.url).filter(Boolean));
     }
   }, [project]);
 
@@ -229,7 +233,13 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
       resultImages: validCard3.map(url => typeof url === 'string' ? { url, alt: projectName } : url),
       conclusionImages: validCard3.map(url => typeof url === 'string' ? { url, alt: projectName } : url),
       conclusionImage: validCard3[0] || '',
-      resultImage: validCard3[0] || ''
+      resultImage: validCard3[0] || '',
+
+      // showcaseConfig mobileScreens updating
+      showcaseConfig: {
+        ...(project?.showcaseConfig || {}),
+        mobileScreens: mobileScreens.filter(Boolean).map(url => ({ url, alt: `${projectName} Mobile Screen` }))
+      }
     };
 
     const res = await updateCaseStudy(project._id || project.slug, payload);
@@ -325,6 +335,18 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
           }}
         >
           📸 Unlimited Image Sliders (Card 1, 2 & 3)
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('mobile-exp')}
+          style={{
+            padding: '10px 20px', borderRadius: '10px', border: 'none', fontSize: '13.5px', fontWeight: '700', cursor: 'pointer',
+            background: activeTab === 'mobile-exp' ? '#111827' : '#FFFFFF',
+            color: activeTab === 'mobile-exp' ? '#FFFFFF' : '#374151',
+            boxShadow: '0 2px 5px rgba(0,0,0,0.04)'
+          }}
+        >
+          📱 Mobile Experience Cards (2 Cards)
         </button>
       </div>
 
@@ -499,6 +521,56 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
             </div>
           </div>
 
+        </div>
+      )}
+
+      {/* ── TAB 3: MOBILE EXPERIENCE (2 CARDS) ── */}
+      {activeTab === 'mobile-exp' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+          
+          <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', padding: '16px', borderRadius: '12px', color: '#1E40AF', fontSize: '13px', lineHeight: '1.5' }}>
+            📱 <strong>Mobile Experience Cards Manager!</strong> You can update the two Pinterest-style mockup cards displayed in the case study. Leave them blank or reset them to fall back to the default design screens.
+          </div>
+
+          <div style={{ background: '#FFFFFF', borderRadius: '18px', padding: '24px', border: '1px solid #EAEAEA' }}>
+            <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '800', color: '#111827' }}>
+              📱 Mobile Card Mockups
+            </h3>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+              <SimpleImageCard 
+                title="Mobile Card 1" 
+                subtitle="First card containing the orders screen mockup"
+                imageSrc={mobileScreens[0] || ''}
+                onSaveImage={(url) => {
+                  const copy = [...mobileScreens];
+                  copy[0] = url;
+                  setMobileScreens(copy);
+                }}
+                onRemoveSlot={() => {
+                  const copy = [...mobileScreens];
+                  copy[0] = '';
+                  setMobileScreens(copy);
+                }}
+              />
+
+              <SimpleImageCard 
+                title="Mobile Card 2" 
+                subtitle="Second card containing the tilted phone & card mockup"
+                imageSrc={mobileScreens[1] || ''}
+                onSaveImage={(url) => {
+                  const copy = [...mobileScreens];
+                  copy[1] = url;
+                  setMobileScreens(copy);
+                }}
+                onRemoveSlot={() => {
+                  const copy = [...mobileScreens];
+                  copy[1] = '';
+                  setMobileScreens(copy);
+                }}
+              />
+            </div>
+          </div>
         </div>
       )}
 
