@@ -31,30 +31,31 @@ function Navbar() {
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
-    // Premium auto-hide scroll handler ONLY on Case Study pages (GPU accelerated, throttled via RAF)
+    // Premium auto-hide scroll handler (GPU accelerated, throttled via RAF)
     useEffect(() => {
-        if (!isCaseStudyPage) {
-            setNavVisible(true);
-            return;
-        }
-
         let lastScrollY = window.scrollY;
         let ticking = false;
+        const scrollThreshold = 60; // hide past 60px scroll
+        const scrollTolerance = 10;  // ignore small shifts under 10px
 
         const updateNavbarVisibility = () => {
             const currentScrollY = window.scrollY;
+            const scrollDelta = currentScrollY - lastScrollY;
 
-            // Pin navbar at the very top (within 80px)
-            if (currentScrollY <= 80) {
+            // Pin navbar at the very top (within threshold)
+            if (currentScrollY <= scrollThreshold) {
                 setNavVisible(true);
             } 
-            // Scrolling down past 80px -> hide smoothly
-            else if (currentScrollY > lastScrollY) {
-                setNavVisible(false);
-            } 
-            // Scrolling up -> reveal smoothly
-            else if (currentScrollY < lastScrollY) {
-                setNavVisible(true);
+            // Ignore tiny scroll movements to prevent flickering
+            else if (Math.abs(scrollDelta) > scrollTolerance) {
+                // Scrolling down -> hide smoothly
+                if (currentScrollY > lastScrollY) {
+                    setNavVisible(false);
+                } 
+                // Scrolling up -> reveal smoothly
+                else if (currentScrollY < lastScrollY) {
+                    setNavVisible(true);
+                }
             }
 
             lastScrollY = currentScrollY;
@@ -70,7 +71,7 @@ function Navbar() {
 
         window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [isCaseStudyPage]);
+    }, []);
 
     // Prevent body scroll when menu is open
     useEffect(() => {
@@ -186,7 +187,7 @@ function Navbar() {
 
     const isAdminLoggedIn = !!(token && (!user || user.role === "admin"));
 
-    const visibilityClass = !navVisible && isCaseStudyPage ? " navbar-hidden" : "";
+    const visibilityClass = !navVisible ? " navbar-hidden" : "";
 
     return (
         <>
