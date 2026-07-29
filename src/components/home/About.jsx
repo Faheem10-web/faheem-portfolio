@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { FiDownload, FiArrowRight, FiStar, FiCheckCircle } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useAdmin } from "../../context/AdminContext";
+import Magnetic from "../common/Magnetic";
 
 function About() {
     const { siteSettings, downloadCv } = useAdmin();
@@ -71,23 +72,27 @@ function About() {
                             {aboutSettings.subtitle || "Download my resume to learn more about my experience and qualifications."}
                         </p>
                         
-                        {/* 2 Liquid Glass Frosted & Glossy Buttons */}
+                        {/* 2 Liquid Glass Frosted & Glossy Buttons with Magnetic Attraction */}
                         <div className="about-buttons-row">
-                            <a 
-                                href="#download-cv" 
-                                onClick={(e) => { e.preventDefault(); downloadCv(); }} 
-                                className="download-cv-btn liquid-glass-btn-primary"
-                            >
-                                <div className="btn-gloss-overlay"></div>
-                                <FiDownload className="btn-icon-svg" />
-                                <span>{navSettings.downloadCvBtnText || "Download CV"}</span>
-                            </a>
+                            <Magnetic strength={0.2}>
+                                <a 
+                                    href="#download-cv" 
+                                    onClick={(e) => { e.preventDefault(); downloadCv(); }} 
+                                    className="download-cv-btn liquid-glass-btn-primary"
+                                >
+                                    <div className="btn-gloss-overlay"></div>
+                                    <FiDownload className="btn-icon-svg" />
+                                    <span>{navSettings.downloadCvBtnText || "Download CV"}</span>
+                                </a>
+                            </Magnetic>
 
-                            <Link to="/about" className="more-about-btn liquid-glass-btn-secondary">
-                                <div className="btn-gloss-overlay"></div>
-                                <span>More About Me</span>
-                                <FiArrowRight className="btn-arrow-icon" />
-                            </Link>
+                            <Magnetic strength={0.2}>
+                                <Link to="/about" className="more-about-btn liquid-glass-btn-secondary">
+                                    <div className="btn-gloss-overlay"></div>
+                                    <span>More About Me</span>
+                                    <FiArrowRight className="btn-arrow-icon" />
+                                </Link>
+                            </Magnetic>
                         </div>
                     </div>
                 </motion.div>

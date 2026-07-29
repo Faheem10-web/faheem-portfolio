@@ -160,10 +160,11 @@ function AppContent() {
     if (mediaQuery.matches) return;
 
     const lenis = new Lenis({
-      lerp: 0.08, // Buttery smooth interpolation for ultra-premium native feel
+      duration: 1.4,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential deceleration for heavy luxury feel
       smoothWheel: true,
-      wheelMultiplier: 1.0,
-      touchMultiplier: 1.5,
+      wheelMultiplier: 1.15,
+      touchMultiplier: 1.8,
       infinite: false,
     });
 
