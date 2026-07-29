@@ -4,14 +4,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import "./CaseStudyPage.css";
 import { 
   FiExternalLink, FiGithub, FiFigma, FiCheck, 
-  FiX, FiChevronRight, FiChevronLeft, FiArrowLeft, FiMaximize2,
+  FiChevronRight, FiChevronLeft, FiArrowLeft,
   FiUser, FiCalendar, FiEdit3, FiClock
 } from "react-icons/fi";
 import { useAdmin } from "../context/AdminContext";
 import { API_BASE } from "../config/api";
 import { getOptimizedImageUrl } from "../utils/imageOptimizer";
 
-function MockupSliderCard({ images = [], onOpenLightbox }) {
+function MockupSliderCard({ images = [] }) {
   const validImages = images.filter(img => typeof img === 'string' && img.trim().length > 0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0); // 1 = next, -1 = prev
@@ -105,8 +105,7 @@ function MockupSliderCard({ images = [], onOpenLightbox }) {
       className="cs-premium-slider-container"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      onClick={() => onOpenLightbox(validImages[currentIndex])}
-      style={{ cursor: isSlider ? 'grab' : 'pointer' }}
+      style={{ cursor: isSlider ? 'grab' : 'default' }}
     >
       <AnimatePresence initial={false} custom={direction}>
         <motion.img
@@ -172,7 +171,6 @@ export default function CaseStudyPage() {
   const contextProject = (projects || []).find(p => p.slug === id || p._id === id || p.id === id);
   const [project, setProject] = useState(contextProject || null);
   const [loading, setLoading] = useState(!contextProject && !project);
-  const [lightboxImg, setLightboxImg] = useState(null);
 
   useEffect(() => {
     if (contextProject) {
@@ -221,11 +219,7 @@ export default function CaseStudyPage() {
     return () => { isCancelled = true; };
   }, [id, contextProject, projects]);
 
-  const handleOpenLightbox = (imgUrl) => {
-    if (imgUrl) {
-      setLightboxImg(imgUrl);
-    }
-  };
+  // Lightbox preview removed as per editorial showcase requirements
 
   if (loading && !project) {
     return (
@@ -440,7 +434,7 @@ export default function CaseStudyPage() {
 
         {/* ── 2. CARD 1 SLIDER (Top Main Cover Showcase Card) ── */}
         {card1SliderImages.length > 0 && (
-          <MockupSliderCard images={card1SliderImages} onOpenLightbox={handleOpenLightbox} />
+          <MockupSliderCard images={card1SliderImages} />
         )}
 
         {/* ── 3. OVERVIEW BLOCK ── */}
@@ -531,7 +525,7 @@ export default function CaseStudyPage() {
 
         {/* ── 5. CARD 2 SLIDER (Middle Featured Showcase Card) ── */}
         {card2SliderImages.length > 0 && (
-          <MockupSliderCard images={card2SliderImages} onOpenLightbox={handleOpenLightbox} />
+          <MockupSliderCard images={card2SliderImages} />
         )}
 
         {/* ── MOBILE EXPERIENCE SECTION (CROMIC EXCLUSIVE) ── */}
@@ -560,8 +554,7 @@ export default function CaseStudyPage() {
                 <motion.div
                   variants={phoneVariants(0.1)}
                   className="cs-mobile-card"
-                  onClick={() => handleOpenLightbox(getCromicMobileScreens()[0])}
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: 'default' }}
                 >
                   <img 
                     src={getCromicMobileScreens()[0]} 
@@ -575,8 +568,7 @@ export default function CaseStudyPage() {
                 <motion.div
                   variants={phoneVariants(0.25)}
                   className="cs-mobile-card"
-                  onClick={() => handleOpenLightbox(getCromicMobileScreens()[1])}
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: 'default' }}
                 >
                   <img 
                     src={getCromicMobileScreens()[1]} 
@@ -611,28 +603,10 @@ export default function CaseStudyPage() {
 
         {/* ── 7. CARD 3 SLIDER (Bottom Outcome Showcase Card) ── */}
         {card3SliderImages.length > 0 && (
-          <MockupSliderCard images={card3SliderImages} onOpenLightbox={handleOpenLightbox} />
+          <MockupSliderCard images={card3SliderImages} />
         )}
 
       </div>
-
-      {/* ── LIGHTBOX FULLSCREEN MODAL ── */}
-      <AnimatePresence>
-        {lightboxImg && (
-          <motion.div 
-            className="cs-lightbox-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setLightboxImg(null)}
-          >
-            <button className="cs-lightbox-close" onClick={() => setLightboxImg(null)}>
-              <FiX />
-            </button>
-            <img src={lightboxImg} alt="Enlarged view" className="cs-lightbox-img" />
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
