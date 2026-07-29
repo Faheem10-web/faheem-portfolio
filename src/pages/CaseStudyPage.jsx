@@ -14,98 +14,132 @@ import { getOptimizedImageUrl } from "../utils/imageOptimizer";
 function MockupSliderCard({ images = [], onOpenLightbox }) {
   const validImages = images.filter(img => typeof img === 'string' && img.trim().length > 0);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0); // 1 = next, -1 = prev
   const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     if (validImages.length <= 1 || isHovered) return;
 
     const timer = setInterval(() => {
+      setDirection(1);
       setCurrentIndex((prev) => (prev === validImages.length - 1 ? 0 : prev + 1));
-    }, 5000);
+    }, 5500);
 
     return () => clearInterval(timer);
   }, [validImages.length, isHovered]);
 
+  // Keyboard Navigation Support
+  useEffect(() => {
+    if (!isHovered || validImages.length <= 1) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === "ArrowLeft") {
+        handlePrev(e);
+      } else if (e.key === "ArrowRight") {
+        handleNext(e);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isHovered, validImages.length]);
+
   if (validImages.length === 0) return null;
 
+  const isSlider = validImages.length > 1;
+
   const handlePrev = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (!isSlider) return;
+    setDirection(-1);
     setCurrentIndex((prev) => (prev === 0 ? validImages.length - 1 : prev - 1));
   };
 
   const handleNext = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (!isSlider) return;
+    setDirection(1);
     setCurrentIndex((prev) => (prev === validImages.length - 1 ? 0 : prev + 1));
+  };
+
+  // Drag swipe gesture support for mobile / desktop
+  const handleDragEnd = (event, info) => {
+    if (!isSlider) return;
+    const swipeThreshold = 50;
+    if (info.offset.x < -swipeThreshold) {
+      handleNext(event);
+    } else if (info.offset.x > swipeThreshold) {
+      handlePrev(event);
+    }
+  };
+
+  // Apple & Linear style cross-fade + subtle spring translation transition variants
+  const slideVariants = {
+    enter: (dir) => ({
+      opacity: 0,
+      scale: 0.98,
+      x: dir > 0 ? 36 : dir < 0 ? -36 : 0
+    }),
+    center: {
+      opacity: 1,
+      scale: 1,
+      x: 0,
+      zIndex: 1
+    },
+    exit: (dir) => ({
+      opacity: 0,
+      scale: 0.99,
+      x: dir > 0 ? -36 : dir < 0 ? 36 : 0,
+      zIndex: 0
+    })
   };
 
   return (
     <div 
-      style={{ 
-        position: 'relative', 
-        width: '100%', 
-        minHeight: '340px',
-        aspectRatio: '16 / 9',
-        borderRadius: '16px', 
-        overflow: 'hidden', 
-        background: '#F4F4F6',
-        cursor: 'pointer',
-        boxShadow: '0 8px 30px rgba(0,0,0,0.06)',
-        marginBottom: '56px'
-      }}
+      className="cs-premium-slider-container"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => onOpenLightbox(validImages[currentIndex])}
+      style={{ cursor: isSlider ? 'grab' : 'pointer' }}
     >
-      <AnimatePresence>
+      <AnimatePresence initial={false} custom={direction}>
         <motion.img
           key={currentIndex}
-          src={getOptimizedImageUrl(validImages[currentIndex], { width: 1920 })}
-          alt={`Mockup Slide ${currentIndex + 1}`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.25, ease: 'easeInOut' }}
-          style={{ 
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%', 
-            height: '100%', 
-            objectFit: 'cover', 
-            display: 'block', 
-            borderRadius: '16px' 
+          custom={direction}
+          variants={slideVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{
+            x: { type: 'spring', stiffness: 280, damping: 28 },
+            opacity: { duration: 0.45, ease: 'easeOut' },
+            scale: { duration: 0.45, ease: 'easeOut' }
           }}
+          drag={isSlider ? "x" : false}
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.2}
+          onDragEnd={handleDragEnd}
+          src={getOptimizedImageUrl(validImages[currentIndex], { width: 1920 })}
+          alt={`Premium Mockup Slide ${currentIndex + 1}`}
+          className="cs-premium-slider-img"
+          loading="lazy"
         />
       </AnimatePresence>
 
-      {validImages.length > 1 && (
+      {isSlider && (
         <>
+          {/* Circular Glassmorphic Arrows */}
           <button
             type="button"
             onClick={handlePrev}
             aria-label="Previous Slide"
-            style={{
-              position: 'absolute',
-              top: '50%',
-              left: '16px',
-              transform: 'translateY(-50%)',
-              background: 'rgba(17, 24, 39, 0.7)',
-              backdropFilter: 'blur(8px)',
-              color: '#FFFFFF',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '50%',
-              width: '44px',
-              height: '44px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              zIndex: 10,
-              boxShadow: '0 4px 14px rgba(0,0,0,0.25)',
-              transition: 'all 0.2s ease'
-            }}
+            className="cs-slider-arrow cs-slider-arrow-prev"
           >
             <FiChevronLeft size={22} />
           </button>
@@ -114,63 +148,16 @@ function MockupSliderCard({ images = [], onOpenLightbox }) {
             type="button"
             onClick={handleNext}
             aria-label="Next Slide"
-            style={{
-              position: 'absolute',
-              top: '50%',
-              right: '16px',
-              transform: 'translateY(-50%)',
-              background: 'rgba(17, 24, 39, 0.7)',
-              backdropFilter: 'blur(8px)',
-              color: '#FFFFFF',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '50%',
-              width: '44px',
-              height: '44px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              zIndex: 10,
-              boxShadow: '0 4px 14px rgba(0,0,0,0.25)',
-              transition: 'all 0.2s ease'
-            }}
+            className="cs-slider-arrow cs-slider-arrow-next"
           >
             <FiChevronRight size={22} />
           </button>
 
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '16px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              display: 'flex',
-              gap: '8px',
-              background: 'rgba(17, 24, 39, 0.65)',
-              backdropFilter: 'blur(10px)',
-              padding: '6px 14px',
-              borderRadius: '20px',
-              zIndex: 10
-            }}
-          >
-            {validImages.map((_, idx) => (
-              <span
-                key={idx}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setCurrentIndex(idx);
-                }}
-                style={{
-                  width: idx === currentIndex ? '22px' : '8px',
-                  height: '8px',
-                  borderRadius: '4px',
-                  background: idx === currentIndex ? '#00E676' : 'rgba(255, 255, 255, 0.45)',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
-                }}
-              />
-            ))}
+          {/* Minimal Glass Progress Indicator */}
+          <div className="cs-slider-indicator">
+            {currentIndex + 1}
+            <span className="cs-slider-indicator-divider">/</span>
+            {validImages.length}
           </div>
         </>
       )}
