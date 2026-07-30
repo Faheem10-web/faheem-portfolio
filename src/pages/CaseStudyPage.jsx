@@ -164,225 +164,6 @@ function MockupSliderCard({ images = [] }) {
   );
 }
 
-function MobileMockupSliderCard({ images = [] }) {
-  const validImages = images.filter(img => typeof img === 'string' && img.trim().length > 0);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-
-  useEffect(() => {
-    if (validImages.length <= 1 || isHovered) return;
-    const timer = setInterval(() => {
-      setDirection(1);
-      setCurrentIndex((prev) => (prev === validImages.length - 1 ? 0 : prev + 1));
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [validImages.length, isHovered]);
-
-  if (validImages.length === 0) return null;
-
-  const isSlider = validImages.length > 1;
-
-  const handlePrev = (e) => {
-    if (e) { e.preventDefault(); e.stopPropagation(); }
-    if (!isSlider) return;
-    setDirection(-1);
-    setCurrentIndex((prev) => (prev === 0 ? validImages.length - 1 : prev - 1));
-  };
-
-  const handleNext = (e) => {
-    if (e) { e.preventDefault(); e.stopPropagation(); }
-    if (!isSlider) return;
-    setDirection(1);
-    setCurrentIndex((prev) => (prev === validImages.length - 1 ? 0 : prev + 1));
-  };
-
-  const handleDragEnd = (event, info) => {
-    if (!isSlider) return;
-    const swipeThreshold = 40;
-    if (info.offset.x < -swipeThreshold) {
-      handleNext(event);
-    } else if (info.offset.x > swipeThreshold) {
-      handlePrev(event);
-    }
-  };
-
-  const slideVariants = {
-    enter: (dir) => ({
-      opacity: 0,
-      scale: 0.97,
-      x: dir > 0 ? 30 : dir < 0 ? -30 : 0
-    }),
-    center: {
-      opacity: 1,
-      scale: 1,
-      x: 0,
-      zIndex: 1
-    },
-    exit: (dir) => ({
-      opacity: 0,
-      scale: 0.98,
-      x: dir > 0 ? -30 : dir < 0 ? 30 : 0,
-      zIndex: 0
-    })
-  };
-
-  return (
-    <div 
-      className="cs-mobile-slider-container"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={{ 
-        position: 'relative',
-        width: '100%',
-        maxWidth: '380px',
-        margin: '0 auto 40px auto',
-        aspectRatio: '560 / 745',
-        borderRadius: '28px',
-        overflow: 'hidden',
-        boxShadow: '0 20px 48px rgba(0, 0, 0, 0.12)',
-        backgroundColor: '#f3f4f6',
-        cursor: isSlider ? 'grab' : 'default',
-        touchAction: 'pan-y',
-        border: '1px solid rgba(0, 0, 0, 0.05)'
-      }}
-    >
-      <AnimatePresence initial={false} custom={direction}>
-        <motion.img
-          key={currentIndex}
-          custom={direction}
-          variants={slideVariants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{
-            x: { type: 'spring', stiffness: 300, damping: 30 },
-            opacity: { duration: 0.4, ease: 'easeOut' },
-            scale: { duration: 0.4, ease: 'easeOut' }
-          }}
-          drag={isSlider ? "x" : false}
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.15}
-          onDragEnd={handleDragEnd}
-          src={getOptimizedImageUrl(validImages[currentIndex], { width: 800 })}
-          alt={`Mobile Mockup Slide ${currentIndex + 1}`}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            display: 'block',
-            pointerEvents: 'none'
-          }}
-          loading="lazy"
-        />
-      </AnimatePresence>
-
-      {isSlider && (
-        <>
-          {/* Glassmorphic Arrows */}
-          <button
-            type="button"
-            onClick={handlePrev}
-            aria-label="Previous Slide"
-            className="cs-slider-arrow cs-slider-arrow-prev"
-            style={{
-              position: 'absolute',
-              left: '12px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              background: 'rgba(255, 255, 255, 0.85)',
-              backdropFilter: 'blur(8px)',
-              border: '1px solid rgba(255, 255, 255, 0.5)',
-              borderRadius: '50%',
-              width: '38px',
-              height: '38px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              zIndex: 10,
-              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-              transition: 'opacity 0.3s, transform 0.2s',
-              color: '#1F2937'
-            }}
-          >
-            <FiChevronLeft size={18} />
-          </button>
-
-          <button
-            type="button"
-            onClick={handleNext}
-            aria-label="Next Slide"
-            className="cs-slider-arrow cs-slider-arrow-next"
-            style={{
-              position: 'absolute',
-              right: '12px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              background: 'rgba(255, 255, 255, 0.85)',
-              backdropFilter: 'blur(8px)',
-              border: '1px solid rgba(255, 255, 255, 0.5)',
-              borderRadius: '50%',
-              width: '38px',
-              height: '38px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              zIndex: 10,
-              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-              transition: 'opacity 0.3s, transform 0.2s',
-              color: '#1F2937'
-            }}
-          >
-            <FiChevronRight size={18} />
-          </button>
-
-          {/* Dots Indicator */}
-          <div style={{
-            position: 'absolute',
-            bottom: '16px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            display: 'flex',
-            gap: '6px',
-            zIndex: 10,
-            background: 'rgba(0, 0, 0, 0.3)',
-            padding: '5px 12px',
-            borderRadius: '20px',
-            backdropFilter: 'blur(6px)'
-          }}>
-            {validImages.map((_, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => {
-                  setDirection(idx > currentIndex ? 1 : -1);
-                  setCurrentIndex(idx);
-                }}
-                style={{
-                  width: '6px',
-                  height: '6px',
-                  borderRadius: '50%',
-                  border: 'none',
-                  padding: 0,
-                  cursor: 'pointer',
-                  background: idx === currentIndex ? '#FFFFFF' : 'rgba(255, 255, 255, 0.4)',
-                  transition: 'background 0.3s'
-                }}
-              />
-            ))}
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
-
-
 export default function CaseStudyPage() {
   const { id } = useParams();
   const { projects } = useAdmin();
@@ -539,18 +320,21 @@ export default function CaseStudyPage() {
     return list.some(item => getCloudinaryPublicId(item) === targetId);
   };
 
-  const getMobileScreens = () => {
-    const cmsScreens = project.showcaseConfig?.mobileScreens?.map(img => typeof img === 'string' ? img : img.url).filter(Boolean) || [];
-    if (cmsScreens.length > 0) return cmsScreens;
+  const getCromicMobileScreens = () => {
+    const defaultCromicScreens = [
+      "https://i.pinimg.com/736x/5a/c5/1a/5ac51a73d86fdfcde5935a8f9a521c10.jpg",
+      "https://i.pinimg.com/736x/72/c9/61/72c9617c4e77a7aede5c69a75fa753d6.jpg"
+    ];
     
-    // Default fallback screens for cromic only
-    if (project.slug === 'projects' || project.name?.toLowerCase() === 'cromic') {
-      return [
-        "https://i.pinimg.com/736x/5a/c5/1a/5ac51a73d86fdfcde5935a8f9a521c10.jpg",
-        "https://i.pinimg.com/736x/72/c9/61/72c9617c4e77a7aede5c69a75fa753d6.jpg"
-      ];
+    if (project.showcaseConfig?.mobileScreens?.length > 0) {
+      const cmsScreens = project.showcaseConfig.mobileScreens.map(img => typeof img === 'string' ? img : img.url).filter(Boolean);
+      if (cmsScreens.length >= 2) return cmsScreens.slice(0, 2);
+      if (cmsScreens.length > 0) {
+        return [cmsScreens[0], defaultCromicScreens[1]];
+      }
     }
-    return [];
+    
+    return defaultCromicScreens;
   };
 
   const containerVariants = {
@@ -744,8 +528,8 @@ export default function CaseStudyPage() {
           <MockupSliderCard images={card2SliderImages} />
         )}
 
-        {/* ── MOBILE EXPERIENCE SECTION ── */}
-        {getMobileScreens().length > 0 && (
+        {/* ── MOBILE EXPERIENCE SECTION (CROMIC EXCLUSIVE) ── */}
+        {(project.slug === 'projects' || project.name?.toLowerCase() === 'cromic') && (
           <motion.div 
             initial="hidden"
             whileInView="visible"
@@ -763,8 +547,36 @@ export default function CaseStudyPage() {
               </motion.h2>
             </div>
 
-            {/* Premium Vertical Phone Slider */}
-            <MobileMockupSliderCard images={getMobileScreens()} />
+            {/* Right Column: Two premium same-height cards matching user provided images */}
+            <div className="cs-mobile-exp-right">
+              {/* Card 1 */}
+              {getCromicMobileScreens()[0] && (
+                <motion.div
+                  variants={phoneVariants(0.1)}
+                  className="cs-mobile-card"
+                  style={{ cursor: 'default' }}
+                >
+                  <img 
+                    src={getCromicMobileScreens()[0]} 
+                    alt="Mobile Experience Card 1" 
+                  />
+                </motion.div>
+              )}
+
+              {/* Card 2 */}
+              {getCromicMobileScreens()[1] && (
+                <motion.div
+                  variants={phoneVariants(0.25)}
+                  className="cs-mobile-card"
+                  style={{ cursor: 'default' }}
+                >
+                  <img 
+                    src={getCromicMobileScreens()[1]} 
+                    alt="Mobile Experience Card 2" 
+                  />
+                </motion.div>
+              )}
+            </div>
           </motion.div>
         )}
 
