@@ -148,6 +148,7 @@ const projectSchema = new mongoose.Schema({
   bannerImage: { type: String, default: '' },
   gallery: { type: [String], default: [] },
   galleryImages: { type: [galleryImageSchema], default: [] },
+  heroImages: { type: [galleryImageSchema], default: [] },
   challenge: { type: String, default: '' },
   solution: { type: String, default: '' },
   conclusion: { type: String, default: '' },
