@@ -234,7 +234,11 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
   const [card1Images, setCard1Images] = useState(extractList(project?.heroImage || project?.bannerImage, null, project?.heroImages));
   const [card2Images, setCard2Images] = useState(extractList(project?.solutionImage, project?.challengeImage, project?.solutionImages || project?.challengeImages));
   const [card3Images, setCard3Images] = useState(extractList(project?.conclusionImage || project?.resultImage, null, project?.resultImages || project?.conclusionImages));
-  const [mobileScreens, setMobileScreens] = useState([]);
+  const [mobileScreens, setMobileScreens] = useState(() => {
+    const screensList = project?.showcaseConfig?.mobileScreens || [];
+    const urls = screensList.map(img => typeof img === 'string' ? img : img.url).filter(Boolean);
+    return urls.length > 0 ? urls : [''];
+  });
 
   useEffect(() => {
     if (project) {
@@ -254,7 +258,8 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
       setCard3Images(extractList(project.conclusionImage || project.resultImage, null, project.resultImages || project.conclusionImages));
       
       const screensList = project.showcaseConfig?.mobileScreens || [];
-      setMobileScreens(screensList.map(img => typeof img === 'string' ? img : img.url).filter(Boolean));
+      const mobileUrls = screensList.map(img => typeof img === 'string' ? img : img.url).filter(Boolean);
+      setMobileScreens(mobileUrls.length > 0 ? mobileUrls : ['']);
     }
   }, [project]);
 
@@ -285,6 +290,15 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
     if (cardIndex === 2) setCard2Images(prev => prev.filter((_, idx) => idx !== slotIndex));
     if (cardIndex === 3) setCard3Images(prev => prev.filter((_, idx) => idx !== slotIndex));
   };
+
+  // Mobile screens unlimited slider helpers
+  const addMobileSlot = () => setMobileScreens(prev => [...prev, '']);
+  const removeMobileSlot = (idx) => setMobileScreens(prev => prev.filter((_, i) => i !== idx));
+  const updateMobileImage = (idx, url) => setMobileScreens(prev => {
+    const copy = [...prev];
+    copy[idx] = url;
+    return copy;
+  });
 
   const handleSave = async () => {
     if (!project?._id && !project?.slug) return;
@@ -326,7 +340,7 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
       conclusionImage: validCard3[0] || '',
       resultImage: validCard3[0] || '',
 
-      // showcaseConfig mobileScreens updating
+      // showcaseConfig mobileScreens updating (unlimited slider)
       showcaseConfig: {
         ...(project?.showcaseConfig || {}),
         mobileScreens: mobileScreens.filter(Boolean).map(url => ({ url, alt: `${projectName} Mobile Screen` }))
@@ -437,7 +451,7 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
             boxShadow: '0 2px 5px rgba(0,0,0,0.04)'
           }}
         >
-          📱 Mobile Experience Cards (2 Cards)
+          📱 Mobile Experience Slider
         </button>
       </div>
 
@@ -615,51 +629,38 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
         </div>
       )}
 
-      {/* ── TAB 3: MOBILE EXPERIENCE (2 CARDS) ── */}
+      {/* ── TAB 3: MOBILE EXPERIENCE SLIDER (Unlimited) ── */}
       {activeTab === 'mobile-exp' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
           
           <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', padding: '16px', borderRadius: '12px', color: '#1E40AF', fontSize: '13px', lineHeight: '1.5' }}>
-            📱 <strong>Mobile Experience Cards Manager!</strong> You can update the two Pinterest-style mockup cards displayed in the case study. Leave them blank or reset them to fall back to the default design screens.
+            📱 <strong>Mobile Experience Slider — Unlimited!</strong> Add as many mobile mockup slides as you want. They display as a smooth interactive slider on the live case study page. Use <strong>"+ Add Slide Image"</strong> to grow the slider.
           </div>
 
           <div style={{ background: '#FFFFFF', borderRadius: '18px', padding: '24px', border: '1px solid #EAEAEA' }}>
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '800', color: '#111827' }}>
-              📱 Mobile Card Mockups
-            </h3>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-              <SimpleImageCard 
-                title="Mobile Card 1" 
-                subtitle="First card containing the orders screen mockup"
-                imageSrc={mobileScreens[0] || ''}
-                onSaveImage={(url) => {
-                  const copy = [...mobileScreens];
-                  copy[0] = url;
-                  setMobileScreens(copy);
-                }}
-                onRemoveSlot={() => {
-                  const copy = [...mobileScreens];
-                  copy[0] = '';
-                  setMobileScreens(copy);
-                }}
-              />
-
-              <SimpleImageCard 
-                title="Mobile Card 2" 
-                subtitle="Second card containing the tilted phone & card mockup"
-                imageSrc={mobileScreens[1] || ''}
-                onSaveImage={(url) => {
-                  const copy = [...mobileScreens];
-                  copy[1] = url;
-                  setMobileScreens(copy);
-                }}
-                onRemoveSlot={() => {
-                  const copy = [...mobileScreens];
-                  copy[1] = '';
-                  setMobileScreens(copy);
-                }}
-              />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: '#111827' }}>
+                📱 Mobile Showcase Slider ({mobileScreens.filter(Boolean).length} Images)
+              </h3>
+              <button 
+                type="button" 
+                onClick={addMobileSlot} 
+                style={{ background: '#111827', color: '#FFFFFF', border: 'none', padding: '6px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                <FiPlus size={14} /> Add Slide Image
+              </button>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
+              {mobileScreens.map((imgUrl, slotIdx) => (
+                <SimpleImageCard 
+                  key={slotIdx}
+                  title={`Mobile Slide ${slotIdx + 1}`} 
+                  subtitle={`Mobile Showcase Slide Image ${slotIdx + 1}`}
+                  imageSrc={imgUrl}
+                  onSaveImage={(url) => updateMobileImage(slotIdx, url)}
+                  onRemoveSlot={() => removeMobileSlot(slotIdx)}
+                />
+              ))}
             </div>
           </div>
         </div>

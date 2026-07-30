@@ -320,21 +320,15 @@ export default function CaseStudyPage() {
     return list.some(item => getCloudinaryPublicId(item) === targetId);
   };
 
-  const getCromicMobileScreens = () => {
-    const defaultCromicScreens = [
-      "https://i.pinimg.com/736x/5a/c5/1a/5ac51a73d86fdfcde5935a8f9a521c10.jpg",
-      "https://i.pinimg.com/736x/72/c9/61/72c9617c4e77a7aede5c69a75fa753d6.jpg"
-    ];
-    
+  const getMobileSliderImages = () => {
     if (project.showcaseConfig?.mobileScreens?.length > 0) {
-      const cmsScreens = project.showcaseConfig.mobileScreens.map(img => typeof img === 'string' ? img : img.url).filter(Boolean);
-      if (cmsScreens.length >= 2) return cmsScreens.slice(0, 2);
-      if (cmsScreens.length > 0) {
-        return [cmsScreens[0], defaultCromicScreens[1]];
-      }
+      const cmsScreens = project.showcaseConfig.mobileScreens
+        .map(img => typeof img === 'string' ? img : img.url)
+        .filter(Boolean);
+      if (cmsScreens.length > 0) return cmsScreens;
     }
-    
-    return defaultCromicScreens;
+    // Fallback default screens for projects without CMS mobile screens
+    return [];
   };
 
   const containerVariants = {
@@ -528,57 +522,35 @@ export default function CaseStudyPage() {
           <MockupSliderCard images={card2SliderImages} />
         )}
 
-        {/* ── MOBILE EXPERIENCE SECTION (CROMIC EXCLUSIVE) ── */}
-        {(project.slug === 'projects' || project.name?.toLowerCase() === 'cromic') && (
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-10% 0px" }}
-            variants={containerVariants}
-            className="cs-mobile-experience-section"
-          >
-            {/* Centered Heading */}
-            <div className="cs-mobile-exp-header">
-              <motion.span variants={fadeUpVariants} className="cs-mobile-exp-label">
-                RESPONSIVE EXPERIENCE
-              </motion.span>
-              <motion.h2 variants={fadeUpVariants} className="cs-mobile-exp-title">
-                MOBILE EXPERIENCE
-              </motion.h2>
-            </div>
+        {/* ── MOBILE EXPERIENCE SECTION (Unlimited Slider) ── */}
+        {(() => {
+          const mobileSlides = getMobileSliderImages();
+          if (mobileSlides.length === 0) return null;
+          return (
+            <motion.div 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-10% 0px" }}
+              variants={containerVariants}
+              className="cs-mobile-experience-section"
+            >
+              {/* Centered Heading */}
+              <div className="cs-mobile-exp-header">
+                <motion.span variants={fadeUpVariants} className="cs-mobile-exp-label">
+                  RESPONSIVE EXPERIENCE
+                </motion.span>
+                <motion.h2 variants={fadeUpVariants} className="cs-mobile-exp-title">
+                  MOBILE EXPERIENCE
+                </motion.h2>
+              </div>
 
-            {/* Right Column: Two premium same-height cards matching user provided images */}
-            <div className="cs-mobile-exp-right">
-              {/* Card 1 */}
-              {getCromicMobileScreens()[0] && (
-                <motion.div
-                  variants={phoneVariants(0.1)}
-                  className="cs-mobile-card"
-                  style={{ cursor: 'default' }}
-                >
-                  <img 
-                    src={getCromicMobileScreens()[0]} 
-                    alt="Mobile Experience Card 1" 
-                  />
-                </motion.div>
-              )}
-
-              {/* Card 2 */}
-              {getCromicMobileScreens()[1] && (
-                <motion.div
-                  variants={phoneVariants(0.25)}
-                  className="cs-mobile-card"
-                  style={{ cursor: 'default' }}
-                >
-                  <img 
-                    src={getCromicMobileScreens()[1]} 
-                    alt="Mobile Experience Card 2" 
-                  />
-                </motion.div>
-              )}
-            </div>
-          </motion.div>
-        )}
+              {/* Full-width Slider using MockupSliderCard */}
+              <motion.div variants={fadeUpVariants} style={{ width: '100%' }}>
+                <MockupSliderCard images={mobileSlides} />
+              </motion.div>
+            </motion.div>
+          );
+        })()}
 
         {/* ── 6. FINAL OUTCOME SECTION ── */}
         <motion.div 
