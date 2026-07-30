@@ -230,7 +230,6 @@ const projectSchema = new mongoose.Schema({
     desktopScreens: { type: [galleryImageSchema], default: [] },
     tabletScreens: { type: [galleryImageSchema], default: [] },
     mobileScreens: { type: [galleryImageSchema], default: [] },
-    mobileScreens2: { type: [galleryImageSchema], default: [] },
     layout: { type: String, default: 'grid-2' } // 'single' | 'grid-2' | 'grid-3' | 'masonry' | 'carousel'
   },
   resultsConfig: {
