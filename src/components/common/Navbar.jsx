@@ -208,7 +208,11 @@ const Navbar = memo(function Navbar() {
                                 >
                                     <span className="nav-item-text">{link.label}</span>
                                     {isLinkActive(link) && (
-                                        <span className="nav-active-bg" />
+                                        <motion.span
+                                            layoutId="nav-active-liquid"
+                                            className="nav-active-bg"
+                                            transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                                        />
                                     )}
                                 </Link>
                             </Magnetic>
@@ -221,7 +225,11 @@ const Navbar = memo(function Navbar() {
                                 >
                                     <span className="nav-item-text">{link.label}</span>
                                     {isLinkActive(link) && (
-                                        <span className="nav-active-bg" />
+                                        <motion.span
+                                            layoutId="nav-active-liquid"
+                                            className="nav-active-bg"
+                                            transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                                        />
                                     )}
                                 </a>
                             </Magnetic>
