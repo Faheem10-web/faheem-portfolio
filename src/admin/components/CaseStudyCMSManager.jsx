@@ -615,51 +615,50 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
         </div>
       )}
 
-      {/* ── TAB 3: MOBILE EXPERIENCE (2 CARDS) ── */}
+      {/* ── TAB 3: MOBILE EXPERIENCE (Unlimited Screens Slider) ── */}
       {activeTab === 'mobile-exp' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
           
           <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', padding: '16px', borderRadius: '12px', color: '#1E40AF', fontSize: '13px', lineHeight: '1.5' }}>
-            📱 <strong>Mobile Experience Cards Manager!</strong> You can update the two Pinterest-style mockup cards displayed in the case study. Leave them blank or reset them to fall back to the default design screens.
+            📱 <strong>Unlimited Mobile Screens Slider Enabled!</strong> You can add as many mobile screens as you want by clicking <strong>"+ Add Mobile Screen"</strong>. They will automatically render as a premium vertical slider on the live site!
           </div>
 
           <div style={{ background: '#FFFFFF', borderRadius: '18px', padding: '24px', border: '1px solid #EAEAEA' }}>
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '800', color: '#111827' }}>
-              📱 Mobile Card Mockups
-            </h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+              <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: '#111827' }}>
+                📱 Mobile Screens Slider Showcase ({mobileScreens.filter(Boolean).length} Screens)
+              </h3>
+              <button 
+                type="button" 
+                onClick={() => setMobileScreens(prev => [...prev, ''])} 
+                style={{ background: '#111827', color: '#FFFFFF', border: 'none', padding: '6px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                <FiPlus size={14} /> Add Mobile Screen
+              </button>
+            </div>
             
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-              <SimpleImageCard 
-                title="Mobile Card 1" 
-                subtitle="First card containing the orders screen mockup"
-                imageSrc={mobileScreens[0] || ''}
-                onSaveImage={(url) => {
-                  const copy = [...mobileScreens];
-                  copy[0] = url;
-                  setMobileScreens(copy);
-                }}
-                onRemoveSlot={() => {
-                  const copy = [...mobileScreens];
-                  copy[0] = '';
-                  setMobileScreens(copy);
-                }}
-              />
-
-              <SimpleImageCard 
-                title="Mobile Card 2" 
-                subtitle="Second card containing the tilted phone & card mockup"
-                imageSrc={mobileScreens[1] || ''}
-                onSaveImage={(url) => {
-                  const copy = [...mobileScreens];
-                  copy[1] = url;
-                  setMobileScreens(copy);
-                }}
-                onRemoveSlot={() => {
-                  const copy = [...mobileScreens];
-                  copy[1] = '';
-                  setMobileScreens(copy);
-                }}
-              />
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
+              {mobileScreens.map((imgUrl, slotIdx) => (
+                <SimpleImageCard 
+                  key={slotIdx}
+                  title={`Mobile Screen ${slotIdx + 1}`} 
+                  subtitle={`Vertical Screen Showcase ${slotIdx + 1}`}
+                  imageSrc={imgUrl}
+                  onSaveImage={(url) => {
+                    const copy = [...mobileScreens];
+                    copy[slotIdx] = url;
+                    setMobileScreens(copy);
+                  }}
+                  onRemoveSlot={() => {
+                    setMobileScreens(prev => prev.filter((_, idx) => idx !== slotIdx));
+                  }}
+                />
+              ))}
+              {mobileScreens.length === 0 && (
+                <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '24px', color: '#6B7280', fontSize: '13px', background: '#F9FAFB', borderRadius: '12px', border: '1px dashed #D1D5DB' }}>
+                  No mobile screens added yet. Click "+ Add Mobile Screen" to start!
+                </div>
+              )}
             </div>
           </div>
         </div>
