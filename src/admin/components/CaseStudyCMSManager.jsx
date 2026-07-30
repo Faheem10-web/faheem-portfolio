@@ -39,9 +39,45 @@ function SimpleImageCard({ title, subtitle, imageSrc, onSaveImage, onRemoveSlot 
   const handleApplyUrl = () => {
     onSaveImage(urlInput);
   };
-
   return (
-    <div style={{ background: '#ffffff', borderRadius: '14px', padding: '16px', border: '1px solid #EAEAEA', marginBottom: '14px' }}>
+    <div style={{ position: 'relative', background: '#ffffff', borderRadius: '14px', padding: '16px', border: '1px solid #EAEAEA', marginBottom: '14px' }}>
+      
+      {/* Uploading loading overlay */}
+      {isUploading && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(255, 255, 255, 0.85)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 10,
+          borderRadius: '14px',
+          backdropFilter: 'blur(2px)'
+        }}>
+          <div style={{
+            width: '24px',
+            height: '24px',
+            border: '3px solid #E5E7EB',
+            borderTop: '3px solid #111827',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            marginBottom: '8px'
+          }} />
+          <style>{`
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}</style>
+          <span style={{ fontSize: '12px', fontWeight: '700', color: '#111827' }}>Uploading...</span>
+        </div>
+      )}
+
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
         <div>
           <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#111827' }}>{title}</h4>
@@ -57,14 +93,69 @@ function SimpleImageCard({ title, subtitle, imageSrc, onSaveImage, onRemoveSlot 
       </div>
 
       {imageSrc ? (
-        <div style={{ position: 'relative', width: '100%', maxHeight: '180px', borderRadius: '10px', overflow: 'hidden', border: '1px solid #E5E7EB', background: '#F9FAFB' }}>
-          <img src={imageSrc} alt={title} style={{ width: '100%', height: '180px', objectFit: 'cover', display: 'block' }} />
+        <div style={{ position: 'relative', width: '100%', height: '180px', borderRadius: '10px', overflow: 'hidden', border: '1px solid #E5E7EB', background: '#F9FAFB' }}>
+          <img src={imageSrc} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          
+          {/* Glassmorphic hover overlay bar */}
+          <div style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            background: 'rgba(17, 24, 39, 0.8)',
+            backdropFilter: 'blur(6px)',
+            display: 'flex',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            padding: '8px',
+            gap: '8px'
+          }}>
+            <label style={{ 
+              background: 'rgba(255,255,255,0.25)', 
+              color: '#FFFFFF', 
+              padding: '5px 10px', 
+              borderRadius: '6px', 
+              fontSize: '11.5px', 
+              fontWeight: '600', 
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+              border: '1px solid rgba(255,255,255,0.35)',
+              margin: 0
+            }}>
+              <FiUploadCloud size={13} /> Replace Image
+              <input type="file" onChange={handleFileUpload} style={{ display: 'none' }} accept="image/*" disabled={isUploading} />
+            </label>
+            <button
+              type="button"
+              onClick={() => {
+                onSaveImage('');
+                setUrlInput('');
+              }}
+              style={{
+                background: 'rgba(239, 68, 68, 0.25)',
+                color: '#FCA5A5',
+                border: '1px solid rgba(239, 68, 68, 0.45)',
+                padding: '5px 10px',
+                borderRadius: '6px',
+                fontSize: '11.5px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}
+            >
+              <FiX size={13} /> Clear Image
+            </button>
+          </div>
         </div>
       ) : (
         <div style={{ border: '2px dashed #D1D5DB', borderRadius: '10px', padding: '16px', textAlign: 'center', background: '#FAFAFA' }}>
           <FiUploadCloud size={24} style={{ color: '#9CA3AF', marginBottom: '4px' }} />
           <p style={{ margin: '0 0 8px 0', fontSize: '12px', color: '#4B5563', fontWeight: '500' }}>
-            {isUploading ? 'Uploading to Cloudinary...' : 'Upload Image or paste URL below'}
+            Upload Image or paste URL below
           </p>
           <label style={{ display: 'inline-block', background: '#111827', color: '#FFFFFF', padding: '6px 14px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}>
             Choose File
