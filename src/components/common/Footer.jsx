@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import "./Footer.css";
 import { Link, useLocation } from "react-router-dom";
 import { useAdmin } from "../../context/AdminContext";
@@ -18,7 +18,7 @@ import {
 } from "react-icons/fa";
 import Magnetic from "./Magnetic";
 
-function Footer() {
+const Footer = memo(function Footer() {
     const { siteSettings } = useAdmin();
     const footerSettings = siteSettings?.footer || {};
     const contactSettings = siteSettings?.contact || {};
@@ -35,11 +35,9 @@ function Footer() {
     const whatsappUrl = footerSettings.whatsappUrl || contactSettings.whatsappUrl || "https://wa.me/917356164236";
     const twitterUrl = footerSettings.twitterUrl || contactSettings.twitterUrl || "";
 
-    // Email heading text color: 'dark' = #0d0d12 (black), 'white' = #ffffff
     const emailColorMode = footerSettings.emailTextColor || 'dark';
     const emailTextColor = emailColorMode === 'white' ? '#ffffff' : '#0d0d12';
 
-    // Dynamic Blur & Brightness filters (Unified Master Blur for Background & Bottom Bar)
     const bgBlur = footerSettings.bgBlur !== undefined ? Number(footerSettings.bgBlur) : 12;
     const bgBrightness = footerSettings.bgBrightness !== undefined ? Number(footerSettings.bgBrightness) : 100;
 
@@ -83,6 +81,8 @@ function Footer() {
                             src={bgImage} 
                             alt="" 
                             className="footer-card-bg-img"
+                            loading="lazy"
+                            decoding="async"
                             referrerPolicy="no-referrer"
                             style={{
                                 filter: `blur(${bgBlur}px) brightness(${bgBrightness}%)`
@@ -128,7 +128,7 @@ function Footer() {
                     </nav>
                 </div>
 
-                {/* ── CARD BOTTOM SUB-FOOTER ROW (INTEGRATED INSIDE CARD - SAME SEAMLESS GLASS BLUR) ── */}
+                {/* ── CARD BOTTOM SUB-FOOTER ROW ── */}
                 <div className="footer-card-bottom">
                     <button onClick={scrollToTop} className="footer-back-to-top" aria-label="Back to Top">
                         <span>Back to Top</span>
@@ -183,6 +183,6 @@ function Footer() {
             </div>
         </footer>
     );
-}
+});
 
-export default Footer;
+export default Footer;

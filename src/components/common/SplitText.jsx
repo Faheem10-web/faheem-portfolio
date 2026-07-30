@@ -1,10 +1,10 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const SplitText = ({
+const SplitText = memo(({
   text = '',
   className = '',
   delay = 50,
@@ -23,6 +23,11 @@ const SplitText = ({
   const ref = useRef(null);
   const animationCompletedRef = useRef(false);
   const onCompleteRef = useRef(onLetterAnimationComplete);
+
+  const fromOpacity = from.opacity !== undefined ? from.opacity : 0;
+  const fromY = from.y !== undefined ? from.y : 40;
+  const toOpacity = to.opacity !== undefined ? to.opacity : 1;
+  const toY = to.y !== undefined ? to.y : 0;
 
   useEffect(() => {
     onCompleteRef.current = onLetterAnimationComplete;
@@ -51,9 +56,10 @@ const SplitText = ({
 
     const tween = gsap.fromTo(
       targets,
-      { ...from },
+      { opacity: fromOpacity, y: fromY },
       {
-        ...to,
+        opacity: toOpacity,
+        y: toY,
         duration,
         ease,
         stagger: delay / 1000,
@@ -82,7 +88,7 @@ const SplitText = ({
         if (st.trigger === el) st.kill();
       });
     };
-  }, [text, startAnimation, delay, duration, ease, splitType, JSON.stringify(from), JSON.stringify(to), threshold, rootMargin]);
+  }, [text, startAnimation, delay, duration, ease, splitType, fromOpacity, fromY, toOpacity, toY, threshold, rootMargin]);
 
   const Tag = tag || 'p';
 
@@ -138,6 +144,7 @@ const SplitText = ({
       {renderContent()}
     </Tag>
   );
-};
+});
 
 export default SplitText;
+

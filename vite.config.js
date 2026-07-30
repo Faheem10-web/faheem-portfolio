@@ -5,6 +5,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const rawSiteUrl = env.VITE_SITE_URL || 'https://faheem-av.vercel.app';
   const siteUrl = rawSiteUrl.replace(/\/+$/, '');
+  const isProd = mode === 'production';
 
   return {
     plugins: [
@@ -16,7 +17,14 @@ export default defineConfig(({ mode }) => {
         },
       },
     ],
+    esbuild: {
+      drop: isProd ? ['console', 'debugger'] : [],
+    },
     build: {
+      target: 'es2022',
+      cssCodeSplit: true,
+      cssMinify: true,
+      sourcemap: false,
       rollupOptions: {
         output: {
           manualChunks(id) {
@@ -39,3 +47,4 @@ export default defineConfig(({ mode }) => {
     },
   };
 });
+

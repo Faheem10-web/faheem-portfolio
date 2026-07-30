@@ -160,11 +160,11 @@ function AppContent() {
     if (mediaQuery.matches) return;
 
     const lenis = new Lenis({
-      duration: 1.4,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential deceleration for heavy luxury feel
+      duration: 0.9,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Native fast-responsive deceleration
       smoothWheel: true,
-      wheelMultiplier: 1.15,
-      touchMultiplier: 1.8,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.0,
       infinite: false,
     });
 
@@ -195,7 +195,7 @@ function AppContent() {
     return () => {
       lenis.destroy();
       if (rafId) {
-        cancelAnimationFrame(rafId); // Correctly clean up the loop to prevent memory/CPU leaks
+        cancelAnimationFrame(rafId);
       }
       document.removeEventListener("click", handleAnchorScroll);
       window.lenis = null;

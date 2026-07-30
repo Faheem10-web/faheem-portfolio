@@ -1,7 +1,7 @@
-import React from "react";
+import React, { memo } from "react";
 import "./Services.css";
 import { motion } from "framer-motion";
-import { FiPenTool, FiMonitor, FiCode, FiSmartphone, FiArrowRight, FiCpu } from "react-icons/fi";
+import { FiPenTool, FiMonitor, FiCode, FiSmartphone, FiCpu } from "react-icons/fi";
 import { useAdmin } from "../../context/AdminContext";
 
 const DEFAULT_SERVICES = [
@@ -54,7 +54,7 @@ const getIcon = (iconName) => {
     }
 };
 
-function Services() {
+const Services = memo(function Services() {
     const { services, isServicesLoading } = useAdmin();
     
     const dbServices = services && services.length > 0
@@ -162,8 +162,6 @@ function Services() {
                                     <h3 className="card-title">{title}</h3>
                                     <p className="card-description">{description}</p>
                                 </div>
-
-
                             </motion.div>
                         );
                     })}
@@ -171,6 +169,7 @@ function Services() {
             </div>
         </section>
     );
-}
+});
 
 export default Services;
+

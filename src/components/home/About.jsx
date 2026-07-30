@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import "./About.css";
 import { motion } from "framer-motion";
 import { FiDownload, FiArrowRight, FiStar, FiCheckCircle } from "react-icons/fi";
@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { useAdmin } from "../../context/AdminContext";
 import Magnetic from "../common/Magnetic";
 
-function About() {
+const About = memo(function About() {
     const { siteSettings, downloadCv } = useAdmin();
     const aboutSettings = siteSettings?.about || {};
     const navSettings = siteSettings?.navbar || {};
@@ -27,7 +27,7 @@ function About() {
                     className="about-left about-glass-card"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-50px" }}
+                    viewport={{ once: true, margin: "-40px" }}
                     transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 >
                     <div className="about-badge-tag">
@@ -60,7 +60,7 @@ function About() {
                     className="about-right about-glass-card cta-gloss-card"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-50px" }}
+                    viewport={{ once: true, margin: "-40px" }}
                     transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
                 >
                     <div className="cta-clean-block">
@@ -99,6 +99,7 @@ function About() {
             </div>
         </section>
     );
-}
+});
 
 export default About;
+

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, memo, useCallback } from "react";
 import "./FAQ.css";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAdmin } from "../../context/AdminContext";
@@ -26,7 +26,7 @@ const DEFAULT_FAQS = [
     }
 ];
 
-function FAQ() {
+const FAQ = memo(function FAQ() {
     const { faqs, isFaqsLoading, siteSettings } = useAdmin();
     
     const faqSettings = siteSettings?.faq || {};
@@ -43,9 +43,9 @@ function FAQ() {
     const [openId, setOpenId] = useState(null);
     const timerRef = useRef(null);
 
-    const toggle = (id) => {
+    const toggle = useCallback((id) => {
         setOpenId((prevId) => (prevId === id ? null : id));
-    };
+    }, []);
 
     // Auto-close FAQ tab after 4 seconds (4000ms)
     useEffect(() => {
@@ -91,6 +91,8 @@ function FAQ() {
                     src={bgImage} 
                     alt="" 
                     className="faq-section-bg-img"
+                    loading="lazy"
+                    decoding="async"
                     referrerPolicy="no-referrer"
                     onError={(e) => {
                         if (!e.target.src.includes('/assets/faq_bg_blocks.png')) {
@@ -102,13 +104,12 @@ function FAQ() {
             </div>
 
             <div className="faq-container">
-
                 <motion.div
                     className="faq-header"
                     initial={{ opacity: 0, y: 25 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    viewport={{ once: true, margin: "-40px" }}
+                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 >
                     <h2 className="faq-title">
                         {sectionTitle}
@@ -119,8 +120,8 @@ function FAQ() {
                     className="faq-list"
                     initial={{ opacity: 0, y: 25 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+                    viewport={{ once: true, margin: "-40px" }}
+                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
                 >
                     {activeFaqs.map((faq, idx) => {
                         const isOpen = openId === faq._id;
@@ -130,8 +131,8 @@ function FAQ() {
                                 className={`faq-item ${isOpen ? "open" : ""}`}
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: idx * 0.05 }}
+                                viewport={{ once: true, margin: "-40px" }}
+                                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: idx * 0.04 }}
                             >
                                 <button
                                     className="faq-question"
@@ -141,9 +142,7 @@ function FAQ() {
                                     <span>{faq.question}</span>
                                     <div className="faq-icon-wrapper">
                                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                            {/* Horizontal line (always visible) */}
                                             <line x1="5" y1="12" x2="19" y2="12"></line>
-                                            {/* Vertical line (collapses when open) */}
                                             <motion.line 
                                                 x1="12" y1="5" x2="12" y2="19"
                                                 animate={{ scaleY: isOpen ? 0 : 1, opacity: isOpen ? 0 : 1 }}
@@ -174,10 +173,10 @@ function FAQ() {
                         );
                     })}
                 </motion.div>
-
             </div>
         </section>
     );
-}
+});
 
 export default FAQ;
+

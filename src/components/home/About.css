@@ -18,12 +18,13 @@
     pointer-events: none;
     z-index: 0;
     overflow: hidden;
+    contain: paint layout;
 }
 
 .about-glow-orb {
     position: absolute;
     border-radius: 50%;
-    filter: blur(60px);
+    filter: blur(48px);
     opacity: 0.18;
     pointer-events: none;
     will-change: transform;

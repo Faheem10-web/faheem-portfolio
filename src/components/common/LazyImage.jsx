@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, memo } from "react";
 import "./LazyImage.css";
 
 /**
- * 2026-Level Ultra-Performance Lazy Loader Component
- * Features IntersectionObserver pre-fetching, shimmer placeholders,
- * and hardware-accelerated blur-up reveal transitions.
+ * Ultra-Performance Lazy Loader Component with CLS Prevention
  */
-export default function LazyImage({
+const LazyImage = memo(function LazyImage({
   src,
   alt = "",
   className = "",
@@ -24,7 +22,7 @@ export default function LazyImage({
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Use IntersectionObserver for viewport lazy loading with 200px threshold
+    // Use IntersectionObserver with 200px rootMargin pre-fetching
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -34,7 +32,7 @@ export default function LazyImage({
           }
         });
       },
-      { rootMargin: "200px 0px" }
+      { rootMargin: "300px 0px" }
     );
 
     observer.observe(containerRef.current);
@@ -43,8 +41,10 @@ export default function LazyImage({
   }, []);
 
   const containerStyle = {
-    ...style,
+    position: "relative",
+    overflow: "hidden",
     ...(aspectRatio ? { aspectRatio } : {}),
+    ...style,
   };
 
   return (
@@ -81,4 +81,7 @@ export default function LazyImage({
       )}
     </div>
   );
-}
+});
+
+export default LazyImage;
+

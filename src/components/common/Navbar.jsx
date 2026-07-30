@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo, useCallback } from "react";
 import "./Navbar.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -7,11 +7,10 @@ import { useAdmin } from "../../context/AdminContext";
 import { FiSun, FiMoon } from "react-icons/fi";
 import Magnetic from "./Magnetic";
 
-function Navbar() {
+const Navbar = memo(function Navbar() {
     const location = useLocation();
     const navigate = useNavigate();
     const isHomePage = location.pathname === "/";
-    const isCaseStudyPage = location.pathname.startsWith("/case-study/");
     const [menuOpen, setMenuOpen] = useState(false);
     const { theme, toggleTheme, showToggle } = useTheme();
     const [activeSection, setActiveSection] = useState("home");
@@ -23,38 +22,34 @@ function Navbar() {
         setMenuOpen(false);
     }, [location.pathname]);
 
-    // Scroll-aware navbar state
-    useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 40);
-        onScroll(); // run once on mount
-        window.addEventListener("scroll", onScroll, { passive: true });
-        return () => window.removeEventListener("scroll", onScroll);
-    }, []);
-
-    // Premium auto-hide scroll handler (GPU accelerated, throttled via RAF)
+    // Consolidated RAF-throttled scroll handler for scrolled state and auto-hide navbar
     useEffect(() => {
         let lastScrollY = window.scrollY;
         let ticking = false;
-        const scrollThreshold = 60; // hide past 60px scroll
-        const scrollTolerance = 10;  // ignore small shifts under 10px
+        const scrollThreshold = 60;
+        const scrollTolerance = 10;
 
-        const updateNavbarVisibility = () => {
+        const updateScrollState = () => {
             const currentScrollY = window.scrollY;
             const scrollDelta = currentScrollY - lastScrollY;
 
-            // Pin navbar at the very top (within threshold)
+            // Update scrolled state
+            const isScrolledPast = currentScrollY > 40;
+            setScrolled(prev => (prev !== isScrolledPast ? isScrolledPast : prev));
+
+            // Update top section active state if near top
+            if (isHomePage && currentScrollY < 80) {
+                setActiveSection(prev => (prev !== "home" ? "home" : prev));
+            }
+
+            // Update auto-hide visibility
             if (currentScrollY <= scrollThreshold) {
-                setNavVisible(true);
-            } 
-            // Ignore tiny scroll movements to prevent flickering
-            else if (Math.abs(scrollDelta) > scrollTolerance) {
-                // Scrolling down -> hide smoothly
+                setNavVisible(prev => (!prev ? true : prev));
+            } else if (Math.abs(scrollDelta) > scrollTolerance) {
                 if (currentScrollY > lastScrollY) {
-                    setNavVisible(false);
-                } 
-                // Scrolling up -> reveal smoothly
-                else if (currentScrollY < lastScrollY) {
-                    setNavVisible(true);
+                    setNavVisible(prev => (prev ? false : prev));
+                } else if (currentScrollY < lastScrollY) {
+                    setNavVisible(prev => (!prev ? true : prev));
                 }
             }
 
@@ -62,16 +57,17 @@ function Navbar() {
             ticking = false;
         };
 
-        const handleScroll = () => {
+        const onScroll = () => {
             if (!ticking) {
-                window.requestAnimationFrame(updateNavbarVisibility);
+                window.requestAnimationFrame(updateScrollState);
                 ticking = true;
             }
         };
 
-        window.addEventListener("scroll", handleScroll, { passive: true });
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+        onScroll(); // initial check
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, [isHomePage]);
 
     // Prevent body scroll when menu is open
     useEffect(() => {
@@ -83,7 +79,6 @@ function Navbar() {
     useEffect(() => {
         if (location.pathname === "/" && location.state?.scrollToId) {
             const targetId = location.state.scrollToId;
-            // Clear state so it doesn't trigger scroll on page refreshes or navigation back
             window.history.replaceState({}, document.title);
 
             setTimeout(() => {
@@ -95,14 +90,14 @@ function Navbar() {
         }
     }, [location]);
 
-    // Track active scroll section on homepage
+    // Track active scroll section on homepage via IntersectionObserver
     useEffect(() => {
         if (!isHomePage) return;
 
         const sections = ["home", "about"];
         const observerOptions = {
             root: null,
-            rootMargin: "-45% 0px -45% 0px", // Trigger when section occupies center
+            rootMargin: "-45% 0px -45% 0px",
             threshold: 0,
         };
 
@@ -123,22 +118,12 @@ function Navbar() {
             }
         });
 
-        const handleScroll = () => {
-            const currentScrollY = window.scrollY;
-            if (currentScrollY < 80) {
-                setActiveSection("home");
-            }
-        };
-
-        window.addEventListener("scroll", handleScroll);
-
         return () => {
             observer.disconnect();
-            window.removeEventListener("scroll", handleScroll);
         };
-    }, [isHomePage, location.pathname]);
+    }, [isHomePage]);
 
-    const handleNavClick = (e, link) => {
+    const handleNavClick = useCallback((e, link) => {
         if (!link.isRouter) {
             e.preventDefault();
             const targetId = link.href.includes("#") ? link.href.split("#")[1] : null;
@@ -158,7 +143,7 @@ function Navbar() {
             }
         }
         setMenuOpen(false);
-    };
+    }, [isHomePage, navigate]);
 
     const { siteSettings, user, token, downloadCv } = useAdmin();
     const navSettings = siteSettings?.navbar || {};
@@ -186,7 +171,6 @@ function Navbar() {
     ];
 
     const isAdminLoggedIn = !!(token && (!user || user.role === "admin"));
-
     const visibilityClass = !navVisible ? " navbar-hidden" : "";
 
     return (
@@ -224,11 +208,7 @@ function Navbar() {
                                 >
                                     <span className="nav-item-text">{link.label}</span>
                                     {isLinkActive(link) && (
-                                        <motion.span
-                                            layoutId="nav-active-liquid"
-                                            className="nav-active-bg"
-                                            transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                                        />
+                                        <span className="nav-active-bg" />
                                     )}
                                 </Link>
                             </Magnetic>
@@ -241,11 +221,7 @@ function Navbar() {
                                 >
                                     <span className="nav-item-text">{link.label}</span>
                                     {isLinkActive(link) && (
-                                        <motion.span
-                                            layoutId="nav-active-liquid"
-                                            className="nav-active-bg"
-                                            transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                                        />
+                                        <span className="nav-active-bg" />
                                     )}
                                 </a>
                             </Magnetic>
@@ -391,6 +367,6 @@ function Navbar() {
             </AnimatePresence>
         </>
     );
-}
+});
 
 export default Navbar;

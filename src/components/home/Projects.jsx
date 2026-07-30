@@ -1,4 +1,4 @@
-import React, { useRef, memo } from "react";
+import React, { useRef, memo, useCallback } from "react";
 import "./Projects.css";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,10 +9,11 @@ import LazyImage from "../common/LazyImage";
 
 const MotionLink = motion(Link);
 
-// Refactored Subcomponent for Home Page Project Card to handle direct mouse follow
+// Refactored Subcomponent for Home Page Project Card to handle direct mouse follow via RAF
 const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverImg, cardTitle, navigate }) {
     const buttonsRef = useRef(null);
     const rectRef = useRef(null);
+    const rafRef = useRef(null);
     const hasCaseStudy = project.hasCaseStudy !== false;
 
     const handleMouseEnter = (e) => {
@@ -27,26 +28,30 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
         const rect = rectRef.current;
         if (!rect || !rect.width || !rect.height) return;
         
-        // Calculate offset from center in range [-0.5, 0.5]
-        const x = (e.clientX - rect.left) / rect.width - 0.5;
-        const y = (e.clientY - rect.top) / rect.height - 0.5;
-        
-        // Max translation 3px (Subtle 2-3px offset)
-        const tx = x * 6; 
-        const ty = y * 6; 
-        
-        buttonsRef.current.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
+        const clientX = e.clientX;
+        const clientY = e.clientY;
+
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        rafRef.current = requestAnimationFrame(() => {
+            if (!buttonsRef.current) return;
+            const x = (clientX - rect.left) / rect.width - 0.5;
+            const y = (clientY - rect.top) / rect.height - 0.5;
+            const tx = x * 6; 
+            const ty = y * 6; 
+            buttonsRef.current.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
+        });
     };
 
     const handleMouseLeave = () => {
         rectRef.current = null;
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
         if (!buttonsRef.current) return;
         buttonsRef.current.style.transform = 'translate3d(0px, 0px, 0)';
     };
 
     const optimizedCover = getOptimizedImageUrl(coverImg, { width: 800 });
 
-    const handleCardClick = (e) => {
+    const handleCardClick = useCallback((e) => {
         if (!e.target.closest('a')) {
             if (hasCaseStudy) {
                 navigate(cardLink);
@@ -54,7 +59,7 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
                 window.open(project.liveUrl, '_blank');
             }
         }
-    };
+    }, [hasCaseStudy, navigate, cardLink, project.liveUrl]);
 
     return (
         <motion.div
@@ -75,9 +80,10 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
                         src={optimizedCover} 
                         alt={cardTitle} 
                         className="project-image" 
+                        aspectRatio="16/10"
                     />
                 ) : (
-                    <div className="project-image-placeholder" style={{ width: '100%', height: '100%', background: 'var(--admin-card-bg, #1a1b23)' }} />
+                    <div className="project-image-placeholder" style={{ width: '100%', height: '100%', background: 'var(--admin-card-bg, #1a1b23)', aspectRatio: '16/10' }} />
                 )}
                 {(hasCaseStudy || project.liveUrl) && (
                     <div className="project-overlay">
@@ -110,7 +116,7 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
     );
 });
 
-function Projects() {
+const Projects = memo(function Projects() {
     const { projects, isProjectsLoading } = useAdmin();
     const navigate = useNavigate();
     
@@ -202,6 +208,7 @@ function Projects() {
             </div>
         </section>
     );
-}
+});
 
 export default Projects;
+

@@ -1,88 +1,27 @@
-import React, { useState, useEffect, useMemo, lazy, Suspense } from "react";
+import React, { useState, useEffect, useMemo, lazy, Suspense, memo } from "react";
 import "./Hero.css";
 import { motion } from "framer-motion";
 import { useAdmin } from "../../context/AdminContext";
 import SplitText from "../common/SplitText";
 
-import {
-  FaFigma,
-  FaGithub,
-  FaReact,
-  FaNodeJs,
-  FaGitAlt,
-  FaCss3Alt,
-  FaHtml5,
-  FaJsSquare
-} from "react-icons/fa";
-import { TbBrandAdobe } from "react-icons/tb";
-import {
-  SiNextdotjs,
-  SiTailwindcss,
-  SiTypescript,
-  SiFramer
-} from "react-icons/si";
-
 const LiquidEther = lazy(() => import("./LiquidEther"));
 
 const HERO_LIQUID_COLORS = ["#5227FF", "#FF9FFC", "#B497CF"];
-const MARQUEE_ITEMS = [
-  { label: "Figma UI/UX", icon: FaFigma },
-  { label: "GitHub & Version Control", icon: FaGithub },
-  { label: "Adobe Creative Suite", icon: TbBrandAdobe },
-  { label: "React.js", icon: FaReact },
-  { label: "Next.js Framework", icon: SiNextdotjs },
-  { label: "JavaScript ES6+", icon: FaJsSquare },
-  { label: "Tailwind CSS", icon: SiTailwindcss },
-  { label: "TypeScript", icon: SiTypescript },
-  { label: "Framer Motion", icon: SiFramer },
-  { label: "HTML5 & Modern Web", icon: FaHtml5 },
-  { label: "CSS3 Styling", icon: FaCss3Alt },
-  { label: "Node.js Backend", icon: FaNodeJs },
-  { label: "Git Workflow", icon: FaGitAlt }
-];
+const FROM_CONFIG = { opacity: 0, y: 40 };
+const TO_CONFIG = { opacity: 1, y: 0 };
 
-const lineVariants = {
-  initial: { opacity: 0, y: 28, filter: "blur(8px)" },
-  animate: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: {
-      duration: 0.9,
-      ease: [0.16, 1, 0.3, 1]
-    }
-  }
-};
-
-function Hero() {
-    const { siteSettings, isSiteLoaded } = useAdmin();
-    
-    const heroSettings = siteSettings?.hero || {};
-    const name = heroSettings.name || "Faheem";
-    const rawWords = heroSettings.words;
-
-    const wordsList = useMemo(() => {
-        const list = Array.isArray(rawWords) && rawWords.length > 0 
-            ? [...rawWords] 
-            : [name, "a UI/UX Designer", "a Frontend Developer"];
-        if (list.length > 0 && list[0] === "Faheem" && name !== "Faheem") {
-            list[0] = name;
-        }
-        return list;
-    }, [JSON.stringify(rawWords), name]);
-
+const TypewriterTagline = memo(function TypewriterTagline({ greeting, wordsList, isSiteLoaded }) {
     const [currentWordIndex, setCurrentWordIndex] = useState(0);
     const [currentText, setCurrentText] = useState("");
     const [isDeleting, setIsDeleting] = useState(false);
     const [typingSpeed, setTypingSpeed] = useState(150);
 
-    // Safely reset typewriter animation state when wordsList changes
     useEffect(() => {
         setCurrentWordIndex(0);
         setCurrentText("");
         setIsDeleting(false);
         setTypingSpeed(100);
-    }, [JSON.stringify(wordsList)]);
+    }, [wordsList]);
 
     useEffect(() => {
         const handleType = () => {
@@ -115,8 +54,38 @@ function Hero() {
     }, [currentText, isDeleting, currentWordIndex, typingSpeed, wordsList]);
 
     return (
-        <section className="hero" id="home">
+        <motion.div
+            className="hero-tagline hero-glass-pill"
+            initial={{ opacity: 0, y: 15 }}
+            animate={isSiteLoaded ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+            transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        >
+            <span className="tagline-prefix">{greeting || "I AM"}</span>
+            <span className="tagline-typed">{currentText}</span>
+            <span className="tagline-cursor">|</span>
+        </motion.div>
+    );
+});
 
+const Hero = memo(function Hero() {
+    const { siteSettings, isSiteLoaded } = useAdmin();
+    
+    const heroSettings = siteSettings?.hero || {};
+    const name = heroSettings.name || "Faheem";
+    const rawWords = heroSettings.words;
+
+    const wordsList = useMemo(() => {
+        const list = Array.isArray(rawWords) && rawWords.length > 0 
+            ? [...rawWords] 
+            : [name, "a UI/UX Designer", "a Frontend Developer"];
+        if (list.length > 0 && list[0] === "Faheem" && name !== "Faheem") {
+            list[0] = name;
+        }
+        return list;
+    }, [rawWords, name]);
+
+    return (
+        <section className="hero" id="home">
             {/* Background */}
             <div className="hero-bg">
                 <Suspense fallback={null}>
@@ -153,19 +122,12 @@ function Hero() {
             </div>
 
             {/* Content */}
-
             <div className="hero-container">
-
-                <motion.div
-                    className="hero-tagline hero-glass-pill"
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={isSiteLoaded ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
-                    transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                >
-                    <span className="tagline-prefix">{heroSettings.greeting || "I AM"}</span>
-                    <span className="tagline-typed">{currentText}</span>
-                    <span className="tagline-cursor">|</span>
-                </motion.div>
+                <TypewriterTagline 
+                    greeting={heroSettings.greeting}
+                    wordsList={wordsList}
+                    isSiteLoaded={isSiteLoaded}
+                />
 
                 <h1 className="hero-title">
                     <div className="hero-first-row">
@@ -178,8 +140,8 @@ function Hero() {
                             duration={0.8}
                             ease="power3.out"
                             splitType="chars"
-                            from={{ opacity: 0, y: 40 }}
-                            to={{ opacity: 1, y: 0 }}
+                            from={FROM_CONFIG}
+                            to={TO_CONFIG}
                             threshold={0.1}
                             rootMargin="-50px"
                             textAlign="center"
@@ -195,8 +157,8 @@ function Hero() {
                             duration={0.9}
                             ease="power3.out"
                             splitType="chars"
-                            from={{ opacity: 0, y: 40 }}
-                            to={{ opacity: 1, y: 0 }}
+                            from={FROM_CONFIG}
+                            to={TO_CONFIG}
                             threshold={0.1}
                             rootMargin="-50px"
                             textAlign="center"
@@ -212,12 +174,9 @@ function Hero() {
                 >
                     {heroSettings.description || "I create premium digital experiences with modern UI/UX design, scalable React development, smooth interactions and high-performance websites."}
                 </motion.p>
-
-
-
             </div>
         </section>
     );
-}
+});
 
 export default Hero;

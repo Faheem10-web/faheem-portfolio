@@ -1,9 +1,8 @@
-import { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { useRef, memo } from "react";
 
-export default function Magnetic({ children, strength = 0.3 }) {
+const Magnetic = memo(function Magnetic({ children, strength = 0.3 }) {
   const ref = useRef(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const rafRef = useRef(null);
 
   const handleMouseMove = (e) => {
     if (!ref.current) return;
@@ -11,26 +10,39 @@ export default function Magnetic({ children, strength = 0.3 }) {
     const { left, top, width, height } = ref.current.getBoundingClientRect();
     const centerX = left + width / 2;
     const centerY = top + height / 2;
-    const distanceX = clientX - centerX;
-    const distanceY = clientY - centerY;
+    const distanceX = (clientX - centerX) * strength;
+    const distanceY = (clientY - centerY) * strength;
 
-    setPosition({ x: distanceX * strength, y: distanceY * strength });
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => {
+      if (ref.current) {
+        ref.current.style.transform = `translate3d(${distanceX}px, ${distanceY}px, 0)`;
+      }
+    });
   };
 
   const handleMouseLeave = () => {
-    setPosition({ x: 0, y: 0 });
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    if (ref.current) {
+      ref.current.style.transform = "translate3d(0px, 0px, 0)";
+    }
   };
 
   return (
-    <motion.div
+    <div
       ref={ref}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      animate={{ x: position.x, y: position.y }}
-      transition={{ type: "spring", stiffness: 120, damping: 14, mass: 0.1 }}
-      style={{ display: "inline-block" }}
+      style={{
+        display: "inline-block",
+        willChange: "transform",
+        transition: "transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+      }}
     >
       {children}
-    </motion.div>
+    </div>
   );
-}
+});
+
+export default Magnetic;
+
