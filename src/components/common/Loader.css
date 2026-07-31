@@ -1,17 +1,19 @@
 /* ============================================================================
-   WORLD-CLASS 2026 PREMIUM SHUTTER PRELOADER STYLES
-   - Full-screen Fixed Overlay (100vw x 100dvh)
-   - Mathematical True Center Flex Alignment (justify-content: center, align-items: center)
+   WORLD-CLASS 2026 APPLE / LINEAR MINIMAL PRELOADER STYLES
    - Clean White Background (#ffffff)
    - Rich Black Typography (#000000)
+   - True Mathematical Viewport Centering (100vw x 100dvh)
+   - Soft Fade-In & Fade-Out Transitions
    - Pure GPU Layer Acceleration (transform + opacity)
+   - Zero Shutter Panels / Zero Split Effects / Zero Layout Shift
    ============================================================================ */
 
-.shutter-preloader-root {
+.minimal-preloader-root {
   position: fixed;
   inset: 0;
   width: 100vw;
   height: 100dvh;
+  background: #ffffff;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,50 +25,26 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-/* Two solid white shutter panels covering top and bottom halves */
-.shutter-panel {
-  position: absolute;
-  left: 0;
-  width: 100vw;
-  background: #ffffff;
-  pointer-events: auto;
-  will-change: transform;
+  will-change: opacity;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 
-.top-panel {
-  top: 0;
-  height: 50.5vh;
-}
-
-.bottom-panel {
-  top: 49.5vh;
-  height: 50.5vh;
-}
-
 /* Centered Brand Content Overlay ("Faheem" + Underline) */
-.shutter-brand-wrapper {
-  position: relative;
-  z-index: 10;
+.minimal-brand-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  pointer-events: none;
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  will-change: opacity;
   margin: 0;
   padding: 0;
 }
 
 /* Premium Black Typography for "Faheem" */
-.shutter-brand-name {
+.minimal-brand-name {
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
   font-size: clamp(2.4rem, 6vw, 3.4rem);
   font-weight: 800;
@@ -80,7 +58,7 @@
 }
 
 /* Subtle Underline Track - Proportional 96px Width Perfectly Centered Under "Faheem" */
-.shutter-underline-track {
+.minimal-underline-track {
   width: 96px;
   height: 2px;
   background: rgba(0, 0, 0, 0.08);
@@ -91,7 +69,7 @@
 }
 
 /* GPU-Accelerated Underline Fill (Symmetrical Center Expand) */
-.shutter-underline-fill {
+.minimal-underline-fill {
   width: 100%;
   height: 100%;
   background: #000000;
