@@ -1,51 +1,104 @@
-/* Minimal White Preloader - "Faheem" (No Box, First Letter Capital) */
-.minimal-white-loader {
+/* ============================================================================
+   WORLD-CLASS 2026 PREMIUM SHUTTER PRELOADER STYLES
+   - Full-screen Fixed Overlay (100vw x 100dvh)
+   - Mathematical True Center Flex Alignment (justify-content: center, align-items: center)
+   - Clean White Background (#ffffff)
+   - Rich Black Typography (#000000)
+   - Pure GPU Layer Acceleration (transform + opacity)
+   ============================================================================ */
+
+.shutter-preloader-root {
   position: fixed;
   inset: 0;
-  z-index: 999999;
-  background: #ffffff;
+  width: 100vw;
+  height: 100dvh;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  z-index: 999999;
   overflow: hidden;
   user-select: none;
+  pointer-events: none;
+  contain: strict;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.minimal-loader-content {
+/* Two solid white shutter panels covering top and bottom halves */
+.shutter-panel {
+  position: absolute;
+  left: 0;
+  width: 100vw;
+  background: #ffffff;
+  pointer-events: auto;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.top-panel {
+  top: 0;
+  height: 50.5vh;
+}
+
+.bottom-panel {
+  top: 49.5vh;
+  height: 50.5vh;
+}
+
+/* Centered Brand Content Overlay ("Faheem" + Underline) */
+.shutter-brand-wrapper {
+  position: relative;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  text-align: center;
+  pointer-events: none;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  margin: 0;
+  padding: 0;
 }
 
-/* Bold Centered "Faheem" Brand Text */
-.minimal-loader-brand {
+/* Premium Black Typography for "Faheem" */
+.shutter-brand-name {
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
   font-size: clamp(2.4rem, 6vw, 3.4rem);
   font-weight: 800;
   color: #000000;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   margin: 0;
+  padding: 0;
   line-height: 1;
+  text-align: center;
+  white-space: nowrap;
 }
 
-/* Thin 2.5px Animated Loading Bar Track */
-.minimal-loader-track {
-  width: 150px;
-  height: 2.5px;
+/* Subtle Underline Track - Proportional 96px Width Perfectly Centered Under "Faheem" */
+.shutter-underline-track {
+  width: 96px;
+  height: 2px;
   background: rgba(0, 0, 0, 0.08);
   border-radius: 99px;
   overflow: hidden;
   position: relative;
-  margin-top: 14px;
+  margin-top: 10px;
 }
 
-/* Thin Animated Loading Bar Fill */
-.minimal-loader-fill {
+/* GPU-Accelerated Underline Fill (Symmetrical Center Expand) */
+.shutter-underline-fill {
+  width: 100%;
   height: 100%;
   background: #000000;
   border-radius: 99px;
-  transition: width 0.08s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: width;
+  transform-origin: center center !important;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }

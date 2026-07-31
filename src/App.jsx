@@ -1,4 +1,4 @@
-import { useState, useEffect, useLayoutEffect, lazy, Suspense } from "react";
+import { useState, useEffect, useLayoutEffect, useCallback, lazy, Suspense } from "react";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import Navbar from "./components/common/Navbar";
@@ -49,6 +49,11 @@ function AppContent() {
   const [hasCompletedInitialLoad, setHasCompletedInitialLoad] = useState(false);
   const isDataLoading = isSettingsLoading || isProjectsLoading;
   const showLoader = !hasCompletedInitialLoad && !isAdminRoute;
+
+  const handleLoaderComplete = useCallback(() => {
+    setHasCompletedInitialLoad(true);
+    setIsSiteLoaded(true);
+  }, [setIsSiteLoaded]);
 
   useEffect(() => {
     if (isAdminRoute) {
@@ -220,10 +225,7 @@ function AppContent() {
           <Loader 
             key="site-loader" 
             isLoading={isDataLoading} 
-            onComplete={() => {
-              setHasCompletedInitialLoad(true);
-              setIsSiteLoaded(true);
-            }} 
+            onComplete={handleLoaderComplete} 
           />
         )}
       </AnimatePresence>

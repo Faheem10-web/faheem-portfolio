@@ -122,7 +122,12 @@ const Hero = memo(function Hero() {
             </div>
 
             {/* Content */}
-            <div className="hero-container">
+            <motion.div 
+                className="hero-container"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={isSiteLoaded ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            >
                 <TypewriterTagline 
                     greeting={heroSettings.greeting}
                     wordsList={wordsList}
@@ -174,7 +179,7 @@ const Hero = memo(function Hero() {
                 >
                     {heroSettings.description || "I create premium digital experiences with modern UI/UX design, scalable React development, smooth interactions and high-performance websites."}
                 </motion.p>
-            </div>
+            </motion.div>
         </section>
     );
 });
