@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import "./About.css";
 import { motion } from "framer-motion";
 import { FiDownload, FiArrowRight, FiStar, FiCheckCircle } from "react-icons/fi";
@@ -6,10 +6,31 @@ import { Link } from "react-router-dom";
 import { useAdmin } from "../../context/AdminContext";
 import Magnetic from "../common/Magnetic";
 
+// ============================================================================
+// PERFORMANCE OPTIMIZATIONS (Framer Motion & Rendering):
+// 1. Static animation variants and transition objects are declared outside the 
+//    component to avoid object re-creation on every re-render, reducing GC overhead.
+// 2. Animations strictly animate GPU-accelerated properties (`opacity` and `y` transform).
+// ============================================================================
+const CARD_VARIANTS = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+};
+
+const LEFT_CARD_TRANSITION = { duration: 0.6, ease: [0.16, 1, 0.3, 1] };
+const RIGHT_CARD_TRANSITION = { duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.08 };
+const VIEWPORT_CONFIG = { once: true, margin: "-40px" };
+
 const About = memo(function About() {
     const { siteSettings, downloadCv } = useAdmin();
     const aboutSettings = siteSettings?.about || {};
     const navSettings = siteSettings?.navbar || {};
+
+    // PERFORMANCE OPTIMIZATION: Memoize click handler to keep a stable reference
+    const handleDownloadCv = useCallback((e) => {
+        e.preventDefault();
+        downloadCv();
+    }, [downloadCv]);
 
     return (
         <section className="about-section" id="about">
@@ -25,10 +46,11 @@ const About = memo(function About() {
                 {/* Left Side: Frosted Glass Card (About Me Story) */}
                 <motion.div 
                     className="about-left about-glass-card"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-40px" }}
-                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                    initial="hidden"
+                    whileInView="visible"
+                    variants={CARD_VARIANTS}
+                    viewport={VIEWPORT_CONFIG}
+                    transition={LEFT_CARD_TRANSITION}
                 >
                     <div className="about-badge-tag">
                         <FiStar className="badge-sparkle-icon" />
@@ -58,10 +80,11 @@ const About = memo(function About() {
                 {/* Right Side: Glossy Liquid Glass Card (Working Together CTA) */}
                 <motion.div 
                     className="about-right about-glass-card cta-gloss-card"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-40px" }}
-                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
+                    initial="hidden"
+                    whileInView="visible"
+                    variants={CARD_VARIANTS}
+                    viewport={VIEWPORT_CONFIG}
+                    transition={RIGHT_CARD_TRANSITION}
                 >
                     <div className="cta-clean-block">
                         <h3 className="cta-title">
@@ -77,7 +100,7 @@ const About = memo(function About() {
                             <Magnetic strength={0.2}>
                                 <a 
                                     href="#download-cv" 
-                                    onClick={(e) => { e.preventDefault(); downloadCv(); }} 
+                                    onClick={handleDownloadCv} 
                                     className="download-cv-btn liquid-glass-btn-primary"
                                 >
                                     <div className="btn-gloss-overlay"></div>
@@ -102,4 +125,3 @@ const About = memo(function About() {
 });
 
 export default About;
-

@@ -1,3 +1,4 @@
+/* ─── ABOUT SECTION & PERFORMANCE CONTAINMENT ─── */
 .about-section {
     width: 100%;
     background-color: var(--bg-primary);
@@ -9,6 +10,9 @@
     display: flex;
     justify-content: center;
     overflow: hidden;
+
+    /* Performance: Isolate layout & style calculations from ancestor/sibling tree during scrolling */
+    contain: layout style;
 }
 
 /* ─── ETHEREAL PASTEL LIGHTING & AMBIENT BACKGROUND ─── */
@@ -18,7 +22,9 @@
     pointer-events: none;
     z-index: 0;
     overflow: hidden;
-    contain: paint layout;
+
+    /* Performance: Strict containment isolates painting & layout of ambient glow background */
+    contain: strict;
 }
 
 .about-glow-orb {
@@ -27,7 +33,10 @@
     filter: blur(48px);
     opacity: 0.18;
     pointer-events: none;
-    will-change: transform;
+    
+    /* Performance: Removed permanent `will-change: transform` on static background orbs.
+       Static blurred elements do not need dedicated composited layer allocations, saving GPU VRAM
+       and preventing heavy backdrop composite redraws during document scroll. */
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
 }
@@ -66,6 +75,9 @@
     background-size: 40px 40px;
     mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.8) 20%, transparent 75%);
     -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.8) 20%, transparent 75%);
+    
+    /* Performance: Isolate grid pattern rendering to prevent repaints */
+    contain: strict;
 }
 
 :root[data-theme='light'] .about-grid-pattern {
@@ -111,9 +123,13 @@
         inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
         inset 0 -1.5px 2px 0 rgba(244, 114, 182, 0.12);
         
-    will-change: transform;
     transform: translateZ(0);
+    backface-visibility: hidden;
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Performance: `isolation: isolate` bounds backdrop-filter and box-shadow rendering to a new stacking context,
+       preventing layout thrashing and redundant repaints of parent/sibling DOM nodes. */
+    isolation: isolate;
 }
 
 :root[data-theme='dark'] .about-glass-card {
@@ -127,6 +143,8 @@
 }
 
 .about-glass-card:hover {
+    /* Performance: Apply `will-change: transform` dynamically on hover to prepare GPU composition layers only during user interaction */
+    will-change: transform;
     transform: translateY(-4px);
     box-shadow:
         0 32px 64px -10px rgba(192, 132, 252, 0.24),
@@ -229,6 +247,9 @@
     color: var(--color-text-main);
     backdrop-filter: blur(12px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03), inset 0 1px 1px #fff;
+
+    /* Performance: Stacking context isolation */
+    isolation: isolate;
 }
 
 :root[data-theme='dark'] .highlight-pill {
@@ -313,10 +334,16 @@
         inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.2);
         
     overflow: hidden;
-    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Performance: Stacking context isolation */
+    isolation: isolate;
 }
 
 .liquid-glass-btn-primary:hover {
+    will-change: transform;
     transform: translateY(-3px) scale(1.03);
     background: linear-gradient(135deg, #c084fc 0%, #9333ea 50%, #7c3aed 100%);
     border-color: rgba(255, 255, 255, 0.95);
@@ -363,7 +390,12 @@
         inset 0 -1.5px 2px 0 rgba(244, 114, 182, 0.12);
         
     overflow: hidden;
-    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Performance: Stacking context isolation */
+    isolation: isolate;
 }
 
 :root[data-theme='dark'] .liquid-glass-btn-secondary {
@@ -375,6 +407,7 @@
 }
 
 .liquid-glass-btn-secondary:hover {
+    will-change: transform;
     transform: translateY(-3px) scale(1.03);
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 230, 255, 0.85) 100%);
     border-color: rgba(192, 132, 252, 0.5);
