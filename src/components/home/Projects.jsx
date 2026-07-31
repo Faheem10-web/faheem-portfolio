@@ -122,7 +122,6 @@ const Projects = memo(function Projects() {
     
     const activeProjects = (projects || [])
         .filter(p => p && p.enabled !== false)
-        .sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0))
         .slice(0, 4);
 
     const showSkeleton = isProjectsLoading && activeProjects.length === 0;

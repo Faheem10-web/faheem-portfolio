@@ -127,8 +127,7 @@ function ProjectsPage() {
     const { projects, isProjectsLoading } = useAdmin();
     
     const activeProjects = (projects || [])
-        .filter(p => p && p.enabled !== false)
-        .sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0));
+        .filter(p => p && p.enabled !== false);
 
     const showSkeleton = isProjectsLoading && activeProjects.length === 0;
 
