@@ -253,6 +253,38 @@ export default function ProjectManager() {
   const [isEditing, setIsEditing] = useState(false);
   const [currentId, setCurrentId] = useState(null);
 
+  // Sorted projects by display order ascending
+  const sortedProjects = [...(projects || [])].sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0));
+
+  const handleOrderChange = async (proj, newOrderVal) => {
+    const newOrder = parseInt(newOrderVal, 10);
+    if (isNaN(newOrder)) return;
+    await projectsCrud.update(proj._id, { order: newOrder });
+  };
+
+  const handleMoveOrder = async (index, direction) => {
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= sortedProjects.length) return;
+
+    const currentProj = sortedProjects[index];
+    const targetProj = sortedProjects[targetIndex];
+
+    const currentOrder = Number(currentProj.order) || (index + 1);
+    const targetOrder = Number(targetProj.order) || (targetIndex + 1);
+
+    let newCurrentOrder = targetOrder;
+    let newTargetOrder = currentOrder;
+
+    if (newCurrentOrder === newTargetOrder) {
+      newCurrentOrder = direction === 'up' ? targetOrder - 1 : targetOrder + 1;
+    }
+
+    await Promise.all([
+      projectsCrud.update(currentProj._id, { order: newCurrentOrder }),
+      projectsCrud.update(targetProj._id, { order: newTargetOrder })
+    ]);
+  };
+
   // Upload handler for setting direct URL
   const handleDirectUpload = async (e, setUrlCallback) => {
     const file = e.target.files[0];
@@ -878,9 +910,66 @@ export default function ProjectManager() {
                 </tr>
               </thead>
               <tbody>
-                {projects.map((proj) => (
+                {sortedProjects.map((proj, idx) => (
                   <tr key={proj._id}>
-                    <td style={{ fontWeight: '600' }}>{proj.order}</td>
+                    <td style={{ fontWeight: '600', whiteSpace: 'nowrap' }}>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                          <button 
+                            type="button"
+                            title="Move Up"
+                            disabled={idx === 0}
+                            onClick={() => handleMoveOrder(idx, 'up')}
+                            style={{
+                              background: 'rgba(255,255,255,0.08)',
+                              border: '1px solid rgba(255,255,255,0.15)',
+                              color: idx === 0 ? 'rgba(255,255,255,0.2)' : 'var(--admin-text)',
+                              borderRadius: '3px',
+                              padding: '1px 5px',
+                              fontSize: '9px',
+                              lineHeight: 1,
+                              cursor: idx === 0 ? 'default' : 'pointer'
+                            }}
+                          >
+                            ▲
+                          </button>
+                          <button 
+                            type="button"
+                            title="Move Down"
+                            disabled={idx === sortedProjects.length - 1}
+                            onClick={() => handleMoveOrder(idx, 'down')}
+                            style={{
+                              background: 'rgba(255,255,255,0.08)',
+                              border: '1px solid rgba(255,255,255,0.15)',
+                              color: idx === sortedProjects.length - 1 ? 'rgba(255,255,255,0.2)' : 'var(--admin-text)',
+                              borderRadius: '3px',
+                              padding: '1px 5px',
+                              fontSize: '9px',
+                              lineHeight: 1,
+                              cursor: idx === sortedProjects.length - 1 ? 'default' : 'pointer'
+                            }}
+                          >
+                            ▼
+                          </button>
+                        </div>
+                        <input 
+                          type="number"
+                          value={proj.order ?? 0}
+                          onChange={(e) => handleOrderChange(proj, e.target.value)}
+                          style={{
+                            width: '48px',
+                            padding: '4px 4px',
+                            borderRadius: '6px',
+                            background: 'rgba(255,255,255,0.06)',
+                            border: '1px solid var(--admin-border)',
+                            color: 'var(--admin-text)',
+                            fontWeight: '700',
+                            fontSize: '13px',
+                            textAlign: 'center'
+                          }}
+                        />
+                      </div>
+                    </td>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                         {proj.coverImage && (

@@ -131,8 +131,9 @@ export function AdminProvider({ children }) {
                     setCache('settings', data.settings);
                 }
                 if (data.projects) {
-                    setProjects(data.projects || []);
-                    setCache('projects', data.projects || []);
+                    const sortedProjects = [...(data.projects || [])].sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0));
+                    setProjects(sortedProjects);
+                    setCache('projects', sortedProjects);
                 }
                 if (data.services) {
                     setServices(data.services || []);
@@ -307,6 +308,14 @@ export function AdminProvider({ children }) {
 
     // Generic CRUD helper generator
     const makeCrud = (routeSegment, stateSetter) => {
+        const sortIfProjects = (arr) => {
+            if (!Array.isArray(arr)) return arr;
+            if (routeSegment === 'projects') {
+                return [...arr].sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0));
+            }
+            return arr;
+        };
+
         const fetchAll = async () => {
             const res = await fetch(`${API_BASE}/${routeSegment}?t=${Date.now()}`, {
                 headers: { 'Cache-Control': 'no-cache, no-store' },
@@ -314,8 +323,9 @@ export function AdminProvider({ children }) {
             });
             if (res.ok) {
                 const freshData = await res.json();
-                stateSetter(freshData);
-                setCache(routeSegment, freshData);
+                const sorted = sortIfProjects(freshData);
+                stateSetter(sorted);
+                setCache(routeSegment, sorted);
             }
         };
 
@@ -334,7 +344,7 @@ export function AdminProvider({ children }) {
                     const createdItem = await res.json().catch(() => null);
                     if (createdItem) {
                         stateSetter(prev => {
-                            const updated = [...(prev || []), createdItem];
+                            const updated = sortIfProjects([...(prev || []), createdItem]);
                             setCache(routeSegment, updated);
                             return updated;
                         });
@@ -360,7 +370,8 @@ export function AdminProvider({ children }) {
                     if (updatedItem && (updatedItem._id || updatedItem.id)) {
                         const targetId = updatedItem._id || updatedItem.id;
                         stateSetter(prev => {
-                            const updated = (prev || []).map(existing => (existing._id === targetId || existing.id === targetId) ? { ...existing, ...updatedItem } : existing);
+                            const rawUpdated = (prev || []).map(existing => (existing._id === targetId || existing.id === targetId) ? { ...existing, ...updatedItem } : existing);
+                            const updated = sortIfProjects(rawUpdated);
                             setCache(routeSegment, updated);
                             return updated;
                         });
