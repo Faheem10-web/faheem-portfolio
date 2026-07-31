@@ -320,22 +320,30 @@ export default function CaseStudyPage() {
     return list.some(item => getCloudinaryPublicId(item) === targetId);
   };
 
-  const getCromicMobileScreens = () => {
+  const getMobileScreens = () => {
     const defaultCromicScreens = [
       "https://i.pinimg.com/736x/5a/c5/1a/5ac51a73d86fdfcde5935a8f9a521c10.jpg",
       "https://i.pinimg.com/736x/72/c9/61/72c9617c4e77a7aede5c69a75fa753d6.jpg"
     ];
     
-    if (project.showcaseConfig?.mobileScreens?.length > 0) {
-      const cmsScreens = project.showcaseConfig.mobileScreens.map(img => typeof img === 'string' ? img : img.url).filter(Boolean);
-      if (cmsScreens.length >= 2) return cmsScreens.slice(0, 2);
-      if (cmsScreens.length > 0) {
-        return [cmsScreens[0], defaultCromicScreens[1]];
-      }
+    const cmsScreens = (project.showcaseConfig?.mobileScreens || [])
+      .map(img => typeof img === 'string' ? img : img?.url)
+      .filter(Boolean);
+
+    if (cmsScreens.length > 0) {
+      return cmsScreens;
     }
-    
-    return defaultCromicScreens;
+
+    const isCromic = project.slug === 'projects' || project.name?.toLowerCase() === 'cromic';
+    if (isCromic) {
+      return defaultCromicScreens;
+    }
+
+    return [];
   };
+
+  const mobileScreensToRender = getMobileScreens();
+
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -528,8 +536,8 @@ export default function CaseStudyPage() {
           <MockupSliderCard images={card2SliderImages} />
         )}
 
-        {/* ── MOBILE EXPERIENCE SECTION (CROMIC EXCLUSIVE) ── */}
-        {(project.slug === 'projects' || project.name?.toLowerCase() === 'cromic') && (
+        {/* ── MOBILE EXPERIENCE SECTION ── */}
+        {mobileScreensToRender.length > 0 && (
           <motion.div 
             initial="hidden"
             whileInView="visible"
@@ -547,35 +555,21 @@ export default function CaseStudyPage() {
               </motion.h2>
             </div>
 
-            {/* Right Column: Two premium same-height cards matching user provided images */}
+            {/* Right Column: Premium cards matching uploaded mobile mockup images */}
             <div className="cs-mobile-exp-right">
-              {/* Card 1 */}
-              {getCromicMobileScreens()[0] && (
+              {mobileScreensToRender.map((screenUrl, idx) => (
                 <motion.div
-                  variants={phoneVariants(0.1)}
+                  key={idx}
+                  variants={phoneVariants(0.1 + idx * 0.15)}
                   className="cs-mobile-card"
                   style={{ cursor: 'default' }}
                 >
                   <img 
-                    src={getCromicMobileScreens()[0]} 
-                    alt="Mobile Experience Card 1" 
+                    src={getOptimizedImageUrl(screenUrl, { width: 1000 })} 
+                    alt={`Mobile Experience Card ${idx + 1}`} 
                   />
                 </motion.div>
-              )}
-
-              {/* Card 2 */}
-              {getCromicMobileScreens()[1] && (
-                <motion.div
-                  variants={phoneVariants(0.25)}
-                  className="cs-mobile-card"
-                  style={{ cursor: 'default' }}
-                >
-                  <img 
-                    src={getCromicMobileScreens()[1]} 
-                    alt="Mobile Experience Card 2" 
-                  />
-                </motion.div>
-              )}
+              ))}
             </div>
           </motion.div>
         )}
