@@ -465,6 +465,46 @@ export default function ProjectManager() {
     }
   };
 
+  const sortedProjects = [...(projects || [])].sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0));
+
+  const handleOrderChange = async (proj, newOrder) => {
+    if (!proj || proj.order === newOrder) return;
+    const res = await projectsCrud.update(proj._id, { order: newOrder });
+    if (!res.success) {
+      alert('Failed to update order: ' + (res.message || 'Error'));
+    }
+  };
+
+  const handleMoveUp = async (proj, index) => {
+    if (index <= 0) return;
+    const prevProj = sortedProjects[index - 1];
+    const currentOrder = Number(proj.order) || (index + 1);
+    const prevOrder = Number(prevProj.order) || index;
+
+    const newProjOrder = prevOrder;
+    const newPrevOrder = currentOrder === prevOrder ? currentOrder + 1 : currentOrder;
+
+    await Promise.all([
+      projectsCrud.update(proj._id, { order: newProjOrder }),
+      projectsCrud.update(prevProj._id, { order: newPrevOrder })
+    ]);
+  };
+
+  const handleMoveDown = async (proj, index) => {
+    if (index >= sortedProjects.length - 1) return;
+    const nextProj = sortedProjects[index + 1];
+    const currentOrder = Number(proj.order) || (index + 1);
+    const nextOrder = Number(nextProj.order) || (index + 2);
+
+    const newProjOrder = nextOrder;
+    const newNextOrder = currentOrder === nextOrder ? currentOrder - 1 : currentOrder;
+
+    await Promise.all([
+      projectsCrud.update(proj._id, { order: newProjOrder }),
+      projectsCrud.update(nextProj._id, { order: newNextOrder })
+    ]);
+  };
+
   const [editSubTab, setEditSubTab] = useState('info'); // 'info' | 'caseStudy'
 
   return (
@@ -878,9 +918,52 @@ export default function ProjectManager() {
                 </tr>
               </thead>
               <tbody>
-                {projects.map((proj) => (
+                {sortedProjects.map((proj, index) => (
                   <tr key={proj._id}>
-                    <td style={{ fontWeight: '600' }}>{proj.order}</td>
+                    <td style={{ width: '130px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                          <button
+                            type="button"
+                            className="admin-btn admin-btn-secondary"
+                            style={{ padding: '2px 6px', fontSize: '10px', lineHeight: 1, minHeight: 'unset', cursor: index === 0 ? 'not-allowed' : 'pointer' }}
+                            disabled={index === 0}
+                            onClick={() => handleMoveUp(proj, index)}
+                            title="Move Up"
+                          >
+                            ▲
+                          </button>
+                          <button
+                            type="button"
+                            className="admin-btn admin-btn-secondary"
+                            style={{ padding: '2px 6px', fontSize: '10px', lineHeight: 1, minHeight: 'unset', cursor: index === sortedProjects.length - 1 ? 'not-allowed' : 'pointer' }}
+                            disabled={index === sortedProjects.length - 1}
+                            onClick={() => handleMoveDown(proj, index)}
+                            title="Move Down"
+                          >
+                            ▼
+                          </button>
+                        </div>
+                        <input
+                          type="number"
+                          className="admin-input"
+                          style={{ width: '54px', padding: '4px 6px', textAlign: 'center', fontSize: '13px', fontWeight: '700' }}
+                          key={`${proj._id}-${proj.order}`}
+                          defaultValue={proj.order ?? (index + 1)}
+                          onBlur={(e) => {
+                            const val = parseInt(e.target.value);
+                            if (!isNaN(val) && val !== proj.order) {
+                              handleOrderChange(proj, val);
+                            }
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.target.blur();
+                            }
+                          }}
+                        />
+                      </div>
+                    </td>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                         {proj.coverImage && (

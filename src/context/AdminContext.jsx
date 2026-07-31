@@ -47,8 +47,22 @@ export function AdminProvider({ children }) {
     // Global preloader completion state for Hero animation timing
     const [isSiteLoaded, setIsSiteLoaded] = useState(false);
 
+    // Helper to keep projects consistently sorted by display order
+    const sortProjectsByOrder = (list) => {
+      if (!Array.isArray(list)) return [];
+      return [...list].sort((a, b) => (Number(a.order) || 0) - (Number(b.order) || 0));
+    };
+
     // Refresh dynamic data hooks with instant cache initialization
-    const [projects, setProjects] = useState(cachedProjects);
+    const [projectsRaw, setProjectsRaw] = useState(() => sortProjectsByOrder(cachedProjects));
+    const setProjects = (val) => {
+      setProjectsRaw(prev => {
+        const next = typeof val === 'function' ? val(prev) : val;
+        return sortProjectsByOrder(next);
+      });
+    };
+    const projects = projectsRaw;
+
     const [services, setServices] = useState(getInitialCache('services', []));
     const [skills, setSkills] = useState([]);
     const [experiences, setExperiences] = useState([]);
