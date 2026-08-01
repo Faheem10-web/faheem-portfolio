@@ -249,7 +249,7 @@ function SectionGalleryUploader({ title, sectionName, images = [], onImagesChang
 }
 
 export default function ProjectManager() {
-  const { projects, projectsCrud, uploadMediaFile } = useAdmin();
+  const { projects, isProjectsLoading, projectsCrud, uploadMediaFile } = useAdmin();
   const [isEditing, setIsEditing] = useState(false);
   const [currentId, setCurrentId] = useState(null);
 
@@ -937,7 +937,27 @@ export default function ProjectManager() {
                 </tr>
               </thead>
               <tbody>
-                {sortedProjects.map((proj, index) => (
+                {isProjectsLoading && sortedProjects.length === 0 ? (
+                  [1, 2, 3, 4].map(idx => (
+                    <tr key={`skeleton-${idx}`}>
+                      <td colSpan="7" style={{ padding: '16px 12px' }}>
+                        <div style={{
+                          height: '24px',
+                          borderRadius: '6px',
+                          background: 'rgba(255,255,255,0.06)',
+                          opacity: 0.6
+                        }} />
+                      </td>
+                    </tr>
+                  ))
+                ) : sortedProjects.length === 0 ? (
+                  <tr>
+                    <td colSpan="7" style={{ textAlign: 'center', padding: '40px 20px', color: 'rgba(255,255,255,0.5)' }}>
+                      No projects found. Click <strong>+ New Project</strong> to create your first portfolio project.
+                    </td>
+                  </tr>
+                ) : (
+                  sortedProjects.map((proj, index) => (
                   <tr key={proj._id}>
                     <td style={{ width: '130px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -1017,7 +1037,7 @@ export default function ProjectManager() {
                       </div>
                     </td>
                   </tr>
-                ))}
+                )))}
               </tbody>
             </table>
           </div>
