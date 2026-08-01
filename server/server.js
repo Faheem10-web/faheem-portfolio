@@ -13,10 +13,41 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+import fs from 'fs';
+import { Settings } from './models/schemas.js';
+
+// Auto-sync initial HTML Open Graph meta tags with single Settings document from DB on startup
+const syncShareBannerHtmlOnStartup = async () => {
+  try {
+    const settings = await Settings.findOne().lean();
+    if (settings?.shareBanner?.imageUrl) {
+      const { imageUrl, updatedAt } = settings.shareBanner;
+      const timestamp = updatedAt ? new Date(updatedAt).getTime() : Date.now();
+      const versionedUrl = imageUrl.includes('?') ? `${imageUrl}&v=${timestamp}` : `${imageUrl}?v=${timestamp}`;
+      const htmlPaths = [
+        path.join(__dirname, '../index.html'),
+        path.join(__dirname, '../dist/index.html')
+      ];
+      for (const htmlPath of htmlPaths) {
+        if (fs.existsSync(htmlPath)) {
+          let content = fs.readFileSync(htmlPath, 'utf-8');
+          content = content.replace(/<meta property="og:image" content="[^"]*"/i, `<meta property="og:image" content="${versionedUrl}"`);
+          content = content.replace(/<meta property="og:image:secure_url" content="[^"]*"/i, `<meta property="og:image:secure_url" content="${versionedUrl}"`);
+          content = content.replace(/<meta name="twitter:image" content="[^"]*"/i, `<meta name="twitter:image" content="${versionedUrl}"`);
+          fs.writeFileSync(htmlPath, content, 'utf-8');
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('⚠️ Startup HTML Share Banner sync warning:', err.message);
+  }
+};
+
 // Database Connection (local/standalone server mode)
 if (!process.env.VERCEL) {
   connectDB().then(async () => {
     await autoSeedDB();
+    await syncShareBannerHtmlOnStartup();
   }).catch(err => {
     console.error('⚠️ Startup DB/Seed error (non-fatal):', err.message);
   });

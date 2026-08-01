@@ -341,10 +341,7 @@ router.get('/bootstrap', checkMaintenance, async (req, res) => {
 const syncIndexHtmlOgImage = (imageUrl, updatedAt) => {
   try {
     const timestamp = updatedAt ? new Date(updatedAt).getTime() : Date.now();
-    let versionedUrl = imageUrl ? imageUrl : '%VITE_SITE_URL%/og-image.jpg';
-    if (imageUrl) {
-      versionedUrl = imageUrl.includes('?') ? `${imageUrl}&v=${timestamp}` : `${imageUrl}?v=${timestamp}`;
-    }
+    let versionedUrl = imageUrl ? (imageUrl.includes('?') ? `${imageUrl}&v=${timestamp}` : `${imageUrl}?v=${timestamp}`) : '';
 
     const htmlPaths = [
       path.join(__dirname, '../../index.html'),
