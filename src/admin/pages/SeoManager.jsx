@@ -136,15 +136,16 @@ export default function SeoManager() {
       const res = await uploadMediaFile(file);
       setUploadProgress(100);
 
-      if (res && res.url) {
-        if (targetField === 'ogImage') setOgImage(res.url);
-        else if (targetField === 'twitterImage') setTwitterImage(res.url);
-        else if (targetField === 'favicon') setFavicon(res.url);
+      if (res && (res.url || res.fileUrl)) {
+        const uploadedUrl = res.url || res.fileUrl;
+        if (targetField === 'ogImage') setOgImage(uploadedUrl);
+        else if (targetField === 'twitterImage') setTwitterImage(uploadedUrl);
+        else if (targetField === 'favicon') setFavicon(uploadedUrl);
 
         markDirty();
-        showToast('success', `Image uploaded & optimized via Cloudinary!`);
+        showToast('success', res.isLocalFallback ? `Image uploaded to storage!` : `Image uploaded & optimized via Cloudinary!`);
       } else {
-        showToast('error', 'Failed to upload image to Cloudinary.');
+        showToast('error', res?.message || 'Failed to upload image.');
       }
     } catch (err) {
       console.error('File upload error:', err);
