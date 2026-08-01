@@ -445,7 +445,7 @@ router.put('/settings/share-banner', protect, upload.single('banner'), async (re
       }
 
       sourceToUpload = uploadedFile.path;
-      fileName = uploadedFile.originalname;
+      fileName = `share_banner_${Date.now()}${fileExt}`;
     } else if (externalUrl) {
       if (typeof externalUrl !== 'string' || (!externalUrl.startsWith('http://') && !externalUrl.startsWith('https://'))) {
         return res.status(400).json({
@@ -454,7 +454,9 @@ router.put('/settings/share-banner', protect, upload.single('banner'), async (re
         });
       }
       sourceToUpload = externalUrl.trim();
-      fileName = externalUrl.split('/').pop() || 'banner.jpg';
+      const extMatch = externalUrl.match(/\.(jpg|jpeg|png|webp)($|\?)/i);
+      const urlExt = extMatch ? `.${extMatch[1].toLowerCase()}` : '.jpg';
+      fileName = `share_banner_${Date.now()}${urlExt}`;
     }
 
     // Fetch existing single Settings document
