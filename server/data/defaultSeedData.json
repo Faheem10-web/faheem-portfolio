@@ -71,19 +71,7 @@
   "seoSettings": {
     "siteTitle": "Faheem - Premium UI/UX Portfolio",
     "metaDescription": "Interactive and modern portfolio website showcasing dynamic frontend development and UI/UX engineering.",
-    "keywords": ["portfolio", "uiux", "developer", "react"],
-    "canonicalUrl": "https://faheem.design",
-    "author": "Faheem",
-    "robotsIndex": "index, follow",
-    "ogTitle": "Faheem - Lead UI/UX Designer & Frontend Developer",
-    "ogDescription": "Explore interactive case studies, design systems, and digital product designs.",
-    "ogImage": "",
-    "twitterTitle": "Faheem - Lead UI/UX Designer & Frontend Developer",
-    "twitterDescription": "Explore interactive case studies, design systems, and digital product designs.",
-    "twitterImage": "",
-    "twitterUseOgImage": true,
-    "twitterCardType": "summary_large_image",
-    "favicon": ""
+    "keywords": ["portfolio", "uiux", "developer", "react"]
   },
   "globalSettings": {
     "portfolioName": "Faheem",

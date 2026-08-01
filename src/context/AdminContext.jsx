@@ -319,32 +319,6 @@ export function AdminProvider({ children }) {
         }
     };
 
-    // Dedicated SEO Settings Update
-    const updateSeoSettings = async (seoData) => {
-        try {
-            const res = await fetch(`${API_BASE}/seo`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(seoData)
-            });
-            const data = await res.json().catch(() => ({}));
-            if (res.ok) {
-                setSiteSettings(prev => {
-                    const updated = { ...(prev || {}), seo: data };
-                    setCache('settings', updated);
-                    return updated;
-                });
-                return { success: true, data };
-            }
-            return { success: false, message: data.error || data.message || 'Failed to save SEO settings' };
-        } catch (error) {
-            return { success: false, message: error.message || 'Network error' };
-        }
-    };
-
     // Generic CRUD helper generator
     const makeCrud = (routeSegment, stateSetter) => {
         const fetchAll = async () => {
@@ -787,7 +761,6 @@ export function AdminProvider({ children }) {
         updateAccount,
         loadPublicData,
         updateSettings,
-        updateSeoSettings,
         projectsCrud,
         servicesCrud,
         skillsCrud,

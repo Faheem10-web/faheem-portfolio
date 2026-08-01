@@ -359,24 +359,9 @@ const seoSettingsSchema = new mongoose.Schema({
   siteTitle: { type: String, default: 'Faheem - Premium UI/UX Portfolio' },
   metaDescription: { type: String, default: 'Interactive and modern portfolio website showcasing dynamic frontend development and UI/UX engineering.' },
   keywords: { type: [String], default: ['portfolio', 'uiux', 'developer', 'react'] },
-  canonicalUrl: { type: String, default: '' },
-  author: { type: String, default: 'Faheem' },
-  robotsIndex: { type: String, default: 'index, follow' },
-  
-  // Open Graph
-  ogTitle: { type: String, default: 'Faheem - Lead UI/UX Designer & Frontend Developer' },
-  ogDescription: { type: String, default: 'Explore interactive case studies, design systems, and digital product designs.' },
+  favicon: { type: String, default: '' },
   ogImage: { type: String, default: '' },
-  
-  // Twitter Card
-  twitterTitle: { type: String, default: 'Faheem - Lead UI/UX Designer & Frontend Developer' },
-  twitterDescription: { type: String, default: 'Explore interactive case studies, design systems, and digital product designs.' },
-  twitterImage: { type: String, default: '' },
-  twitterUseOgImage: { type: Boolean, default: true },
-  twitterCardType: { type: String, default: 'summary_large_image' },
-  
-  // Favicon
-  favicon: { type: String, default: '' }
+  canonicalUrl: { type: String, default: '' }
 });
 export const SeoSettings = mongoose.models.SeoSettings || mongoose.model('SeoSettings', seoSettingsSchema);
 

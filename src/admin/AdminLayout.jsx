@@ -4,7 +4,7 @@ import { useAdmin } from '../context/AdminContext';
 import { useTheme } from '../context/ThemeContext';
 import { 
   FiGrid, FiFolder, FiSliders, FiMessageSquare, FiImage, 
-  FiKey, FiLogOut, FiSun, FiMoon, FiMenu, FiX, FiActivity, FiShare2
+  FiKey, FiLogOut, FiSun, FiMoon, FiMenu, FiX, FiActivity 
 } from 'react-icons/fi';
 import './Admin.css';
 
@@ -20,23 +20,32 @@ export default function AdminLayout() {
   // Mobile Sidebar Drawer state
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Synchronize system mode with themeMode if set to system
+  // Sync with global themeMode settings
   useEffect(() => {
-    if (themeMode === 'system') {
-      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setTheme(isDark ? 'dark' : 'light');
+    if (themeMode === 'light') {
+      setTheme('light');
+    } else if (themeMode === 'dark') {
+      setTheme('dark');
+    } else if (themeMode === 'system') {
+      const savedOverride = localStorage.getItem('admin-theme_override') || 'light';
+      setTheme(savedOverride);
     }
   }, [themeMode]);
 
   useEffect(() => {
-    document.documentElement.classList.remove('admin-theme-light', 'admin-theme-dark');
-    document.documentElement.classList.add(`admin-theme-${theme}`);
+    const root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('admin-dark-theme');
+      root.classList.remove('admin-light-theme');
+    } else {
+      root.classList.add('admin-light-theme');
+      root.classList.remove('admin-dark-theme');
+    }
     localStorage.setItem('admin-theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
-  };
+    if (themeMode === 'system') {
+      localStorage.setItem('admin-theme_override', theme);
+    }
+  }, [theme, themeMode]);
 
   // Close sidebar drawer automatically on navigation/location change
   useEffect(() => {
@@ -62,7 +71,6 @@ export default function AdminLayout() {
     { to: '/admin', label: 'Dashboard', icon: <FiGrid /> },
     { to: '/admin/projects', label: 'Projects', icon: <FiFolder /> },
     { to: '/admin/sections', label: 'Page Content', icon: <FiSliders /> },
-    { to: '/admin/seo', label: 'SEO & Social Sharing', icon: <FiShare2 /> },
     { to: '/admin/inbox', label: 'Inbox', icon: <FiMessageSquare /> },
     { to: '/admin/media', label: 'Media Library', icon: <FiImage /> },
     { to: '/admin/status', label: 'Site Status', icon: <FiActivity /> },

@@ -12,7 +12,6 @@ import { sendAdminEmail, sendVisitorAutoReply } from '../services/emailService.j
 import { uploadToCloudinary, deleteFromCloudinary, deleteCloudinaryAssetsFromObject } from '../services/cloudinaryService.js';
 import { importDb, exportDb } from '../scripts/seeder.js';
 import connectDB from '../config/db.js';
-import { saveSeoJsonCache, injectSeoMetadataToHtml } from '../utils/seoInjector.js';
 
 import {
   NavbarSettings,
@@ -400,7 +399,7 @@ router.put('/settings/:module', protect, async (req, res) => {
       // Find existing document to check replaced Cloudinary image fields
       const existingDoc = await model.findOne();
       if (existingDoc) {
-        const imageFields = ['logoImage', 'heroImage', 'bgImage', 'aboutImage', 'resumeUrl', 'favicon', 'ogImage', 'twitterImage', 'loaderLogo'];
+        const imageFields = ['logoImage', 'heroImage', 'bgImage', 'aboutImage', 'resumeUrl', 'favicon', 'ogImage', 'loaderLogo'];
         for (const field of imageFields) {
           if (cleanData[field] && existingDoc[field] && cleanData[field] !== existingDoc[field] && String(existingDoc[field]).includes('res.cloudinary.com')) {
             await deleteFromCloudinary(existingDoc[field]);
@@ -416,97 +415,16 @@ router.put('/settings/:module', protect, async (req, res) => {
       }
     }
 
-    if (modKey === 'seo') {
-      saveSeoJsonCache(settings);
-      try {
-        const distHtmlPath = path.join(process.cwd(), 'dist', 'index.html');
-        if (fs.existsSync(distHtmlPath)) {
-          const rawHtml = fs.readFileSync(distHtmlPath, 'utf-8');
-          const updatedHtml = injectSeoMetadataToHtml(rawHtml, settings);
-          fs.writeFileSync(distHtmlPath, updatedHtml, 'utf-8');
-        }
-      } catch (e) {
-        // Non-fatal
-      }
-    }
-
-    invalidateBootstrapCache();
-    invalidateMaintenanceCache();
-    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0, s-maxage=0');
-    res.setHeader('Surrogate-Control', 'no-store');
-    res.json(settings);
-  } catch (error) {
-    console.error(`❌ Error updating settings for '${modKey}':`, error);
-    res.status(500).json({ error: error.message || 'Failed to save settings' });
-  }
-});
-
-// Dedicated REST APIs for SEO & Social Sharing Module
-router.get('/seo', checkMaintenance, async (req, res) => {
-  try {
-    if (mongoose.connection.readyState !== 1) {
-      const seed = getDefaultSeedData();
-      return res.json(seed.seoSettings || {});
-    }
-    let settings = await SeoSettings.findOne().lean();
-    if (!settings) {
-      settings = await SeoSettings.create({});
-    }
-    res.json(settings);
-  } catch (error) {
-    const seed = getDefaultSeedData();
-    res.json(seed.seoSettings || {});
-  }
-});
-
-router.put('/seo', protect, async (req, res) => {
-  try {
-    const cleanData = { ...req.body };
-    delete cleanData._id;
-    delete cleanData.__v;
-
-    let settings = null;
-    if (mongoose.connection.readyState === 1) {
-      const existingDoc = await SeoSettings.findOne();
-      if (existingDoc) {
-        const imageFields = ['favicon', 'ogImage', 'twitterImage'];
-        for (const field of imageFields) {
-          if (cleanData[field] && existingDoc[field] && cleanData[field] !== existingDoc[field] && String(existingDoc[field]).includes('res.cloudinary.com')) {
-            await deleteFromCloudinary(existingDoc[field]);
-          }
-        }
-      }
-
-      settings = await SeoSettings.findOneAndUpdate({}, cleanData, { new: true, upsert: true, runValidators: false, setDefaultsOnInsert: true }).lean();
-      if (settings && settings._id) {
-        await SeoSettings.deleteMany({ _id: { $ne: settings._id } });
-      }
-    }
-
     if (!settings) {
       settings = { ...cleanData };
     }
 
-    // Persist real SEO JSON metadata source and update static dist/index.html if available
-    saveSeoJsonCache(settings);
-    try {
-      const distHtmlPath = path.join(process.cwd(), 'dist', 'index.html');
-      if (fs.existsSync(distHtmlPath)) {
-        const rawHtml = fs.readFileSync(distHtmlPath, 'utf-8');
-        const updatedHtml = injectSeoMetadataToHtml(rawHtml, settings);
-        fs.writeFileSync(distHtmlPath, updatedHtml, 'utf-8');
-      }
-    } catch {
-      // Non-fatal if read-only
-    }
-
     invalidateBootstrapCache();
-    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0, s-maxage=0');
-    res.setHeader('Surrogate-Control', 'no-store');
+    invalidateMaintenanceCache();
     res.json(settings);
   } catch (error) {
-    console.error('❌ Error updating SEO settings:', error);
-    res.status(500).json({ error: error.message || 'Failed to save SEO settings' });
+    console.error(`❌ Error updating settings for '${modKey}':`, error);
+    res.status(500).json({ error: error.message || 'Failed to save settings' });
   }
 });
 

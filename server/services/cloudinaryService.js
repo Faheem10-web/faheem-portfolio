@@ -1,17 +1,22 @@
 import cloudinary from '../config/cloudinary.js';
 import fs from 'fs';
-import path from 'path';
 
 /**
  * Uploads a local file to Cloudinary and deletes the local file.
- * Falls back gracefully to local uploads storage if Cloudinary network upload fails.
  * Returns the secure optimized url and public_id.
  */
 export const uploadToCloudinary = async (localFilePath, originalName) => {
-  const extension = originalName ? originalName.split('.').pop().toLowerCase() : 'jpg';
-
   try {
+    // Detect resource type from extension
+    const extension = originalName.split('.').pop().toLowerCase();
     let resourceType = 'auto';
+
+    if (extension === 'pdf') {
+      // Storing PDFs as raw or image. Raw is best for direct downloads,
+      // but 'image' resource type lets Cloudinary generate preview thumbs.
+      // Let's use 'auto' which handles it beautifully.
+      resourceType = 'auto';
+    }
 
     const uploadOptions = {
       folder: 'portfolio_media',
@@ -48,36 +53,12 @@ export const uploadToCloudinary = async (localFilePath, originalName) => {
       version: result.version
     };
   } catch (error) {
-    console.error('⚠️ Cloudinary Upload Error (falling back to local storage):', error.message || error);
-    
-    try {
-      const fileName = path.basename(localFilePath);
-      const targetDir = path.join(process.cwd(), 'uploads');
-      if (!fs.existsSync(targetDir)) {
-        fs.mkdirSync(targetDir, { recursive: true });
-      }
-      const targetPath = path.join(targetDir, fileName);
-      if (localFilePath !== targetPath && fs.existsSync(localFilePath)) {
-        fs.copyFileSync(localFilePath, targetPath);
-        fs.unlinkSync(localFilePath);
-      }
-      
-      const localUrl = `/uploads/${fileName}`;
-      return {
-        success: true,
-        url: localUrl,
-        publicId: `local-${Date.now()}`,
-        public_id: `local-${Date.now()}`,
-        fileSize: fs.existsSync(targetPath) ? fs.statSync(targetPath).size : 0,
-        fileType: extension,
-        isLocalFallback: true
-      };
-    } catch {
-      if (fs.existsSync(localFilePath)) {
-        fs.unlinkSync(localFilePath);
-      }
-      throw error;
+    console.error('❌ Cloudinary Upload Error:', error);
+    // Ensure local file is removed in case of failure
+    if (fs.existsSync(localFilePath)) {
+      fs.unlinkSync(localFilePath);
     }
+    throw error;
   }
 };
 
