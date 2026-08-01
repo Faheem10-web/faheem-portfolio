@@ -168,10 +168,10 @@ function AppContent() {
         const res = await fetch(`${API_BASE}/settings/share-banner?t=${Date.now()}`);
         if (res.ok) {
           const data = await res.json();
-          if (isMounted && data.success && data.banner?.imageUrl) {
-            const imageUrl = data.banner.imageUrl;
-            const timestamp = data.banner.updatedAt ? new Date(data.banner.updatedAt).getTime() : Date.now();
-            const versionedUrl = imageUrl.includes('?') ? `${imageUrl}&v=${timestamp}` : `${imageUrl}?v=${timestamp}`;
+          if (isMounted && data.success) {
+            const imageUrl = data.banner?.imageUrl || '';
+            const timestamp = data.banner?.updatedAt ? new Date(data.banner.updatedAt).getTime() : Date.now();
+            const versionedUrl = imageUrl ? (imageUrl.includes('?') ? `${imageUrl}&v=${timestamp}` : `${imageUrl}?v=${timestamp}`) : '';
             
             const updateMeta = (selector, attrName, attrVal, contentVal) => {
               let tag = document.querySelector(selector);
