@@ -230,7 +230,8 @@ const projectSchema = new mongoose.Schema({
     desktopScreens: { type: [galleryImageSchema], default: [] },
     tabletScreens: { type: [galleryImageSchema], default: [] },
     mobileScreens: { type: [galleryImageSchema], default: [] },
-    layout: { type: String, default: 'grid-2' } // 'single' | 'grid-2' | 'grid-3' | 'masonry' | 'carousel'
+    layout: { type: String, default: 'grid-2' }, // 'single' | 'grid-2' | 'grid-3' | 'masonry' | 'carousel'
+    cardHeight: { type: String, default: 'standard' }
   },
   resultsConfig: {
     successMetrics: { type: [String], default: [] },
@@ -255,6 +256,7 @@ const projectSchema = new mongoose.Schema({
   testimonial: { type: String, default: '' },
   hasCaseStudy: { type: Boolean, default: true },
   viewDesignOnly: { type: Boolean, default: false },
+  cardHeight: { type: String, default: 'standard' },
   isFeatured: { type: Boolean, default: false },
   showOnHome: { type: Boolean, default: true },
   enabled: { type: Boolean, default: true },

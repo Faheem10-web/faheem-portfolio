@@ -235,6 +235,7 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
   const [card2Images, setCard2Images] = useState(extractList(project?.solutionImage, project?.challengeImage, project?.solutionImages || project?.challengeImages));
   const [card3Images, setCard3Images] = useState(extractList(project?.conclusionImage || project?.resultImage, null, project?.resultImages || project?.conclusionImages));
   const [mobileScreens, setMobileScreens] = useState([]);
+  const [cardHeight, setCardHeight] = useState(project?.cardHeight || project?.showcaseConfig?.cardHeight || 'standard');
 
   useEffect(() => {
     if (project) {
@@ -255,6 +256,7 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
       
       const screensList = project.showcaseConfig?.mobileScreens || [];
       setMobileScreens(screensList.map(img => typeof img === 'string' ? img : img.url).filter(Boolean));
+      setCardHeight(project.cardHeight || project.showcaseConfig?.cardHeight || 'standard');
     }
   }, [project]);
 
@@ -326,9 +328,11 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
       conclusionImage: validCard3[0] || '',
       resultImage: validCard3[0] || '',
 
+      cardHeight,
       // showcaseConfig mobileScreens updating
       showcaseConfig: {
         ...(project?.showcaseConfig || {}),
+        cardHeight,
         mobileScreens: mobileScreens.filter(Boolean).map(url => ({ url, alt: `${projectName} Mobile Screen` }))
       }
     };
@@ -526,6 +530,28 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
           
           <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', padding: '16px', borderRadius: '12px', color: '#1E40AF', fontSize: '13px', lineHeight: '1.5' }}>
             🚀 <strong>Unlimited Card Sliders Enabled!</strong> You can add as many images as you want to Card 1, Card 2, and Card 3 by clicking <strong>"+ Add Slide Image"</strong>. Each card section becomes a smooth interactive slider on the live site!
+          </div>
+
+          {/* Card Height Selector */}
+          <div style={{ background: '#FFFFFF', borderRadius: '18px', padding: '20px 24px', border: '1px solid #EAEAEA', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+            <div>
+              <h4 style={{ margin: 0, fontSize: '15px', fontWeight: '800', color: '#111827' }}>
+                📐 Showcase Slider Card Height
+              </h4>
+              <p style={{ margin: '4px 0 0 0', fontSize: '12.5px', color: '#6B7280' }}>
+                Adjust the vertical height & aspect ratio of all mockup slider cards in this case study.
+              </p>
+            </div>
+            <select 
+              value={cardHeight} 
+              onChange={e => setCardHeight(e.target.value)}
+              style={{ padding: '8px 16px', borderRadius: '10px', border: '1px solid #D1D5DB', fontSize: '13.5px', fontWeight: '700', color: '#111827', outline: 'none', cursor: 'pointer', background: '#F9FAFB' }}
+            >
+              <option value="standard">Standard Height (16:9)</option>
+              <option value="tall">Tall Height (16:11)</option>
+              <option value="extra-tall">Extra Tall Height (4:3)</option>
+              <option value="full">Full / Maximum Height (16:12.5)</option>
+            </select>
           </div>
 
           {/* 1. CARD 1 SLIDER GROUP (Top Main Cover) */}

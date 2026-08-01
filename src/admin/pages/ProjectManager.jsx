@@ -309,6 +309,7 @@ export default function ProjectManager() {
   const [process, setProcess] = useState('');
   const [hasCaseStudy, setHasCaseStudy] = useState(true);
   const [viewDesignOnly, setViewDesignOnly] = useState(false);
+  const [cardHeight, setCardHeight] = useState('standard');
   const [isFeatured, setIsFeatured] = useState(false);
   const [showOnHome, setShowOnHome] = useState(true);
   const [enabled, setEnabled] = useState(true);
@@ -350,6 +351,7 @@ export default function ProjectManager() {
     setProcess('');
     setHasCaseStudy(true);
     setViewDesignOnly(false);
+    setCardHeight('standard');
     setIsFeatured(true);
     setShowOnHome(true);
     setEnabled(true);
@@ -404,6 +406,7 @@ export default function ProjectManager() {
     setProcess(proj.process || '');
     setHasCaseStudy(proj.hasCaseStudy !== false);
     setViewDesignOnly(!!proj.viewDesignOnly);
+    setCardHeight(proj.cardHeight || proj.showcaseConfig?.cardHeight || 'standard');
     setIsFeatured(!!proj.isFeatured);
     setShowOnHome(!!proj.showOnHome);
     setEnabled(!!proj.enabled);
@@ -436,7 +439,7 @@ export default function ProjectManager() {
       liveUrl, caseStudyUrl, githubUrl, coverImage, thumbnailImage, bannerImage,
       challenge, challengeImage, solution, solutionImage, results, resultImage,
       challengeImages, solutionImages, resultImages,
-      process, hasCaseStudy, viewDesignOnly, isFeatured, showOnHome, enabled, order,
+      process, hasCaseStudy, viewDesignOnly, cardHeight, isFeatured, showOnHome, enabled, order,
       technologies: formattedTechs,
       gallery: formattedGallery,
       infoConfig: {
@@ -870,6 +873,15 @@ export default function ProjectManager() {
                 <div className="admin-form-group">
                   <label className="admin-label">Display Order</label>
                   <input type="number" className="admin-input" value={order} onChange={e => setOrder(parseInt(e.target.value) || 0)} />
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">📐 Showcase Card Height</label>
+                  <select className="admin-input" value={cardHeight} onChange={e => setCardHeight(e.target.value)}>
+                    <option value="standard">Standard Height (16:9)</option>
+                    <option value="tall">Tall Height (16:11)</option>
+                    <option value="extra-tall">Extra Tall Height (4:3)</option>
+                    <option value="full">Full / Maximum Height (16:12.5)</option>
+                  </select>
                 </div>
                 <div className="admin-form-group" style={{ display: 'flex', gap: '20px', alignItems: 'center', height: '100%', flexWrap: 'wrap' }}>
                   <label style={{ display: 'flex', gap: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: '700', color: hasCaseStudy ? '#10B981' : '#EF4444' }}>

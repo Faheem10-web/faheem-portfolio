@@ -11,11 +11,22 @@ import { useAdmin } from "../context/AdminContext";
 import { API_BASE } from "../config/api";
 import { getOptimizedImageUrl } from "../utils/imageOptimizer";
 
-function MockupSliderCard({ images = [] }) {
+function MockupSliderCard({ images = [], cardHeight }) {
   const validImages = images.filter(img => typeof img === 'string' && img.trim().length > 0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0); // 1 = next, -1 = prev
   const [isHovered, setIsHovered] = useState(false);
+
+  let aspectRatioVal = '16 / 9';
+  if (cardHeight === 'tall' || cardHeight === '16/11') {
+    aspectRatioVal = '16 / 11';
+  } else if (cardHeight === 'extra-tall' || cardHeight === '4/3') {
+    aspectRatioVal = '4 / 3';
+  } else if (cardHeight === 'full' || cardHeight === '16/12.5' || cardHeight === '16/12') {
+    aspectRatioVal = '16 / 12.5';
+  } else if (cardHeight && cardHeight.includes('/')) {
+    aspectRatioVal = cardHeight.replace('/', ' / ');
+  }
 
   useEffect(() => {
     if (validImages.length <= 1 || isHovered) return;
@@ -105,7 +116,10 @@ function MockupSliderCard({ images = [] }) {
       className="cs-premium-slider-container"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      style={{ cursor: isSlider ? 'grab' : 'default' }}
+      style={{ 
+        cursor: isSlider ? 'grab' : 'default',
+        aspectRatio: aspectRatioVal
+      }}
     >
       <AnimatePresence initial={false} custom={direction}>
         <motion.img
@@ -442,7 +456,7 @@ export default function CaseStudyPage() {
 
         {/* ── 2. CARD 1 SLIDER (Top Main Cover Showcase Card) ── */}
         {card1SliderImages.length > 0 && (
-          <MockupSliderCard images={card1SliderImages} />
+          <MockupSliderCard images={card1SliderImages} cardHeight={project.cardHeight || project.showcaseConfig?.cardHeight} />
         )}
 
         {/* ── 3. OVERVIEW BLOCK ── */}
@@ -533,7 +547,7 @@ export default function CaseStudyPage() {
 
         {/* ── 5. CARD 2 SLIDER (Middle Featured Showcase Card) ── */}
         {card2SliderImages.length > 0 && (
-          <MockupSliderCard images={card2SliderImages} />
+          <MockupSliderCard images={card2SliderImages} cardHeight={project.cardHeight || project.showcaseConfig?.cardHeight} />
         )}
 
         {/* ── MOBILE EXPERIENCE SECTION ── */}
@@ -597,7 +611,7 @@ export default function CaseStudyPage() {
 
         {/* ── 7. CARD 3 SLIDER (Bottom Outcome Showcase Card) ── */}
         {card3SliderImages.length > 0 && (
-          <MockupSliderCard images={card3SliderImages} />
+          <MockupSliderCard images={card3SliderImages} cardHeight={project.cardHeight || project.showcaseConfig?.cardHeight} />
         )}
 
       </div>
