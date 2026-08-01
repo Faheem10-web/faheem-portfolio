@@ -16,6 +16,7 @@ import ChatWidget from "./components/common/ChatWidget";
 import ClickSpark from "./components/common/ClickSpark";
 import CustomCursor from "./components/common/CustomCursor";
 import ScrollToTop from "./components/common/ScrollToTop";
+import SeoHeadManager from "./components/common/SeoHeadManager";
 
 // Lazy-loaded Admin CMS Routes for optimal initial bundle size
 const AdminLayout = lazy(() => import("./admin/AdminLayout"));
@@ -27,6 +28,7 @@ const Inbox = lazy(() => import("./admin/pages/Inbox"));
 const MediaLibrary = lazy(() => import("./admin/pages/MediaLibrary"));
 const Profile = lazy(() => import("./admin/pages/Profile"));
 const SiteStatus = lazy(() => import("./admin/pages/SiteStatus"));
+const SeoManager = lazy(() => import("./admin/pages/SeoManager"));
 const MaintenancePage = lazy(() => import("./pages/MaintenancePage"));
 
 import { PageWrapper } from "./components/common/PageTransition";
@@ -218,6 +220,7 @@ function AppContent() {
 
   return (
     <>
+      <SeoHeadManager />
       <ScrollToTop />
       {/* World-Class 2026 Glassmorphism Preloader */}
       <AnimatePresence mode="wait">
@@ -252,6 +255,7 @@ function AppContent() {
                   <Route path="projects" element={<ProjectManager />} />
                   <Route path="sections" element={<SectionManager />} />
                   <Route path="inbox" element={<Inbox />} />
+                  <Route path="seo" element={<SeoManager />} />
                   <Route path="media" element={<MediaLibrary />} />
                   <Route path="status" element={<SiteStatus />} />
                   <Route path="profile" element={<Profile />} />

@@ -399,7 +399,7 @@ router.put('/settings/:module', protect, async (req, res) => {
       // Find existing document to check replaced Cloudinary image fields
       const existingDoc = await model.findOne();
       if (existingDoc) {
-        const imageFields = ['logoImage', 'heroImage', 'bgImage', 'aboutImage', 'resumeUrl', 'favicon', 'ogImage', 'loaderLogo'];
+        const imageFields = ['logoImage', 'heroImage', 'bgImage', 'aboutImage', 'resumeUrl', 'favicon', 'ogImage', 'twitterImage', 'loaderLogo'];
         for (const field of imageFields) {
           if (cleanData[field] && existingDoc[field] && cleanData[field] !== existingDoc[field] && String(existingDoc[field]).includes('res.cloudinary.com')) {
             await deleteFromCloudinary(existingDoc[field]);
@@ -425,6 +425,60 @@ router.put('/settings/:module', protect, async (req, res) => {
   } catch (error) {
     console.error(`❌ Error updating settings for '${modKey}':`, error);
     res.status(500).json({ error: error.message || 'Failed to save settings' });
+  }
+});
+
+// Dedicated REST APIs for SEO & Social Sharing Module
+router.get('/seo', checkMaintenance, async (req, res) => {
+  try {
+    if (mongoose.connection.readyState !== 1) {
+      const seed = getDefaultSeedData();
+      return res.json(seed.seoSettings || {});
+    }
+    let settings = await SeoSettings.findOne().lean();
+    if (!settings) {
+      settings = await SeoSettings.create({});
+    }
+    res.json(settings);
+  } catch (error) {
+    const seed = getDefaultSeedData();
+    res.json(seed.seoSettings || {});
+  }
+});
+
+router.put('/seo', protect, async (req, res) => {
+  try {
+    const cleanData = { ...req.body };
+    delete cleanData._id;
+    delete cleanData.__v;
+
+    let settings = null;
+    if (mongoose.connection.readyState === 1) {
+      const existingDoc = await SeoSettings.findOne();
+      if (existingDoc) {
+        const imageFields = ['favicon', 'ogImage', 'twitterImage'];
+        for (const field of imageFields) {
+          if (cleanData[field] && existingDoc[field] && cleanData[field] !== existingDoc[field] && String(existingDoc[field]).includes('res.cloudinary.com')) {
+            await deleteFromCloudinary(existingDoc[field]);
+          }
+        }
+      }
+
+      settings = await SeoSettings.findOneAndUpdate({}, cleanData, { new: true, upsert: true, runValidators: false, setDefaultsOnInsert: true }).lean();
+      if (settings && settings._id) {
+        await SeoSettings.deleteMany({ _id: { $ne: settings._id } });
+      }
+    }
+
+    if (!settings) {
+      settings = { ...cleanData };
+    }
+
+    invalidateBootstrapCache();
+    res.json(settings);
+  } catch (error) {
+    console.error('❌ Error updating SEO settings:', error);
+    res.status(500).json({ error: error.message || 'Failed to save SEO settings' });
   }
 });
 
