@@ -118,13 +118,7 @@ const Services = memo(function Services() {
                         let title = service.title;
                         let description = service.description;
 
-                        if (title === "Web Design") title = "Web Development";
-                        if (title === "Frontend Development" || title === "Frontend Dev") {
-                            title = "Mobile App Design";
-                            iconName = "smartphone";
-                            description = "Intuitive iOS and Android app interfaces focused on usability.";
-                        }
-                        if (title === "Mobile App Design") {
+                        if (iconName === "smartphone") {
                             iconName = "smartphone";
                         }
 
