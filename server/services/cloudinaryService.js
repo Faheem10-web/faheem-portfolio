@@ -5,21 +5,18 @@ import fs from 'fs';
  * Uploads a local file to Cloudinary and deletes the local file.
  * Returns the secure optimized url and public_id.
  */
-export const uploadToCloudinary = async (localFilePath, originalName) => {
+export const uploadToCloudinary = async (localFilePath, originalName, targetFolder = 'portfolio_media') => {
   try {
     // Detect resource type from extension
     const extension = originalName.split('.').pop().toLowerCase();
     let resourceType = 'auto';
 
     if (extension === 'pdf') {
-      // Storing PDFs as raw or image. Raw is best for direct downloads,
-      // but 'image' resource type lets Cloudinary generate preview thumbs.
-      // Let's use 'auto' which handles it beautifully.
       resourceType = 'auto';
     }
 
     const uploadOptions = {
-      folder: 'portfolio_media',
+      folder: targetFolder,
       resource_type: resourceType,
       use_filename: true,
       unique_filename: true,

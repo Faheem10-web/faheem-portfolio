@@ -32,7 +32,8 @@ import {
   Media,
   ThemeSettings,
   ChatSettings,
-  FaqSettings
+  FaqSettings,
+  Settings
 } from '../models/schemas.js';
 
 const router = express.Router();
@@ -333,6 +334,208 @@ router.get('/bootstrap', checkMaintenance, async (req, res) => {
     console.warn('Bootstrap DB fetch fallback:', error.message);
     const fallbackPayload = buildFallbackPayload();
     res.json(fallbackPayload);
+  }
+});
+
+// Helper to sync open graph image tags in index.html for static social scrapers
+const syncIndexHtmlOgImage = (imageUrl, updatedAt) => {
+  try {
+    const timestamp = updatedAt ? new Date(updatedAt).getTime() : Date.now();
+    let versionedUrl = imageUrl ? imageUrl : '%VITE_SITE_URL%/og-image.jpg';
+    if (imageUrl) {
+      versionedUrl = imageUrl.includes('?') ? `${imageUrl}&v=${timestamp}` : `${imageUrl}?v=${timestamp}`;
+    }
+
+    const htmlPaths = [
+      path.join(__dirname, '../../index.html'),
+      path.join(__dirname, '../../dist/index.html')
+    ];
+
+    for (const htmlPath of htmlPaths) {
+      if (fs.existsSync(htmlPath)) {
+        let content = fs.readFileSync(htmlPath, 'utf-8');
+        content = content.replace(
+          /<meta property="og:image" content="[^"]*"/i,
+          `<meta property="og:image" content="${versionedUrl}"`
+        );
+        content = content.replace(
+          /<meta property="og:image:secure_url" content="[^"]*"/i,
+          `<meta property="og:image:secure_url" content="${versionedUrl}"`
+        );
+        content = content.replace(
+          /<meta name="twitter:image" content="[^"]*"/i,
+          `<meta name="twitter:image" content="${versionedUrl}"`
+        );
+        fs.writeFileSync(htmlPath, content, 'utf-8');
+      }
+    }
+  } catch (err) {
+    console.warn('⚠️ Index HTML Open Graph image sync warning:', err.message);
+  }
+};
+
+/* ── SETTINGS: SHARE BANNER ENDPOINTS ────────────────────────────────────── */
+
+// GET Share Banner settings (Public)
+router.get('/settings/share-banner', async (req, res) => {
+  try {
+    let settings = null;
+    if (mongoose.connection.readyState === 1) {
+      settings = await Settings.findOne().lean();
+      if (!settings) {
+        settings = await Settings.create({});
+      }
+    }
+    const banner = settings?.shareBanner || { imageUrl: '', publicId: '', updatedAt: null };
+    return res.json({
+      success: true,
+      banner: {
+        imageUrl: banner.imageUrl || '',
+        publicId: banner.publicId || '',
+        updatedAt: banner.updatedAt || null
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching share banner settings:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to fetch share banner settings'
+    });
+  }
+});
+
+// PUT Upload / Replace Share Banner (Admin Protected)
+router.put('/settings/share-banner', protect, upload.single('banner'), async (req, res) => {
+  try {
+    const uploadedFile = req.file;
+    if (!uploadedFile) {
+      return res.status(400).json({
+        success: false,
+        error: 'No image file provided. Please select a valid banner image to upload.'
+      });
+    }
+
+    // Validate maximum file size (5 MB)
+    const MAX_SIZE = 5 * 1024 * 1024;
+    if (uploadedFile.size > MAX_SIZE) {
+      if (fs.existsSync(uploadedFile.path)) fs.unlinkSync(uploadedFile.path);
+      return res.status(400).json({
+        success: false,
+        error: 'File size exceeds maximum allowed limit of 5 MB. Please upload a smaller image.'
+      });
+    }
+
+    // Validate MIME type & file format (JPG, PNG, WEBP)
+    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+    const fileExt = path.extname(uploadedFile.originalname).toLowerCase();
+    const isImageMime = !uploadedFile.mimetype || uploadedFile.mimetype.startsWith('image/');
+    
+    if (!allowedExtensions.includes(fileExt) || !isImageMime) {
+      if (fs.existsSync(uploadedFile.path)) fs.unlinkSync(uploadedFile.path);
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid file format. Only JPG, PNG, and WEBP image formats are supported.'
+      });
+    }
+
+    // Fetch existing single Settings document
+    let settingsDoc = await Settings.findOne();
+    if (!settingsDoc) {
+      settingsDoc = new Settings({});
+    }
+
+    // Delete previous banner from Cloudinary using publicId before saving new image
+    const previousPublicId = settingsDoc.shareBanner?.publicId;
+    if (previousPublicId) {
+      try {
+        await deleteFromCloudinary(previousPublicId);
+      } catch (cloudErr) {
+        console.warn('⚠️ Non-fatal Cloudinary deletion error for previous banner:', cloudErr.message);
+      }
+    }
+
+    // Upload new image to Cloudinary in dedicated folder 'portfolio/share-banner'
+    const uploadResult = await uploadToCloudinary(uploadedFile.path, uploadedFile.originalname, 'portfolio/share-banner');
+
+    if (!uploadResult || !uploadResult.url) {
+      throw new Error('Failed to obtain uploaded image URL from Cloudinary');
+    }
+
+    const updatedAt = new Date();
+    settingsDoc.shareBanner = {
+      imageUrl: uploadResult.url,
+      publicId: uploadResult.publicId || uploadResult.public_id || '',
+      updatedAt: updatedAt
+    };
+
+    await settingsDoc.save();
+
+    // Sync initial static HTML source meta tags
+    syncIndexHtmlOgImage(uploadResult.url, updatedAt);
+
+    return res.json({
+      success: true,
+      message: 'Share banner updated successfully',
+      banner: {
+        imageUrl: settingsDoc.shareBanner.imageUrl,
+        publicId: settingsDoc.shareBanner.publicId,
+        updatedAt: settingsDoc.shareBanner.updatedAt
+      }
+    });
+  } catch (error) {
+    console.error('❌ Upload Share Banner Error:', error);
+    if (req.file && fs.existsSync(req.file.path)) {
+      try { fs.unlinkSync(req.file.path); } catch {}
+    }
+    return res.status(500).json({
+      success: false,
+      error: error.message || 'An error occurred while uploading the share banner image'
+    });
+  }
+});
+
+// DELETE Remove Share Banner (Admin Protected)
+router.delete('/settings/share-banner', protect, async (req, res) => {
+  try {
+    let settingsDoc = await Settings.findOne();
+    if (settingsDoc && settingsDoc.shareBanner?.publicId) {
+      try {
+        await deleteFromCloudinary(settingsDoc.shareBanner.publicId);
+      } catch (cloudErr) {
+        console.warn('⚠️ Non-fatal Cloudinary deletion error on banner remove:', cloudErr.message);
+      }
+    }
+
+    if (!settingsDoc) {
+      settingsDoc = new Settings({});
+    }
+
+    settingsDoc.shareBanner = {
+      imageUrl: '',
+      publicId: '',
+      updatedAt: null
+    };
+
+    await settingsDoc.save();
+
+    // Sync static HTML source meta tags back to default
+    syncIndexHtmlOgImage('', null);
+
+    return res.json({
+      success: true,
+      message: 'Share banner removed successfully',
+      banner: {
+        imageUrl: '',
+        publicId: '',
+        updatedAt: null
+      }
+    });
+  } catch (error) {
+    console.error('❌ Remove Share Banner Error:', error);
+    return res.status(500).json({
+      success: false,
+      error: error.message || 'Failed to remove share banner'
+    });
   }
 });
 

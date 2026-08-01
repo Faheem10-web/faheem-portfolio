@@ -440,3 +440,14 @@ const faqSettingsSchema = new mongoose.Schema({
 }, { strict: false });
 export const FaqSettings = mongoose.models.FaqSettings || mongoose.model('FaqSettings', faqSettingsSchema);
 
+// 21. Single Settings Schema (Share Banner & Site Settings)
+const settingsSchema = new mongoose.Schema({
+  siteName: { type: String, default: 'Faheem Portfolio' },
+  shareBanner: {
+    imageUrl: { type: String, default: '' },
+    publicId: { type: String, default: '' },
+    updatedAt: { type: Date, default: null }
+  }
+}, { timestamps: true });
+export const Settings = mongoose.models.Settings || mongoose.model('Settings', settingsSchema);
+

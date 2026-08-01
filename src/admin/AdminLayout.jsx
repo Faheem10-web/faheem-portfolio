@@ -4,7 +4,7 @@ import { useAdmin } from '../context/AdminContext';
 import { useTheme } from '../context/ThemeContext';
 import { 
   FiGrid, FiFolder, FiSliders, FiMessageSquare, FiImage, 
-  FiKey, FiLogOut, FiSun, FiMoon, FiMenu, FiX, FiActivity 
+  FiKey, FiLogOut, FiSun, FiMoon, FiMenu, FiX, FiActivity, FiShare2
 } from 'react-icons/fi';
 import './Admin.css';
 
@@ -73,6 +73,7 @@ export default function AdminLayout() {
     { to: '/admin/sections', label: 'Page Content', icon: <FiSliders /> },
     { to: '/admin/inbox', label: 'Inbox', icon: <FiMessageSquare /> },
     { to: '/admin/media', label: 'Media Library', icon: <FiImage /> },
+    { to: '/admin/settings/share-banner', label: 'Share Banner', icon: <FiShare2 /> },
     { to: '/admin/status', label: 'Site Status', icon: <FiActivity /> },
     { to: '/admin/profile', label: 'Account Settings', icon: <FiKey /> }
   ];

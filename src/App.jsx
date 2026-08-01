@@ -17,6 +17,8 @@ import ClickSpark from "./components/common/ClickSpark";
 import CustomCursor from "./components/common/CustomCursor";
 import ScrollToTop from "./components/common/ScrollToTop";
 
+import { API_BASE } from "./config/api";
+
 // Lazy-loaded Admin CMS Routes for optimal initial bundle size
 const AdminLayout = lazy(() => import("./admin/AdminLayout"));
 const Login = lazy(() => import("./admin/pages/Login"));
@@ -27,6 +29,7 @@ const Inbox = lazy(() => import("./admin/pages/Inbox"));
 const MediaLibrary = lazy(() => import("./admin/pages/MediaLibrary"));
 const Profile = lazy(() => import("./admin/pages/Profile"));
 const SiteStatus = lazy(() => import("./admin/pages/SiteStatus"));
+const ShareBanner = lazy(() => import("./admin/pages/ShareBanner"));
 const MaintenancePage = lazy(() => import("./pages/MaintenancePage"));
 
 import { PageWrapper } from "./components/common/PageTransition";
@@ -157,6 +160,43 @@ function AppContent() {
     }
   }, [siteSettings]);
 
+  // Dynamically update Share Banner Open Graph image meta tags from dedicated endpoint
+  useEffect(() => {
+    let isMounted = true;
+    const fetchShareBannerMeta = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/settings/share-banner?t=${Date.now()}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (isMounted && data.success && data.banner?.imageUrl) {
+            const imageUrl = data.banner.imageUrl;
+            const timestamp = data.banner.updatedAt ? new Date(data.banner.updatedAt).getTime() : Date.now();
+            const versionedUrl = imageUrl.includes('?') ? `${imageUrl}&v=${timestamp}` : `${imageUrl}?v=${timestamp}`;
+            
+            const updateMeta = (selector, attrName, attrVal, contentVal) => {
+              let tag = document.querySelector(selector);
+              if (!tag) {
+                tag = document.createElement('meta');
+                tag.setAttribute(attrName, attrVal);
+                document.head.appendChild(tag);
+              }
+              tag.content = contentVal;
+            };
+
+            updateMeta("meta[property='og:image']", 'property', 'og:image', versionedUrl);
+            updateMeta("meta[property='og:image:secure_url']", 'property', 'og:image:secure_url', versionedUrl);
+            updateMeta("meta[name='twitter:image']", 'name', 'twitter:image', versionedUrl);
+          }
+        }
+      } catch (e) {
+        console.warn('Share banner meta fetch error:', e);
+      }
+    };
+
+    fetchShareBannerMeta();
+    return () => { isMounted = false; };
+  }, []);
+
   useEffect(() => {
     if (isAdminRoute) return; // Disable Lenis on Admin Panel routes to prevent navigation/panel scroll conflicts
 
@@ -253,6 +293,8 @@ function AppContent() {
                   <Route path="sections" element={<SectionManager />} />
                   <Route path="inbox" element={<Inbox />} />
                   <Route path="media" element={<MediaLibrary />} />
+                  <Route path="settings/share-banner" element={<ShareBanner />} />
+                  <Route path="share-banner" element={<ShareBanner />} />
                   <Route path="status" element={<SiteStatus />} />
                   <Route path="profile" element={<Profile />} />
                 </Route>
