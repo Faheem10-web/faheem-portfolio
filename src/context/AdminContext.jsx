@@ -112,14 +112,20 @@ export function AdminProvider({ children }) {
             }
         };
 
+        const handleDataUpdated = () => {
+            loadPublicData(true);
+        };
+
         window.addEventListener('focus', handleFocus);
         document.addEventListener('visibilitychange', handleVisibilityChange);
         window.addEventListener('pageshow', handlePageShow);
+        window.addEventListener('faheem_data_updated', handleDataUpdated);
 
         return () => {
             window.removeEventListener('focus', handleFocus);
             document.removeEventListener('visibilitychange', handleVisibilityChange);
             window.removeEventListener('pageshow', handlePageShow);
+            window.removeEventListener('faheem_data_updated', handleDataUpdated);
         };
     }, [token]);
 
@@ -352,9 +358,9 @@ export function AdminProvider({ children }) {
                             setCache(routeSegment, updated);
                             return updated;
                         });
-                    } else {
-                        await fetchAll();
                     }
+                    await fetchAll();
+                    if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('faheem_data_updated'));
                     return { success: true };
                 }
                 const errData = await res.json().catch(() => ({}));
@@ -378,9 +384,9 @@ export function AdminProvider({ children }) {
                             setCache(routeSegment, updated);
                             return updated;
                         });
-                    } else {
-                        await fetchAll();
                     }
+                    await fetchAll();
+                    if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('faheem_data_updated'));
                     return { success: true };
                 }
                 const errData = await res.json().catch(() => ({}));
@@ -400,11 +406,12 @@ export function AdminProvider({ children }) {
                         method: 'DELETE',
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
+                    await fetchAll();
+                    if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('faheem_data_updated'));
                     if (res.ok) {
                         return { success: true, message: 'Deleted successfully' };
                     } else {
                         const errData = await res.json().catch(() => ({}));
-                        await fetchAll();
                         return { success: false, message: errData.error || errData.message || 'Failed to delete item' };
                     }
                 } catch (err) {
