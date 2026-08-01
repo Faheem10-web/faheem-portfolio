@@ -465,11 +465,12 @@ router.put('/settings/share-banner', protect, upload.single('banner'), async (re
       settingsDoc = new Settings({});
     }
 
-    // Delete previous banner from Cloudinary using publicId before saving new image
-    const previousPublicId = settingsDoc.shareBanner?.publicId;
-    if (previousPublicId) {
+    // Delete previous banner from Cloudinary using publicId or imageUrl before saving new image
+    const previousAsset = settingsDoc.shareBanner?.publicId || settingsDoc.shareBanner?.imageUrl;
+    if (previousAsset) {
       try {
-        await deleteFromCloudinary(previousPublicId);
+        console.log(`🗑️ Deleting previous share banner asset from Cloudinary: ${previousAsset}`);
+        await deleteFromCloudinary(previousAsset);
       } catch (cloudErr) {
         console.warn('⚠️ Non-fatal Cloudinary deletion error for previous banner:', cloudErr.message);
       }
@@ -519,9 +520,11 @@ router.put('/settings/share-banner', protect, upload.single('banner'), async (re
 router.delete('/settings/share-banner', protect, async (req, res) => {
   try {
     let settingsDoc = await Settings.findOne();
-    if (settingsDoc && settingsDoc.shareBanner?.publicId) {
+    const previousAsset = settingsDoc?.shareBanner?.publicId || settingsDoc?.shareBanner?.imageUrl;
+    if (previousAsset) {
       try {
-        await deleteFromCloudinary(settingsDoc.shareBanner.publicId);
+        console.log(`🗑️ Permanently deleting share banner asset from Cloudinary: ${previousAsset}`);
+        await deleteFromCloudinary(previousAsset);
       } catch (cloudErr) {
         console.warn('⚠️ Non-fatal Cloudinary deletion error on banner remove:', cloudErr.message);
       }
