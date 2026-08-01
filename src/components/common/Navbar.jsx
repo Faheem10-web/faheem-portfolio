@@ -24,16 +24,14 @@ const Navbar = memo(function Navbar() {
 
     // Consolidated RAF-throttled scroll handler for scrolled state and auto-hide navbar
     useEffect(() => {
-        let lastScrollY = window.scrollY;
+        let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
         let ticking = false;
-        const scrollThreshold = 60;
-        const scrollTolerance = 10;
 
         const updateScrollState = () => {
             const currentScrollY = window.scrollY;
             const scrollDelta = currentScrollY - lastScrollY;
 
-            // Update scrolled state
+            // Update scrolled state (tighter pill positioning)
             const isScrolledPast = currentScrollY > 40;
             setScrolled(prev => (prev !== isScrolledPast ? isScrolledPast : prev));
 
@@ -42,15 +40,15 @@ const Navbar = memo(function Navbar() {
                 setActiveSection(prev => (prev !== "home" ? "home" : prev));
             }
 
-            // Update auto-hide visibility
-            if (currentScrollY <= scrollThreshold) {
-                setNavVisible(prev => (!prev ? true : prev));
-            } else if (Math.abs(scrollDelta) > scrollTolerance) {
-                if (currentScrollY > lastScrollY) {
-                    setNavVisible(prev => (prev ? false : prev));
-                } else if (currentScrollY < lastScrollY) {
-                    setNavVisible(prev => (!prev ? true : prev));
-                }
+            // Auto-reveal on scroll back UP, hide on scroll DOWN
+            if (currentScrollY <= 40 || menuOpen) {
+                setNavVisible(true);
+            } else if (scrollDelta < -3) {
+                // Scrolling BACK UP -> Reveal Navbar smoothly
+                setNavVisible(true);
+            } else if (scrollDelta > 5 && currentScrollY > 80) {
+                // Scrolling DOWN -> Hide Navbar
+                setNavVisible(false);
             }
 
             lastScrollY = currentScrollY;
@@ -67,7 +65,7 @@ const Navbar = memo(function Navbar() {
         onScroll(); // initial check
         window.addEventListener("scroll", onScroll, { passive: true });
         return () => window.removeEventListener("scroll", onScroll);
-    }, [isHomePage]);
+    }, [isHomePage, menuOpen]);
 
     // Prevent body scroll when menu is open
     useEffect(() => {
