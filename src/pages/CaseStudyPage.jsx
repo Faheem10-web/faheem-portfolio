@@ -331,7 +331,7 @@ export default function CaseStudyPage() {
       .filter(Boolean);
 
     if (cmsScreens.length > 0) {
-      return cmsScreens;
+      return cmsScreens.slice(0, 2);
     }
 
     const isCromic = project.slug === 'projects' || project.name?.toLowerCase() === 'cromic';
@@ -342,7 +342,7 @@ export default function CaseStudyPage() {
     return [];
   };
 
-  const mobileScreensToRender = getMobileScreens();
+  const mobileScreensToRender = getMobileScreens().slice(0, 2);
 
 
   const containerVariants = {
