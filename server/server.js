@@ -133,7 +133,13 @@ app.get('*', async (req, res, next) => {
     console.error('⚠️ Express HTML SEO injection error:', err.message);
   }
 
-  next();
+  // Fallback to index.html if dist/index.html injection unavailable
+  const fallbackIndex = path.join(__dirname, '../dist/index.html');
+  if (fs.existsSync(fallbackIndex)) {
+    return res.sendFile(fallbackIndex);
+  }
+  
+  res.status(200).send('<!doctype html><html><head><title>Faheem Portfolio</title></head><body><div id="root"></div></body></html>');
 });
 
 // Global Error Handler Middleware

@@ -1,7 +1,7 @@
 {
   "functions": {
     "api/index.js": {
-      "includeFiles": "server/**,dist/**,public/**,index.html"
+      "includeFiles": "server/**,public/**"
     }
   },
   "headers": [
@@ -17,14 +17,11 @@
       ]
     },
     {
-      "source": "/",
+      "source": "/index.html",
       "headers": [
         { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0, s-maxage=0" },
         { "key": "Pragma", "value": "no-cache" },
-        { "key": "Expires", "value": "0" },
-        { "key": "Surrogate-Control", "value": "no-store" },
-        { "key": "CDN-Cache-Control", "value": "no-store" },
-        { "key": "Vercel-CDN-Cache-Control", "value": "no-store" }
+        { "key": "Expires", "value": "0" }
       ]
     },
     {
@@ -36,6 +33,6 @@
   ],
   "rewrites": [
     { "source": "/api/:path*", "destination": "/api/index.js" },
-    { "source": "/((?!assets/|uploads/|favicon.ico|site.webmanifest|.*\\.(?:png|jpg|jpeg|svg|webp|gif|ico|css|js|woff|woff2|ttf|eot)).*)", "destination": "/api/index.js" }
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
