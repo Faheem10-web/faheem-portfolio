@@ -78,22 +78,69 @@ app.use('/api', (req, res, next) => {
   next();
 });
 
-// Serve Uploads Folder Statically (accessible from frontend)
+import fs from 'fs';
+import mongoose from 'mongoose';
+import { SeoSettings } from './models/schemas.js';
+import { injectSeoMetadataToHtml, loadSeoJsonCache } from './utils/seoInjector.js';
+
+// Serve Static Frontend Dist & Uploads Folders
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use(express.static(path.join(__dirname, '../dist'), { index: false }));
+app.use(express.static(path.join(__dirname, '../public'), { index: false }));
 
 // API routes
 app.use('/api', apiRouter);
+
+// Catch-all Server-Side Open Graph & Meta Tag Injector for HTML Page Requests
+app.get('*', async (req, res, next) => {
+  if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+    return next();
+  }
+
+  try {
+    let seoData = null;
+    if (mongoose.connection.readyState === 1) {
+      try {
+        seoData = await SeoSettings.findOne().lean();
+      } catch {
+        // Fallback to static cache if DB query fails
+      }
+    }
+
+    if (!seoData) {
+      seoData = loadSeoJsonCache(path.join(__dirname, '..'));
+    }
+
+    let templatePath = path.join(__dirname, '../dist/index.html');
+    if (!fs.existsSync(templatePath)) {
+      templatePath = path.join(__dirname, '../index.html');
+    }
+
+    if (fs.existsSync(templatePath)) {
+      const rawHtml = fs.readFileSync(templatePath, 'utf-8');
+      const injectedHtml = injectSeoMetadataToHtml(rawHtml, seoData);
+
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0, s-maxage=0');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+      res.setHeader('Surrogate-Control', 'no-store');
+      res.setHeader('CDN-Cache-Control', 'no-store');
+      res.setHeader('Vercel-CDN-Cache-Control', 'no-store');
+      return res.status(200).send(injectedHtml);
+    }
+  } catch (err) {
+    console.error('⚠️ Express HTML SEO injection error:', err.message);
+  }
+
+  next();
+});
 
 // Global Error Handler Middleware
 app.use((err, req, res, next) => {
   console.error('⚠️ Express Error Handler:', err.message);
   const statusCode = err.status || err.statusCode || 500;
   res.status(statusCode).json({ error: err.message || 'Internal Server Error' });
-});
-
-// Health Endpoint
-app.get('/', (req, res) => {
-  res.send('Portfolio API Server is running...');
 });
 
 const PORT = process.env.PORT || 5000;

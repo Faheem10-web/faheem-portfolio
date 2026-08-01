@@ -12,6 +12,7 @@ import { sendAdminEmail, sendVisitorAutoReply } from '../services/emailService.j
 import { uploadToCloudinary, deleteFromCloudinary, deleteCloudinaryAssetsFromObject } from '../services/cloudinaryService.js';
 import { importDb, exportDb } from '../scripts/seeder.js';
 import connectDB from '../config/db.js';
+import { saveSeoJsonCache, injectSeoMetadataToHtml } from '../utils/seoInjector.js';
 
 import {
   NavbarSettings,
@@ -415,12 +416,24 @@ router.put('/settings/:module', protect, async (req, res) => {
       }
     }
 
-    if (!settings) {
-      settings = { ...cleanData };
+    if (modKey === 'seo') {
+      saveSeoJsonCache(settings);
+      try {
+        const distHtmlPath = path.join(process.cwd(), 'dist', 'index.html');
+        if (fs.existsSync(distHtmlPath)) {
+          const rawHtml = fs.readFileSync(distHtmlPath, 'utf-8');
+          const updatedHtml = injectSeoMetadataToHtml(rawHtml, settings);
+          fs.writeFileSync(distHtmlPath, updatedHtml, 'utf-8');
+        }
+      } catch (e) {
+        // Non-fatal
+      }
     }
 
     invalidateBootstrapCache();
     invalidateMaintenanceCache();
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0, s-maxage=0');
+    res.setHeader('Surrogate-Control', 'no-store');
     res.json(settings);
   } catch (error) {
     console.error(`❌ Error updating settings for '${modKey}':`, error);
@@ -474,7 +487,22 @@ router.put('/seo', protect, async (req, res) => {
       settings = { ...cleanData };
     }
 
+    // Persist real SEO JSON metadata source and update static dist/index.html if available
+    saveSeoJsonCache(settings);
+    try {
+      const distHtmlPath = path.join(process.cwd(), 'dist', 'index.html');
+      if (fs.existsSync(distHtmlPath)) {
+        const rawHtml = fs.readFileSync(distHtmlPath, 'utf-8');
+        const updatedHtml = injectSeoMetadataToHtml(rawHtml, settings);
+        fs.writeFileSync(distHtmlPath, updatedHtml, 'utf-8');
+      }
+    } catch {
+      // Non-fatal if read-only
+    }
+
     invalidateBootstrapCache();
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0, s-maxage=0');
+    res.setHeader('Surrogate-Control', 'no-store');
     res.json(settings);
   } catch (error) {
     console.error('❌ Error updating SEO settings:', error);
