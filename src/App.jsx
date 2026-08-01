@@ -151,16 +151,10 @@ function AppContent() {
         updateMetaTag("meta[name='keywords']", 'name', 'keywords', keywordsStr);
       }
 
-      // Update OG Image if specified dynamically in CMS settings
-      if (seo.ogImage) {
-        updateMetaTag("meta[property='og:image']", 'property', 'og:image', seo.ogImage);
-        updateMetaTag("meta[property='og:image:secure_url']", 'property', 'og:image:secure_url', seo.ogImage);
-        updateMetaTag("meta[name='twitter:image']", 'name', 'twitter:image', seo.ogImage);
-      }
     }
   }, [siteSettings]);
 
-  // Dynamically update Share Banner Open Graph image meta tags from dedicated endpoint
+  // Dynamically update Share Banner Open Graph image meta tags & JSON-LD from dedicated endpoint
   useEffect(() => {
     let isMounted = true;
     const fetchShareBannerMeta = async () => {
@@ -186,6 +180,16 @@ function AppContent() {
             updateMeta("meta[property='og:image']", 'property', 'og:image', versionedUrl);
             updateMeta("meta[property='og:image:secure_url']", 'property', 'og:image:secure_url', versionedUrl);
             updateMeta("meta[name='twitter:image']", 'name', 'twitter:image', versionedUrl);
+
+            // Update JSON-LD structured data image
+            const jsonLdScript = document.getElementById('json-ld-schema');
+            if (jsonLdScript) {
+              try {
+                const schemaData = JSON.parse(jsonLdScript.textContent);
+                schemaData.image = versionedUrl;
+                jsonLdScript.textContent = JSON.stringify(schemaData, null, 2);
+              } catch (err) {}
+            }
           }
         }
       } catch (e) {

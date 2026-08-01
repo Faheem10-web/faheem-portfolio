@@ -363,6 +363,10 @@ const syncIndexHtmlOgImage = (imageUrl, updatedAt) => {
           /<meta name="twitter:image" content="[^"]*"/i,
           `<meta name="twitter:image" content="${versionedUrl}"`
         );
+        content = content.replace(
+          /"image":\s*"[^"]*"/g,
+          `"image": "${versionedUrl}"`
+        );
         fs.writeFileSync(htmlPath, content, 'utf-8');
       }
     }

@@ -34,6 +34,7 @@ const syncShareBannerHtmlOnStartup = async () => {
           content = content.replace(/<meta property="og:image" content="[^"]*"/i, `<meta property="og:image" content="${versionedUrl}"`);
           content = content.replace(/<meta property="og:image:secure_url" content="[^"]*"/i, `<meta property="og:image:secure_url" content="${versionedUrl}"`);
           content = content.replace(/<meta name="twitter:image" content="[^"]*"/i, `<meta name="twitter:image" content="${versionedUrl}"`);
+          content = content.replace(/"image":\s*"[^"]*"/gi, `"image": "${versionedUrl}"`);
           fs.writeFileSync(htmlPath, content, 'utf-8');
         }
       }
