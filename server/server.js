@@ -49,19 +49,22 @@ const globalLimiter = rateLimit({
   max: 300,
   standardHeaders: true,
   legacyHeaders: false,
-  validate: { trustProxy: false },
+  validate: false,
   message: { error: 'Too many requests from this IP address. Please try again later.' }
 });
-app.use('/api', globalLimiter);
 
 // Strict Login Rate Limiter (15 attempts per 15 minutes per IP)
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 15,
-  validate: { trustProxy: false },
+  validate: false,
   message: { error: 'Too many login attempts. Please wait 15 minutes.' }
 });
-app.use('/api/auth/login', loginLimiter);
+
+if (!process.env.VERCEL) {
+  app.use('/api', globalLimiter);
+  app.use('/api/auth/login', loginLimiter);
+}
 
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
