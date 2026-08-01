@@ -5,10 +5,12 @@ import fs from 'fs';
  * Uploads a local file to Cloudinary and deletes the local file.
  * Returns the secure optimized url and public_id.
  */
-export const uploadToCloudinary = async (localFilePath, originalName, targetFolder = 'portfolio_media') => {
+export const uploadToCloudinary = async (localFilePathOrUrl, originalName = 'image.jpg', targetFolder = 'portfolio_media') => {
   try {
-    // Detect resource type from extension
-    const extension = originalName.split('.').pop().toLowerCase();
+    const isRemoteUrl = typeof localFilePathOrUrl === 'string' && localFilePathOrUrl.startsWith('http');
+    const extension = isRemoteUrl 
+      ? (originalName && originalName.includes('.') ? originalName.split('.').pop().toLowerCase() : 'jpg')
+      : originalName.split('.').pop().toLowerCase();
     let resourceType = 'auto';
 
     if (extension === 'pdf') {
@@ -24,11 +26,11 @@ export const uploadToCloudinary = async (localFilePath, originalName, targetFold
     };
 
     // Perform upload
-    const result = await cloudinary.uploader.upload(localFilePath, uploadOptions);
+    const result = await cloudinary.uploader.upload(localFilePathOrUrl, uploadOptions);
 
-    // Clean up local temp file synchronously
-    if (fs.existsSync(localFilePath)) {
-      fs.unlinkSync(localFilePath);
+    // Clean up local temp file if it was a disk path
+    if (!isRemoteUrl && typeof localFilePathOrUrl === 'string' && fs.existsSync(localFilePathOrUrl)) {
+      try { fs.unlinkSync(localFilePathOrUrl); } catch {}
     }
 
     // Embed Cloudinary auto-format (f_auto) and auto-quality (q_auto) for optimized delivery (skip for documents like PDFs)
@@ -52,8 +54,8 @@ export const uploadToCloudinary = async (localFilePath, originalName, targetFold
   } catch (error) {
     console.error('❌ Cloudinary Upload Error:', error);
     // Ensure local file is removed in case of failure
-    if (fs.existsSync(localFilePath)) {
-      fs.unlinkSync(localFilePath);
+    if (typeof localFilePathOrUrl === 'string' && !localFilePathOrUrl.startsWith('http') && fs.existsSync(localFilePathOrUrl)) {
+      try { fs.unlinkSync(localFilePathOrUrl); } catch {}
     }
     throw error;
   }

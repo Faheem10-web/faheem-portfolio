@@ -404,38 +404,57 @@ router.get('/settings/share-banner', async (req, res) => {
   }
 });
 
-// PUT Upload / Replace Share Banner (Admin Protected)
+// PUT Upload / Replace Share Banner (File or External URL) (Admin Protected)
 router.put('/settings/share-banner', protect, upload.single('banner'), async (req, res) => {
   try {
     const uploadedFile = req.file;
-    if (!uploadedFile) {
+    const externalUrl = req.body?.imageUrl || req.body?.bannerUrl || req.body?.url;
+
+    if (!uploadedFile && !externalUrl) {
       return res.status(400).json({
         success: false,
-        error: 'No image file provided. Please select a valid banner image to upload.'
+        error: 'Please select an image file or provide a valid image URL.'
       });
     }
 
-    // Validate maximum file size (5 MB)
-    const MAX_SIZE = 5 * 1024 * 1024;
-    if (uploadedFile.size > MAX_SIZE) {
-      if (fs.existsSync(uploadedFile.path)) fs.unlinkSync(uploadedFile.path);
-      return res.status(400).json({
-        success: false,
-        error: 'File size exceeds maximum allowed limit of 5 MB. Please upload a smaller image.'
-      });
-    }
+    let sourceToUpload = '';
+    let fileName = 'banner.jpg';
 
-    // Validate MIME type & file format (JPG, PNG, WEBP)
-    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
-    const fileExt = path.extname(uploadedFile.originalname).toLowerCase();
-    const isImageMime = !uploadedFile.mimetype || uploadedFile.mimetype.startsWith('image/');
-    
-    if (!allowedExtensions.includes(fileExt) || !isImageMime) {
-      if (fs.existsSync(uploadedFile.path)) fs.unlinkSync(uploadedFile.path);
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid file format. Only JPG, PNG, and WEBP image formats are supported.'
-      });
+    if (uploadedFile) {
+      // Validate maximum file size (5 MB)
+      const MAX_SIZE = 5 * 1024 * 1024;
+      if (uploadedFile.size > MAX_SIZE) {
+        if (fs.existsSync(uploadedFile.path)) fs.unlinkSync(uploadedFile.path);
+        return res.status(400).json({
+          success: false,
+          error: 'File size exceeds maximum allowed limit of 5 MB. Please upload a smaller image.'
+        });
+      }
+
+      // Validate MIME type & file format (JPG, PNG, WEBP)
+      const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+      const fileExt = path.extname(uploadedFile.originalname).toLowerCase();
+      const isImageMime = !uploadedFile.mimetype || uploadedFile.mimetype.startsWith('image/');
+      
+      if (!allowedExtensions.includes(fileExt) || !isImageMime) {
+        if (fs.existsSync(uploadedFile.path)) fs.unlinkSync(uploadedFile.path);
+        return res.status(400).json({
+          success: false,
+          error: 'Invalid file format. Only JPG, PNG, and WEBP image formats are supported.'
+        });
+      }
+
+      sourceToUpload = uploadedFile.path;
+      fileName = uploadedFile.originalname;
+    } else if (externalUrl) {
+      if (typeof externalUrl !== 'string' || (!externalUrl.startsWith('http://') && !externalUrl.startsWith('https://'))) {
+        return res.status(400).json({
+          success: false,
+          error: 'Invalid image URL. Must start with http:// or https://'
+        });
+      }
+      sourceToUpload = externalUrl.trim();
+      fileName = externalUrl.split('/').pop() || 'banner.jpg';
     }
 
     // Fetch existing single Settings document
@@ -454,8 +473,8 @@ router.put('/settings/share-banner', protect, upload.single('banner'), async (re
       }
     }
 
-    // Upload new image to Cloudinary in dedicated folder 'portfolio/share-banner'
-    const uploadResult = await uploadToCloudinary(uploadedFile.path, uploadedFile.originalname, 'portfolio/share-banner');
+    // Upload new image (file or remote URL) to Cloudinary in dedicated folder 'portfolio/share-banner'
+    const uploadResult = await uploadToCloudinary(sourceToUpload, fileName, 'portfolio/share-banner');
 
     if (!uploadResult || !uploadResult.url) {
       throw new Error('Failed to obtain uploaded image URL from Cloudinary');

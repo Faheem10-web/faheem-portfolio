@@ -3,7 +3,8 @@ import { useAdmin } from '../../context/AdminContext';
 import { API_BASE } from '../../config/api';
 import { 
   FiUploadCloud, FiTrash2, FiCopy, FiCheck, FiImage, 
-  FiAlertCircle, FiCheckCircle, FiRefreshCw, FiInfo, FiLayers
+  FiAlertCircle, FiCheckCircle, FiRefreshCw, FiInfo, FiLayers,
+  FiLink, FiFolder
 } from 'react-icons/fi';
 import '../Admin.css';
 
@@ -14,11 +15,17 @@ export default function ShareBanner() {
   const [banner, setBanner] = useState({ imageUrl: '', publicId: '', updatedAt: null });
   const [isFetching, setIsFetching] = useState(true);
   
+  // Upload mode tab state ('file' | 'url')
+  const [uploadMode, setUploadMode] = useState('file');
+
   // File drag & upload states
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState('');
   const [dragActive, setDragActive] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+
+  // External URL input state
+  const [externalUrl, setExternalUrl] = useState('');
   
   // Action loading states ('uploading' | 'saving' | 'deleting' | null)
   const [activeAction, setActiveAction] = useState(null);
@@ -138,8 +145,8 @@ export default function ShareBanner() {
     }
   };
 
-  // Perform upload via XHR to support progress updates
-  const handleUploadBanner = () => {
+  // Upload Banner via File (XHR with progress)
+  const handleUploadBannerFile = () => {
     if (!selectedFile) {
       setToast({ type: 'error', message: 'Please select an image file to upload.' });
       return;
@@ -203,6 +210,49 @@ export default function ShareBanner() {
     xhr.send(formData);
   };
 
+  // Upload Banner via Image URL
+  const handleUploadBannerUrl = async () => {
+    if (!externalUrl || !externalUrl.trim()) {
+      setToast({ type: 'error', message: 'Please enter a valid image URL.' });
+      return;
+    }
+
+    const trimmedUrl = externalUrl.trim();
+    if (!trimmedUrl.startsWith('http://') && !trimmedUrl.startsWith('https://')) {
+      setToast({ type: 'error', message: 'Invalid URL format. Must start with http:// or https://' });
+      return;
+    }
+
+    setActiveAction('saving');
+    try {
+      const res = await fetch(`${API_BASE}/settings/share-banner`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ imageUrl: trimmedUrl })
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success && data.banner) {
+        setBanner(data.banner);
+        setExternalUrl('');
+        if (previewUrl) {
+          URL.revokeObjectURL(previewUrl);
+          setPreviewUrl('');
+        }
+        setToast({ type: 'success', message: 'Share banner updated from URL successfully!' });
+      } else {
+        setToast({ type: 'error', message: data.error || 'Failed to upload banner from URL.' });
+      }
+    } catch (err) {
+      setToast({ type: 'error', message: err.message || 'Network error uploading banner from URL.' });
+    } finally {
+      setActiveAction(null);
+    }
+  };
+
   // Delete Share Banner
   const handleConfirmDelete = async () => {
     setShowConfirmModal(false);
@@ -218,6 +268,7 @@ export default function ShareBanner() {
       if (res.ok && data.success) {
         setBanner({ imageUrl: '', publicId: '', updatedAt: null });
         setSelectedFile(null);
+        setExternalUrl('');
         if (previewUrl) {
           URL.revokeObjectURL(previewUrl);
           setPreviewUrl('');
@@ -245,7 +296,7 @@ export default function ShareBanner() {
     });
   };
 
-  const currentDisplayUrl = previewUrl || (banner.imageUrl ? getVersionedUrl(banner.imageUrl, banner.updatedAt) : '');
+  const currentDisplayUrl = previewUrl || (uploadMode === 'url' && externalUrl.startsWith('http') ? externalUrl : '') || (banner.imageUrl ? getVersionedUrl(banner.imageUrl, banner.updatedAt) : '');
 
   return (
     <div style={{ paddingBottom: '60px' }}>
@@ -349,6 +400,9 @@ export default function ShareBanner() {
                   src={currentDisplayUrl} 
                   alt="Share Banner Social Preview"
                   loading="lazy"
+                  onError={() => {
+                    if (previewUrl) setToast({ type: 'error', message: 'Failed to load preview image from provided source.' });
+                  }}
                   style={{
                     width: '100%',
                     height: 'auto',
@@ -357,7 +411,7 @@ export default function ShareBanner() {
                     display: 'block'
                   }}
                 />
-                {previewUrl && (
+                {(previewUrl || (uploadMode === 'url' && externalUrl)) && (
                   <div style={{
                     position: 'absolute',
                     top: '12px',
@@ -369,7 +423,7 @@ export default function ShareBanner() {
                     fontSize: '12px',
                     fontWeight: '600'
                   }}>
-                    Unsaved Local Preview
+                    Unsaved Preview
                   </div>
                 )}
               </div>
@@ -387,7 +441,7 @@ export default function ShareBanner() {
                 <FiLayers size={36} style={{ marginBottom: '12px', opacity: 0.6 }} />
                 <p style={{ margin: 0, fontSize: '14px', fontWeight: '500' }}>No Share Banner Uploaded</p>
                 <p style={{ margin: '4px 0 0', fontSize: '12px', opacity: 0.7 }}>
-                  Upload an image below to set your portfolio's social media preview banner.
+                  Upload a file or enter an image URL below to set your portfolio's social media preview banner.
                 </p>
               </div>
             )}
@@ -417,49 +471,95 @@ export default function ShareBanner() {
             </div>
           )}
 
-          {/* Upload & Replace File Dropzone */}
-          <div className="admin-form-group" style={{ marginBottom: '24px' }}>
-            <label className="admin-label">
-              {banner.imageUrl ? 'Replace Banner Image' : 'Upload Banner Image'}
-            </label>
-            
-            <div 
-              onDragEnter={handleDrag}
-              onDragLeave={handleDrag}
-              onDragOver={handleDrag}
-              onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
-              style={{
-                border: `2px dashed ${dragActive ? 'var(--admin-primary)' : 'var(--admin-border)'}`,
-                borderRadius: '12px',
-                padding: '32px 20px',
-                textAlign: 'center',
-                cursor: activeAction ? 'not-allowed' : 'pointer',
-                background: dragActive ? 'var(--admin-primary-glow)' : 'var(--admin-input-bg)',
-                transition: 'all 200ms ease'
-              }}
-            >
-              <input 
-                ref={fileInputRef}
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                onChange={handleInputChange}
-                style={{ display: 'none' }}
-                disabled={!!activeAction}
-              />
-
-              <FiUploadCloud size={38} style={{ color: 'var(--admin-primary)', marginBottom: '10px' }} />
-              <p style={{ margin: '0 0 6px', fontSize: '14px', fontWeight: '600', color: 'var(--admin-text-main)' }}>
-                {selectedFile ? selectedFile.name : 'Click to select or drag & drop image here'}
-              </p>
-              <p style={{ margin: 0, fontSize: '12px', color: 'var(--admin-text-muted)' }}>
-                Supports JPG, PNG, or WEBP (Max 5 MB)
-              </p>
+          {/* Upload Method Tab Switcher */}
+          <div style={{ marginBottom: '20px' }}>
+            <label className="admin-label">Select Upload Method</label>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                type="button"
+                className={`admin-btn ${uploadMode === 'file' ? 'admin-btn-primary' : 'admin-btn-secondary'}`}
+                onClick={() => setUploadMode('file')}
+                style={{ flex: 1, justifyContent: 'center' }}
+              >
+                <FiFolder /> Upload File from Device
+              </button>
+              <button
+                type="button"
+                className={`admin-btn ${uploadMode === 'url' ? 'admin-btn-primary' : 'admin-btn-secondary'}`}
+                onClick={() => setUploadMode('url')}
+                style={{ flex: 1, justifyContent: 'center' }}
+              >
+                <FiLink /> Upload via Image URL
+              </button>
             </div>
           </div>
 
-          {/* Upload Progress Bar */}
-          {activeAction === 'uploading' && (
+          {/* Tab 1: Local File Drag-and-Drop Dropzone */}
+          {uploadMode === 'file' && (
+            <div className="admin-form-group" style={{ marginBottom: '24px' }}>
+              <label className="admin-label">
+                {banner.imageUrl ? 'Replace Banner via File' : 'Upload Banner File'}
+              </label>
+              
+              <div 
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+                style={{
+                  border: `2px dashed ${dragActive ? 'var(--admin-primary)' : 'var(--admin-border)'}`,
+                  borderRadius: '12px',
+                  padding: '32px 20px',
+                  textAlign: 'center',
+                  cursor: activeAction ? 'not-allowed' : 'pointer',
+                  background: dragActive ? 'var(--admin-primary-glow)' : 'var(--admin-input-bg)',
+                  transition: 'all 200ms ease'
+                }}
+              >
+                <input 
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={handleInputChange}
+                  style={{ display: 'none' }}
+                  disabled={!!activeAction}
+                />
+
+                <FiUploadCloud size={38} style={{ color: 'var(--admin-primary)', marginBottom: '10px' }} />
+                <p style={{ margin: '0 0 6px', fontSize: '14px', fontWeight: '600', color: 'var(--admin-text-main)' }}>
+                  {selectedFile ? selectedFile.name : 'Click to select or drag & drop image file here'}
+                </p>
+                <p style={{ margin: 0, fontSize: '12px', color: 'var(--admin-text-muted)' }}>
+                  Supports JPG, PNG, or WEBP (Max 5 MB)
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Tab 2: External Image URL Input */}
+          {uploadMode === 'url' && (
+            <div className="admin-form-group" style={{ marginBottom: '24px' }}>
+              <label className="admin-label">Image URL (HTTP / HTTPS)</label>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <input 
+                  type="url"
+                  className="admin-input"
+                  placeholder="https://example.com/banner.jpg or https://res.cloudinary.com/..."
+                  value={externalUrl}
+                  onChange={(e) => setExternalUrl(e.target.value)}
+                  disabled={!!activeAction}
+                  style={{ fontFamily: 'monospace', fontSize: '13px', flex: 1 }}
+                />
+              </div>
+              <span style={{ fontSize: '12px', color: 'var(--admin-text-muted)', display: 'block', marginTop: '6px' }}>
+                Paste any direct image URL. Cloudinary will automatically fetch, optimize, and store the banner in portfolio/share-banner.
+              </span>
+            </div>
+          )}
+
+          {/* Upload Progress Bar (File Upload Mode) */}
+          {uploadMode === 'file' && activeAction === 'uploading' && (
             <div style={{ marginBottom: '24px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '6px', color: 'var(--admin-text-main)' }}>
                 <span>Uploading banner to Cloudinary...</span>
@@ -484,19 +584,31 @@ export default function ShareBanner() {
 
           {/* Action Toolbar */}
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center', paddingTop: '12px', borderTop: '1px solid var(--admin-border)' }}>
-            <button
-              type="button"
-              className="admin-btn admin-btn-primary"
-              disabled={!selectedFile || !!activeAction}
-              onClick={handleUploadBanner}
-            >
-              <FiUploadCloud /> 
-              {activeAction === 'uploading' 
-                ? 'Uploading...' 
-                : activeAction === 'saving' 
-                  ? 'Saving...' 
-                  : banner.imageUrl ? 'Save & Replace Banner' : 'Upload Banner'}
-            </button>
+            {uploadMode === 'file' ? (
+              <button
+                type="button"
+                className="admin-btn admin-btn-primary"
+                disabled={!selectedFile || !!activeAction}
+                onClick={handleUploadBannerFile}
+              >
+                <FiUploadCloud /> 
+                {activeAction === 'uploading' 
+                  ? 'Uploading...' 
+                  : activeAction === 'saving' 
+                    ? 'Saving...' 
+                    : banner.imageUrl ? 'Save & Replace Banner' : 'Upload Banner'}
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="admin-btn admin-btn-primary"
+                disabled={!externalUrl || !externalUrl.trim() || !!activeAction}
+                onClick={handleUploadBannerUrl}
+              >
+                <FiLink /> 
+                {activeAction === 'saving' ? 'Processing & Saving URL...' : 'Save Banner from URL'}
+              </button>
+            )}
 
             {banner.imageUrl && (
               <button
