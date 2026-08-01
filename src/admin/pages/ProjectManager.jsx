@@ -308,6 +308,7 @@ export default function ProjectManager() {
   const [results, setResults] = useState('');
   const [process, setProcess] = useState('');
   const [hasCaseStudy, setHasCaseStudy] = useState(true);
+  const [viewDesignOnly, setViewDesignOnly] = useState(false);
   const [isFeatured, setIsFeatured] = useState(false);
   const [showOnHome, setShowOnHome] = useState(true);
   const [enabled, setEnabled] = useState(true);
@@ -348,6 +349,7 @@ export default function ProjectManager() {
     setResults('');
     setProcess('');
     setHasCaseStudy(true);
+    setViewDesignOnly(false);
     setIsFeatured(true);
     setShowOnHome(true);
     setEnabled(true);
@@ -401,6 +403,7 @@ export default function ProjectManager() {
     setResults(proj.results || 'Achieved 98+ Google Lighthouse performance score and 30% increase in user engagement.');
     setProcess(proj.process || '');
     setHasCaseStudy(proj.hasCaseStudy !== false);
+    setViewDesignOnly(!!proj.viewDesignOnly);
     setIsFeatured(!!proj.isFeatured);
     setShowOnHome(!!proj.showOnHome);
     setEnabled(!!proj.enabled);
@@ -433,7 +436,7 @@ export default function ProjectManager() {
       liveUrl, caseStudyUrl, githubUrl, coverImage, thumbnailImage, bannerImage,
       challenge, challengeImage, solution, solutionImage, results, resultImage,
       challengeImages, solutionImages, resultImages,
-      process, hasCaseStudy, isFeatured, showOnHome, enabled, order,
+      process, hasCaseStudy, viewDesignOnly, isFeatured, showOnHome, enabled, order,
       technologies: formattedTechs,
       gallery: formattedGallery,
       infoConfig: {
@@ -872,6 +875,10 @@ export default function ProjectManager() {
                   <label style={{ display: 'flex', gap: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: '700', color: hasCaseStudy ? '#10B981' : '#EF4444' }}>
                     <input type="checkbox" checked={hasCaseStudy} onChange={e => setHasCaseStudy(e.target.checked)} />
                     📖 Case Study Page ({hasCaseStudy ? 'ON' : 'OFF'})
+                  </label>
+                  <label style={{ display: 'flex', gap: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: '700', color: viewDesignOnly ? '#8B5CF6' : 'inherit' }}>
+                    <input type="checkbox" checked={viewDesignOnly} onChange={e => setViewDesignOnly(e.target.checked)} />
+                    🎨 View Design Only ({viewDesignOnly ? 'ON' : 'OFF'})
                   </label>
                   <label style={{ display: 'flex', gap: '8px', cursor: 'pointer', fontSize: '14px' }}>
                     <input type="checkbox" checked={isFeatured} onChange={e => setIsFeatured(e.target.checked)} />

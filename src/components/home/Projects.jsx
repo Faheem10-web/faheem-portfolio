@@ -88,25 +88,50 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
                 {(hasCaseStudy || project.liveUrl) && (
                     <div className="project-overlay">
                         <div className="project-hover-actions" ref={buttonsRef}>
-                            {hasCaseStudy && (
-                                <Link 
-                                    to={cardLink} 
-                                    className={`project-hover-btn ${!project.liveUrl ? 'project-hover-btn--primary' : ''}`}
-                                >
-                                    Case Study
-                                </Link>
-                            )}
-                            {project.liveUrl && (
-                                <a 
-                                    href={project.liveUrl} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer" 
-                                    className="project-hover-btn project-hover-btn--primary"
-                                    onClick={(e) => e.stopPropagation()}
-                                >
-                                    <span>Live Preview</span>
-                                    <FiExternalLink />
-                                </a>
+                            {project.viewDesignOnly ? (
+                                hasCaseStudy ? (
+                                    <Link 
+                                        to={cardLink} 
+                                        className="project-hover-btn project-hover-btn--primary"
+                                    >
+                                        <span>View Design</span>
+                                        <FiExternalLink />
+                                    </Link>
+                                ) : (
+                                    <a 
+                                        href={project.liveUrl || '#'} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer" 
+                                        className="project-hover-btn project-hover-btn--primary"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        <span>View Design</span>
+                                        <FiExternalLink />
+                                    </a>
+                                )
+                            ) : (
+                                <>
+                                    {hasCaseStudy && (
+                                        <Link 
+                                            to={cardLink} 
+                                            className={`project-hover-btn ${!project.liveUrl ? 'project-hover-btn--primary' : ''}`}
+                                        >
+                                            Case Study
+                                        </Link>
+                                    )}
+                                    {project.liveUrl && (
+                                        <a 
+                                            href={project.liveUrl} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer" 
+                                            className="project-hover-btn project-hover-btn--primary"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            <span>Live Preview</span>
+                                            <FiExternalLink />
+                                        </a>
+                                    )}
+                                </>
                             )}
                         </div>
                     </div>

@@ -254,6 +254,7 @@ const projectSchema = new mongoose.Schema({
 
   testimonial: { type: String, default: '' },
   hasCaseStudy: { type: Boolean, default: true },
+  viewDesignOnly: { type: Boolean, default: false },
   isFeatured: { type: Boolean, default: false },
   showOnHome: { type: Boolean, default: true },
   enabled: { type: Boolean, default: true },

@@ -65,25 +65,50 @@ function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }
                     {(hasCaseStudy || demoLink) && (
                         <div className="proj-card-hover-overlay">
                             <div className="proj-card-hover-buttons" ref={buttonsRef}>
-                                {hasCaseStudy && (
-                                    <Link 
-                                        to={cardLink} 
-                                        className={`hover-btn ${demoLink ? 'hover-btn-glass' : 'hover-btn-purple'}`}
-                                    >
-                                        Case Study
-                                    </Link>
-                                )}
-                                {demoLink && (
-                                    <a 
-                                        href={demoLink} 
-                                        className="hover-btn hover-btn-purple" 
-                                        target="_blank" 
-                                        rel="noreferrer"
-                                        onClick={(e) => e.stopPropagation()}
-                                    >
-                                        <span>Live Preview</span>
-                                        <FiExternalLink />
-                                    </a>
+                                {project.viewDesignOnly ? (
+                                    hasCaseStudy ? (
+                                        <Link 
+                                            to={cardLink} 
+                                            className="hover-btn hover-btn-purple"
+                                        >
+                                            <span>View Design</span>
+                                            <FiExternalLink />
+                                        </Link>
+                                    ) : (
+                                        <a 
+                                            href={demoLink} 
+                                            className="hover-btn hover-btn-purple" 
+                                            target="_blank" 
+                                            rel="noreferrer"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            <span>View Design</span>
+                                            <FiExternalLink />
+                                        </a>
+                                    )
+                                ) : (
+                                    <>
+                                        {hasCaseStudy && (
+                                            <Link 
+                                                to={cardLink} 
+                                                className={`hover-btn ${demoLink ? 'hover-btn-glass' : 'hover-btn-purple'}`}
+                                            >
+                                                Case Study
+                                            </Link>
+                                        )}
+                                        {demoLink && (
+                                            <a 
+                                                href={demoLink} 
+                                                className="hover-btn hover-btn-purple" 
+                                                target="_blank" 
+                                                rel="noreferrer"
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                <span>Live Preview</span>
+                                                <FiExternalLink />
+                                            </a>
+                                        )}
+                                    </>
                                 )}
                             </div>
                         </div>
@@ -97,24 +122,42 @@ function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }
                     <h3 className="meta-title">{cardTitle}</h3>
                     
                     <div className="proj-card-actions">
-                        {hasCaseStudy ? (
-                            <Link to={cardLink} className="action-btn action-primary">
-                                <span>Case Study</span>
-                                <FiArrowRight />
-                            </Link>
-                        ) : (
-                            demoLink && (
-                                <a href={demoLink} className="action-btn action-primary" target="_blank" rel="noreferrer">
-                                    <span>Live Preview</span>
-                                    <FiExternalLink />
-                                </a>
+                        {project.viewDesignOnly ? (
+                            hasCaseStudy ? (
+                                <Link to={cardLink} className="action-btn action-primary">
+                                    <span>View Design</span>
+                                    <FiArrowRight />
+                                </Link>
+                            ) : (
+                                demoLink && (
+                                    <a href={demoLink} className="action-btn action-primary" target="_blank" rel="noreferrer">
+                                        <span>View Design</span>
+                                        <FiExternalLink />
+                                    </a>
+                                )
                             )
-                        )}
-                        {hasCaseStudy && demoLink && (
-                            <a href={demoLink} className="action-btn action-secondary" target="_blank" rel="noreferrer">
-                                <FiExternalLink />
-                                <span>Live Preview</span>
-                            </a>
+                        ) : (
+                            <>
+                                {hasCaseStudy ? (
+                                    <Link to={cardLink} className="action-btn action-primary">
+                                        <span>Case Study</span>
+                                        <FiArrowRight />
+                                    </Link>
+                                ) : (
+                                    demoLink && (
+                                        <a href={demoLink} className="action-btn action-primary" target="_blank" rel="noreferrer">
+                                            <span>Live Preview</span>
+                                            <FiExternalLink />
+                                        </a>
+                                    )
+                                )}
+                                {hasCaseStudy && demoLink && (
+                                    <a href={demoLink} className="action-btn action-secondary" target="_blank" rel="noreferrer">
+                                        <FiExternalLink />
+                                        <span>Live Preview</span>
+                                    </a>
+                                )}
+                            </>
                         )}
                     </div>
                 </div>
