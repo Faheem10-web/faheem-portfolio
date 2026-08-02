@@ -748,40 +748,88 @@ export function AdminProvider({ children }) {
     };
 
     const downloadCv = async () => {
-        const resumeUrl = siteSettings?.resume?.resumeUrl;
-        if (!resumeUrl) {
-            alert("CV document not found. Please configure/upload it in the Admin Panel.");
+        const resumeUrl = siteSettings?.resume?.resumeUrl || siteSettings?.about?.resumeUrl || '/resume.pdf';
+        if (!resumeUrl || !resumeUrl.trim()) {
+            alert("CV document not found. Please configure or upload it in the Admin Panel.");
             return;
         }
 
-        let fullUrl = resumeUrl;
-        const baseUrl = API_BASE.replace('/api', '');
+        let fullUrl = resumeUrl.trim();
+        const baseUrl = API_BASE ? API_BASE.replace(/\/api\/?$/, '') : '';
 
-        if (resumeUrl.startsWith("/uploads")) {
-            fullUrl = `${baseUrl}${resumeUrl}`;
-        } else if (resumeUrl.startsWith("uploads/")) {
-            fullUrl = `${baseUrl}/${resumeUrl}`;
-        } else if (resumeUrl.includes("res.cloudinary.com") && resumeUrl.includes("/upload/")) {
-            fullUrl = resumeUrl.replace("/upload/", "/upload/fl_attachment/");
+        if (fullUrl.startsWith("/uploads")) {
+            fullUrl = baseUrl ? `${baseUrl}${fullUrl}` : fullUrl;
+        } else if (fullUrl.startsWith("uploads/")) {
+            fullUrl = baseUrl ? `${baseUrl}/${fullUrl}` : `/${fullUrl}`;
+        } else if (fullUrl.includes("res.cloudinary.com") && fullUrl.includes("/upload/")) {
+            if (!fullUrl.includes("fl_attachment")) {
+                fullUrl = fullUrl.replace("/upload/", "/upload/fl_attachment/");
+            }
         }
 
-        try {
-            const response = await fetch(fullUrl);
-            if (!response.ok) {
-                throw new Error("File not found on server");
-            }
-            const blob = await response.blob();
-            const blobUrl = window.URL.createObjectURL(blob);
+        const triggerDirectDownload = (url) => {
             const link = document.createElement('a');
-            link.href = blobUrl;
+            link.href = url;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
             link.setAttribute('download', 'faheem_cv.pdf');
             document.body.appendChild(link);
             link.click();
             link.remove();
-            window.URL.revokeObjectURL(blobUrl);
+        };
+
+        try {
+            const response = await fetch(fullUrl);
+            if (response.ok) {
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                const urlParts = fullUrl.split('/');
+                const rawFileName = urlParts[urlParts.length - 1].split('?')[0];
+                const fileName = rawFileName && rawFileName.endsWith('.pdf') ? rawFileName : 'faheem_cv.pdf';
+                link.setAttribute('download', fileName);
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                window.URL.revokeObjectURL(blobUrl);
+                return;
+            }
+            if (fullUrl.startsWith('/assets/')) {
+                const altUrl = fullUrl.replace('/assets/', '/');
+                const altRes = await fetch(altUrl);
+                if (altRes.ok) {
+                    const blob = await altRes.blob();
+                    const blobUrl = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = blobUrl;
+                    link.setAttribute('download', 'faheem_cv.pdf');
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    window.URL.revokeObjectURL(blobUrl);
+                    return;
+                }
+            } else if (fullUrl.startsWith('/') && !fullUrl.startsWith('/uploads')) {
+                const altUrl = `/assets${fullUrl}`;
+                const altRes = await fetch(altUrl);
+                if (altRes.ok) {
+                    const blob = await altRes.blob();
+                    const blobUrl = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = blobUrl;
+                    link.setAttribute('download', 'faheem_cv.pdf');
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    window.URL.revokeObjectURL(blobUrl);
+                    return;
+                }
+            }
+            triggerDirectDownload(fullUrl);
         } catch (error) {
-            console.error("CV download error:", error);
-            alert("CV file not found or could not be downloaded. Please verify it in the Admin panel.");
+            console.warn("Fetch CV error, falling back to direct navigation:", error);
+            triggerDirectDownload(fullUrl);
         }
     };
 

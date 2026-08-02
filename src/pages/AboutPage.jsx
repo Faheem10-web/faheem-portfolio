@@ -280,7 +280,7 @@ const FallbackProfileCard = ({ data = {} }) => {
 };
 
 function AboutPage() {
-  const { siteSettings } = useAdmin();
+  const { siteSettings, downloadCv } = useAdmin();
   const rawAbout = siteSettings?.about || {};
   const aboutSettings = rawAbout.aboutPage || rawAbout;
   const [imgError, setImgError] = useState(false);
@@ -462,9 +462,15 @@ function AboutPage() {
           {/* CTA Actions Section */}
           <div className="about-cta-section" style={{ marginTop: '50px', display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
             <a 
-              href={aboutSettings.resumeUrl || "/assets/resume.pdf"} 
+              href={aboutSettings.resumeUrl || "/resume.pdf"} 
               target="_blank" 
               rel="noopener noreferrer" 
+              onClick={(e) => {
+                if (downloadCv) {
+                  e.preventDefault();
+                  downloadCv();
+                }
+              }}
               className="about-primary-btn"
               style={{
                 display: 'inline-flex',
@@ -477,7 +483,8 @@ function AboutPage() {
                 fontWeight: 600,
                 fontSize: '15px',
                 textDecoration: 'none',
-                transition: 'all 0.3s ease'
+                transition: 'all 0.3s ease',
+                cursor: 'pointer'
               }}
             >
               <FiDownload style={{ fontSize: '18px' }} />

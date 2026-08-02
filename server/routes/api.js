@@ -1607,12 +1607,54 @@ router.get('/media/sync-all', protect, async (req, res) => {
   }
 });
 
-// Upload File (Cloudinary Integrated with DAM metadata)
+// Upload File (Cloudinary Integrated with DAM metadata, Direct Storage for PDFs/CVs)
 router.post('/media/upload', protect, upload.single('file'), async (req, res) => {
   if (!req.file) return res.status(400).json({ message: 'No file received' });
   try {
     const folder = req.body.folder || 'General';
-    const uploadResult = await uploadToCloudinary(req.file.path, req.file.originalname, `portfolio/${folder.toLowerCase()}`);
+    const ext = req.file.originalname ? req.file.originalname.split('.').pop().toLowerCase() : '';
+    const isPdfOrResume = ext === 'pdf' || folder.toLowerCase() === 'resume' || (req.file.mimetype && req.file.mimetype.includes('pdf'));
+
+    let uploadResult;
+    if (isPdfOrResume) {
+      // Direct local storage upload for CV/PDF documents (bypassing Cloudinary)
+      const targetFileName = req.file.originalname.toLowerCase().includes('resume') || req.file.originalname.toLowerCase().includes('cv') 
+        ? 'resume.pdf' 
+        : `doc_${Date.now()}.${ext || 'pdf'}`;
+      const uploadsDir = path.join(__dirname, '../uploads');
+      const publicDir = path.join(__dirname, '../public');
+      const publicAssetsDir = path.join(__dirname, '../public/assets');
+
+      if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+      if (!fs.existsSync(publicDir)) fs.mkdirSync(publicDir, { recursive: true });
+      if (!fs.existsSync(publicAssetsDir)) fs.mkdirSync(publicAssetsDir, { recursive: true });
+
+      const destinationPath = path.join(uploadsDir, targetFileName);
+      fs.copyFileSync(req.file.path, destinationPath);
+
+      // Copy to public folders for static serving
+      if (targetFileName === 'resume.pdf') {
+        fs.copyFileSync(req.file.path, path.join(publicDir, 'resume.pdf'));
+        fs.copyFileSync(req.file.path, path.join(publicAssetsDir, 'resume.pdf'));
+      }
+
+      // Cleanup temp multer upload
+      if (fs.existsSync(req.file.path)) {
+        try { fs.unlinkSync(req.file.path); } catch {}
+      }
+
+      const fileUrl = targetFileName === 'resume.pdf' ? '/resume.pdf' : `/uploads/${targetFileName}`;
+      uploadResult = {
+        url: fileUrl,
+        publicId: targetFileName,
+        fileType: ext || 'pdf',
+        fileSize: req.file.size || 0,
+        format: ext || 'pdf',
+        resourceType: 'raw'
+      };
+    } else {
+      uploadResult = await uploadToCloudinary(req.file.path, req.file.originalname, `portfolio/${folder.toLowerCase()}`);
+    }
     
     let media = null;
     if (mongoose.connection.readyState === 1) {
@@ -1651,6 +1693,7 @@ router.post('/media/upload', protect, upload.single('file'), async (req, res) =>
     invalidateBootstrapCache();
     const responsePayload = {
       ...(media.toObject ? media.toObject() : media),
+      success: true,
       url: uploadResult.url,
       fileUrl: uploadResult.url,
       public_id: uploadResult.publicId,
@@ -1659,7 +1702,7 @@ router.post('/media/upload', protect, upload.single('file'), async (req, res) =>
     res.status(201).json(responsePayload);
   } catch (error) {
     console.error('❌ Media Upload API Error:', error);
-    res.status(500).json({ error: error.message || 'Image upload failed' });
+    res.status(500).json({ error: error.message || 'File upload failed' });
   }
 });
 
