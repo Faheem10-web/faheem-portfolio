@@ -72,7 +72,7 @@ function normalizeAboutSettings(s = {}) {
   const aboutPage = s.aboutPage && (s.aboutPage.badgeText || s.aboutPage.title) ? s.aboutPage : {
     badgeText: s.badgeText || 'About Me',
     title: s.title || 'About me.',
-    greeting: s.greeting || 'Hi! 👋',
+    greeting: s.greeting || 'Hi!',
     bioIntro: s.bioIntro || s.description || 'My name is Faheem. I am a UI/UX Designer & Frontend Developer based in India with experience through projects and building modern web applications.',
     objective: s.objective || 'My objective: Challenge myself in a new environment to learn, develop, improve my skills through different projects and contribute more to the company with my abilities.',
     profileName: s.profileName || 'Faheem A V',

@@ -131,7 +131,7 @@ export default function SectionManager() {
       setAboutPageForm({
         badgeText: pageData.badgeText || 'About Me',
         title: pageData.title || 'About me.',
-        greeting: pageData.greeting || 'Hi! 👋',
+        greeting: pageData.greeting || 'Hi!',
         bioIntro: pageData.bioIntro || pageData.description || '',
         objective: pageData.objective || '',
         profileName: pageData.profileName || 'Faheem A V',

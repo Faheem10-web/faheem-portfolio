@@ -351,7 +351,7 @@ function AboutPage() {
                 transition={{ duration: 0.6, delay: 0.15 }}
               >
                 <div className="about-greeting-hi">
-                  {aboutSettings.greeting || "Hi!"} <span className="wave-hand">👋</span>
+                  {(aboutSettings.greeting || "Hi!").replace(/👋/g, '').trim()} <span className="wave-hand">👋</span>
                 </div>
                 
                 <p className="about-bio-text">

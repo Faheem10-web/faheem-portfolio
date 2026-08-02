@@ -57,7 +57,7 @@ const aboutHomeSchema = new mongoose.Schema({
 const aboutPageSchema = new mongoose.Schema({
   badgeText: { type: String, default: 'About Me' },
   title: { type: String, default: 'About me.' },
-  greeting: { type: String, default: 'Hi! 👋' },
+  greeting: { type: String, default: 'Hi!' },
   bioIntro: { type: String, default: 'My name is Faheem. I am a UI/UX Designer & Frontend Developer based in India with experience through projects and building modern web applications.' },
   objective: { type: String, default: 'My objective: Challenge myself in a new environment to learn, develop, improve my skills through different projects and contribute more to the company with my abilities.' },
   profileName: { type: String, default: 'Faheem A V' },
