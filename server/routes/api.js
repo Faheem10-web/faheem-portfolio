@@ -290,50 +290,50 @@ router.get('/bootstrap', checkMaintenance, async (req, res) => {
     }
 
     const isConnected = mongoose.connection.readyState === 1;
-    if (isConnected) {
-      const [
-        navbar, hero, about, resume, contact, footer, seo, globalSettings, theme, chatSettings,
-        projects, services, skills, experiences, faqs, testimonials
-      ] = await Promise.all([
-        NavbarSettings.findOne().lean().then(s => s || {}),
-        HeroSettings.findOne().lean().then(s => s || {}),
-        AboutSettings.findOne().lean().then(s => s || {}),
-        ResumeSettings.findOne().lean().then(s => s || {}),
-        ContactSettings.findOne().lean().then(s => s || {}),
-        FooterSettings.findOne().lean().then(s => s || {}),
-        SeoSettings.findOne().lean().then(s => s || {}),
-        GlobalSettings.findOne().lean().then(s => s || {}),
-        ThemeSettings.findOne().lean().then(s => s || { mode: 'system' }),
-        ChatSettings.findOne().lean().then(s => s || {}),
-        Project.find().sort({ order: 1 }).lean(),
-        Service.find().sort({ order: 1 }).lean(),
-        Skill.find().sort({ category: 1, order: 1 }).lean(),
-        Experience.find().sort({ order: 1 }).lean(),
-        FAQ.find().sort({ order: 1 }).lean(),
-        Testimonial.find().sort({ order: 1 }).lean()
-      ]);
-
-      const freshPayload = {
-        settings: {
-          navbar, hero, about, resume, contact, footer, seo, global: globalSettings, theme, chat: chatSettings
-        },
-        projects,
-        services,
-        skills,
-        experiences,
-        faqs,
-        testimonials
-      };
-
-      return res.json(freshPayload);
+    if (!isConnected) {
+      res.setHeader('Retry-After', '1');
+      return res.status(503).json({ error: 'Database connection connecting. Please retry.' });
     }
 
-    const fallbackPayload = buildFallbackPayload();
-    return res.json(fallbackPayload);
+    const [
+      navbar, hero, about, resume, contact, footer, seo, globalSettings, theme, chatSettings,
+      projects, services, skills, experiences, faqs, testimonials
+    ] = await Promise.all([
+      NavbarSettings.findOne().lean().then(s => s || {}),
+      HeroSettings.findOne().lean().then(s => s || {}),
+      AboutSettings.findOne().lean().then(s => s || {}),
+      ResumeSettings.findOne().lean().then(s => s || {}),
+      ContactSettings.findOne().lean().then(s => s || {}),
+      FooterSettings.findOne().lean().then(s => s || {}),
+      SeoSettings.findOne().lean().then(s => s || {}),
+      GlobalSettings.findOne().lean().then(s => s || {}),
+      ThemeSettings.findOne().lean().then(s => s || { mode: 'system' }),
+      ChatSettings.findOne().lean().then(s => s || {}),
+      Project.find().sort({ order: 1 }).lean(),
+      Service.find().sort({ order: 1 }).lean(),
+      Skill.find().sort({ category: 1, order: 1 }).lean(),
+      Experience.find().sort({ order: 1 }).lean(),
+      FAQ.find().sort({ order: 1 }).lean(),
+      Testimonial.find().sort({ order: 1 }).lean()
+    ]);
+
+    const freshPayload = {
+      settings: {
+        navbar, hero, about, resume, contact, footer, seo, global: globalSettings, theme, chat: chatSettings
+      },
+      projects,
+      services,
+      skills,
+      experiences,
+      faqs,
+      testimonials
+    };
+
+    return res.json(freshPayload);
   } catch (error) {
-    console.warn('Bootstrap DB fetch fallback:', error.message);
-    const fallbackPayload = buildFallbackPayload();
-    res.json(fallbackPayload);
+    console.error('Bootstrap DB fetch error:', error.message);
+    res.setHeader('Retry-After', '1');
+    return res.status(503).json({ error: 'Database query error during bootstrap' });
   }
 });
 
