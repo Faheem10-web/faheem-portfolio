@@ -744,37 +744,103 @@ export default function SectionManager() {
                 </div>
               </div>
 
-              <div className="admin-form-row">
-                <div className="admin-form-group">
-                  <label className="admin-label">Profile Photo Image URL</label>
-                  <div style={{ display: 'flex', gap: '10px' }}>
-                    <input 
-                      type="text" 
-                      className="admin-input" 
-                      value={aboutPageForm.aboutImage || ''} 
-                      onChange={e => setAboutPageForm({ ...aboutPageForm, aboutImage: e.target.value })} 
-                      placeholder="Enter profile image URL or upload" 
-                    />
-                    <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
-                      Upload Photo
-                      <input 
-                        type="file" 
-                        onChange={(e) => handleDirectUpload(e, aboutPageForm, setAboutPageForm, 'aboutImage')} 
-                        style={{ display: 'none' }} 
+              {/* HIGHLIGHTED GREEN PROFILE PHOTO UPLOADER BOX */}
+              <div style={{
+                background: 'rgba(16, 185, 129, 0.08)',
+                border: '1px solid rgba(16, 185, 129, 0.3)',
+                borderRadius: '16px',
+                padding: '24px',
+                margin: '20px 0'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                  <span style={{
+                    display: 'inline-block',
+                    width: '12px',
+                    height: '12px',
+                    borderRadius: '50%',
+                    background: '#10B981',
+                    boxShadow: '0 0 10px #10B981'
+                  }}></span>
+                  <h4 style={{ margin: 0, color: '#10B981', fontSize: '17px', fontWeight: 700 }}>
+                    📸 Change Faheem Your Photo (Profile Image)
+                  </h4>
+                </div>
+
+                <p style={{ margin: '0 0 16px 0', fontSize: '13px', color: 'rgba(255, 255, 255, 0.7)' }}>
+                  Upload your photo or enter an image URL. This photo will be displayed on the right side of your About Page.
+                </p>
+
+                <div style={{ display: 'flex', gap: '20px', alignItems: 'center', flexWrap: 'wrap' }}>
+                  {/* Live Image Preview Thumbnail */}
+                  <div style={{
+                    width: '72px',
+                    height: '72px',
+                    borderRadius: '16px',
+                    background: '#12131a',
+                    border: '2px dashed rgba(16, 185, 129, 0.5)',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}>
+                    {aboutPageForm.aboutImage ? (
+                      <img 
+                        src={aboutPageForm.aboutImage} 
+                        alt="Profile Preview" 
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        onError={(e) => { e.target.style.display = 'none'; }}
                       />
-                    </label>
+                    ) : (
+                      <span style={{ fontSize: '24px', color: 'rgba(255, 255, 255, 0.3)' }}>📷</span>
+                    )}
+                  </div>
+
+                  <div style={{ flex: 1, minWidth: '240px' }}>
+                    <label className="admin-label" style={{ color: '#10B981', fontWeight: 600 }}>Profile Photo URL / File Upload</label>
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                      <input 
+                        type="text" 
+                        className="admin-input" 
+                        style={{ borderColor: 'rgba(16, 185, 129, 0.4)' }}
+                        value={aboutPageForm.aboutImage || ''} 
+                        onChange={e => setAboutPageForm({ ...aboutPageForm, aboutImage: e.target.value })} 
+                        placeholder="Paste image URL or click Upload Photo button" 
+                      />
+                      <label 
+                        className="admin-btn" 
+                        style={{ 
+                          cursor: 'pointer', 
+                          whiteSpace: 'nowrap', 
+                          display: 'flex', 
+                          alignItems: 'center',
+                          background: '#10B981',
+                          color: '#0d0d11',
+                          fontWeight: 700
+                        }}
+                      >
+                        <FiUpload style={{ marginRight: '6px' }} /> Upload Photo
+                        <input 
+                          type="file" 
+                          accept="image/*"
+                          onChange={(e) => handleDirectUpload(e, aboutPageForm, setAboutPageForm, 'aboutImage')} 
+                          style={{ display: 'none' }} 
+                        />
+                      </label>
+                    </div>
                   </div>
                 </div>
-                <div className="admin-form-group">
-                  <label className="admin-label">Skills / Tags List (Comma-Separated)</label>
-                  <input 
-                    type="text" 
-                    className="admin-input" 
-                    value={aboutPageForm.skillsTags} 
-                    onChange={e => setAboutPageForm({ ...aboutPageForm, skillsTags: e.target.value })} 
-                    placeholder="Figma, React, UX Research, Prototyping"
-                  />
-                </div>
+              </div>
+
+              <div className="admin-form-group">
+                <label className="admin-label">Skills / Tags List (Comma-Separated)</label>
+                <input 
+                  type="text" 
+                  className="admin-input" 
+                  value={aboutPageForm.skillsTags} 
+                  onChange={e => setAboutPageForm({ ...aboutPageForm, skillsTags: e.target.value })} 
+                  placeholder="Figma, React, UX Research, Prototyping"
+                />
               </div>
 
               <div className="admin-form-group">

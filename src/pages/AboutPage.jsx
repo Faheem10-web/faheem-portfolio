@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./AboutPage.css";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAdmin } from "../context/AdminContext";
@@ -286,6 +286,10 @@ function AboutPage() {
   const [imgError, setImgError] = useState(false);
 
   const profileImgSrc = aboutSettings.aboutImage || "/assets/about_profile.png";
+
+  useEffect(() => {
+    setImgError(false);
+  }, [profileImgSrc]);
 
   const categorizedExpertise = [
     {
