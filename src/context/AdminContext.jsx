@@ -316,7 +316,12 @@ export function AdminProvider({ children }) {
             });
             const data = await res.json().catch(() => ({}));
             if (res.ok) {
-                setSiteSettings(prev => ({ ...prev, [moduleName]: data }));
+                setSiteSettings(prev => {
+                    const nextSettings = { ...prev, [moduleName]: data };
+                    setCache('settings', nextSettings);
+                    return nextSettings;
+                });
+                if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('faheem_data_updated'));
                 return { success: true };
             }
             return { success: false, message: data.error || data.message || 'Failed to save settings' };
