@@ -382,20 +382,20 @@
     transition-delay: 50ms;
 }
 
-/* Button 1: Case Study (Glassmorphism) */
+/* Button 1: Case Study (Pure White) */
 .proj-card-hover-overlay .hover-btn-glass {
-    background: rgba(255, 255, 255, 0.14);
-    border: 1px solid rgba(255, 255, 255, 0.32);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    color: #ffffff;
-    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    background: #ffffff;
+    border: 1px solid #ffffff;
+    color: #111827;
+    font-weight: 700;
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.25);
 }
 
 .proj-card-hover-overlay .hover-btn-glass:hover {
-    background: rgba(255, 255, 255, 0.22);
-    border-color: rgba(255, 255, 255, 0.55);
-    box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.6);
+    background: #f8fafc;
+    color: #000000;
+    border-color: #ffffff;
+    box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.35);
     transform: translateY(-2px) scale(1.04) translateZ(0);
 }
 
