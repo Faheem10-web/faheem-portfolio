@@ -163,14 +163,30 @@ const IllustratorIcon = () => (
   </svg>
 );
 
+const FramerIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M4 0h16v8h-8zM4 8h8l8 8H4zM4 16h8v8z"/>
+  </svg>
+);
+
+const CanvaIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm-1.8 17.5c-3.1 0-4.7-2.3-4.7-5.5 0-3.6 2.2-5.7 5.2-5.7 2.1 0 3.7 1.1 3.7 2.8 0 1.2-.7 2-1.8 2-.6 0-1.1-.3-1.1-.8 0-.4.3-.8.3-1.1 0-.6-.4-.9-.9-.9-1.2 0-2.1 1.4-2.1 3.3 0 1.8.8 2.9 2.3 2.9.9 0 1.8-.4 2.5-1.1l1 1.4c-1 1.1-2.4 1.7-4.4 1.7z"/>
+  </svg>
+);
+
 const getSkillItemConfig = (name) => {
   switch (name) {
     case "Figma":
       return { icon: <SiFigma />, color: "#F24E1E", class: "figma" };
-    case "Adobe XD":
-      return { icon: <AdobeXdIcon />, color: "#FF61F6", class: "adobexd" };
     case "Photoshop":
       return { icon: <DiPhotoshop />, color: "#31A8FF", class: "photoshop" };
+    case "Framer":
+      return { icon: <FramerIcon />, color: "#0055FF", class: "framer" };
+    case "Canva":
+      return { icon: <CanvaIcon />, color: "#00C4CC", class: "canva" };
+    case "Adobe XD":
+      return { icon: <AdobeXdIcon />, color: "#FF61F6", class: "adobexd" };
     case "Illustrator":
       return { icon: <IllustratorIcon />, color: "#FF9A00", class: "illustrator" };
 
@@ -258,7 +274,7 @@ function AboutPage() {
       id: "design-tools",
       title: "Design Tools",
       icon: <FiPenTool className="expertise-icon" />,
-      skills: ["Figma", "Adobe XD", "Photoshop", "Illustrator"]
+      skills: ["Figma", "Photoshop", "Framer", "Canva"]
     },
     {
       id: "ui-skills",
