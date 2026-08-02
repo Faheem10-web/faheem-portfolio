@@ -1572,7 +1572,18 @@ const syncAllPortfolioAssetsAndDetectUsage = async () => {
       const usedSet = usageMap.get(cleanUrl) || new Set();
       const usedInArray = Array.from(usedSet);
 
-      if (JSON.stringify(doc.usedIn || []) !== JSON.stringify(usedInArray)) {
+      let computedFolder = doc.folder || 'General';
+      if (usedInArray.length > 0) {
+        const firstUsed = usedInArray[0];
+        if (firstUsed.includes('Project') || firstUsed.includes('Case Study')) computedFolder = 'Projects';
+        else if (firstUsed.includes('Hero')) computedFolder = 'Hero';
+        else if (firstUsed.includes('About')) computedFolder = 'About';
+        else if (firstUsed.includes('Resume')) computedFolder = 'Resume';
+        else if (firstUsed.includes('SEO') || firstUsed.includes('Favicon') || firstUsed.includes('Navbar')) computedFolder = 'Brand Assets';
+      }
+
+      if (doc.folder !== computedFolder || JSON.stringify(doc.usedIn || []) !== JSON.stringify(usedInArray)) {
+        doc.folder = computedFolder;
         doc.usedIn = usedInArray;
         await doc.save();
       }

@@ -283,9 +283,23 @@ export default function MediaLibrary() {
       );
     }
 
-    // Folder Filter
+    // Folder Filter (Dual match: folder name OR usedIn section keyword)
     if (activeFolder !== 'all') {
-      result = result.filter(m => (m.folder || 'General').toLowerCase() === activeFolder.toLowerCase());
+      const fLower = activeFolder.toLowerCase();
+      result = result.filter(m => {
+        const folderMatch = (m.folder || 'General').toLowerCase() === fLower;
+        const usageMatch = Array.isArray(m.usedIn) && m.usedIn.some(u => {
+          const uLower = u.toLowerCase();
+          if (fLower === 'projects') return uLower.includes('project') || uLower.includes('case study');
+          if (fLower === 'hero') return uLower.includes('hero');
+          if (fLower === 'about') return uLower.includes('about');
+          if (fLower === 'services') return uLower.includes('service');
+          if (fLower === 'resume') return uLower.includes('resume');
+          if (fLower === 'brand assets') return uLower.includes('seo') || uLower.includes('favicon') || uLower.includes('navbar') || uLower.includes('logo');
+          return false;
+        });
+        return folderMatch || usageMatch;
+      });
     }
 
     // Category Type Filter
