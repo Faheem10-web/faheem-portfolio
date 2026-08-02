@@ -3,13 +3,7 @@ import mongoose from 'mongoose';
 import User from '../models/User.js';
 import { GlobalSettings } from '../models/schemas.js';
 
-let cachedMaintenanceStatus = false;
-let lastMaintenanceCheck = 0;
-const MAINTENANCE_CACHE_TTL = 30 * 1000;
-
-export const invalidateMaintenanceCache = () => {
-  lastMaintenanceCheck = 0;
-};
+export const invalidateMaintenanceCache = () => {};
 
 export const checkMaintenance = async (req, res, next) => {
   try {
@@ -21,15 +15,8 @@ export const checkMaintenance = async (req, res, next) => {
       return next();
     }
 
-    const now = Date.now();
-    let isMaintenance = cachedMaintenanceStatus;
-
-    if (now - lastMaintenanceCheck > MAINTENANCE_CACHE_TTL) {
-      const settings = await GlobalSettings.findOne().lean();
-      isMaintenance = settings ? !!settings.maintenanceMode : false;
-      cachedMaintenanceStatus = isMaintenance;
-      lastMaintenanceCheck = now;
-    }
+    const settings = await GlobalSettings.findOne().lean();
+    const isMaintenance = settings ? !!settings.maintenanceMode : false;
 
     if (isMaintenance) {
       let isAdmin = false;
