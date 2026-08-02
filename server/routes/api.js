@@ -54,6 +54,42 @@ const getDefaultSeedData = () => {
   return defaultSeedDataCache || {};
 };
 
+function normalizeAboutSettings(s = {}) {
+  if (!s) s = {};
+  const home = s.home && (s.home.title || s.home.description) ? s.home : {
+    title: s.title || 'Interested in working together?',
+    subtitle: s.subtitle || 'Download my resume to learn more about my experience and qualifications.',
+    description: s.description || '',
+    aboutImage: s.aboutImage || '/assets/about_profile.png',
+    experienceYears: typeof s.experienceYears === 'number' ? s.experienceYears : 3,
+    stats: Array.isArray(s.stats) && s.stats.length > 0 ? s.stats : [
+      { label: "Projects Completed", value: "25+" },
+      { label: "Happy Clients", value: "15+" },
+      { label: "Awards Won", value: "3+" }
+    ]
+  };
+
+  const aboutPage = s.aboutPage && (s.aboutPage.badgeText || s.aboutPage.title) ? s.aboutPage : {
+    badgeText: s.badgeText || 'About Me',
+    title: s.title || 'About me.',
+    greeting: s.greeting || 'Hi! 👋',
+    bioIntro: s.bioIntro || s.description || 'My name is Faheem. I am a UI/UX Designer & Frontend Developer based in India with experience through projects and building modern web applications.',
+    objective: s.objective || 'My objective: Challenge myself in a new environment to learn, develop, improve my skills through different projects and contribute more to the company with my abilities.',
+    profileName: s.profileName || 'Faheem A V',
+    profileRole: s.profileRole || 'UI/UX Designer • Frontend Developer',
+    availabilityText: s.availabilityText || 'Available for Work',
+    skillsTags: Array.isArray(s.skillsTags) && s.skillsTags.length > 0 ? s.skillsTags : ['Figma', 'React', 'UX Research', 'Prototyping'],
+    journeyText: s.journeyText || "Started with a curiosity for code, evolved into a love for design. Over the years, I've honed my skills in creating seamless digital experiences that solve real problems. My background in both development and design allows me to unify the creative vision with technical feasibility.",
+    aboutImage: s.aboutImage || '/assets/about_profile.png',
+    resumeBtnText: s.resumeBtnText || 'Download Resume',
+    resumeUrl: s.resumeUrl || '/assets/resume.pdf',
+    contactBtnText: s.contactBtnText || "Let's Talk",
+    contactBtnUrl: s.contactBtnUrl || '/contact'
+  };
+
+  return { ...s, home, aboutPage };
+}
+
 const buildFallbackPayload = () => {
   const seed = getDefaultSeedData();
   return {
@@ -319,7 +355,16 @@ router.get('/bootstrap', checkMaintenance, async (req, res) => {
 
     const freshPayload = {
       settings: {
-        navbar, hero, about, resume, contact, footer, seo, global: globalSettings, theme, chat: chatSettings
+        navbar,
+        hero,
+        about: normalizeAboutSettings(about),
+        resume,
+        contact,
+        footer,
+        seo,
+        global: globalSettings,
+        theme,
+        chat: chatSettings
       },
       projects,
       services,
@@ -605,6 +650,9 @@ router.get('/settings/:module', checkMaintenance, async (req, res) => {
     let settings = await model.findOne().lean();
     if (!settings) {
       settings = await model.create({});
+    }
+    if (modKey === 'about') {
+      settings = normalizeAboutSettings(settings);
     }
     res.json(settings);
   } catch {

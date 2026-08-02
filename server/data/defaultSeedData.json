@@ -22,6 +22,35 @@
     "description": "I create premium digital experiences with modern UI/UX design, scalable React development, smooth interactions and high-performance websites."
   },
   "aboutSettings": {
+    "home": {
+      "title": "Interested in working together?",
+      "subtitle": "Download my resume to learn more about my experience and qualifications.",
+      "description": "Dynamic and result-oriented UI/UX engineer and front-end developer passionate about clean interfaces and high-performance React architectures.",
+      "experienceYears": 3,
+      "stats": [
+        { "label": "Projects Completed", "value": "25+" },
+        { "label": "Happy Clients", "value": "15+" },
+        { "label": "Awards Won", "value": "3+" }
+      ],
+      "aboutImage": "/assets/about_profile.png"
+    },
+    "aboutPage": {
+      "badgeText": "About Me",
+      "title": "About me.",
+      "greeting": "Hi! 👋",
+      "bioIntro": "My name is Faheem. I am a UI/UX Designer & Frontend Developer based in India with experience through projects and building modern web applications.",
+      "objective": "My objective: Challenge myself in a new environment to learn, develop, improve my skills through different projects and contribute more to the company with my abilities.",
+      "profileName": "Faheem A V",
+      "profileRole": "UI/UX Designer • Frontend Developer",
+      "availabilityText": "Available for Work",
+      "skillsTags": ["Figma", "React", "UX Research", "Prototyping"],
+      "journeyText": "Started with a curiosity for code, evolved into a love for design. Over the years, I've honed my skills in creating seamless digital experiences that solve real problems. My background in both development and design allows me to unify the creative vision with technical feasibility.",
+      "aboutImage": "/assets/about_profile.png",
+      "resumeBtnText": "Download Resume",
+      "resumeUrl": "/assets/resume.pdf",
+      "contactBtnText": "Let's Talk",
+      "contactBtnUrl": "/contact"
+    },
     "title": "Interested in working together?",
     "subtitle": "Download my resume to learn more about my experience and qualifications.",
     "description": "Dynamic and result-oriented UI/UX engineer and front-end developer passionate about clean interfaces and high-performance React architectures.",

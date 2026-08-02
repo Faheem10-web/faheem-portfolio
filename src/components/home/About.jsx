@@ -23,7 +23,8 @@ const VIEWPORT_CONFIG = { once: true, margin: "-40px" };
 
 const About = memo(function About() {
     const { siteSettings, downloadCv } = useAdmin();
-    const aboutSettings = siteSettings?.about || {};
+    const rawAbout = siteSettings?.about || {};
+    const aboutSettings = rawAbout.home || rawAbout;
     const navSettings = siteSettings?.navbar || {};
 
     // PERFORMANCE OPTIMIZATION: Memoize click handler to keep a stable reference

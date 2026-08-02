@@ -51,7 +51,24 @@ export default function SectionManager() {
   // Tab State variables
   const [heroForm, setHeroForm] = useState({ greeting: '', name: '', words: '', title1: '', title2: '', description: '', isAvailable: true, availabilityText: '', heroImage: '', bgImage: '', bgVideo: '' });
   const [navForm, setNavForm] = useState({ logoType: 'text', logoText: 'FAHEEM', logoImage: '', logoHeight: 32, downloadCvBtnText: 'Download CV', downloadCvBtnVisible: true, themeToggleVisible: true, stickyNavbar: true });
-  const [aboutForm, setAboutForm] = useState({ title: '', subtitle: '', description: '', experienceYears: 3, aboutImage: '' });
+  const [aboutHomeForm, setAboutHomeForm] = useState({ title: '', subtitle: '', description: '', experienceYears: 3, aboutImage: '' });
+  const [aboutPageForm, setAboutPageForm] = useState({
+    badgeText: 'About Me',
+    title: 'About me.',
+    greeting: 'Hi! 👋',
+    bioIntro: '',
+    objective: '',
+    profileName: 'Faheem A V',
+    profileRole: 'UI/UX Designer • Frontend Developer',
+    availabilityText: 'Available for Work',
+    skillsTags: 'Figma, React, UX Research, Prototyping',
+    journeyText: '',
+    aboutImage: '',
+    resumeBtnText: 'Download Resume',
+    resumeUrl: '/assets/resume.pdf',
+    contactBtnText: "Let's Talk",
+    contactBtnUrl: '/contact'
+  });
   const [footerForm, setFooterForm] = useState({ logoText: '', copyrightText: '', authorName: 'Faheem', description: '', contactEmail: '', bgImage: '', bgVideo: '', githubUrl: '', linkedinUrl: '', facebookUrl: '', instagramUrl: '', whatsappUrl: '', dribbbleUrl: '', twitterUrl: '', emailTextColor: 'dark', bgBlur: 12, bgBrightness: 100, subFooterBlur: 16 });
   const [faqForm, setFaqForm] = useState({ title: 'Frequently asked Questions', bgImage: '/assets/faq_bg_blocks.png' });
   const [seoForm, setSeoForm] = useState({ siteTitle: '', metaDescription: '', keywords: '', favicon: '', ogImage: '' });
@@ -100,7 +117,35 @@ export default function SectionManager() {
   useEffect(() => {
     if (siteSettings.hero) setHeroForm({ ...siteSettings.hero, words: siteSettings.hero.words ? siteSettings.hero.words.join(', ') : '' });
     if (siteSettings.navbar) setNavForm({ ...siteSettings.navbar });
-    if (siteSettings.about) setAboutForm({ ...siteSettings.about });
+    if (siteSettings.about) {
+      const ab = siteSettings.about;
+      const homeData = ab.home || ab;
+      const pageData = ab.aboutPage || ab;
+      setAboutHomeForm({
+        title: homeData.title || '',
+        subtitle: homeData.subtitle || '',
+        description: homeData.description || '',
+        experienceYears: typeof homeData.experienceYears === 'number' ? homeData.experienceYears : 3,
+        aboutImage: homeData.aboutImage || ''
+      });
+      setAboutPageForm({
+        badgeText: pageData.badgeText || 'About Me',
+        title: pageData.title || 'About me.',
+        greeting: pageData.greeting || 'Hi! 👋',
+        bioIntro: pageData.bioIntro || pageData.description || '',
+        objective: pageData.objective || '',
+        profileName: pageData.profileName || 'Faheem A V',
+        profileRole: pageData.profileRole || 'UI/UX Designer • Frontend Developer',
+        availabilityText: pageData.availabilityText || 'Available for Work',
+        skillsTags: Array.isArray(pageData.skillsTags) ? pageData.skillsTags.join(', ') : (pageData.skillsTags || 'Figma, React, UX Research, Prototyping'),
+        journeyText: pageData.journeyText || '',
+        aboutImage: pageData.aboutImage || '',
+        resumeBtnText: pageData.resumeBtnText || 'Download Resume',
+        resumeUrl: pageData.resumeUrl || '/assets/resume.pdf',
+        contactBtnText: pageData.contactBtnText || "Let's Talk",
+        contactBtnUrl: pageData.contactBtnUrl || '/contact'
+      });
+    }
     if (siteSettings.footer) setFooterForm(prev => ({ ...prev, ...siteSettings.footer }));
     if (siteSettings.faq) setFaqForm(prev => ({ ...prev, ...siteSettings.faq }));
     if (siteSettings.seo) setSeoForm({ ...siteSettings.seo, keywords: siteSettings.seo.keywords ? siteSettings.seo.keywords.join(', ') : '' });
@@ -529,55 +574,284 @@ export default function SectionManager() {
 
         {/* ABOUT TAB */}
         {activeTab === 'about' && (
-          <form onSubmit={(e) => { e.preventDefault(); handleSaveSettings('about', aboutForm); }}>
-            <h3 className="admin-panel-title">About Section Settings</h3>
-            <div className="admin-form-row">
-              <div className="admin-form-group">
-                <label className="admin-label">Section Heading</label>
-                <input type="text" className="admin-input" value={aboutForm.title} onChange={e => setAboutForm({ ...aboutForm, title: e.target.value })} />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">Section Subtitle</label>
-                <input type="text" className="admin-input" value={aboutForm.subtitle} onChange={e => setAboutForm({ ...aboutForm, subtitle: e.target.value })} />
-              </div>
-            </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+            {/* SUB-SECTION 1: HOME PAGE ABOUT SECTION */}
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              const currentAbout = siteSettings?.about || {};
+              const updatedAbout = {
+                ...currentAbout,
+                home: { ...aboutHomeForm }
+              };
+              await handleSaveSettings('about', updatedAbout);
+            }}>
+              <h3 className="admin-panel-title">🏠 Home Page About Section</h3>
+              <p className="admin-subtitle" style={{ marginBottom: '20px', color: 'rgba(255, 255, 255, 0.6)' }}>
+                Configures the About preview section displayed on the main home page (/).
+              </p>
 
-            <div className="admin-form-row">
-              <div className="admin-form-group">
-                <label className="admin-label">Years of Experience</label>
-                <input type="number" className="admin-input" value={aboutForm.experienceYears} onChange={e => setAboutForm({ ...aboutForm, experienceYears: parseInt(e.target.value) || 0 })} />
-              </div>
-              <div className="admin-form-group">
-                <label className="admin-label">About Image URL</label>
-                <div style={{ display: 'flex', gap: '10px' }}>
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">Section Heading</label>
                   <input 
                     type="text" 
                     className="admin-input" 
-                    value={aboutForm.aboutImage || ''} 
-                    onChange={e => setAboutForm({ ...aboutForm, aboutImage: e.target.value })} 
-                    placeholder="Enter image URL or upload file" 
+                    value={aboutHomeForm.title} 
+                    onChange={e => setAboutHomeForm({ ...aboutHomeForm, title: e.target.value })} 
                   />
-                  <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
-                    Upload File
-                    <input 
-                      type="file" 
-                      onChange={(e) => handleDirectUpload(e, aboutForm, setAboutForm, 'aboutImage')} 
-                      style={{ display: 'none' }} 
-                    />
-                  </label>
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">Section Subtitle</label>
+                  <input 
+                    type="text" 
+                    className="admin-input" 
+                    value={aboutHomeForm.subtitle} 
+                    onChange={e => setAboutHomeForm({ ...aboutHomeForm, subtitle: e.target.value })} 
+                  />
                 </div>
               </div>
-            </div>
 
-            <div className="admin-form-group">
-              <label className="admin-label">About Detail Summary Description</label>
-              <textarea className="admin-textarea" value={aboutForm.description} onChange={e => setAboutForm({ ...aboutForm, description: e.target.value })}></textarea>
-            </div>
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">Years of Experience</label>
+                  <input 
+                    type="number" 
+                    className="admin-input" 
+                    value={aboutHomeForm.experienceYears} 
+                    onChange={e => setAboutHomeForm({ ...aboutHomeForm, experienceYears: parseInt(e.target.value) || 0 })} 
+                  />
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">Home Section Image URL</label>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <input 
+                      type="text" 
+                      className="admin-input" 
+                      value={aboutHomeForm.aboutImage || ''} 
+                      onChange={e => setAboutHomeForm({ ...aboutHomeForm, aboutImage: e.target.value })} 
+                      placeholder="Enter image URL or upload file" 
+                    />
+                    <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
+                      Upload File
+                      <input 
+                        type="file" 
+                        onChange={(e) => handleDirectUpload(e, aboutHomeForm, setAboutHomeForm, 'aboutImage')} 
+                        style={{ display: 'none' }} 
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
 
-            <button type="submit" className="admin-btn admin-btn-primary" disabled={saving}>
-              <FiSave /> Save About Settings
-            </button>
-          </form>
+              <div className="admin-form-group">
+                <label className="admin-label">Home Section Description</label>
+                <textarea 
+                  className="admin-textarea" 
+                  value={aboutHomeForm.description} 
+                  onChange={e => setAboutHomeForm({ ...aboutHomeForm, description: e.target.value })}
+                ></textarea>
+              </div>
+
+              <button type="submit" className="admin-btn admin-btn-primary" disabled={saving}>
+                <FiSave /> Save Home About Settings
+              </button>
+            </form>
+
+            <div style={{ height: '1px', background: 'rgba(255, 255, 255, 0.1)', margin: '10px 0' }}></div>
+
+            {/* SUB-SECTION 2: STANDALONE ABOUT PAGE */}
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              const currentAbout = siteSettings?.about || {};
+              const skillsArray = typeof aboutPageForm.skillsTags === 'string'
+                ? aboutPageForm.skillsTags.split(',').map(s => s.trim()).filter(Boolean)
+                : (aboutPageForm.skillsTags || []);
+
+              const updatedAbout = {
+                ...currentAbout,
+                aboutPage: {
+                  ...aboutPageForm,
+                  skillsTags: skillsArray
+                }
+              };
+              await handleSaveSettings('about', updatedAbout);
+            }}>
+              <h3 className="admin-panel-title">📄 Standalone About Page Settings</h3>
+              <p className="admin-subtitle" style={{ marginBottom: '20px', color: 'rgba(255, 255, 255, 0.6)' }}>
+                Configures all content, profile info, and CTA buttons on the dedicated /about page.
+              </p>
+
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">Pill Badge Text</label>
+                  <input 
+                    type="text" 
+                    className="admin-input" 
+                    value={aboutPageForm.badgeText} 
+                    onChange={e => setAboutPageForm({ ...aboutPageForm, badgeText: e.target.value })} 
+                  />
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">Main Heading</label>
+                  <input 
+                    type="text" 
+                    className="admin-input" 
+                    value={aboutPageForm.title} 
+                    onChange={e => setAboutPageForm({ ...aboutPageForm, title: e.target.value })} 
+                  />
+                </div>
+              </div>
+
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">Greeting Text</label>
+                  <input 
+                    type="text" 
+                    className="admin-input" 
+                    value={aboutPageForm.greeting} 
+                    onChange={e => setAboutPageForm({ ...aboutPageForm, greeting: e.target.value })} 
+                  />
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">Availability Badge Text</label>
+                  <input 
+                    type="text" 
+                    className="admin-input" 
+                    value={aboutPageForm.availabilityText} 
+                    onChange={e => setAboutPageForm({ ...aboutPageForm, availabilityText: e.target.value })} 
+                  />
+                </div>
+              </div>
+
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">Profile Card Name</label>
+                  <input 
+                    type="text" 
+                    className="admin-input" 
+                    value={aboutPageForm.profileName} 
+                    onChange={e => setAboutPageForm({ ...aboutPageForm, profileName: e.target.value })} 
+                  />
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">Profile Card Designation / Role</label>
+                  <input 
+                    type="text" 
+                    className="admin-input" 
+                    value={aboutPageForm.profileRole} 
+                    onChange={e => setAboutPageForm({ ...aboutPageForm, profileRole: e.target.value })} 
+                  />
+                </div>
+              </div>
+
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">Profile Photo Image URL</label>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <input 
+                      type="text" 
+                      className="admin-input" 
+                      value={aboutPageForm.aboutImage || ''} 
+                      onChange={e => setAboutPageForm({ ...aboutPageForm, aboutImage: e.target.value })} 
+                      placeholder="Enter profile image URL or upload" 
+                    />
+                    <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
+                      Upload Photo
+                      <input 
+                        type="file" 
+                        onChange={(e) => handleDirectUpload(e, aboutPageForm, setAboutPageForm, 'aboutImage')} 
+                        style={{ display: 'none' }} 
+                      />
+                    </label>
+                  </div>
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">Skills / Tags List (Comma-Separated)</label>
+                  <input 
+                    type="text" 
+                    className="admin-input" 
+                    value={aboutPageForm.skillsTags} 
+                    onChange={e => setAboutPageForm({ ...aboutPageForm, skillsTags: e.target.value })} 
+                    placeholder="Figma, React, UX Research, Prototyping"
+                  />
+                </div>
+              </div>
+
+              <div className="admin-form-group">
+                <label className="admin-label">Bio Description</label>
+                <textarea 
+                  className="admin-textarea" 
+                  value={aboutPageForm.bioIntro} 
+                  onChange={e => setAboutPageForm({ ...aboutPageForm, bioIntro: e.target.value })}
+                ></textarea>
+              </div>
+
+              <div className="admin-form-group">
+                <label className="admin-label">Objective Statement</label>
+                <textarea 
+                  className="admin-textarea" 
+                  value={aboutPageForm.objective} 
+                  onChange={e => setAboutPageForm({ ...aboutPageForm, objective: e.target.value })}
+                ></textarea>
+              </div>
+
+              <div className="admin-form-group">
+                <label className="admin-label">My Journey Paragraph</label>
+                <textarea 
+                  className="admin-textarea" 
+                  value={aboutPageForm.journeyText} 
+                  onChange={e => setAboutPageForm({ ...aboutPageForm, journeyText: e.target.value })}
+                ></textarea>
+              </div>
+
+              <h4 className="admin-subheading" style={{ margin: '20px 0 10px', color: '#fff' }}>CTA Button Settings</h4>
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">Resume Button Text</label>
+                  <input 
+                    type="text" 
+                    className="admin-input" 
+                    value={aboutPageForm.resumeBtnText} 
+                    onChange={e => setAboutPageForm({ ...aboutPageForm, resumeBtnText: e.target.value })} 
+                  />
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">Resume File URL</label>
+                  <input 
+                    type="text" 
+                    className="admin-input" 
+                    value={aboutPageForm.resumeUrl} 
+                    onChange={e => setAboutPageForm({ ...aboutPageForm, resumeUrl: e.target.value })} 
+                  />
+                </div>
+              </div>
+
+              <div className="admin-form-row">
+                <div className="admin-form-group">
+                  <label className="admin-label">Secondary Button Text</label>
+                  <input 
+                    type="text" 
+                    className="admin-input" 
+                    value={aboutPageForm.contactBtnText} 
+                    onChange={e => setAboutPageForm({ ...aboutPageForm, contactBtnText: e.target.value })} 
+                  />
+                </div>
+                <div className="admin-form-group">
+                  <label className="admin-label">Secondary Button URL</label>
+                  <input 
+                    type="text" 
+                    className="admin-input" 
+                    value={aboutPageForm.contactBtnUrl} 
+                    onChange={e => setAboutPageForm({ ...aboutPageForm, contactBtnUrl: e.target.value })} 
+                  />
+                </div>
+              </div>
+
+              <button type="submit" className="admin-btn admin-btn-primary" disabled={saving}>
+                <FiSave /> Save About Page Settings
+              </button>
+            </form>
+          </div>
         )}
 
         {/* SERVICES TAB */}

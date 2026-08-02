@@ -20,6 +20,7 @@ import {
   DiPhotoshop 
 } from "react-icons/di";
 
+import { Link } from "react-router-dom";
 import { 
   FiSmartphone, 
   FiMessageSquare, 
@@ -34,7 +35,9 @@ import {
   FiSearch,
   FiUserCheck,
   FiCompass,
-  FiCheckSquare
+  FiCheckSquare,
+  FiDownload,
+  FiArrowRight
 } from "react-icons/fi";
 
 import { 
@@ -222,49 +225,64 @@ const getSkillItemConfig = (name) => {
   }
 };
 
-const FallbackProfileCard = () => (
-  <motion.div 
-    className="fallback-profile-card"
-    initial={{ opacity: 0, y: 10 }}
-    animate={{ opacity: 1, y: 0 }}
-    whileHover={{ scale: 1.02 }}
-    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-  >
-    <div className="fallback-bg-grid"></div>
-    <div className="fallback-purple-glow"></div>
+const FallbackProfileCard = ({ data = {} }) => {
+  const profileName = data.profileName || "Faheem A V";
+  const profileRole = data.profileRole || "UI/UX Designer • Frontend Developer";
+  const availabilityText = data.availabilityText || "Available for Work";
+  const skillsList = Array.isArray(data.skillsTags) && data.skillsTags.length > 0
+    ? data.skillsTags
+    : ["Figma", "React", "UX Research", "Prototyping"];
 
-    <div className="fallback-content">
-      {/* Large Initials */}
-      <div className="fallback-initials-wrapper">
-        <div className="fallback-initials">FA</div>
-      </div>
+  // Generate initials from profileName
+  const nameParts = profileName.trim().split(' ').filter(Boolean);
+  const initials = nameParts.length >= 2 
+    ? `${nameParts[0][0]}${nameParts[nameParts.length - 1][0]}`.toUpperCase()
+    : profileName.slice(0, 2).toUpperCase();
 
-      {/* Profile Information */}
-      <div className="fallback-info">
-        <h3 className="fallback-name">Faheem A V</h3>
-        <p className="fallback-role">UI/UX Designer • Frontend Developer</p>
-      </div>
+  return (
+    <motion.div 
+      className="fallback-profile-card"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.02 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <div className="fallback-bg-grid"></div>
+      <div className="fallback-purple-glow"></div>
 
-      {/* Status Badge */}
-      <div className="fallback-status-badge">
-        <span className="status-dot-green"></span>
-        <span>Available for Work</span>
-      </div>
+      <div className="fallback-content">
+        {/* Large Initials */}
+        <div className="fallback-initials-wrapper">
+          <div className="fallback-initials">{initials || "FA"}</div>
+        </div>
 
-      {/* Skills Chips */}
-      <div className="fallback-skills-chips">
-        <span className="skill-chip">Figma</span>
-        <span className="skill-chip">React</span>
-        <span className="skill-chip">UX Research</span>
-        <span className="skill-chip">Prototyping</span>
+        {/* Profile Information */}
+        <div className="fallback-info">
+          <h3 className="fallback-name">{profileName}</h3>
+          <p className="fallback-role">{profileRole}</p>
+        </div>
+
+        {/* Status Badge */}
+        <div className="fallback-status-badge">
+          <span className="status-dot-green"></span>
+          <span>{availabilityText}</span>
+        </div>
+
+        {/* Skills Chips */}
+        <div className="fallback-skills-chips">
+          {skillsList.map((tag, idx) => (
+            <span key={idx} className="skill-chip">{tag}</span>
+          ))}
+        </div>
       </div>
-    </div>
-  </motion.div>
-);
+    </motion.div>
+  );
+};
 
 function AboutPage() {
-  const { siteSettings, skills, isSkillsLoading } = useAdmin();
-  const aboutSettings = siteSettings?.about || {};
+  const { siteSettings } = useAdmin();
+  const rawAbout = siteSettings?.about || {};
+  const aboutSettings = rawAbout.aboutPage || rawAbout;
   const [imgError, setImgError] = useState(false);
 
   const profileImgSrc = aboutSettings.aboutImage || "/assets/about_profile.png";
@@ -312,7 +330,7 @@ function AboutPage() {
                 transition={{ duration: 0.5 }}
               >
                 <FiUser className="pill-badge-icon" />
-                <span>About Me</span>
+                <span>{aboutSettings.badgeText || "About Me"}</span>
               </motion.div>
               
               {/* Main Heading with Purple Dot */}
@@ -322,7 +340,7 @@ function AboutPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.08 }}
               >
-                About me<span className="purple-dot">.</span>
+                {aboutSettings.title || "About me."}<span className="purple-dot">.</span>
               </motion.h1>
               
               {/* Greeting & Bio Block */}
@@ -333,7 +351,7 @@ function AboutPage() {
                 transition={{ duration: 0.6, delay: 0.15 }}
               >
                 <div className="about-greeting-hi">
-                  Hi! <span className="wave-hand">👋</span>
+                  {aboutSettings.greeting || "Hi!"} <span className="wave-hand">👋</span>
                 </div>
                 
                 <p className="about-bio-text">
@@ -372,7 +390,7 @@ function AboutPage() {
                       onError={() => setImgError(true)}
                     />
                   ) : (
-                    <FallbackProfileCard />
+                    <FallbackProfileCard data={aboutSettings} />
                   )}
                 </div>
               </div>
@@ -390,7 +408,7 @@ function AboutPage() {
             
             <div className="about-section-content">
               <p className="journey-text">
-                Started with a curiosity for code, evolved into a love for design. Over the years, I've honed my skills in creating seamless digital experiences that solve real problems. My background in both development and design allows me to unify the creative vision with technical feasibility.
+                {aboutSettings.journeyText || "Started with a curiosity for code, evolved into a love for design. Over the years, I've honed my skills in creating seamless digital experiences that solve real problems. My background in both development and design allows me to unify the creative vision with technical feasibility."}
               </p>
             </div>
           </div>
@@ -435,6 +453,54 @@ function AboutPage() {
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* CTA Actions Section */}
+          <div className="about-cta-section" style={{ marginTop: '50px', display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <a 
+              href={aboutSettings.resumeUrl || "/assets/resume.pdf"} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="about-primary-btn"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '14px 28px',
+                borderRadius: '999px',
+                background: '#ffffff',
+                color: '#0d0d11',
+                fontWeight: 600,
+                fontSize: '15px',
+                textDecoration: 'none',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              <FiDownload style={{ fontSize: '18px' }} />
+              {aboutSettings.resumeBtnText || "Download Resume"}
+            </a>
+
+            <Link 
+              to={aboutSettings.contactBtnUrl || "/contact"} 
+              className="about-secondary-btn"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '14px 28px',
+                borderRadius: '999px',
+                background: 'rgba(255, 255, 255, 0.08)',
+                color: '#ffffff',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                fontWeight: 600,
+                fontSize: '15px',
+                textDecoration: 'none',
+                transition: 'all 0.3s ease'
+              }}
+            >
+              {aboutSettings.contactBtnText || "Let's Talk"}
+              <FiArrowRight style={{ fontSize: '18px' }} />
+            </Link>
           </div>
 
         </div>

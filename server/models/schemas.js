@@ -42,7 +42,40 @@ const heroSettingsSchema = new mongoose.Schema({
 export const HeroSettings = mongoose.models.HeroSettings || mongoose.model('HeroSettings', heroSettingsSchema);
 
 // 3. About Section Schema
+const aboutHomeSchema = new mongoose.Schema({
+  title: { type: String, default: 'Interested in working together?' },
+  subtitle: { type: String, default: 'Download my resume to learn more about my experience and qualifications.' },
+  description: { type: String, default: '' },
+  aboutImage: { type: String, default: '/assets/about_profile.png' },
+  experienceYears: { type: Number, default: 3 },
+  stats: [{
+    label: { type: String, required: true },
+    value: { type: String, required: true }
+  }]
+}, { _id: false });
+
+const aboutPageSchema = new mongoose.Schema({
+  badgeText: { type: String, default: 'About Me' },
+  title: { type: String, default: 'About me.' },
+  greeting: { type: String, default: 'Hi! 👋' },
+  bioIntro: { type: String, default: 'My name is Faheem. I am a UI/UX Designer & Frontend Developer based in India with experience through projects and building modern web applications.' },
+  objective: { type: String, default: 'My objective: Challenge myself in a new environment to learn, develop, improve my skills through different projects and contribute more to the company with my abilities.' },
+  profileName: { type: String, default: 'Faheem A V' },
+  profileRole: { type: String, default: 'UI/UX Designer • Frontend Developer' },
+  availabilityText: { type: String, default: 'Available for Work' },
+  skillsTags: { type: [String], default: ['Figma', 'React', 'UX Research', 'Prototyping'] },
+  journeyText: { type: String, default: "Started with a curiosity for code, evolved into a love for design. Over the years, I've honed my skills in creating seamless digital experiences that solve real problems. My background in both development and design allows me to unify the creative vision with technical feasibility." },
+  aboutImage: { type: String, default: '/assets/about_profile.png' },
+  resumeBtnText: { type: String, default: 'Download Resume' },
+  resumeUrl: { type: String, default: '/assets/resume.pdf' },
+  contactBtnText: { type: String, default: "Let's Talk" },
+  contactBtnUrl: { type: String, default: '/contact' }
+}, { _id: false });
+
 const aboutSettingsSchema = new mongoose.Schema({
+  home: { type: aboutHomeSchema, default: () => ({}) },
+  aboutPage: { type: aboutPageSchema, default: () => ({}) },
+  // Legacy top-level fields for 100% backward compatibility
   title: { type: String, default: 'Interested in working together?' },
   subtitle: { type: String, default: 'Download my resume to learn more about my experience and qualifications.' },
   description: { type: String, default: '' },
