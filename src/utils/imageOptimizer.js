@@ -7,7 +7,9 @@
 export function getOptimizedImageUrl(url, options = {}) {
   if (!url || typeof url !== 'string') return '';
 
-  const { width, quality = 'auto', format = 'auto', dpr = 'auto' } = options;
+  const { width, quality = 'auto', format = 'auto', dpr = 'auto', version, updatedAt } = options;
+
+  let finalUrl = url;
 
   // Cloudinary image processing
   if (url.includes('res.cloudinary.com') && url.includes('/upload/')) {
@@ -20,10 +22,17 @@ export function getOptimizedImageUrl(url, options = {}) {
     }
 
     const transformStr = `/upload/${transformations.join(',')}/`;
-    return cleanUrl.replace('/upload/', transformStr);
+    finalUrl = cleanUrl.replace('/upload/', transformStr);
   }
 
-  return url;
+  // Preserve or append version timestamp for cache busting
+  const ts = version || (updatedAt ? new Date(updatedAt).getTime() : null);
+  if (ts && !finalUrl.includes('v=')) {
+    const separator = finalUrl.includes('?') ? '&' : '?';
+    finalUrl = `${finalUrl}${separator}v=${ts}`;
+  }
+
+  return finalUrl;
 }
 
 export function getSrcSet(url, widths = [400, 600, 800, 1200, 1600]) {
