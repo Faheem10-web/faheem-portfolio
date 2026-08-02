@@ -7,7 +7,7 @@ import {
     FiExternalLink
 } from "react-icons/fi";
 import { useAdmin } from "../context/AdminContext";
-import { getOptimizedImageUrl } from "../utils/imageOptimizer";
+import { getOptimizedImageUrl, getSrcSet } from "../utils/imageOptimizer";
 import LazyImage from "../components/common/LazyImage";
 
 // Refactored Subcomponent for Project Card to handle direct mouse follow
@@ -35,6 +35,7 @@ function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }
     };
 
     const optimizedCover = getOptimizedImageUrl(coverImg, { width: 800 });
+    const coverSrcSet = getSrcSet(coverImg, [400, 600, 800, 1200]);
 
     const hasCaseStudy = project.hasCaseStudy !== false;
 
@@ -54,6 +55,9 @@ function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }
                     {optimizedCover ? (
                         <LazyImage 
                             src={optimizedCover} 
+                            srcSet={coverSrcSet}
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+                            priority={index < 2}
                             alt={cardTitle} 
                             className="proj-card-image" 
                         />

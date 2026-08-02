@@ -1,37 +1,32 @@
 /**
- * Image Optimizer Utility for Cloudinary and local assets.
+ * Ultra-Fast Image Optimizer Utility for Cloudinary and local assets.
  * Embeds dynamic auto-formatting (f_auto), quality optimization (q_auto),
- * and width scaling parameters into Cloudinary URLs.
+ * dpr_auto, and responsive width scaling parameters into Cloudinary URLs.
  */
 
 export function getOptimizedImageUrl(url, options = {}) {
   if (!url || typeof url !== 'string') return '';
 
-  const { width, quality = 'auto', format = 'auto' } = options;
+  const { width, quality = 'auto', format = 'auto', dpr = 'auto' } = options;
 
   // Cloudinary image processing
   if (url.includes('res.cloudinary.com') && url.includes('/upload/')) {
-    // Avoid double transformation insertion
-    if (url.includes('/upload/f_auto,q_auto/')) {
-      if (width) {
-        return url.replace('/upload/f_auto,q_auto/', `/upload/f_${format},q_${quality},w_${width},c_limit/`);
-      }
-      return url;
-    }
+    // Strip existing transformations if present to avoid duplication
+    const cleanUrl = url.replace(/\/upload\/(?:[a-z]_[^/]+,)*[a-z]_[^/]+\//, '/upload/');
 
-    const transformations = [`f_${format}`, `q_${quality}`];
+    const transformations = [`f_${format}`, `q_${quality}`, `dpr_${dpr}`];
     if (width) {
       transformations.push(`w_${width}`, 'c_limit');
     }
 
     const transformStr = `/upload/${transformations.join(',')}/`;
-    return url.replace('/upload/', transformStr);
+    return cleanUrl.replace('/upload/', transformStr);
   }
 
   return url;
 }
 
-export function getSrcSet(url, widths = [400, 800, 1200]) {
+export function getSrcSet(url, widths = [400, 600, 800, 1200, 1600]) {
   if (!url || typeof url !== 'string' || !url.includes('res.cloudinary.com')) {
     return '';
   }
@@ -39,4 +34,12 @@ export function getSrcSet(url, widths = [400, 800, 1200]) {
   return widths
     .map((w) => `${getOptimizedImageUrl(url, { width: w })} ${w}w`)
     .join(', ');
+}
+
+export function getBlurPlaceholderUrl(url) {
+  if (!url || typeof url !== 'string' || !url.includes('res.cloudinary.com')) {
+    return '';
+  }
+
+  return getOptimizedImageUrl(url, { width: 30, quality: 10 });
 }

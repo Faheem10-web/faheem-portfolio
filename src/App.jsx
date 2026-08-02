@@ -4,10 +4,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
 import Home from "./pages/Home";
-import AboutPage from "./pages/AboutPage";
-import ProjectsPage from "./pages/ProjectsPage";
-import ContactPage from "./pages/ContactPage";
-import CaseStudyPage from "./pages/CaseStudyPage";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AdminProvider, useAdmin } from "./context/AdminContext";
 import Loader from "./components/common/Loader";
@@ -18,6 +14,12 @@ import CustomCursor from "./components/common/CustomCursor";
 import ScrollToTop from "./components/common/ScrollToTop";
 
 import { API_BASE } from "./config/api";
+
+// Lazy-loaded Public Secondary Routes for optimal initial bundle size
+const AboutPage = lazy(() => import("./pages/AboutPage"));
+const ProjectsPage = lazy(() => import("./pages/ProjectsPage"));
+const ContactPage = lazy(() => import("./pages/ContactPage"));
+const CaseStudyPage = lazy(() => import("./pages/CaseStudyPage"));
 
 // Lazy-loaded Admin CMS Routes for optimal initial bundle size
 const AdminLayout = lazy(() => import("./admin/AdminLayout"));
@@ -327,13 +329,15 @@ function AppContent() {
                   }
                 }}
               >
-                <Routes location={location} key={location.pathname}>
-                  <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
-                  <Route path="/about" element={<PageWrapper><AboutPage /></PageWrapper>} />
-                  <Route path="/projects" element={<PageWrapper><ProjectsPage /></PageWrapper>} />
-                  <Route path="/contact" element={<PageWrapper><ContactPage /></PageWrapper>} />
-                  <Route path="/case-study/:id" element={<PageWrapper><CaseStudyPage /></PageWrapper>} />
-                </Routes>
+                <Suspense fallback={null}>
+                  <Routes location={location} key={location.pathname}>
+                    <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
+                    <Route path="/about" element={<PageWrapper><AboutPage /></PageWrapper>} />
+                    <Route path="/projects" element={<PageWrapper><ProjectsPage /></PageWrapper>} />
+                    <Route path="/contact" element={<PageWrapper><ContactPage /></PageWrapper>} />
+                    <Route path="/case-study/:id" element={<PageWrapper><CaseStudyPage /></PageWrapper>} />
+                  </Routes>
+                </Suspense>
               </AnimatePresence>
             </main>
             <Footer />

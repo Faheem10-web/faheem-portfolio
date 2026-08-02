@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { FiExternalLink } from "react-icons/fi";
 import { useAdmin } from "../../context/AdminContext";
-import { getOptimizedImageUrl } from "../../utils/imageOptimizer";
+import { getOptimizedImageUrl, getSrcSet } from "../../utils/imageOptimizer";
 import LazyImage from "../common/LazyImage";
 
 const MotionLink = motion(Link);
@@ -50,6 +50,7 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
     };
 
     const optimizedCover = getOptimizedImageUrl(coverImg, { width: 800 });
+    const coverSrcSet = getSrcSet(coverImg, [400, 600, 800, 1200]);
 
     const handleCardClick = useCallback((e) => {
         if (!e.target.closest('a')) {
@@ -78,6 +79,9 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
                 {optimizedCover ? (
                     <LazyImage 
                         src={optimizedCover} 
+                        srcSet={coverSrcSet}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+                        priority={index < 2}
                         alt={cardTitle} 
                         className="project-image" 
                         aspectRatio="16/10"

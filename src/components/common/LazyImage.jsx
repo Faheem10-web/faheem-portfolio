@@ -2,27 +2,31 @@ import React, { useState, useEffect, useRef, memo } from "react";
 import "./LazyImage.css";
 
 /**
- * Ultra-Performance Lazy Loader Component with CLS Prevention
+ * Instant-Performance Lazy Loader Component with CLS Prevention & Priority Pre-fetching
  */
 const LazyImage = memo(function LazyImage({
   src,
+  srcSet,
+  sizes,
   alt = "",
   className = "",
   containerClassName = "",
   style = {},
   aspectRatio,
+  priority = false,
   onClick,
   ...props
 }) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isInView, setIsInView] = useState(false);
+  const [isInView, setIsInView] = useState(priority);
   const [hasError, setHasError] = useState(false);
   const containerRef = useRef(null);
 
   useEffect(() => {
+    if (priority || isInView) return;
     if (!containerRef.current) return;
 
-    // Use IntersectionObserver with 200px rootMargin pre-fetching
+    // Use IntersectionObserver with 600px rootMargin to pre-fetch well before scrolling into view
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -32,13 +36,13 @@ const LazyImage = memo(function LazyImage({
           }
         });
       },
-      { rootMargin: "300px 0px" }
+      { rootMargin: "600px 0px" }
     );
 
     observer.observe(containerRef.current);
 
     return () => observer.disconnect();
-  }, []);
+  }, [priority, isInView]);
 
   const containerStyle = {
     position: "relative",
@@ -59,16 +63,19 @@ const LazyImage = memo(function LazyImage({
         <div className={`lazy-image-placeholder ${isLoaded ? "hidden" : ""}`} />
       )}
 
-      {/* Actual Image Tag with Blur-up Reveal */}
+      {/* Actual Image Tag with Instant & Priority Support */}
       {isInView && !hasError && (
         <img
           src={src}
+          srcSet={srcSet}
+          sizes={sizes}
           alt={alt}
           className={`lazy-image-img ${isLoaded ? "loaded" : ""} ${className}`}
           onLoad={() => setIsLoaded(true)}
           onError={() => setHasError(true)}
           decoding="async"
-          loading="lazy"
+          loading={priority ? "eager" : "lazy"}
+          {...(priority ? { fetchPriority: "high" } : {})}
           {...props}
         />
       )}
