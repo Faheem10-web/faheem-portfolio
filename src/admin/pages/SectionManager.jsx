@@ -1987,78 +1987,7 @@ export default function SectionManager() {
               </div>
             </div>
 
-            {/* Preloader / Loading Screen Complete Management Controls */}
-            <div style={{ background: 'rgba(255,255,255,0.02)', padding: '24px', borderRadius: '16px', border: '1px solid var(--admin-border)', marginBottom: '28px' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '20px', color: 'var(--admin-text-main)' }}>
-                Preloader / Loading Screen Content Controls
-              </h3>
 
-              <div className="admin-form-row">
-                <div className="admin-form-group">
-                  <label className="admin-label">Top-Left Title Text (Default: LOADING)</label>
-                  <input 
-                    type="text" 
-                    className="admin-input" 
-                    value={globalForm.loaderTitle || ''} 
-                    onChange={e => setGlobalForm({ ...globalForm, loaderTitle: e.target.value })} 
-                    placeholder="LOADING" 
-                  />
-                </div>
-                <div className="admin-form-group">
-                  <label className="admin-label">Bottom-Right Subtitle / Changing Words</label>
-                  <input 
-                    type="text" 
-                    className="admin-input" 
-                    value={globalForm.loaderText || ''} 
-                    onChange={e => setGlobalForm({ ...globalForm, loaderText: e.target.value })} 
-                    placeholder="UI / UX DESIGNER & FRONTEND DEVELOPER (or comma-separated: UI / UX DESIGNER, FRONTEND DEVELOPER, CREATING ART)" 
-                  />
-                  <span style={{ fontSize: '12px', color: 'var(--admin-text-muted)', marginTop: '4px', display: 'block' }}>
-                    Single title or comma-separated words to rotate them smoothly during loading.
-                  </span>
-                </div>
-              </div>
-
-              <h4 style={{ fontSize: '14px', fontWeight: '600', marginTop: '16px', marginBottom: '14px', color: 'var(--admin-text-muted)' }}>
-                5 Preloader Slideshow Images (Bottom-Left 4:3 Editorial Frame)
-              </h4>
-
-              {[1, 2, 3, 4, 5].map((num) => {
-                const fieldName = `loaderImage${num}`;
-                const ranges = ["0% – 20%", "20% – 40%", "40% – 60%", "60% – 80%", "80% – 100%"];
-                return (
-                  <div key={num} className="admin-form-group" style={{ marginBottom: '16px' }}>
-                    <label className="admin-label">Image {num} ({ranges[num - 1]})</label>
-                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                      <input 
-                        type="text" 
-                        className="admin-input" 
-                        value={globalForm[fieldName] || ''} 
-                        onChange={e => setGlobalForm({ ...globalForm, [fieldName]: e.target.value })} 
-                        placeholder={`Enter Image ${num} URL or upload file`} 
-                      />
-                      <label className="admin-btn admin-btn-secondary" style={{ cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
-                        Upload File
-                        <input 
-                          type="file" 
-                          onChange={(e) => handleDirectUpload(e, globalForm, setGlobalForm, fieldName)} 
-                          style={{ display: 'none' }} 
-                        />
-                      </label>
-                    </div>
-                    {globalForm[fieldName] && (
-                      <div style={{ marginTop: '8px' }}>
-                        <img 
-                          src={globalForm[fieldName]} 
-                          alt={`Preview ${num}`} 
-                          style={{ width: '100px', height: '75px', objectFit: 'cover', borderRadius: '4px', border: '1px solid var(--admin-border)' }} 
-                        />
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
 
             <div className="admin-form-group">
               <label className="admin-label">Favicon URL</label>
