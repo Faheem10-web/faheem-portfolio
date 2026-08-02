@@ -140,6 +140,9 @@
     width: 100%;
     max-width: 440px;
     padding: 20px;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
 }
 
 .profile-photo-card {
@@ -151,19 +154,21 @@
     border-radius: 48px;
     overflow: hidden;
     background: transparent;
-    border: none;
-    box-shadow: none;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
     transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 :root[data-theme='light'] .profile-photo-card {
-    border: none;
-    box-shadow: none;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 .profile-photo-card:hover {
     transform: translateY(-6px) scale(1.01);
-    box-shadow: none;
+    box-shadow: none !important;
+    border: none !important;
 }
 
 .profile-photo-img {
@@ -171,62 +176,17 @@
     height: 100%;
     object-fit: cover;
     display: block;
+    border: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+    outline: none !important;
 }
 
-/* Decorative Background Circles & Ornaments */
-.decor-circle {
-    position: absolute;
-    border-radius: 50%;
-    border: 1.5px solid rgba(139, 92, 246, 0.35);
-    pointer-events: none;
-    z-index: 1;
-}
-
-:root[data-theme='light'] .decor-circle {
-    border-color: rgba(124, 58, 237, 0.25);
-}
-
-.decor-circle-top-left {
-    width: 360px;
-    height: 360px;
-    top: -20px;
-    left: -35px;
-}
-
-.decor-circle-bottom-right {
-    width: 320px;
-    height: 320px;
-    bottom: -30px;
-    right: -25px;
-}
-
-.decor-sparkle-star {
-    position: absolute;
-    bottom: 25px;
-    right: 5px;
-    z-index: 3;
-    font-size: 24px;
-    color: #8B5CF6;
-    pointer-events: none;
-    animation: pulseStar 3s ease-in-out infinite alternate;
-}
-
-@keyframes pulseStar {
-    0% { transform: scale(0.9) rotate(0deg); opacity: 0.8; }
-    100% { transform: scale(1.2) rotate(15deg); opacity: 1; }
-}
-
+/* Decorative Background Circles & Ornaments - Fully Hidden/Removed */
+.decor-circle,
+.decor-sparkle-star,
 .decor-dots-grid {
-    position: absolute;
-    right: -10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 60px;
-    height: 180px;
-    background-image: radial-gradient(rgba(139, 92, 246, 0.35) 1.5px, transparent 1.5px);
-    background-size: 12px 12px;
-    pointer-events: none;
-    z-index: 1;
+    display: none !important;
 }
 
 /* Sections Structure (Journey & Capabilities) */
@@ -705,9 +665,10 @@
     background-image: radial-gradient(circle at 50% 35%, #181818 0%, #0A0A0A 100%);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: none !important;
     border-radius: inherit;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(139, 92, 246, 0.12);
+    box-shadow: none !important;
+    outline: none !important;
     overflow: hidden;
     display: flex;
     flex-direction: column;
