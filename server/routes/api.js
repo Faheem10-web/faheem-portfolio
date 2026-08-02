@@ -1417,14 +1417,160 @@ router.delete('/messages/:id', protect, async (req, res) => {
 });
 
 /* ──────────────────────────────────────────────────────────────────────── */
-/* ── MEDIA LIBRARY CRUD ENDPOINTS ───────────────────────────────────────── */
+/* ── DAM MEDIA LIBRARY & ASSET INDEXING ENDPOINTS ───────────────────────── */
 /* ──────────────────────────────────────────────────────────────────────── */
 
-// Upload File (Cloudinary Integrated with fallback response)
+const syncAllPortfolioAssetsAndDetectUsage = async () => {
+  if (mongoose.connection.readyState !== 1) return [];
+
+  try {
+    const [
+      projects,
+      hero,
+      about,
+      navbar,
+      footer,
+      seo,
+      globalSettings,
+      resume,
+      existingMedia
+    ] = await Promise.all([
+      Project.find().lean().catch(() => []),
+      HeroSettings.findOne().lean().catch(() => null),
+      AboutSettings.findOne().lean().catch(() => null),
+      NavbarSettings.findOne().lean().catch(() => null),
+      FooterSettings.findOne().lean().catch(() => null),
+      SeoSettings.findOne().lean().catch(() => null),
+      GlobalSettings.findOne().lean().catch(() => null),
+      ResumeSettings.findOne().lean().catch(() => null),
+      Media.find().lean().catch(() => [])
+    ]);
+
+    const usageMap = new Map();
+
+    const addUsage = (url, label) => {
+      if (!url || typeof url !== 'string') return;
+      const cleanUrl = url.split('?')[0].trim();
+      if (!cleanUrl) return;
+      if (!usageMap.has(cleanUrl)) usageMap.set(cleanUrl, new Set());
+      usageMap.get(cleanUrl).add(label);
+    };
+
+    if (hero) {
+      if (hero.heroImage) addUsage(hero.heroImage, 'Hero Section (Profile)');
+      if (hero.bgImage) addUsage(hero.bgImage, 'Hero Section (Background)');
+    }
+
+    if (about) {
+      const homeImg = about.home?.aboutImage || about.aboutImage;
+      const pageImg = about.aboutPage?.aboutImage || about.aboutImage;
+      if (homeImg) addUsage(homeImg, 'Home About Section');
+      if (pageImg) addUsage(pageImg, 'About Page (Profile Photo)');
+    }
+
+    if (navbar && navbar.logoImage) addUsage(navbar.logoImage, 'Navbar (Logo)');
+    if (footer && footer.bgImage) addUsage(footer.bgImage, 'Footer (Background)');
+    if (seo) {
+      if (seo.ogImage) addUsage(seo.ogImage, 'SEO Meta (OG Image)');
+      if (seo.favicon) addUsage(seo.favicon, 'SEO Meta (Favicon)');
+    }
+    if (globalSettings) {
+      if (globalSettings.loaderLogo) addUsage(globalSettings.loaderLogo, 'Site Loader (Logo)');
+      if (globalSettings.favicon) addUsage(globalSettings.favicon, 'Site Favicon');
+    }
+    if (resume && resume.resumeUrl) addUsage(resume.resumeUrl, 'Resume Document (PDF)');
+
+    if (Array.isArray(projects)) {
+      projects.forEach(p => {
+        const pTitle = p.title || 'Untitled Project';
+        if (p.coverImage) addUsage(p.coverImage, `Project Cover: ${pTitle}`);
+        if (Array.isArray(p.images)) {
+          p.images.forEach(img => addUsage(img, `Project Gallery: ${pTitle}`));
+        }
+        if (p.caseStudy?.heroImage) addUsage(p.caseStudy.heroImage, `Case Study: ${pTitle}`);
+      });
+    }
+
+    const mediaMap = new Map();
+    (existingMedia || []).forEach(m => {
+      if (m.fileUrl) {
+        const cleanUrl = m.fileUrl.split('?')[0].trim();
+        mediaMap.set(cleanUrl, m);
+      }
+    });
+
+    for (const [url, usedSet] of usageMap.entries()) {
+      if (!mediaMap.has(url) && url.includes('res.cloudinary.com')) {
+        const parts = url.split('/');
+        const rawName = parts[parts.length - 1] || 'Cloudinary Asset';
+        const cleanName = rawName.split('?')[0];
+        const ext = cleanName.includes('.') ? cleanName.split('.').pop().toLowerCase() : 'jpg';
+
+        let folder = 'General';
+        const firstUsed = Array.from(usedSet)[0] || '';
+        if (firstUsed.includes('Project')) folder = 'Projects';
+        else if (firstUsed.includes('Hero')) folder = 'Hero';
+        else if (firstUsed.includes('About')) folder = 'About';
+        else if (firstUsed.includes('Resume')) folder = 'Resume';
+        else if (firstUsed.includes('SEO') || firstUsed.includes('Favicon') || firstUsed.includes('Navbar')) folder = 'Brand Assets';
+
+        try {
+          const publicId = extractPublicIdFromUrl(url) || '';
+          const createdMedia = await Media.create({
+            fileName: cleanName,
+            fileUrl: url,
+            fileType: ext,
+            fileSize: 0,
+            publicId,
+            folder,
+            usedIn: Array.from(usedSet),
+            createdAt: new Date()
+          });
+          mediaMap.set(url, createdMedia.toObject ? createdMedia.toObject() : createdMedia);
+        } catch (err) {
+          console.warn('Auto-indexing notice:', err.message);
+        }
+      }
+    }
+
+    const allMediaDocs = await Media.find().sort({ createdAt: -1 });
+    const updatedMediaList = [];
+
+    for (const doc of allMediaDocs) {
+      const cleanUrl = (doc.fileUrl || '').split('?')[0].trim();
+      const usedSet = usageMap.get(cleanUrl) || new Set();
+      const usedInArray = Array.from(usedSet);
+
+      if (JSON.stringify(doc.usedIn || []) !== JSON.stringify(usedInArray)) {
+        doc.usedIn = usedInArray;
+        await doc.save();
+      }
+      updatedMediaList.push(doc.toObject ? doc.toObject() : doc);
+    }
+
+    return updatedMediaList;
+  } catch (err) {
+    console.error('DAM sync error:', err);
+    return await Media.find().sort({ createdAt: -1 }).lean().catch(() => []);
+  }
+};
+
+// GET Sync All DAM Assets & Detect Usage
+router.get('/media/sync-all', protect, async (req, res) => {
+  try {
+    const assets = await syncAllPortfolioAssetsAndDetectUsage();
+    res.json({ success: true, count: assets.length, media: assets });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Upload File (Cloudinary Integrated with DAM metadata)
 router.post('/media/upload', protect, upload.single('file'), async (req, res) => {
   if (!req.file) return res.status(400).json({ message: 'No file received' });
   try {
-    const uploadResult = await uploadToCloudinary(req.file.path, req.file.originalname);
+    const folder = req.body.folder || 'General';
+    const uploadResult = await uploadToCloudinary(req.file.path, req.file.originalname, `portfolio/${folder.toLowerCase()}`);
     
     let media = null;
     if (mongoose.connection.readyState === 1) {
@@ -1434,7 +1580,13 @@ router.post('/media/upload', protect, upload.single('file'), async (req, res) =>
           fileUrl: uploadResult.url,
           fileType: uploadResult.fileType,
           fileSize: uploadResult.fileSize,
-          publicId: uploadResult.publicId
+          publicId: uploadResult.publicId,
+          folder: folder,
+          width: uploadResult.width || 0,
+          height: uploadResult.height || 0,
+          format: uploadResult.format || uploadResult.fileType,
+          resourceType: uploadResult.resourceType || 'image',
+          version: uploadResult.version || 1
         });
       } catch (dbErr) {
         console.warn('DB Media save warning:', dbErr.message);
@@ -1449,6 +1601,7 @@ router.post('/media/upload', protect, upload.single('file'), async (req, res) =>
         fileType: uploadResult.fileType,
         fileSize: uploadResult.fileSize,
         publicId: uploadResult.publicId,
+        folder: folder,
         createdAt: new Date().toISOString()
       };
     }
@@ -1468,12 +1621,12 @@ router.post('/media/upload', protect, upload.single('file'), async (req, res) =>
   }
 });
 
-// Upload Image via External URL (Cloudinary Integrated)
+// Upload Image via External URL
 router.post('/media/upload-url', protect, async (req, res) => {
-  const { imageUrl } = req.body;
+  const { imageUrl, folder = 'General' } = req.body;
   if (!imageUrl) return res.status(400).json({ error: 'imageUrl is required' });
   try {
-    const uploadResult = await uploadToCloudinary(imageUrl, 'external_image.jpg');
+    const uploadResult = await uploadToCloudinary(imageUrl, 'external_image.jpg', `portfolio/${folder.toLowerCase()}`);
     let media = null;
     if (mongoose.connection.readyState === 1) {
       try {
@@ -1482,7 +1635,8 @@ router.post('/media/upload-url', protect, async (req, res) => {
           fileUrl: uploadResult.url,
           fileType: uploadResult.fileType || 'jpg',
           fileSize: uploadResult.fileSize || 0,
-          publicId: uploadResult.publicId
+          publicId: uploadResult.publicId,
+          folder: folder
         });
       } catch (dbErr) {
         console.warn('DB Media save warning:', dbErr.message);
@@ -1503,15 +1657,16 @@ router.post('/media/upload-url', protect, async (req, res) => {
   }
 });
 
-// Upload Multiple Files (Cloudinary Integrated)
+// Upload Multiple Files
 router.post('/media/upload-multiple', protect, upload.array('files', 15), async (req, res) => {
   if (!req.files || req.files.length === 0) {
     return res.status(400).json({ error: 'No files received' });
   }
   try {
+    const folder = req.body.folder || 'General';
     const fileResults = [];
     for (const file of req.files) {
-      const uploadResult = await uploadToCloudinary(file.path, file.originalname);
+      const uploadResult = await uploadToCloudinary(file.path, file.originalname, `portfolio/${folder.toLowerCase()}`);
       fileResults.push({
         url: uploadResult.url,
         public_id: uploadResult.publicId,
@@ -1542,7 +1697,7 @@ router.post('/media/delete-cloudinary', protect, async (req, res) => {
   }
 });
 
-// Replace File (Cloudinary Integrated)
+// Replace File (Cloudinary Integrated with DAM preservation)
 router.post('/media/replace/:id', protect, upload.single('file'), async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id) && !req.params.id.startsWith('temp-')) {
     return res.status(400).json({ message: 'Invalid ID format' });
@@ -1558,7 +1713,8 @@ router.post('/media/replace/:id', protect, upload.single('file'), async (req, re
       await deleteFromCloudinary(media.publicId, media.fileType || '');
     }
 
-    const uploadResult = await uploadToCloudinary(req.file.path, req.file.originalname);
+    const targetFolder = media?.folder ? `portfolio/${media.folder.toLowerCase()}` : 'portfolio_media';
+    const uploadResult = await uploadToCloudinary(req.file.path, req.file.originalname, targetFolder);
 
     if (media) {
       media.fileName = req.file.originalname;
@@ -1566,6 +1722,10 @@ router.post('/media/replace/:id', protect, upload.single('file'), async (req, re
       media.fileType = uploadResult.fileType;
       media.fileSize = uploadResult.fileSize;
       media.publicId = uploadResult.publicId;
+      media.width = uploadResult.width || 0;
+      media.height = uploadResult.height || 0;
+      media.format = uploadResult.format || uploadResult.fileType;
+      media.version = (media.version || 1) + 1;
       await media.save();
     } else {
       media = {
@@ -1587,14 +1747,60 @@ router.post('/media/replace/:id', protect, upload.single('file'), async (req, re
   }
 });
 
-// Get Media Files
+// Bulk Delete Unused Media Files (Protected)
+router.post('/media/bulk-delete', protect, async (req, res) => {
+  const { ids } = req.body;
+  if (!Array.isArray(ids) || ids.length === 0) {
+    return res.status(400).json({ error: 'ids array is required' });
+  }
+
+  try {
+    let deletedCount = 0;
+    const blockedAssets = [];
+
+    // Re-verify usage across database
+    await syncAllPortfolioAssetsAndDetectUsage();
+
+    for (const id of ids) {
+      if (!mongoose.Types.ObjectId.isValid(id)) continue;
+      const media = await Media.findById(id);
+      if (!media) continue;
+
+      if (media.usedIn && media.usedIn.length > 0) {
+        blockedAssets.push({ id, fileName: media.fileName, usedIn: media.usedIn });
+        continue;
+      }
+
+      if (media.publicId) {
+        await deleteFromCloudinary(media.publicId, media.fileType || '');
+      } else if (media.fileUrl && media.fileUrl.includes('res.cloudinary.com')) {
+        await deleteFromCloudinary(media.fileUrl, media.fileType || '');
+      }
+
+      await Media.findByIdAndDelete(id);
+      deletedCount++;
+    }
+
+    invalidateBootstrapCache();
+    return res.json({
+      success: true,
+      deletedCount,
+      blockedCount: blockedAssets.length,
+      blockedAssets
+    });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// Get Media Files (Enriched with Usage Detection)
 router.get('/media', checkMaintenance, async (req, res) => {
   try {
     if (mongoose.connection.readyState !== 1) {
       const seed = getDefaultSeedData();
       return res.json(seed.media || []);
     }
-    const media = await Media.find().sort({ createdAt: -1 }).lean();
+    const media = await syncAllPortfolioAssetsAndDetectUsage();
     res.json(media);
   } catch {
     const seed = getDefaultSeedData();
@@ -1602,7 +1808,7 @@ router.get('/media', checkMaintenance, async (req, res) => {
   }
 });
 
-// Delete Media File (Cloudinary Integrated, Local PDF fallback)
+// Delete Media File (With Safety Usage Check)
 router.delete('/media/:id', protect, async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     return res.status(400).json({ message: 'Invalid ID format' });
@@ -1611,16 +1817,22 @@ router.delete('/media/:id', protect, async (req, res) => {
     const media = await Media.findById(req.params.id);
     if (!media) return res.status(404).json({ message: 'Media entry not found' });
 
+    // Re-verify usage safety
+    await syncAllPortfolioAssetsAndDetectUsage();
+    const freshMedia = await Media.findById(req.params.id);
+
+    if (freshMedia && freshMedia.usedIn && freshMedia.usedIn.length > 0) {
+      return res.status(400).json({
+        error: `Cannot delete asset currently in use by: ${freshMedia.usedIn.join(', ')}`,
+        usedIn: freshMedia.usedIn
+      });
+    }
+
     // Delete from Cloudinary or local filesystem
     if (media.publicId) {
       await deleteFromCloudinary(media.publicId, media.fileType || '');
     } else if (media.fileUrl && media.fileUrl.includes('res.cloudinary.com')) {
       await deleteFromCloudinary(media.fileUrl, media.fileType || '');
-    } else if (media.fileUrl && media.fileUrl.startsWith('/uploads')) {
-      const localPath = path.join(__dirname, '../..', media.fileUrl);
-      if (fs.existsSync(localPath)) {
-        fs.unlinkSync(localPath);
-      }
     }
 
     await Media.findByIdAndDelete(req.params.id);

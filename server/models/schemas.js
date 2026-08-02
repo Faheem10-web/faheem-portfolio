@@ -420,9 +420,19 @@ const mediaSchema = new mongoose.Schema({
   fileType: { type: String, required: true },
   fileSize: { type: Number, default: 0 },
   publicId: { type: String, default: '' },
+  folder: { type: String, default: 'General' },
+  tags: { type: [String], default: [] },
+  usedIn: { type: [String], default: [] },
+  width: { type: Number, default: 0 },
+  height: { type: Number, default: 0 },
+  format: { type: String, default: '' },
+  resourceType: { type: String, default: 'image' },
+  version: { type: Number, default: 1 },
   createdAt: { type: Date, default: Date.now }
 });
 mediaSchema.index({ createdAt: -1 });
+mediaSchema.index({ folder: 1 });
+mediaSchema.index({ publicId: 1 });
 export const Media = mongoose.models.Media || mongoose.model('Media', mediaSchema);
 
 // 18. Theme Settings Schema

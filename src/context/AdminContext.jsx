@@ -493,9 +493,10 @@ export function AdminProvider({ children }) {
         }
     };
 
-    const uploadMediaFile = async (file, retries = 2) => {
+    const uploadMediaFile = async (file, folder = 'General', retries = 2) => {
         const formData = new FormData();
         formData.append('file', file);
+        formData.append('folder', folder);
         for (let attempt = 0; attempt <= retries; attempt++) {
             try {
                 const res = await fetch(`${API_BASE}/media/upload`, {
@@ -527,152 +528,61 @@ export function AdminProvider({ children }) {
         return { success: false };
     };
 
-    // Dedicated Case Study Upload with Progress & Metadata
-    const uploadCaseStudyFile = (file, onProgress) => {
-        return new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            const formData = new FormData();
-            formData.append('file', file);
-
-            xhr.upload.addEventListener('progress', (e) => {
-                if (e.lengthComputable && onProgress) {
-                    const percent = Math.round((e.loaded / e.total) * 100);
-                    onProgress(percent);
-                }
-            });
-
-            xhr.addEventListener('load', () => {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    try {
-                        const data = JSON.parse(xhr.responseText);
-                        resolve({ success: true, ...data });
-                    } catch (e) {
-                        reject({ success: false, message: 'Invalid JSON response from server' });
-                    }
-                } else {
-                    let errMsg = 'Upload failed';
-                    try {
-                        const err = JSON.parse(xhr.responseText);
-                        errMsg = err.error || err.message || errMsg;
-                    } catch {}
-                    reject({ success: false, message: errMsg });
-                }
-            });
-
-            xhr.addEventListener('error', () => {
-                reject({ success: false, message: 'Network error during upload' });
-            });
-
-            xhr.open('POST', `${API_BASE}/upload`);
-            if (token) {
-                xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-            }
-            xhr.send(formData);
-        });
-    };
-
-    const deleteCaseStudyImage = async (public_idOrUrl) => {
-        if (!public_idOrUrl) return { success: false };
+    const syncAllMedia = async () => {
+        setIsMediaLoading(true);
         try {
-            const res = await fetch(`${API_BASE}/upload`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ public_id: public_idOrUrl, url: public_idOrUrl })
+            const res = await fetch(`${API_BASE}/media/sync-all`, {
+                headers: { 'Authorization': `Bearer ${token}` }
             });
-            const data = await safeParseJson(res);
-            return { success: res.ok, ...data };
+            if (res.ok) {
+                const data = await res.json();
+                if (data.media) setMedia(data.media);
+                return { success: true, count: data.count };
+            }
         } catch (err) {
-            return { success: false, message: err.message };
+            console.error('Failed to sync all media:', err);
+        } finally {
+            setIsMediaLoading(false);
         }
+        return { success: false };
     };
 
-    const updateCaseStudy = async (idOrSlug, payload) => {
+    const bulkDeleteMedia = async (idsArray) => {
         try {
-            const res = await fetch(`${API_BASE}/case-study/${idOrSlug}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(payload)
-            });
-            const data = await safeParseJson(res);
-            if (res.ok && data.project) {
-                // Update local projects array state immediately for zero-lag UI updates & sync localStorage cache
-                setProjects(prev => {
-                    const updated = (prev || []).map(p => (p._id === data.project._id || p.slug === data.project.slug) ? { ...p, ...data.project } : p);
-                    setCache('projects', updated);
-                    return updated;
-                });
-                return { success: true, project: data.project };
-            }
-            return { success: false, message: data.error || data.message || 'Failed to update case study' };
-        } catch (err) {
-            return { success: false, message: err.message };
-        }
-    };
-
-    const uploadMultipleMediaFiles = async (filesArray, retries = 2) => {
-        if (!filesArray || filesArray.length === 0) return { success: false, files: [] };
-        const formData = new FormData();
-        Array.from(filesArray).forEach(file => formData.append('files', file));
-        
-        for (let attempt = 0; attempt <= retries; attempt++) {
-            try {
-                const res = await fetch(`${API_BASE}/media/upload-multiple`, {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` },
-                    body: formData
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    await fetchMedia();
-                    return { success: true, files: data.files || [] };
-                }
-                const errData = await res.json().catch(() => ({}));
-                if (attempt === retries) {
-                    return { success: false, message: errData.error || 'Batch upload failed' };
-                }
-            } catch (err) {
-                if (attempt === retries) {
-                    return { success: false, message: err.message || 'Network error during batch upload' };
-                }
-            }
-            await new Promise(r => setTimeout(r, 1000));
-        }
-        return { success: false, files: [] };
-    };
-
-    const deleteCloudinaryMedia = async (publicIdOrUrl) => {
-        try {
-            const res = await fetch(`${API_BASE}/media/delete-cloudinary`, {
+            const res = await fetch(`${API_BASE}/media/bulk-delete`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ public_id: publicIdOrUrl, url: publicIdOrUrl })
+                body: JSON.stringify({ ids: idsArray })
             });
-            return { success: res.ok };
+            const data = await safeParseJson(res);
+            if (res.ok) {
+                await fetchMedia();
+                return { success: true, ...data };
+            }
+            return { success: false, message: data.error || 'Bulk delete failed' };
         } catch (err) {
-            console.error('Delete Cloudinary media error:', err);
-            return { success: false };
+            return { success: false, message: err.message };
         }
     };
 
     const deleteMediaFile = async (id) => {
-        const res = await fetch(`${API_BASE}/media/${id}`, {
-            method: 'DELETE',
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (res.ok) {
-            await fetchMedia();
-            return { success: true };
+        try {
+            const res = await fetch(`${API_BASE}/media/${id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await safeParseJson(res);
+            if (res.ok) {
+                await fetchMedia();
+                return { success: true };
+            }
+            return { success: false, message: data.error || data.message || 'Failed to delete asset' };
+        } catch (err) {
+            return { success: false, message: err.message };
         }
-        return { success: false };
     };
 
     const replaceMediaFile = async (id, file) => {
@@ -784,6 +694,8 @@ export function AdminProvider({ children }) {
         deleteMessage,
         submitContactMessage,
         fetchMedia,
+        syncAllMedia,
+        bulkDeleteMedia,
         uploadMediaFile,
         uploadMultipleMediaFiles,
         uploadCaseStudyFile,

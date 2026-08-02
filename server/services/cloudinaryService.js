@@ -47,9 +47,14 @@ export const uploadToCloudinary = async (localFilePathOrUrl, originalName = 'ima
       url: optimizedUrl,
       publicId: result.public_id,
       public_id: result.public_id,
-      fileSize: result.bytes,
+      fileSize: result.bytes || 0,
       fileType: result.format || extension,
-      version: result.version
+      format: result.format || extension,
+      width: result.width || 0,
+      height: result.height || 0,
+      resourceType: result.resource_type || 'image',
+      version: result.version || 1,
+      folder: targetFolder
     };
   } catch (error) {
     console.error('❌ Cloudinary Upload Error:', error);
