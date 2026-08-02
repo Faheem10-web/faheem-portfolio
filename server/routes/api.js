@@ -1483,11 +1483,42 @@ const syncAllPortfolioAssetsAndDetectUsage = async () => {
     if (Array.isArray(projects)) {
       projects.forEach(p => {
         const pTitle = p.title || 'Untitled Project';
-        if (p.coverImage) addUsage(p.coverImage, `Project Cover: ${pTitle}`);
-        if (Array.isArray(p.images)) {
-          p.images.forEach(img => addUsage(img, `Project Gallery: ${pTitle}`));
-        }
-        if (p.caseStudy?.heroImage) addUsage(p.caseStudy.heroImage, `Case Study: ${pTitle}`);
+
+        // Recursive scanner for all project & case study sub-trees
+        const scanForImages = (obj, prefix = '') => {
+          if (!obj) return;
+          if (typeof obj === 'string') {
+            const trimmed = obj.trim();
+            if (trimmed.length > 3 && (
+              trimmed.startsWith('http') ||
+              trimmed.startsWith('/assets/') ||
+              trimmed.includes('res.cloudinary.com') ||
+              /\.(png|jpg|jpeg|webp|gif|svg|avif)($|\?)/i.test(trimmed)
+            )) {
+              addUsage(trimmed, `${prefix}: ${pTitle}`);
+            }
+          } else if (Array.isArray(obj)) {
+            obj.forEach(item => scanForImages(item, prefix));
+          } else if (typeof obj === 'object') {
+            Object.keys(obj).forEach(key => {
+              if (['richText', 'problemStatement', 'challengePoints', 'solutionPoints', 'visibilityMap', 'slug', '_id', '__v'].includes(key)) return;
+              let label = 'Project Media';
+              if (key === 'coverImage') label = 'Project Cover';
+              else if (key === 'images') label = 'Project Gallery';
+              else if (key.includes('hero')) label = 'Case Study Hero';
+              else if (key.includes('banner')) label = 'Case Study Banner';
+              else if (key.includes('challenge')) label = 'Case Study Challenge';
+              else if (key.includes('solution')) label = 'Case Study Solution';
+              else if (key.includes('research')) label = 'Case Study Research';
+              else if (key.includes('process')) label = 'Case Study Process';
+              else if (key.includes('system')) label = 'Case Study Design System';
+              else if (key.includes('showcase') || key.includes('Screen')) label = 'Case Study Showcase';
+              scanForImages(obj[key], label);
+            });
+          }
+        };
+
+        scanForImages(p, 'Project Asset');
       });
     }
 
@@ -1500,15 +1531,15 @@ const syncAllPortfolioAssetsAndDetectUsage = async () => {
     });
 
     for (const [url, usedSet] of usageMap.entries()) {
-      if (!mediaMap.has(url) && url.includes('res.cloudinary.com')) {
+      if (!mediaMap.has(url) && (url.startsWith('http') || url.startsWith('/assets/') || url.includes('res.cloudinary.com'))) {
         const parts = url.split('/');
-        const rawName = parts[parts.length - 1] || 'Cloudinary Asset';
+        const rawName = parts[parts.length - 1] || 'Portfolio Asset';
         const cleanName = rawName.split('?')[0];
         const ext = cleanName.includes('.') ? cleanName.split('.').pop().toLowerCase() : 'jpg';
 
         let folder = 'General';
         const firstUsed = Array.from(usedSet)[0] || '';
-        if (firstUsed.includes('Project')) folder = 'Projects';
+        if (firstUsed.includes('Project') || firstUsed.includes('Case Study')) folder = 'Projects';
         else if (firstUsed.includes('Hero')) folder = 'Hero';
         else if (firstUsed.includes('About')) folder = 'About';
         else if (firstUsed.includes('Resume')) folder = 'Resume';
