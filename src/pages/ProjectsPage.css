@@ -60,7 +60,7 @@
 
 /* PAGE HEADING */
 .proj-page-heading-wrap {
-    padding: 120px 24px 32px 24px;
+    padding: 90px 24px 20px 24px;
     text-align: center;
 }
 
@@ -81,7 +81,7 @@
 /* 1. PREMIUM HERO SECTION */
 .proj-hero-section {
     position: relative;
-    padding: 180px 24px 80px 24px;
+    padding: 110px 24px 40px 24px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -239,7 +239,7 @@
 
 /* 3. PREMIUM PROJECT GRID */
 .proj-grid-section {
-    padding: 60px 24px 120px 24px;
+    padding: 30px 24px 60px 24px;
     display: flex;
     justify-content: center;
     z-index: 2;

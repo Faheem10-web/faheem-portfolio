@@ -25,7 +25,7 @@
 .services-section {
     width: 100%;
     background: transparent;
-    padding: 100px 24px;
+    padding: 60px 24px;
     position: relative;
     z-index: 10;
     border-top: none;
@@ -57,7 +57,7 @@
     flex-direction: column;
     align-items: center;
     gap: 15px;
-    margin-bottom: 50px;
+    margin-bottom: 32px;
     width: 100%;
     max-width: 800px;
 }
@@ -420,11 +420,11 @@
 /* Responsive Breakpoints */
 @media (max-width: 991px) {
     .services-section {
-        padding: 70px 20px;
+        padding: 40px 20px;
     }
 
     .services-intro {
-        margin-bottom: 40px;
+        margin-bottom: 24px;
     }
 
     .service-card {
@@ -442,7 +442,7 @@
 
 @media (max-width: 767px) {
     .services-section {
-        padding: 50px 16px;
+        padding: 32px 16px;
     }
 
     .services-grid {

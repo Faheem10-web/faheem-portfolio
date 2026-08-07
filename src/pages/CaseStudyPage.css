@@ -49,7 +49,7 @@
   font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
   min-height: 100vh;
   padding-top: 0;
-  padding-bottom: 120px;
+  padding-bottom: 60px;
   overflow-x: hidden;
   transition: background-color 0.3s ease, color 0.3s ease;
 }

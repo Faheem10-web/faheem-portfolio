@@ -4,7 +4,7 @@
 
 .faq-section {
     width: 100%;
-    padding: 100px 24px;
+    padding: 60px 24px;
     background-color: var(--bg-primary);
     position: relative;
     overflow: hidden;
@@ -55,7 +55,7 @@
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 60px;
+    gap: 32px;
 }
 
 /* Header */
@@ -241,7 +241,7 @@
 /* Responsive adjust */
 @media (max-width: 768px) {
     .faq-section {
-        padding: 60px 16px;
+        padding: 36px 16px;
     }
 
     .faq-container {

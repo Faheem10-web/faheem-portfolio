@@ -2,7 +2,7 @@
 .about-section {
     width: 100%;
     background-color: var(--bg-primary);
-    padding: 120px 24px;
+    padding: 60px 24px;
     position: relative;
     z-index: 10;
     border-top: none;
@@ -457,7 +457,7 @@
 
 @media (max-width: 576px) {
     .about-section {
-        padding: 80px 16px;
+        padding: 40px 16px;
     }
     
     .about-glass-card {
