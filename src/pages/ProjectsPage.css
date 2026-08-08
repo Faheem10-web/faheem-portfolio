@@ -60,7 +60,7 @@
 
 /* PAGE HEADING */
 .proj-page-heading-wrap {
-    padding: 90px 24px 20px 24px;
+    padding: 150px 24px 35px 24px;
     text-align: center;
 }
 
@@ -1353,7 +1353,7 @@
 
 @media (max-width: 480px) {
     .proj-page-heading-wrap {
-        padding: 90px 12px 20px 12px;
+        padding: 115px 12px 20px 12px;
     }
     
     .proj-page-heading {
