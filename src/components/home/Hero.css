@@ -3,11 +3,19 @@
     width: 100%;
     min-height: 100dvh;
     overflow: hidden;
-    background: var(--bg-primary);
+    background: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 80px 24px 70px 24px;
+    --mouse-x: 50%;
+    --mouse-y: 45%;
+    --mouse-x-offset: 0;
+    --mouse-y-offset: 0;
+}
+
+:root[data-theme='dark'] .hero {
+    background: #ffffff;
 }
 
 .hero-bg {
@@ -22,71 +30,76 @@
     transform: translateZ(0);
 }
 
-/* ─── AURORA MESH LIGHTING & CINEMATIC ATMOSPHERE ─── */
-.hero-aurora-mesh {
+/* ─── Architectural Micro Grid Background (Barely Visible Grid ~0.035) ─── */
+.hero-grid {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background-size: 44px 44px;
+    background-image: 
+        linear-gradient(to right, rgba(124, 58, 237, 0.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(124, 58, 237, 0.035) 1px, transparent 1px);
+    opacity: 0.9;
+}
+
+/* ─── Fluid Light Atmosphere (Dynamically follows cursor) ─── */
+.hero-fluid-atmosphere {
     position: absolute;
     inset: 0;
     z-index: 2;
     pointer-events: none;
-    background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(168, 85, 247, 0.14) 0%, rgba(56, 189, 248, 0.05) 45%, rgba(244, 114, 182, 0.02) 75%, transparent 100%);
-    animation: auroraFade 16s ease-in-out infinite alternate;
+    background: 
+        radial-gradient(
+            850px circle at var(--mouse-x, 50%) var(--mouse-y, 45%),
+            rgba(124, 58, 237, 0.16) 0%,
+            rgba(109, 61, 245, 0.07) 35%,
+            rgba(255, 255, 255, 0.5) 70%,
+            transparent 100%
+        ),
+        radial-gradient(
+            1100px ellipse at calc(100% - var(--mouse-x, 50%)) calc(100% - var(--mouse-y, 45%)),
+            rgba(243, 238, 255, 0.7) 0%,
+            rgba(255, 255, 255, 0.3) 55%,
+            transparent 100%
+        );
+    will-change: background;
+    transition: opacity 0.5s ease;
 }
 
-:root[data-theme='dark'] .hero-aurora-mesh {
-    background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(168, 85, 247, 0.22) 0%, rgba(99, 102, 241, 0.09) 45%, transparent 100%);
-}
-
-@keyframes auroraFade {
-    0% { opacity: 0.8; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.03); }
-    100% { opacity: 0.85; transform: scale(0.98); }
-}
-
-/* Soft Radial Bloom Behind Hero Title - 30% Refined Blur */
-.hero-radial-glow {
-    position: absolute;
-    top: 46%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 65vw;
-    height: 65vw;
-    max-width: 850px;
-    max-height: 850px;
-    background: radial-gradient(circle, rgba(168, 85, 247, 0.14) 0%, rgba(99, 102, 241, 0.04) 45%, transparent 75%);
-    filter: blur(85px);
-    z-index: 2;
-    pointer-events: none;
-}
-
-:root[data-theme='light'] .hero-radial-glow {
-    background: radial-gradient(circle, rgba(168, 85, 247, 0.09) 0%, rgba(244, 114, 182, 0.03) 45%, transparent 75%);
-    filter: blur(70px);
-}
-
-/* Subtle 2% Noise Texture */
-.hero-noise {
-    position: absolute;
-    inset: 0;
-    z-index: 4;
-    opacity: 0.02;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-}
-
-.hero-vignette {
+/* ─── Glass Refraction Layer (Fixed inset: 0, full bleed, zero clipping seam) ─── */
+.hero-glass-refraction {
     position: absolute;
     inset: 0;
     z-index: 3;
     pointer-events: none;
-    background: radial-gradient(circle at center, transparent 50%, rgba(var(--bg-primary-rgb), 0.4) 100%);
+    backdrop-filter: blur(36px) saturate(165%) contrast(101%);
+    -webkit-backdrop-filter: blur(36px) saturate(165%) contrast(101%);
 }
 
-.hero-overlay {
+/* ─── Ultra-Subtle Top Glass Specular Reflection Highlight ─── */
+.hero-glass-highlight {
     position: absolute;
     inset: 0;
-    z-index: 2;
-    background: linear-gradient(to bottom, rgba(var(--bg-primary-rgb), 0) 60%, rgba(var(--bg-primary-rgb), 1) 100%);
+    z-index: 4;
     pointer-events: none;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.75) 0%,
+        rgba(255, 255, 255, 0.12) 40%,
+        transparent 65%,
+        rgba(243, 238, 255, 0.25) 100%
+    );
+    box-shadow: inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* ─── Bottom Soft Fading Overlay ─── */
+.hero-overlay-fade {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    background: linear-gradient(to bottom, transparent 65%, rgba(255, 255, 255, 0.98) 100%);
 }
 
 .hero-container {
@@ -103,7 +116,7 @@
     gap: 28px;
 }
 
-/* ─── HERO TOP BAR (DUAL BADGES: HANDLE & STATUS) ─── */
+/* ─── HERO TOP BAR & BADGES ─── */
 .hero-top-bar {
     width: 100%;
     max-width: 1040px;
@@ -135,8 +148,7 @@
     letter-spacing: -0.01em;
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     
-    /* Frosted Liquid Glass Surface (Light Mode Default) */
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(245, 240, 255, 0.75) 100%), rgba(255, 255, 255, 0.85);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(245, 240, 255, 0.75) 100%), rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     
@@ -144,76 +156,25 @@
     color: #1e1b4b;
     
     box-shadow:
-        0 6px 20px -4px rgba(168, 85, 247, 0.1),
+        0 6px 20px -4px rgba(124, 58, 237, 0.09),
         0 2px 6px rgba(0, 0, 0, 0.02),
         inset 0 1.5px 2px 0 rgba(255, 255, 255, 1);
 }
 
 :root[data-theme='dark'] .hero-glass-badge {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%), rgba(16, 14, 24, 0.75);
-    border-color: rgba(255, 255, 255, 0.18);
-    color: #ffffff;
-    
-    box-shadow:
-        0 8px 24px -6px rgba(0, 0, 0, 0.4),
-        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.35);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(245, 240, 255, 0.75) 100%), rgba(255, 255, 255, 0.85);
+    border-color: rgba(255, 255, 255, 0.95);
+    color: #1e1b4b;
 }
 
 .hero-glass-badge:hover {
     transform: translateY(-2px);
     box-shadow:
-        0 10px 28px -4px rgba(168, 85, 247, 0.18),
+        0 10px 28px -4px rgba(124, 58, 237, 0.16),
         inset 0 2px 2px 0 rgba(255, 255, 255, 1);
 }
 
-:root[data-theme='dark'] .hero-glass-badge:hover {
-    border-color: rgba(255, 255, 255, 0.3);
-    box-shadow:
-        0 12px 28px -6px rgba(0, 0, 0, 0.5),
-        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.45);
-}
-
-/* Glowing Pulsing Status Dots */
-.pulse-dot {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    position: relative;
-}
-
-.pulse-dot.purple {
-    background: #a855f7;
-    box-shadow: 0 0 10px rgba(168, 85, 247, 0.8), 0 0 20px rgba(168, 85, 247, 0.4);
-}
-
-:root[data-theme='dark'] .pulse-dot.purple {
-    background: #c084fc;
-    box-shadow: 0 0 10px rgba(192, 132, 252, 0.9), 0 0 20px rgba(192, 132, 252, 0.5);
-}
-
-.pulse-dot.green {
-    background: #10b981;
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.8), 0 0 20px rgba(16, 185, 129, 0.4);
-}
-
-.pulse-dot.green::after {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 50%;
-    background: rgba(16, 185, 129, 0.4);
-    animation: pulseRing 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulseRing {
-    0% { transform: scale(0.95); opacity: 0.8; }
-    50% { transform: scale(1.6); opacity: 0; }
-    100% { transform: scale(0.95); opacity: 0; }
-}
-
-/* ─── STATUS PILL (FROSTED CRYSTAL GLASS - 30% REFINED BLUR) ─── */
+/* ─── STATUS PILL (FROSTED CRYSTAL GLASS) ─── */
 .hero-glass-pill {
     display: inline-flex !important;
     align-items: center !important;
@@ -222,28 +183,23 @@
     padding: 10px 24px !important;
     border-radius: 100px !important;
     
-    /* Frosted Crystal Glass Surface */
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(245, 240, 255, 0.65) 100%), rgba(255, 255, 255, 0.8);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(245, 240, 255, 0.75) 100%), rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     
     border: 1px solid rgba(255, 255, 255, 0.95);
     color: #1e1b4b;
     
-    /* Specular Glow & Soft Ambient Shadow */
     box-shadow:
-        0 8px 24px -4px rgba(168, 85, 247, 0.12),
+        0 8px 24px -4px rgba(124, 58, 237, 0.09),
         0 2px 8px rgba(0, 0, 0, 0.02),
         inset 0 1.5px 2px 0 rgba(255, 255, 255, 1);
 }
 
 :root[data-theme='dark'] .hero-glass-pill {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%), rgba(16, 14, 24, 0.75);
-    border-color: rgba(255, 255, 255, 0.18);
-    color: #ffffff;
-    box-shadow:
-        0 10px 24px -6px rgba(0, 0, 0, 0.35),
-        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.35);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(245, 240, 255, 0.75) 100%), rgba(255, 255, 255, 0.85);
+    border-color: rgba(255, 255, 255, 0.95);
+    color: #1e1b4b;
 }
 
 /* ─── Hero Heading – Editorial Precision Typography ────────────────── */
@@ -262,29 +218,29 @@
     word-break: break-word;
 }
 
-/* ── Line 1: "Designing Future" ── Clean, crisp headline */
+/* ── Line 1: "Designing Future" ── Crisp, dark Slate headline */
 .hero-title .hero-first-row {
     display: block;
     width: 100%;
     text-align: center;
     padding-bottom: 0.06em;
-    color: #ffffff;
-    filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.2));
-}
-
-:root[data-theme='light'] .hero-title .hero-first-row {
     color: #0f172a;
-    filter: drop-shadow(0 2px 12px rgba(15, 23, 42, 0.08));
+    filter: drop-shadow(0 2px 10px rgba(124, 58, 237, 0.06));
 }
 
-/* ── Line 2: "Digital Experiences" ── Refined purple-indigo linear gradient */
+:root[data-theme='dark'] .hero-title .hero-first-row {
+    color: #0f172a;
+    filter: drop-shadow(0 2px 10px rgba(124, 58, 237, 0.06));
+}
+
+/* ── Line 2: "Digital Experiences" ── Liquid purple linear gradient */
 .hero-title .hero-gradient-text {
     display: block;
     width: 100%;
     text-align: center;
     background: transparent !important;
     -webkit-text-fill-color: initial !important;
-    filter: drop-shadow(0 0 35px rgba(168, 85, 247, 0.35));
+    filter: drop-shadow(0 4px 18px rgba(124, 58, 237, 0.18));
 }
 
 .hero-gradient-text .split-parent,
@@ -294,24 +250,13 @@
 }
 
 .hero-gradient-text .split-char {
-    color: #a855f7;
-    background: linear-gradient(135deg, #c084fc 0%, #a855f7 40%, #818cf8 100%);
+    color: #7c3aed;
+    background: linear-gradient(135deg, #a855f7 0%, #7c3aed 45%, #6366f1 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-:root[data-theme='light'] .hero-title .hero-gradient-text {
-    background: transparent !important;
-    filter: drop-shadow(0 4px 20px rgba(124, 58, 237, 0.2));
-}
-
-:root[data-theme='light'] .hero-gradient-text .split-parent,
-:root[data-theme='light'] .hero-gradient-text .split-word {
-    background: transparent !important;
-    -webkit-text-fill-color: initial !important;
-}
-
-:root[data-theme='light'] .hero-gradient-text .split-char {
+:root[data-theme='dark'] .hero-gradient-text .split-char {
     color: #7c3aed;
     background: linear-gradient(135deg, #a855f7 0%, #7c3aed 45%, #6366f1 100%);
     -webkit-background-clip: text;
@@ -321,14 +266,19 @@
 .hero-description {
     font-size: clamp(0.98rem, 1.3vw + 0.35rem, 1.18rem);
     line-height: 1.7;
-    color: var(--color-text-main);
-    opacity: 0.75;
+    color: #334155;
+    opacity: 0.88;
     max-width: 620px;
     margin-top: 6px;
     margin-bottom: 0;
     font-family: var(--font-body);
     letter-spacing: -0.01em;
     font-weight: 400;
+}
+
+:root[data-theme='dark'] .hero-description {
+    color: #334155;
+    opacity: 0.88;
 }
 
 /* Interactive Buttons */
@@ -462,13 +412,17 @@
 }
 
 .tagline-typed {
-    color: var(--color-text-main);
+    color: #1e1b4b;
+}
+
+:root[data-theme='dark'] .tagline-typed {
+    color: #1e1b4b;
 }
 
 .tagline-cursor {
     margin-left: 2px;
     font-weight: 300;
-    color: var(--color-primary);
+    color: #7c3aed;
     animation: blinkCursor 0.8s infinite;
 }
 
@@ -478,9 +432,23 @@
 }
 
 /* Responsiveness Breakpoints */
+@media (max-width: 1024px) {
+    .hero-glass-refraction {
+        backdrop-filter: blur(24px) saturate(150%);
+        -webkit-backdrop-filter: blur(24px) saturate(150%);
+    }
+}
+
 @media (max-width: 768px) {
     .hero {
         padding: 90px 16px 65px 16px;
+        --mouse-x: 50% !important;
+        --mouse-y: 40% !important;
+    }
+
+    .hero-glass-refraction {
+        backdrop-filter: blur(16px) saturate(140%);
+        -webkit-backdrop-filter: blur(16px) saturate(140%);
     }
 
     .hero-container {
@@ -568,29 +536,25 @@
     height: 64px;
     pointer-events: auto;
     
-    /* Full Width Pill Capsule Shape */
     border-radius: 100px;
     
-    /* Liquid Glass Aesthetic - Light Mode Base */
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.88) 0%, rgba(240, 238, 255, 0.65) 100%);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(240, 238, 255, 0.75) 100%);
     backdrop-filter: blur(30px) saturate(190%) contrast(102%);
     -webkit-backdrop-filter: blur(30px) saturate(190%) contrast(102%);
     
     border: 1px solid rgba(255, 255, 255, 0.95);
     
-    /* Multi-layered Specular Glow & Soft Ambient Shadow */
     box-shadow:
-        0 20px 50px -10px rgba(160, 140, 255, 0.2),
-        0 4px 20px rgba(0, 0, 0, 0.04),
+        0 16px 40px -10px rgba(124, 58, 237, 0.12),
+        0 4px 20px rgba(0, 0, 0, 0.02),
         inset 0 2px 2px 0 rgba(255, 255, 255, 1),
-        inset 0 -1.5px 2px 0 rgba(160, 140, 255, 0.15);
+        inset 0 -1.5px 2px 0 rgba(160, 140, 255, 0.1);
     
     overflow: hidden;
     display: flex;
     align-items: center;
     position: relative;
     
-    /* Premium visual fade mask at left & right borders */
     mask-image: linear-gradient(to right, transparent 0%, #000 4%, #000 96%, transparent 100%);
     -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 4%, #000 96%, transparent 100%);
     
@@ -598,13 +562,12 @@
 }
 
 :root[data-theme='dark'] .hero-marquee {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.03) 100%), rgba(12, 12, 18, 0.7);
-    border-color: rgba(255, 255, 255, 0.18);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(240, 238, 255, 0.75) 100%);
+    border-color: rgba(255, 255, 255, 0.95);
     box-shadow:
-        0 20px 48px -12px rgba(0, 0, 0, 0.4),
-        0 0 0 1px rgba(255, 255, 255, 0.05),
-        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.4),
-        inset 0 -1px 2px 0 rgba(0, 0, 0, 0.2);
+        0 16px 40px -10px rgba(124, 58, 237, 0.12),
+        0 4px 20px rgba(0, 0, 0, 0.02),
+        inset 0 2px 2px 0 rgba(255, 255, 255, 1);
 }
 
 /* Hover effect on marquee container */

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, lazy, Suspense, memo } from "react";
+import React, { useState, useEffect, useMemo, lazy, Suspense, memo, useRef } from "react";
 import "./Hero.css";
 import { motion } from "framer-motion";
 import { useAdmin } from "../../context/AdminContext";
@@ -6,7 +6,7 @@ import SplitText from "../common/SplitText";
 
 const LiquidEther = lazy(() => import("./LiquidEther"));
 
-const HERO_LIQUID_COLORS = ["#5227FF", "#FF9FFC", "#B497CF"];
+const HERO_LIQUID_COLORS = ["#7C3AED", "#6D3DF5", "#A855F7"];
 const FROM_CONFIG = { opacity: 0, y: 40 };
 const TO_CONFIG = { opacity: 1, y: 0 };
 
@@ -69,7 +69,10 @@ const TypewriterTagline = memo(function TypewriterTagline({ greeting, wordsList,
 
 const Hero = memo(function Hero() {
     const { siteSettings, isSiteLoaded } = useAdmin();
-    
+    const heroRef = useRef(null);
+    const mousePos = useRef({ currentX: 50, currentY: 45, targetX: 50, targetY: 45 });
+    const rafId = useRef(null);
+
     const heroSettings = siteSettings?.hero || {};
     const name = heroSettings.name || "Faheem";
     const rawWords = heroSettings.words;
@@ -84,15 +87,75 @@ const Hero = memo(function Hero() {
         return list;
     }, [rawWords, name]);
 
+    useEffect(() => {
+        const isTouchOrMobile = window.matchMedia("(max-width: 768px)").matches || 'ontouchstart' in window;
+        if (isTouchOrMobile) return;
+
+        const handleMouseMove = (e) => {
+            if (!heroRef.current) return;
+            const rect = heroRef.current.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            
+            mousePos.current.targetX = Math.max(0, Math.min(100, x));
+            mousePos.current.targetY = Math.max(0, Math.min(100, y));
+        };
+
+        const handleMouseLeave = () => {
+            mousePos.current.targetX = 50;
+            mousePos.current.targetY = 45;
+        };
+
+        const updateLoop = () => {
+            const { currentX, currentY, targetX, targetY } = mousePos.current;
+            const lerpX = currentX + (targetX - currentX) * 0.05;
+            const lerpY = currentY + (targetY - currentY) * 0.05;
+
+            mousePos.current.currentX = lerpX;
+            mousePos.current.currentY = lerpY;
+
+            if (heroRef.current) {
+                heroRef.current.style.setProperty('--mouse-x', `${lerpX.toFixed(2)}%`);
+                heroRef.current.style.setProperty('--mouse-y', `${lerpY.toFixed(2)}%`);
+                
+                const offsetX = (lerpX - 50) / 50;
+                const offsetY = (lerpY - 45) / 50;
+                heroRef.current.style.setProperty('--mouse-x-offset', offsetX.toFixed(3));
+                heroRef.current.style.setProperty('--mouse-y-offset', offsetY.toFixed(3));
+            }
+
+            rafId.current = requestAnimationFrame(updateLoop);
+        };
+
+        const heroEl = heroRef.current;
+        if (heroEl) {
+            heroEl.addEventListener('mousemove', handleMouseMove, { passive: true });
+            heroEl.addEventListener('mouseleave', handleMouseLeave, { passive: true });
+            rafId.current = requestAnimationFrame(updateLoop);
+        }
+
+        return () => {
+            if (heroEl) {
+                heroEl.removeEventListener('mousemove', handleMouseMove);
+                heroEl.removeEventListener('mouseleave', handleMouseLeave);
+            }
+            if (rafId.current) {
+                cancelAnimationFrame(rafId.current);
+            }
+        };
+    }, []);
+
     return (
-        <section className="hero" id="home">
+        <section className="hero" id="home" ref={heroRef}>
             {/* Background */}
             <div className="hero-bg">
+                <div className="hero-grid" aria-hidden="true"></div>
+
                 <Suspense fallback={null}>
                     <LiquidEther
                         colors={HERO_LIQUID_COLORS}
-                        mouseForce={20}
-                        cursorSize={100}
+                        mouseForce={15}
+                        cursorSize={90}
                         isViscous
                         viscous={25}
                         iterationsViscous={14}
@@ -100,8 +163,8 @@ const Hero = memo(function Hero() {
                         resolution={0.4}
                         isBounce={false}
                         autoDemo
-                        autoSpeed={0.5}
-                        autoIntensity={2.2}
+                        autoSpeed={0.4}
+                        autoIntensity={1.8}
                         takeoverDuration={0.25}
                         autoResumeDelay={3000}
                         autoRampDuration={0.6}
@@ -110,15 +173,15 @@ const Hero = memo(function Hero() {
                             inset: 0,
                             width: "100%",
                             height: "100%",
+                            opacity: 0.55,
                         }}
                     />
                 </Suspense>
 
-                <div className="hero-aurora-mesh" aria-hidden="true"></div>
-                <div className="hero-radial-glow" aria-hidden="true"></div>
-                <div className="hero-noise" aria-hidden="true"></div>
-                <div className="hero-vignette" aria-hidden="true"></div>
-                <div className="hero-overlay" aria-hidden="true"></div>
+                <div className="hero-fluid-atmosphere" aria-hidden="true"></div>
+                <div className="hero-glass-refraction" aria-hidden="true"></div>
+                <div className="hero-glass-highlight" aria-hidden="true"></div>
+                <div className="hero-overlay-fade" aria-hidden="true"></div>
             </div>
 
             {/* Content */}
