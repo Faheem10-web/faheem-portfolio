@@ -35,8 +35,7 @@ import {
   FiSearch,
   FiUserCheck,
   FiCompass,
-  FiCheckSquare,
-  FiArrowRight
+  FiCheckSquare
 } from "react-icons/fi";
 
 import { 
@@ -458,29 +457,6 @@ function AboutPage() {
             </div>
           </div>
 
-          {/* CTA Actions Section */}
-          <div className="about-cta-section" style={{ marginTop: '50px', display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <Link 
-              to={aboutSettings.contactBtnUrl || "/contact"} 
-              className="about-primary-btn"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '14px 28px',
-                borderRadius: '999px',
-                background: '#ffffff',
-                color: '#0d0d11',
-                fontWeight: 600,
-                fontSize: '15px',
-                textDecoration: 'none',
-                transition: 'all 0.3s ease'
-              }}
-            >
-              {aboutSettings.contactBtnText || "Let's Talk"}
-              <FiArrowRight style={{ fontSize: '18px' }} />
-            </Link>
-          </div>
 
         </div>
       </section>
