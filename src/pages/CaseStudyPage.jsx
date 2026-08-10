@@ -463,18 +463,6 @@ export default function CaseStudyPage() {
           }}
           style={{ textAlign: 'center', marginBottom: '44px' }}
         >
-          {/* Stage 1: Category Badge */}
-          <motion.div 
-            variants={{
-              hidden: { opacity: 0, y: 14 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }
-            }}
-            style={{ marginBottom: '14px' }}
-          >
-            <span className="cs-hero-category-pill">
-              {categoryVal}
-            </span>
-          </motion.div>
 
           {/* Stage 2: Main Project Title */}
           <motion.h1 
