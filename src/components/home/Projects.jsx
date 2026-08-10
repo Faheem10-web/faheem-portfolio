@@ -1,4 +1,4 @@
-import React, { useRef, memo, useCallback } from "react";
+import React, { useState, useEffect, useRef, memo, useCallback } from "react";
 import "./Projects.css";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,15 +9,60 @@ import LazyImage from "../common/LazyImage";
 
 const MotionLink = motion(Link);
 
+const formatExternalUrl = (url) => {
+    if (!url || typeof url !== 'string') return '#';
+    const trimmed = url.trim();
+    if (!trimmed) return '#';
+    if (/^https?:\/\//i.test(trimmed)) return trimmed;
+    return `https://${trimmed}`;
+};
+
 // Refactored Subcomponent for Home Page Project Card to handle direct mouse follow via RAF
 const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverImg, cardTitle, navigate }) {
+    const [isHovered, setIsHovered] = useState(false);
+    const cardRef = useRef(null);
     const buttonsRef = useRef(null);
     const rectRef = useRef(null);
     const rafRef = useRef(null);
     const hasCaseStudy = project.hasCaseStudy !== false;
 
+    const resetState = useCallback(() => {
+        setIsHovered(false);
+        rectRef.current = null;
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        if (buttonsRef.current) {
+            buttonsRef.current.style.transform = 'translate3d(0px, 0px, 0)';
+        }
+        if (document.activeElement && typeof document.activeElement.blur === 'function') {
+            document.activeElement.blur();
+        }
+    }, []);
+
+    useEffect(() => {
+        const handleFocusReturn = () => {
+            resetState();
+        };
+
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                resetState();
+            }
+        };
+
+        window.addEventListener('focus', handleFocusReturn);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('pageshow', handleFocusReturn);
+
+        return () => {
+            window.removeEventListener('focus', handleFocusReturn);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener('pageshow', handleFocusReturn);
+        };
+    }, [resetState]);
+
     const handleMouseEnter = (e) => {
         rectRef.current = e.currentTarget.getBoundingClientRect();
+        setIsHovered(true);
     };
 
     const handleMouseMove = (e) => {
@@ -40,31 +85,29 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
             const ty = y * 6; 
             buttonsRef.current.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
         });
-    };
-
-    const handleMouseLeave = () => {
-        rectRef.current = null;
-        if (rafRef.current) cancelAnimationFrame(rafRef.current);
-        if (!buttonsRef.current) return;
-        buttonsRef.current.style.transform = 'translate3d(0px, 0px, 0)';
+        if (!isHovered) setIsHovered(true);
     };
 
     const optimizedCover = getOptimizedImageUrl(coverImg, { width: 800 });
     const coverSrcSet = getSrcSet(coverImg, [400, 600, 800, 1200]);
 
     const handleCardClick = useCallback((e) => {
-        if (!e.target.closest('a')) {
+        if (!e.target.closest('a') && !e.target.closest('button')) {
             if (hasCaseStudy) {
                 navigate(cardLink);
             } else if (project.liveUrl) {
-                window.open(project.liveUrl, '_blank');
+                const formatted = formatExternalUrl(project.liveUrl);
+                if (formatted !== '#') {
+                    window.open(formatted, '_blank', 'noopener,noreferrer');
+                }
             }
         }
     }, [hasCaseStudy, navigate, cardLink, project.liveUrl]);
 
     return (
         <motion.div
-            className="project-card-wrapper"
+            ref={cardRef}
+            className={`project-card-wrapper ${isHovered ? 'is-hovered' : 'is-idle'}`}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
@@ -73,7 +116,9 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
             style={{ cursor: hasCaseStudy || project.liveUrl ? 'pointer' : 'default' }}
             onMouseEnter={handleMouseEnter}
             onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
+            onMouseLeave={resetState}
+            onPointerLeave={resetState}
+            onBlur={resetState}
         >
             <div className="project-card" tabIndex="0">
                 {optimizedCover ? (
@@ -97,17 +142,21 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
                                     <Link 
                                         to={cardLink} 
                                         className="project-hover-btn project-hover-btn--primary"
+                                        onClick={resetState}
                                     >
                                         <span>View Design</span>
                                         <FiExternalLink />
                                     </Link>
                                 ) : (
                                     <a 
-                                        href={project.liveUrl || '#'} 
+                                        href={formatExternalUrl(project.liveUrl)} 
                                         target="_blank" 
                                         rel="noopener noreferrer" 
                                         className="project-hover-btn project-hover-btn--primary"
-                                        onClick={(e) => e.stopPropagation()}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            resetState();
+                                        }}
                                     >
                                         <span>View Design</span>
                                         <FiExternalLink />
@@ -119,17 +168,21 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
                                         <Link 
                                             to={cardLink} 
                                             className={`project-hover-btn ${!project.liveUrl ? 'project-hover-btn--primary' : ''}`}
+                                            onClick={resetState}
                                         >
                                             Case Study
                                         </Link>
                                     )}
                                     {project.liveUrl && (
                                         <a 
-                                            href={project.liveUrl} 
+                                            href={formatExternalUrl(project.liveUrl)} 
                                             target="_blank" 
                                             rel="noopener noreferrer" 
                                             className="project-hover-btn project-hover-btn--primary"
-                                            onClick={(e) => e.stopPropagation()}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                resetState();
+                                            }}
                                         >
                                             <span>Live Preview</span>
                                             <FiExternalLink />

@@ -6,21 +6,21 @@ import './PageTransition.css';
 export const pageVariants = {
   initial: {
     opacity: 0,
-    transform: 'translate3d(0, 16px, 0)'
+    y: 10
   },
   animate: {
     opacity: 1,
-    transform: 'translate3d(0, 0px, 0)',
+    y: 0,
     transition: {
-      duration: 0.45,
+      duration: 0.32,
       ease: [0.16, 1, 0.3, 1]
     }
   },
   exit: {
     opacity: 0,
-    transform: 'translate3d(0, -12px, 0)',
+    y: -8,
     transition: {
-      duration: 0.25,
+      duration: 0.2,
       ease: [0.76, 0, 0.24, 1]
     }
   }

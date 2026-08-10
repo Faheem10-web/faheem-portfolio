@@ -447,15 +447,44 @@ export default function CaseStudyPage() {
       
       <div style={{ maxWidth: '1040px', margin: '0 auto', padding: '0 24px' }}>
         
-        {/* ── 1. CENTERED PROJECT TITLE ── */}
-        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+        {/* ── 1. CINEMATIC STAGGERED HERO HEADER ── */}
+        <motion.div 
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.09,
+                delayChildren: 0.05
+              }
+            }
+          }}
+          style={{ textAlign: 'center', marginBottom: '44px' }}
+        >
+          {/* Stage 1: Category Badge */}
+          <motion.div 
+            variants={{
+              hidden: { opacity: 0, y: 14 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }
+            }}
+            style={{ marginBottom: '14px' }}
+          >
+            <span className="cs-hero-category-pill">
+              {categoryVal}
+            </span>
+          </motion.div>
+
+          {/* Stage 2: Main Project Title */}
           <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            variants={{
+              hidden: { opacity: 0, y: 22, scale: 0.98 },
+              visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] } }
+            }}
             style={{ 
               fontSize: 'clamp(36px, 5.5vw, 64px)', 
-              fontWeight: '700', 
+              fontWeight: '800', 
               color: 'var(--cs-title-color)', 
               letterSpacing: '-0.03em',
               lineHeight: '1.1',
@@ -464,19 +493,24 @@ export default function CaseStudyPage() {
           >
             {project.name || titleText}
           </motion.h1>
-        </div>
+        </motion.div>
 
-        {/* ── 2. CARD 1 SLIDER (Top Main Cover Showcase Card) ── */}
+        {/* ── 2. CARD 1 SLIDER (Top Main Cover Showcase Card) WITH CINEMATIC REVEAL ── */}
         {card1SliderImages.length > 0 && (
-          <MockupSliderCard images={card1SliderImages} cardHeight={project.cardHeight || project.showcaseConfig?.cardHeight} />
+          <motion.div
+            initial={{ opacity: 0, y: 30, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.48, delay: 0.22, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <MockupSliderCard images={card1SliderImages} cardHeight={project.cardHeight || project.showcaseConfig?.cardHeight} />
+          </motion.div>
         )}
 
-        {/* ── 3. OVERVIEW BLOCK ── */}
+        {/* ── 3. OVERVIEW BLOCK WITH SMOOTH STAGGER REVEAL ── */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.34, ease: [0.16, 1, 0.3, 1] }}
           style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '40px', marginBottom: '56px' }}
         >
           {/* Left Column: Short Description & Purple Glossy Visit Website Button */}

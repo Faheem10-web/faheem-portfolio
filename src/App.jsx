@@ -64,6 +64,20 @@ function AppContent() {
     if (isAdminRoute) {
       setHasCompletedInitialLoad(true);
       setIsSiteLoaded(true);
+    } else {
+      // Proactively prefetch public secondary route chunks in background for 0ms navigation latency
+      const prefetchSecondaryRoutes = () => {
+        import("./pages/AboutPage");
+        import("./pages/ProjectsPage");
+        import("./pages/ContactPage");
+        import("./pages/CaseStudyPage");
+      };
+
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(prefetchSecondaryRoutes);
+      } else {
+        setTimeout(prefetchSecondaryRoutes, 800);
+      }
     }
   }, [isAdminRoute, setIsSiteLoaded]);
 

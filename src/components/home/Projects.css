@@ -145,10 +145,9 @@
     align-items: center;
     justify-content: center;
     border: none;
-    transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1), 
-                box-shadow 250ms cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.12); /* Default card shadow */
-    will-change: transform, box-shadow;
+    transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: none;
+    will-change: transform;
 }
 
 .project-card:focus-visible {
@@ -276,7 +275,7 @@
 .project-card-wrapper:hover .project-card,
 .project-card-wrapper:focus-within .project-card {
     transform: scale(1.02) translateZ(0); /* Scale card to 1.02 */
-    box-shadow: 0 28px 75px -12px rgba(124, 92, 255, 0.32), 0 16px 36px -8px rgba(0, 0, 0, 0.35); /* Soft purple ambient glow & deep shadow */
+    box-shadow: none;
 }
 
 .project-card-wrapper:hover .project-image,
@@ -301,6 +300,27 @@
     opacity: 1;
     transform: translateY(0) scale(1) translateZ(0); /* 10px -> 0, scale 0.96 -> 1 */
     transition-delay: 50ms;
+}
+
+/* Force Reset Idle State to Prevent Stuck Overlays on Tab Focus Return */
+.project-card-wrapper.is-idle .project-overlay {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+.project-card-wrapper.is-idle .project-hover-btn {
+    opacity: 0 !important;
+    transform: translateY(10px) scale(0.96) translateZ(0) !important;
+}
+
+.project-card-wrapper.is-idle .project-card {
+    transform: scale(1) translateZ(0) !important;
+    box-shadow: none !important;
+}
+
+.project-card-wrapper.is-idle .project-image {
+    transform: scale(1) translateZ(0) !important;
+    filter: brightness(1) translateZ(0) !important;
 }
 
 /* Grid & Responsive breakpoints */

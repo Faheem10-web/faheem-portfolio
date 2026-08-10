@@ -43,6 +43,23 @@
   --cs-shadow-hover: 0 20px 50px rgba(0, 0, 0, 0.08);
 }
 
+.cs-hero-category-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 18px;
+  border-radius: 9999px;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--cs-card-bg, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--cs-card-border, rgba(255, 255, 255, 0.14));
+  color: var(--cs-section-label, #a855f7);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
 /* ──────────────────────────────────────────────────────────────────────────
    CASE STUDY EXCLUSIVE THEME CONTROL SYSTEM (DARK MODE & LIGHT MODE)
    ────────────────────────────────────────────────────────────────────────── */

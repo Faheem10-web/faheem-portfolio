@@ -270,10 +270,9 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1), 
-                box-shadow 250ms cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.12); /* Default card shadow */
-    will-change: transform, box-shadow;
+    transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: none;
+    will-change: transform;
 }
 
 .proj-card-inner:focus-visible {
@@ -284,7 +283,7 @@
 .proj-card-inner:hover,
 .proj-card-inner:focus-within {
     transform: scale(1.02) translateZ(0); /* Scale card to 1.02 */
-    box-shadow: 0 28px 75px -12px rgba(124, 92, 255, 0.32), 0 16px 36px -8px rgba(0, 0, 0, 0.35); /* Soft purple ambient glow & deep shadow */
+    box-shadow: none;
 }
 
 .proj-card-image-wrap {
@@ -380,6 +379,27 @@
     opacity: 1;
     transform: translateY(0) scale(1) translateZ(0); /* 10px -> 0, scale 0.96 -> 1 */
     transition-delay: 50ms;
+}
+
+/* Force Reset Idle State to Prevent Stuck Overlays on Tab Focus Return */
+.proj-card-box.is-idle .proj-card-hover-overlay {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+.proj-card-box.is-idle .hover-btn {
+    opacity: 0 !important;
+    transform: translateY(10px) scale(0.96) translateZ(0) !important;
+}
+
+.proj-card-box.is-idle .proj-card-inner {
+    transform: scale(1) translateZ(0) !important;
+    box-shadow: none !important;
+}
+
+.proj-card-box.is-idle .proj-card-image {
+    transform: scale(1) translateZ(0) !important;
+    filter: brightness(1) translateZ(0) !important;
 }
 
 /* Button 1: Case Study (Pure White) */

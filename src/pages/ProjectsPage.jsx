@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./ProjectsPage.css";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -10,9 +10,52 @@ import { useAdmin } from "../context/AdminContext";
 import { getOptimizedImageUrl, getSrcSet } from "../utils/imageOptimizer";
 import LazyImage from "../components/common/LazyImage";
 
+const formatExternalUrl = (url) => {
+    if (!url || typeof url !== 'string') return '#';
+    const trimmed = url.trim();
+    if (!trimmed) return '#';
+    if (/^https?:\/\//i.test(trimmed)) return trimmed;
+    return `https://${trimmed}`;
+};
+
 // Refactored Subcomponent for Project Card to handle direct mouse follow
 function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }) {
+    const [isHovered, setIsHovered] = useState(false);
+    const cardRef = useRef(null);
     const buttonsRef = useRef(null);
+    const hasCaseStudy = project.hasCaseStudy !== false;
+
+    const resetState = useCallback(() => {
+        setIsHovered(false);
+        if (buttonsRef.current) {
+            buttonsRef.current.style.transform = 'translate3d(0px, 0px, 0)';
+        }
+        if (document.activeElement && typeof document.activeElement.blur === 'function') {
+            document.activeElement.blur();
+        }
+    }, []);
+
+    useEffect(() => {
+        const handleFocusReturn = () => {
+            resetState();
+        };
+
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                resetState();
+            }
+        };
+
+        window.addEventListener('focus', handleFocusReturn);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('pageshow', handleFocusReturn);
+
+        return () => {
+            window.removeEventListener('focus', handleFocusReturn);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener('pageshow', handleFocusReturn);
+        };
+    }, [resetState]);
 
     const handleMouseMove = (e) => {
         if (!buttonsRef.current) return;
@@ -27,28 +70,35 @@ function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }
         const ty = y * 6; 
         
         buttonsRef.current.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
-    };
-
-    const handleMouseLeave = () => {
-        if (!buttonsRef.current) return;
-        buttonsRef.current.style.transform = 'translate3d(0px, 0px, 0)';
+        if (!isHovered) setIsHovered(true);
     };
 
     const optimizedCover = getOptimizedImageUrl(coverImg, { width: 800 });
     const coverSrcSet = getSrcSet(coverImg, [400, 600, 800, 1200]);
 
-    const hasCaseStudy = project.hasCaseStudy !== false;
+    const handleSaveScrollPos = () => {
+        try {
+            sessionStorage.setItem('projects_scroll_pos', window.scrollY.toString());
+        } catch {
+            // fallback
+        }
+        resetState();
+    };
 
     return (
         <motion.div
+            ref={cardRef}
             layout
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.5, delay: index * 0.05 }}
-            className="proj-card-box"
+            className={`proj-card-box ${isHovered ? 'is-hovered' : 'is-idle'}`}
+            onMouseEnter={() => setIsHovered(true)}
             onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
+            onMouseLeave={resetState}
+            onPointerLeave={resetState}
+            onBlur={resetState}
         >
             <div className="proj-card-inner" tabIndex="0">
                 <div className="proj-card-image-wrap">
@@ -74,17 +124,21 @@ function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }
                                         <Link 
                                             to={cardLink} 
                                             className="hover-btn hover-btn-purple"
+                                            onClick={handleSaveScrollPos}
                                         >
                                             <span>View Design</span>
                                             <FiExternalLink />
                                         </Link>
                                     ) : (
                                         <a 
-                                            href={demoLink} 
+                                            href={formatExternalUrl(demoLink)} 
                                             className="hover-btn hover-btn-purple" 
                                             target="_blank" 
-                                            rel="noreferrer"
-                                            onClick={(e) => e.stopPropagation()}
+                                            rel="noopener noreferrer"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                resetState();
+                                            }}
                                         >
                                             <span>View Design</span>
                                             <FiExternalLink />
@@ -96,17 +150,21 @@ function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }
                                             <Link 
                                                 to={cardLink} 
                                                 className={`hover-btn ${demoLink ? 'hover-btn-glass' : 'hover-btn-purple'}`}
+                                                onClick={handleSaveScrollPos}
                                             >
                                                 Case Study
                                             </Link>
                                         )}
                                         {demoLink && (
                                             <a 
-                                                href={demoLink} 
+                                                href={formatExternalUrl(demoLink)} 
                                                 className="hover-btn hover-btn-purple" 
                                                 target="_blank" 
-                                                rel="noreferrer"
-                                                onClick={(e) => e.stopPropagation()}
+                                                rel="noopener noreferrer"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    resetState();
+                                                }}
                                             >
                                                 <span>Live Preview</span>
                                                 <FiExternalLink />
@@ -128,13 +186,22 @@ function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }
                     <div className="proj-card-actions">
                         {project.viewDesignOnly ? (
                             hasCaseStudy ? (
-                                <Link to={cardLink} className="action-btn action-primary">
+                                <Link to={cardLink} className="action-btn action-primary" onClick={handleSaveScrollPos}>
                                     <span>View Design</span>
                                     <FiArrowRight />
                                 </Link>
                             ) : (
                                 demoLink && (
-                                    <a href={demoLink} className="action-btn action-primary" target="_blank" rel="noreferrer">
+                                    <a 
+                                        href={formatExternalUrl(demoLink)} 
+                                        className="action-btn action-primary" 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            resetState();
+                                        }}
+                                    >
                                         <span>View Design</span>
                                         <FiExternalLink />
                                     </a>
@@ -143,20 +210,32 @@ function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }
                         ) : (
                             <>
                                 {hasCaseStudy ? (
-                                    <Link to={cardLink} className="action-btn action-primary">
+                                    <Link to={cardLink} className="action-btn action-primary" onClick={handleSaveScrollPos}>
                                         <span>Case Study</span>
                                         <FiArrowRight />
                                     </Link>
                                 ) : (
                                     demoLink && (
-                                        <a href={demoLink} className="action-btn action-primary" target="_blank" rel="noreferrer">
+                                        <a 
+                                            href={formatExternalUrl(demoLink)} 
+                                            className="action-btn action-primary" 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
                                             <span>Live Preview</span>
                                             <FiExternalLink />
                                         </a>
                                     )
                                 )}
                                 {hasCaseStudy && demoLink && (
-                                    <a href={demoLink} className="action-btn action-secondary" target="_blank" rel="noreferrer">
+                                    <a 
+                                        href={formatExternalUrl(demoLink)} 
+                                        className="action-btn action-secondary" 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
                                         <FiExternalLink />
                                         <span>Live Preview</span>
                                     </a>
@@ -180,7 +259,39 @@ function ProjectsPage() {
     const showSkeleton = isProjectsLoading && activeProjects.length === 0;
 
     useEffect(() => {
-        window.scrollTo(0, 0);
+        let savedPos = null;
+        try {
+            savedPos = sessionStorage.getItem('projects_scroll_pos');
+        } catch {
+            savedPos = null;
+        }
+
+        if (savedPos !== null) {
+            const scrollY = parseInt(savedPos, 10) || 0;
+            try {
+                sessionStorage.removeItem('projects_scroll_pos');
+            } catch {
+                // fallback
+            }
+
+            const timer = setTimeout(() => {
+                window.scrollTo(0, scrollY);
+                document.documentElement.scrollTop = scrollY;
+                document.body.scrollTop = scrollY;
+                if (window.lenis) {
+                    window.lenis.scrollTo(scrollY, { immediate: true });
+                }
+            }, 60);
+
+            return () => clearTimeout(timer);
+        } else {
+            window.scrollTo(0, 0);
+            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
+            if (window.lenis) {
+                window.lenis.scrollTo(0, { immediate: true });
+            }
+        }
     }, []);
 
     if (showSkeleton) {
