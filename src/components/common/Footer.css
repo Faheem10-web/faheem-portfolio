@@ -32,14 +32,14 @@
     backdrop-filter: blur(18px) saturate(140%);
     -webkit-backdrop-filter: blur(18px) saturate(140%);
     
-    border: 1px solid rgba(255, 255, 255, 0.45);
+    border: none;
     box-shadow: none;
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 :root[data-theme='dark'] .footer-card {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.03) 100%), rgba(16, 14, 22, 0.55);
-    border-color: rgba(255, 255, 255, 0.22);
+    border: none;
     box-shadow: none;
 }
 
@@ -317,7 +317,7 @@ body.cs-dark-active .footer-nav-pill .pill-nav-icon {
     position: relative;
     z-index: 2;
     width: 100%;
-    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    border-top: none;
     padding: 22px 40px;
     display: flex;
     align-items: center;
@@ -333,7 +333,7 @@ body.cs-dark-active .footer-nav-pill .pill-nav-icon {
 }
 
 :root[data-theme='dark'] .footer-card-bottom {
-    border-top-color: rgba(255, 255, 255, 0.12);
+    border-top: none;
     background: transparent !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
