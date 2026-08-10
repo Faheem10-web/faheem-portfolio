@@ -36,7 +36,6 @@ import {
   FiUserCheck,
   FiCompass,
   FiCheckSquare,
-  FiDownload,
   FiArrowRight
 } from "react-icons/fi";
 
@@ -280,7 +279,7 @@ const FallbackProfileCard = ({ data = {} }) => {
 };
 
 function AboutPage() {
-  const { siteSettings, downloadCv } = useAdmin();
+  const { siteSettings } = useAdmin();
   const rawAbout = siteSettings?.about || {};
   const aboutSettings = rawAbout.aboutPage || rawAbout;
   const [imgError, setImgError] = useState(false);
@@ -461,16 +460,8 @@ function AboutPage() {
 
           {/* CTA Actions Section */}
           <div className="about-cta-section" style={{ marginTop: '50px', display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <a 
-              href={aboutSettings.resumeUrl || "/resume.pdf"} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              onClick={(e) => {
-                if (downloadCv) {
-                  e.preventDefault();
-                  downloadCv();
-                }
-              }}
+            <Link 
+              to={aboutSettings.contactBtnUrl || "/contact"} 
               className="about-primary-btn"
               style={{
                 display: 'inline-flex',
@@ -480,29 +471,6 @@ function AboutPage() {
                 borderRadius: '999px',
                 background: '#ffffff',
                 color: '#0d0d11',
-                fontWeight: 600,
-                fontSize: '15px',
-                textDecoration: 'none',
-                transition: 'all 0.3s ease',
-                cursor: 'pointer'
-              }}
-            >
-              <FiDownload style={{ fontSize: '18px' }} />
-              {aboutSettings.resumeBtnText || "Download Resume"}
-            </a>
-
-            <Link 
-              to={aboutSettings.contactBtnUrl || "/contact"} 
-              className="about-secondary-btn"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '14px 28px',
-                borderRadius: '999px',
-                background: 'rgba(255, 255, 255, 0.08)',
-                color: '#ffffff',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
                 fontWeight: 600,
                 fontSize: '15px',
                 textDecoration: 'none',

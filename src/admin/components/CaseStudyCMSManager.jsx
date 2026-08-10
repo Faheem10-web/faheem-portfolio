@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAdmin } from '../../context/AdminContext';
+import CaseStudyThemeToggle from './CaseStudyThemeToggle';
 import { 
   FiUploadCloud, FiTrash2, FiSave, FiEye, 
   FiCheckCircle, FiLink, FiCheck, FiX, FiPlus
@@ -385,7 +386,8 @@ export default function CaseStudyCMSManager({ project, onSaveComplete }) {
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '12px' }}>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <CaseStudyThemeToggle />
           <a
             href={`/projects/${projectSlug}`}
             target="_blank"

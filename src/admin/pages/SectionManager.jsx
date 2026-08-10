@@ -873,27 +873,6 @@ export default function SectionManager() {
               <h4 className="admin-subheading" style={{ margin: '20px 0 10px', color: '#fff' }}>CTA Button Settings</h4>
               <div className="admin-form-row">
                 <div className="admin-form-group">
-                  <label className="admin-label">Resume Button Text</label>
-                  <input 
-                    type="text" 
-                    className="admin-input" 
-                    value={aboutPageForm.resumeBtnText} 
-                    onChange={e => setAboutPageForm({ ...aboutPageForm, resumeBtnText: e.target.value })} 
-                  />
-                </div>
-                <div className="admin-form-group">
-                  <label className="admin-label">Resume File URL</label>
-                  <input 
-                    type="text" 
-                    className="admin-input" 
-                    value={aboutPageForm.resumeUrl} 
-                    onChange={e => setAboutPageForm({ ...aboutPageForm, resumeUrl: e.target.value })} 
-                  />
-                </div>
-              </div>
-
-              <div className="admin-form-row">
-                <div className="admin-form-group">
                   <label className="admin-label">Secondary Button Text</label>
                   <input 
                     type="text" 

@@ -437,7 +437,8 @@ export const Media = mongoose.models.Media || mongoose.model('Media', mediaSchem
 
 // 18. Theme Settings Schema
 const themeSettingsSchema = new mongoose.Schema({
-  mode: { type: String, default: 'system' } // 'system', 'user', 'light', 'dark'
+  mode: { type: String, default: 'system' }, // 'system', 'user', 'light', 'dark'
+  caseStudyDarkMode: { type: Boolean, default: true } // ON = Dark Mode, OFF = Light Mode
 });
 export const ThemeSettings = mongoose.models.ThemeSettings || mongoose.model('ThemeSettings', themeSettingsSchema);
 

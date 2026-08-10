@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAdmin } from '../../context/AdminContext';
 import { FiEdit2, FiTrash2, FiPlus, FiX } from 'react-icons/fi';
 import CaseStudyCMSManager from '../components/CaseStudyCMSManager';
+import CaseStudyThemeToggle from '../components/CaseStudyThemeToggle';
 import '../Admin.css';
 
 function SectionGalleryUploader({ title, sectionName, images = [], onImagesChange, onSaveSection, isSaving }) {
@@ -520,11 +521,14 @@ export default function ProjectManager() {
           <h1 className="admin-header-title">Project Management</h1>
           <p className="admin-header-subtitle">Add, edit, or delete items in your portfolio grid</p>
         </div>
-        {!isEditing && (
-          <button className="admin-btn admin-btn-primary" onClick={() => { resetForm(); setIsEditing(true); }}>
-            <FiPlus /> New Project
-          </button>
-        )}
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <CaseStudyThemeToggle />
+          {!isEditing && (
+            <button className="admin-btn admin-btn-primary" onClick={() => { resetForm(); setIsEditing(true); }}>
+              <FiPlus /> New Project
+            </button>
+          )}
+        </div>
       </div>
 
       {isEditing ? (

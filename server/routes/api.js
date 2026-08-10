@@ -102,7 +102,7 @@ const buildFallbackPayload = () => {
       footer: seed.footerSettings || {},
       seo: seed.seoSettings || {},
       global: seed.globalSettings || {},
-      theme: seed.themeSettings || { mode: 'system' },
+      theme: seed.themeSettings || { mode: 'system', caseStudyDarkMode: true },
       chat: seed.chatSettings || {}
     },
     projects: [],

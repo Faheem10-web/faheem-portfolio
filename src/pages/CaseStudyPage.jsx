@@ -180,7 +180,8 @@ function MockupSliderCard({ images = [], cardHeight }) {
 
 export default function CaseStudyPage() {
   const { id } = useParams();
-  const { projects } = useAdmin();
+  const { projects, siteSettings } = useAdmin();
+  const isCaseStudyDarkMode = siteSettings?.theme?.caseStudyDarkMode !== false; // Default: ON (Dark Mode)
   
   const contextProject = (projects || []).find(p => p.slug === id || p._id === id || p.id === id);
   const [project, setProject] = useState(contextProject || null);
@@ -237,7 +238,7 @@ export default function CaseStudyPage() {
 
   if (loading && !project) {
     return (
-      <div className="case-study-root" style={{ textAlign: 'center', paddingTop: '160px', minHeight: '80vh' }}>
+      <div className={`case-study-root ${isCaseStudyDarkMode ? 'cs-dark-theme' : 'cs-light-theme'}`} style={{ textAlign: 'center', paddingTop: '160px', minHeight: '80vh' }}>
         <div className="cs-loading-spinner" style={{ margin: '0 auto 20px' }}></div>
         <p style={{ color: 'var(--cs-text-secondary, #9CA3AF)', fontSize: '15px' }}>Loading case study experience...</p>
       </div>
@@ -246,7 +247,7 @@ export default function CaseStudyPage() {
 
   if (!project) {
     return (
-      <div className="case-study-root" style={{ textAlign: 'center', paddingTop: '140px' }}>
+      <div className={`case-study-root ${isCaseStudyDarkMode ? 'cs-dark-theme' : 'cs-light-theme'}`} style={{ textAlign: 'center', paddingTop: '140px' }}>
         <h2 style={{ fontSize: '32px', fontWeight: '800' }}>Case Study Not Found</h2>
         <p style={{ color: 'var(--cs-text-secondary)', marginBottom: '24px' }}>The requested portfolio project does not exist.</p>
         <Link to="/projects" className="cs-view-all-btn">
@@ -259,7 +260,7 @@ export default function CaseStudyPage() {
   if (project.hasCaseStudy === false) {
     const projectLiveUrl = project.links?.liveProject || project.liveUrl;
     return (
-      <div className="case-study-root" style={{ textAlign: 'center', paddingTop: '160px', paddingBottom: '120px', minHeight: '80vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+      <div className={`case-study-root ${isCaseStudyDarkMode ? 'cs-dark-theme' : 'cs-light-theme'}`} style={{ textAlign: 'center', paddingTop: '160px', paddingBottom: '120px', minHeight: '80vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔒</div>
         <h2 style={{ fontSize: '32px', fontWeight: '800', marginBottom: '12px' }}>Case Study Currently Disabled</h2>
         <p style={{ color: 'var(--cs-text-secondary, #9CA3AF)', maxWidth: '500px', marginBottom: '32px', lineHeight: '1.6' }}>
@@ -431,7 +432,7 @@ export default function CaseStudyPage() {
   );
 
   return (
-    <div className="case-study-root" style={{ paddingTop: '120px', paddingBottom: '140px', background: '#FFFFFF', minHeight: '100vh', color: '#111827' }}>
+    <div className={`case-study-root ${isCaseStudyDarkMode ? 'cs-dark-theme' : 'cs-light-theme'}`}>
       
       <div style={{ maxWidth: '1040px', margin: '0 auto', padding: '0 24px' }}>
         
@@ -444,7 +445,7 @@ export default function CaseStudyPage() {
             style={{ 
               fontSize: 'clamp(36px, 5.5vw, 64px)', 
               fontWeight: '700', 
-              color: '#0D0D0D', 
+              color: 'var(--cs-title-color)', 
               letterSpacing: '-0.03em',
               lineHeight: '1.1',
               margin: 0
@@ -469,7 +470,7 @@ export default function CaseStudyPage() {
         >
           {/* Left Column: Short Description & Purple Glossy Visit Website Button */}
           <div style={{ flex: '1 1 380px', maxWidth: '460px' }}>
-            <p style={{ fontSize: '15px', lineHeight: '1.65', color: '#374151', margin: '0 0 24px 0', fontWeight: '400' }}>
+            <p style={{ fontSize: '15px', lineHeight: '1.65', color: 'var(--cs-text-primary)', margin: '0 0 24px 0', fontWeight: '400' }}>
               {project.shortDesc || project.overviewConfig?.intro || `${titleText} is a modern digital product designed to deliver exceptional user experience, high performance, and scalable interface architecture.`}
             </p>
 
@@ -503,23 +504,23 @@ export default function CaseStudyPage() {
           {/* Right Column: 4-Item Metadata Grid (Category, Services, Client, Date) */}
           <div style={{ flex: '1 1 420px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))', gap: '24px' }}>
             <div>
-              <span style={{ display: 'block', fontSize: '12px', color: '#6B7280', marginBottom: '6px', fontWeight: '500' }}>Category</span>
-              <strong style={{ fontSize: '15px', color: '#111827', fontWeight: '600' }}>{categoryVal}</strong>
+              <span style={{ display: 'block', fontSize: '12px', color: 'var(--cs-meta-label)', marginBottom: '6px', fontWeight: '500' }}>Category</span>
+              <strong style={{ fontSize: '15px', color: 'var(--cs-meta-val)', fontWeight: '600' }}>{categoryVal}</strong>
             </div>
 
             <div>
-              <span style={{ display: 'block', fontSize: '12px', color: '#6B7280', marginBottom: '6px', fontWeight: '500' }}>Services</span>
-              <strong style={{ fontSize: '15px', color: '#111827', fontWeight: '600' }}>{roleVal}</strong>
+              <span style={{ display: 'block', fontSize: '12px', color: 'var(--cs-meta-label)', marginBottom: '6px', fontWeight: '500' }}>Services</span>
+              <strong style={{ fontSize: '15px', color: 'var(--cs-meta-val)', fontWeight: '600' }}>{roleVal}</strong>
             </div>
 
             <div>
-              <span style={{ display: 'block', fontSize: '12px', color: '#6B7280', marginBottom: '6px', fontWeight: '500' }}>Client</span>
-              <strong style={{ fontSize: '15px', color: '#111827', fontWeight: '600' }}>{clientVal}</strong>
+              <span style={{ display: 'block', fontSize: '12px', color: 'var(--cs-meta-label)', marginBottom: '6px', fontWeight: '500' }}>Client</span>
+              <strong style={{ fontSize: '15px', color: 'var(--cs-meta-val)', fontWeight: '600' }}>{clientVal}</strong>
             </div>
 
             <div>
-              <span style={{ display: 'block', fontSize: '12px', color: '#6B7280', marginBottom: '6px', fontWeight: '500' }}>Date</span>
-              <strong style={{ fontSize: '15px', color: '#111827', fontWeight: '600' }}>{yearVal}</strong>
+              <span style={{ display: 'block', fontSize: '12px', color: 'var(--cs-meta-label)', marginBottom: '6px', fontWeight: '500' }}>Date</span>
+              <strong style={{ fontSize: '15px', color: 'var(--cs-meta-val)', fontWeight: '600' }}>{yearVal}</strong>
             </div>
           </div>
         </motion.div>
@@ -533,13 +534,13 @@ export default function CaseStudyPage() {
           style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '32px', marginBottom: '56px' }}
         >
           <div style={{ flex: '0 0 160px' }}>
-            <span style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '0.12em', color: '#4B5563', textTransform: 'uppercase' }}>
+            <span style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '0.12em', color: 'var(--cs-section-label)', textTransform: 'uppercase' }}>
               THE CHALLENGE
             </span>
           </div>
 
           <div style={{ flex: '1 1 540px', maxWidth: '680px' }}>
-            <p style={{ fontSize: '15px', lineHeight: '1.7', color: '#374151', margin: 0, whiteSpace: 'pre-line' }}>
+            <p style={{ fontSize: '15px', lineHeight: '1.7', color: 'var(--cs-text-primary)', margin: 0, whiteSpace: 'pre-line' }}>
               {project.challenge || project.challengeIntro || `The client struggled with a complex product that overwhelmed users with dense data and inconsistent layouts. Key insights were buried behind poor hierarchy, unclear navigation, and fragmented components.\n\nAdditionally, the product needed to scale rapidly while maintaining usability.`}
             </p>
           </div>
@@ -597,13 +598,13 @@ export default function CaseStudyPage() {
           style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '32px', marginBottom: '40px' }}
         >
           <div style={{ flex: '0 0 160px' }}>
-            <span style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '0.12em', color: '#4B5563', textTransform: 'uppercase' }}>
+            <span style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '0.12em', color: 'var(--cs-section-label)', textTransform: 'uppercase' }}>
               FINAL OUTCOME
             </span>
           </div>
 
           <div style={{ flex: '1 1 540px', maxWidth: '680px' }}>
-            <p style={{ fontSize: '15px', lineHeight: '1.7', color: '#374151', margin: 0, whiteSpace: 'pre-line' }}>
+            <p style={{ fontSize: '15px', lineHeight: '1.7', color: 'var(--cs-text-primary)', margin: 0, whiteSpace: 'pre-line' }}>
               {project.results || project.conclusion || `A clear dashboard structure was introduced with consistent components, improved data hierarchy, and simplified navigation patterns that made insights easier to access.\n\nThe new design system reduced design debt, improved usability, and allowed the team to ship new features faster.`}
             </p>
           </div>
