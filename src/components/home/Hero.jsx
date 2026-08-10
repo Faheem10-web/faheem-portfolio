@@ -6,7 +6,7 @@ import SplitText from "../common/SplitText";
 
 const LiquidEther = lazy(() => import("./LiquidEther"));
 
-const HERO_LIQUID_COLORS = ["#8B5CF6", "#7C3AED", "#9333EA", "#C084FC", "#6D28D9"];
+const HERO_LIQUID_COLORS = ["#7C3AED", "#6D3DF5", "#A855F7"];
 const FROM_CONFIG = { opacity: 0, y: 40 };
 const TO_CONFIG = { opacity: 1, y: 0 };
 
@@ -108,8 +108,8 @@ const Hero = memo(function Hero() {
 
         const updateLoop = () => {
             const { currentX, currentY, targetX, targetY } = mousePos.current;
-            const lerpX = currentX + (targetX - currentX) * 0.08;
-            const lerpY = currentY + (targetY - currentY) * 0.08;
+            const lerpX = currentX + (targetX - currentX) * 0.05;
+            const lerpY = currentY + (targetY - currentY) * 0.05;
 
             mousePos.current.currentX = lerpX;
             mousePos.current.currentY = lerpY;
@@ -154,26 +154,26 @@ const Hero = memo(function Hero() {
                 <Suspense fallback={null}>
                     <LiquidEther
                         colors={HERO_LIQUID_COLORS}
-                        mouseForce={22}
-                        cursorSize={100}
+                        mouseForce={15}
+                        cursorSize={90}
                         isViscous
-                        viscous={20}
-                        iterationsViscous={10}
-                        iterationsPoisson={10}
-                        resolution={0.5}
+                        viscous={25}
+                        iterationsViscous={14}
+                        iterationsPoisson={14}
+                        resolution={0.4}
                         isBounce={false}
                         autoDemo
-                        autoSpeed={0.35}
-                        autoIntensity={2.0}
+                        autoSpeed={0.4}
+                        autoIntensity={1.8}
                         takeoverDuration={0.25}
-                        autoResumeDelay={2000}
+                        autoResumeDelay={3000}
                         autoRampDuration={0.6}
                         style={{
                             position: "absolute",
                             inset: 0,
                             width: "100%",
                             height: "100%",
-                            opacity: 0.70,
+                            opacity: 0.55,
                         }}
                     />
                 </Suspense>
