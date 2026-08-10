@@ -75,6 +75,49 @@
   --cs-shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.03);
 }
 
+/* Ensure body, app container, main content, and footer wrapper seamlessly match dark mode background */
+body.cs-dark-active,
+body.cs-dark-active .app-container,
+body.cs-dark-active .main-content,
+body.cs-dark-active .footer-wrapper,
+.app-container:has(.cs-dark-theme),
+.app-container:has(.cs-dark-theme) .main-content,
+.app-container:has(.cs-dark-theme) .footer-wrapper {
+  background-color: #0B0C10 !important;
+  transition: background-color 0.4s ease;
+}
+
+.cs-dark-theme .cs-typography-hero {
+  background-color: #0B0C10 !important;
+  color: #FFFFFF !important;
+}
+
+.cs-dark-theme .cs-hero-editorial-headline {
+  color: #FFFFFF !important;
+}
+
+.cs-dark-theme .cs-hero-card-panel,
+.cs-dark-theme .cs-feature-card,
+.cs-dark-theme .cs-premium-slider-container,
+.cs-dark-theme .cs-mockup-frame,
+.cs-dark-theme .cs-mobile-card {
+  background: #121216 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.4) !important;
+}
+
+.cs-dark-theme .cs-mobile-exp-title {
+  color: #FFFFFF !important;
+}
+
+.cs-dark-theme .cs-mobile-exp-label {
+  color: #A855F7 !important;
+}
+
+.cs-dark-theme .cs-mobile-experience-section {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
 .case-study-root {
   background-color: var(--cs-bg-main);
   color: var(--cs-text-primary);
@@ -1054,7 +1097,7 @@
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: #4B5563;
+  color: var(--cs-section-label, #4B5563);
   text-transform: uppercase;
   margin-bottom: 12px;
 }
@@ -1062,7 +1105,7 @@
 .cs-mobile-exp-title {
   font-size: clamp(28px, 4.5vw, 48px);
   font-weight: 800;
-  color: #0D0D0D;
+  color: var(--cs-title-color, #0D0D0D);
   letter-spacing: -0.03em;
   line-height: 1.15;
   margin: 0;
@@ -1128,12 +1171,12 @@
   aspect-ratio: 16 / 9;
   border-radius: 24px;
   overflow: hidden;
-  background-color: #FFFFFF;
+  background-color: var(--cs-card-bg, #FFFFFF);
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.05);
   margin-bottom: 56px;
   user-select: none;
   touch-action: pan-y;
-  border: 1px solid rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--cs-card-border, rgba(0, 0, 0, 0.06));
 }
 
 .cs-premium-slider-img {

@@ -188,6 +188,17 @@ export default function CaseStudyPage() {
   const [loading, setLoading] = useState(!contextProject && !project);
 
   useEffect(() => {
+    if (isCaseStudyDarkMode) {
+      document.body.classList.add('cs-dark-active');
+    } else {
+      document.body.classList.remove('cs-dark-active');
+    }
+    return () => {
+      document.body.classList.remove('cs-dark-active');
+    };
+  }, [isCaseStudyDarkMode]);
+
+  useEffect(() => {
     if (contextProject) {
       setProject(contextProject);
       setLoading(false);
