@@ -433,12 +433,13 @@ export async function generateAIChatReply(userMessage) {
       // 1. Google Gemini API (if configured)
       if (process.env.GEMINI_API_KEY || (process.env.AI_API_KEY && process.env.AI_API_KEY.startsWith("AIza"))) {
         const geminiKey = process.env.GEMINI_API_KEY || process.env.AI_API_KEY;
+        const geminiModel = process.env.GEMINI_MODEL || "gemini-1.5-flash";
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 7000);
 
         try {
           const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${geminiKey}`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -481,7 +482,9 @@ export async function generateAIChatReply(userMessage) {
           ? "https://api.groq.com/openai/v1/chat/completions"
           : "https://api.openai.com/v1/chat/completions";
         const token = isGroq ? process.env.GROQ_API_KEY : process.env.OPENAI_API_KEY;
-        const model = isGroq ? "llama-3.1-8b-instant" : "gpt-3.5-turbo";
+        const model = isGroq 
+          ? (process.env.GROQ_MODEL || process.env.AI_MODEL || "llama-3.3-70b-versatile")
+          : (process.env.OPENAI_MODEL || process.env.AI_MODEL || "gpt-4o-mini");
 
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 7000);

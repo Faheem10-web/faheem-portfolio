@@ -1,37 +1,85 @@
 /* ==========================================================================
-   AI Assistant Avatar - Futuristic 3D Robot CSS
+   AI Robot Avatar — Premium Floating Animations
+   ONE ICON  ·  ONE AI IDENTITY  ·  GPU-ONLY TRANSFORMS
    ========================================================================== */
 
-.ai-robot-avatar-root {
+.ai-robot-avatar-wrapper {
   position: relative;
+  user-select: none;
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  user-select: none;
-  flex-shrink: 0;
 }
 
-.ai-robot-outer-glow {
-  position: absolute;
-  inset: -12%;
-  border-radius: 50%;
-  transition: background 0.3s ease;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.ai-robot-svg {
+/* Base image — always GPU animated, always contain */
+.ai-robot-floating-img {
   width: 100%;
   height: 100%;
-  position: relative;
-  z-index: 1;
+  object-fit: contain;
   display: block;
+  will-change: transform;
+  transform-origin: center center;
+  /* Default: idle float */
+  animation: chatbot-float-idle 3.8s ease-in-out infinite;
 }
 
-/* Reduced motion preference */
+/* --------------------------------------------------------
+   1. IDLE — Very subtle lift + micro scale
+   -------------------------------------------------------- */
+@keyframes chatbot-float-idle {
+  0%, 100% { transform: translate3d(0,  0px, 0) scale(1.000); }
+  50%       { transform: translate3d(0, -3px, 0) scale(1.010); }
+}
+
+/* --------------------------------------------------------
+   2. THINKING — slightly more active while AI responds
+   -------------------------------------------------------- */
+.ai-robot-floating-img.is-thinking {
+  animation: chatbot-float-thinking 1.8s ease-in-out infinite !important;
+}
+@keyframes chatbot-float-thinking {
+  0%, 100% { transform: translate3d(0, 0px, 0) scale(1.000); }
+  50%       { transform: translate3d(0,-2px, 0) scale(1.015); }
+}
+
+/* --------------------------------------------------------
+   3. TALKING — minimal micro-movement after response
+   -------------------------------------------------------- */
+.ai-robot-floating-img.is-talking {
+  animation: chatbot-float-talking 1.3s ease-in-out infinite !important;
+}
+@keyframes chatbot-float-talking {
+  0%, 100% { transform: translate3d(0, 0px, 0) scale(1.000); }
+  50%       { transform: translate3d(0,-1px, 0) scale(1.008); }
+}
+
+/* --------------------------------------------------------
+   4. OPEN — freeze animation while panel is open
+   -------------------------------------------------------- */
+.ai-robot-floating-img.is-open {
+  animation: none !important;
+  transform: translate3d(0, 0, 0) scale(1) !important;
+}
+
+/* --------------------------------------------------------
+   Mobile: reduce float distance
+   -------------------------------------------------------- */
+@media (max-width: 480px) {
+  @keyframes chatbot-float-idle {
+    0%, 100% { transform: translate3d(0,  0px, 0) scale(1.000); }
+    50%       { transform: translate3d(0, -2px, 0) scale(1.008); }
+  }
+}
+
+/* --------------------------------------------------------
+   Reduced Motion — disable all animation
+   -------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-  .ai-robot-avatar-root {
+  .ai-robot-floating-img,
+  .ai-robot-floating-img.is-thinking,
+  .ai-robot-floating-img.is-talking {
     animation: none !important;
-    transform: none !important;
+    transform: translate3d(0,0,0) scale(1) !important;
   }
 }

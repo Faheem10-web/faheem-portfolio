@@ -33,10 +33,128 @@ export default function AIChatbot() {
   const [profileAvatarUrl, setProfileAvatarUrl] = useState(DEFAULT_AVATAR_FALLBACK);
   const [avatarError, setAvatarError] = useState(false);
 
+  // Hero section scroll state & responsiveness
+  const [isHeroSection, setIsHeroSection] = useState(true);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [screenWidth, setScreenWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1200
+  );
+
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const fabRef = useRef(null);
   const chatWindowRef = useRef(null);
+
+  // Viewport resize tracking
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Smooth scroll progress & Hero section detection
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const heroEl = document.getElementById("home") || document.querySelector(".hero");
+          const currentScroll = window.scrollY || window.pageYOffset || 0;
+
+          if (heroEl) {
+            const heroRect = heroEl.getBoundingClientRect();
+            const heroHeight = heroEl.offsetHeight || 700;
+
+            if (heroRect.bottom > 100 && currentScroll < heroHeight) {
+              setIsHeroSection(true);
+              const progress = Math.min(1, Math.max(0, currentScroll / (heroHeight * 0.75)));
+              setScrollProgress(progress);
+            } else {
+              setIsHeroSection(false);
+              setScrollProgress(0);
+            }
+          } else {
+            setIsHeroSection(false);
+            setScrollProgress(0);
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, []);
+
+  // Calculate dynamic dimensions for launcher using GPU transform scale
+  const getLauncherStyles = () => {
+    const isMobile = screenWidth <= 480;
+    const isTablet = screenWidth > 480 && screenWidth <= 1024;
+
+    let baseSize = 64;  // Normal page desktop: 64px
+    let scaleVal = 1;
+    let rightPos = 36;
+    let bottomPos = 32;
+
+    if (isHeroSection) {
+      if (isMobile) {
+        // Mobile hero: 58px -> 68px
+        baseSize = 58;
+        scaleVal = 1 + (10 / 58) * scrollProgress;
+        rightPos = 18;
+        bottomPos = 20;
+      } else if (isTablet) {
+        // Tablet hero: 68px -> 80px
+        baseSize = 68;
+        scaleVal = 1 + (12 / 68) * scrollProgress;
+        rightPos = 26;
+        bottomPos = 26;
+      } else {
+        // Desktop hero: 80px -> 88px max
+        baseSize = 80;
+        scaleVal = 1 + (8 / 80) * scrollProgress;
+        rightPos = 36;
+        bottomPos = 32;
+      }
+    } else {
+      // Normal page (past hero)
+      if (isMobile) {
+        baseSize = 58;
+        scaleVal = 1;
+        rightPos = 18;
+        bottomPos = 20;
+      } else if (isTablet) {
+        baseSize = 62;
+        scaleVal = 1;
+        rightPos = 24;
+        bottomPos = 24;
+      } else {
+        baseSize = 64;
+        scaleVal = 1;
+        rightPos = 36;
+        bottomPos = 32;
+      }
+    }
+
+    return {
+      "--fab-size": `${baseSize}px`,
+      "--fab-scale": scaleVal.toFixed(3),
+      "--fab-right": `${rightPos}px`,
+      "--fab-bottom": `${bottomPos}px`,
+    };
+  };
+
+  const launcherStyleVars = getLauncherStyles();
 
   // Fetch live About/Profile photo from MongoDB /api/settings
   useEffect(() => {
@@ -218,29 +336,28 @@ export default function AIChatbot() {
   };
 
   return (
-    <div className="ai-chatbot-root">
-      {/* Floating Trigger Button with Animated AI Avatar */}
-      <button
-        ref={fabRef}
-        className={`ai-chatbot-fab ${isOpen ? "is-open" : ""}`}
-        onClick={() => setIsOpen(!isOpen)}
-        aria-expanded={isOpen}
-        aria-label={isOpen ? "Close AI Assistant" : "Open AI Assistant"}
-      >
-        <div className="ai-fab-glow"></div>
-        <div className="ai-fab-content">
-          {isOpen ? (
-            <X className="ai-fab-close-icon" />
-          ) : (
-            <>
-              <div className="ai-fab-icon-wrapper">
-                <AIAssistantAvatar state="idle" size={36} />
-              </div>
-              <span className="ai-fab-online-badge"></span>
-            </>
-          )}
-        </div>
-      </button>
+    <div className="ai-chatbot-root" style={launcherStyleVars}>
+      {/* Floating Trigger Button with Animated AI Avatar (Hidden when chatbot panel is open) */}
+      {!isOpen && (
+        <button
+          ref={fabRef}
+          className={`ai-chatbot-fab ${isTyping ? "is-processing" : ""}`}
+          onClick={() => setIsOpen(true)}
+          aria-expanded={false}
+          aria-label="Open AI Assistant"
+        >
+          <div className="ai-fab-glow"></div>
+          <div className="ai-fab-content">
+            <div className="ai-fab-icon-wrapper">
+              <AIAssistantAvatar
+                state={isTyping ? "thinking" : "idle"}
+                size="100%"
+              />
+            </div>
+            <span className="ai-fab-online-badge"></span>
+          </div>
+        </button>
+      )}
 
       {/* Chat Panel Modal */}
       <AnimatePresence>
@@ -251,26 +368,27 @@ export default function AIChatbot() {
             role="dialog"
             aria-modal="true"
             aria-label="AI Assistant"
-            initial={{ opacity: 0, scale: 0.96, y: 10 }}
+            initial={{ opacity: 0, scale: 0.96, y: 12 }}
             animate={{
               opacity: 1,
               scale: 1,
               y: 0,
-              transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] },
+              transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] },
             }}
             exit={{
               opacity: 0,
               scale: 0.96,
-              y: 10,
-              transition: { duration: 0.18, ease: "easeOut" },
+              y: 8,
+              transition: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
             }}
           >
-            {/* Minimal Header with Robot Badge */}
+            {/* Header with Robot Badge + Title */}
             <div className="ai-chat-header">
               <div className="ai-chat-header-left">
                 <div className="ai-header-icon-badge">
-                  <AIAssistantAvatar state={isTyping ? "thinking" : "idle"} size={24} />
+                  <AIAssistantAvatar state={isTyping ? "thinking" : "idle"} size={26} />
                 </div>
+                <span className="ai-header-title">Faheem's AI Assistant</span>
               </div>
 
               <div className="ai-header-actions">
@@ -308,7 +426,7 @@ export default function AIChatbot() {
                 <div className="ai-profile-avatar-wrapper">
                   <AIAssistantAvatar
                     state={isTyping ? "thinking" : "idle"}
-                    size={68}
+                    size={76}
                   />
                 </div>
                 <h4 className="ai-welcome-title">Hi, I'm Faheem's AI Assistant.</h4>
