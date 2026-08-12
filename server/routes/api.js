@@ -8,7 +8,9 @@ import checkMaintenance, { invalidateMaintenanceCache } from '../middleware/main
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import rateLimit from 'express-rate-limit';
 import { sendAdminEmail, sendVisitorAutoReply } from '../services/emailService.js';
+import { generateAIChatReply } from '../services/aiChatService.js';
 import { uploadToCloudinary, deleteFromCloudinary, deleteCloudinaryAssetsFromObject } from '../services/cloudinaryService.js';
 import { importDb, exportDb } from '../scripts/seeder.js';
 import connectDB from '../config/db.js';
@@ -2012,6 +2014,54 @@ router.get('/test-db', async (req, res) => {
   }
 
   res.json(result);
+});
+
+// =========================================================================
+// AI Portfolio Assistant Chat Endpoint
+// =========================================================================
+const chatMinuteLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 10, // 10 requests per minute
+  standardHeaders: true,
+  legacyHeaders: false,
+  validate: { trustProxy: false },
+  message: { error: "I'm getting a lot of questions right now. Please try again in a little while." }
+});
+
+const chatHourLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 50, // 50 requests per hour
+  standardHeaders: true,
+  legacyHeaders: false,
+  validate: { trustProxy: false },
+  message: { error: "I'm getting a lot of questions right now. Please try again in a little while." }
+});
+
+router.post('/chat', [chatMinuteLimiter, chatHourLimiter], async (req, res) => {
+  try {
+    const { message } = req.body || {};
+
+    if (!message || typeof message !== 'string' || !message.trim()) {
+      return res.status(400).json({ error: 'Message content is required.' });
+    }
+
+    if (message.length > 500) {
+      return res.status(400).json({ error: 'Message exceeds maximum length of 500 characters.' });
+    }
+
+    const result = await generateAIChatReply(message.trim());
+    if (typeof result === 'object' && result !== null) {
+      return res.json({
+        reply: result.text || '',
+        actions: result.actions || [],
+        suggestedQuestions: result.suggestedQuestions || []
+      });
+    }
+    return res.json({ reply: result, actions: [], suggestedQuestions: [] });
+  } catch (err) {
+    console.warn('⚠️ /api/chat processing exception');
+    return res.status(500).json({ error: "Faheem's AI assistant is temporarily unavailable. Please try again in a moment." });
+  }
 });
 
 export default router;

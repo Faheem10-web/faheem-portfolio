@@ -8,6 +8,16 @@ export default defineConfig(({ mode }) => {
   const isProd = mode === 'production';
 
   return {
+    server: {
+      port: 5173,
+      proxy: {
+        '/api': {
+          target: 'http://localhost:5000',
+          changeOrigin: true,
+          secure: false,
+        },
+      },
+    },
     plugins: [
       react(),
       {
