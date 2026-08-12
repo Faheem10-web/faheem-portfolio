@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X, Send, Sparkles, RotateCcw, ExternalLink } from "lucide-react";
 import { getAIResponse } from "../../utils/aiChatService";
 import { API_BASE } from "../../config/api";
+import StarBorder from "../ui/StarBorder";
 import "./AIChatbot.css";
 
 const INITIAL_WELCOME_MESSAGE = {
@@ -241,12 +242,12 @@ export default function AIChatbot() {
         </div>
       </button>
 
-      {/* Chat Panel Modal */}
+      {/* Chat Panel Modal with Outer StarBorder */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             ref={chatWindowRef}
-            className="ai-chatbot-panel"
+            className="ai-chatbot-panel-wrapper"
             role="dialog"
             aria-modal="true"
             aria-label="AI Assistant"
@@ -264,166 +265,176 @@ export default function AIChatbot() {
               transition: { duration: 0.18, ease: "easeOut" },
             }}
           >
-            {/* Minimal Header without Text */}
-            <div className="ai-chat-header">
-              <div className="ai-chat-header-left">
-                <div className="ai-header-icon-badge">
-                  <Sparkles size={14} className="ai-header-sparkle-icon" />
-                </div>
-              </div>
-
-              <div className="ai-header-actions">
-                <span className="ai-status-badge">
-                  <span className="ai-status-dot"></span>
-                  <span className="ai-status-text">Online</span>
-                </span>
-                <button
-                  type="button"
-                  className="ai-header-btn"
-                  onClick={handleResetChat}
-                  title="Reset conversation"
-                  aria-label="Reset conversation"
-                >
-                  <RotateCcw size={14} />
-                </button>
-                <button
-                  type="button"
-                  className="ai-header-btn ai-close-btn"
-                  onClick={() => {
-                    setIsOpen(false);
-                    fabRef.current?.focus();
-                  }}
-                  aria-label="Close Chat Window"
-                >
-                  <X size={16} />
-                </button>
-              </div>
-            </div>
-
-            {/* Scrollable Chat Body Area */}
-            <div className="ai-chat-body">
-              {/* Centered Profile Avatar Welcome Banner */}
-              <div className="ai-welcome-banner">
-                <div className="ai-profile-avatar-wrapper">
-                  {!avatarError && profileAvatarUrl ? (
-                    <img
-                      src={profileAvatarUrl}
-                      alt="Faheem A V"
-                      className="ai-profile-avatar-img"
-                      onError={() => setAvatarError(true)}
-                    />
-                  ) : (
-                    <div className="ai-avatar-fallback">
-                      <Sparkles size={24} className="ai-avatar-fallback-icon" />
+            <StarBorder
+              as="div"
+              color="#7C3AED"
+              speed="7s"
+              thickness={1}
+              className="ai-chatbot-star-border"
+            >
+              <div className="ai-chatbot-panel">
+                {/* Minimal Header without Text */}
+                <div className="ai-chat-header">
+                  <div className="ai-chat-header-left">
+                    <div className="ai-header-icon-badge">
+                      <Sparkles size={14} className="ai-header-sparkle-icon" />
                     </div>
-                  )}
-                </div>
-                <h4 className="ai-welcome-title">Hi, I'm Faheem's AI Assistant.</h4>
-                <p className="ai-welcome-subtitle">Ask me about my work, skills, projects, experience, or availability.</p>
-              </div>
+                  </div>
 
-              {/* Messages Stream */}
-              <div className="ai-messages-list">
-                {messages.map((msg) => (
-                  <motion.div
-                    key={msg.id}
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className={`ai-message-row ${
-                      msg.sender === "user" ? "user-row" : "assistant-row"
-                    }`}
-                  >
-                    <div className="ai-msg-bubble-wrapper">
-                      <div className={`ai-msg-bubble ${msg.sender}-bubble`}>
-                        <p className="ai-msg-text">{msg.text}</p>
-                        
-                        {/* Contextual Action Buttons */}
-                        {Array.isArray(msg.actions) && msg.actions.length > 0 && (
-                          <div className="ai-msg-actions">
-                            {msg.actions.map((act, actionIdx) => (
-                              <a
-                                key={actionIdx}
-                                href={act.url}
-                                target={act.url.startsWith("http") || act.url.startsWith("mailto") ? "_blank" : "_self"}
-                                rel="noopener noreferrer"
-                                className="ai-action-btn"
-                              >
-                                <span>{act.label}</span>
-                                <ExternalLink size={11} className="ai-action-icon" />
-                              </a>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      <span className="ai-msg-timestamp">{msg.timestamp}</span>
-                    </div>
-                  </motion.div>
-                ))}
-
-                {/* Typing Indicator State */}
-                {isTyping && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="ai-message-row assistant-row"
-                  >
-                    <div className="ai-msg-bubble-wrapper">
-                      <div className="ai-msg-bubble assistant-bubble ai-typing-bubble">
-                        <div className="ai-typing-dots">
-                          <span className="ai-dot"></span>
-                          <span className="ai-dot"></span>
-                          <span className="ai-dot"></span>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-
-                <div ref={messagesEndRef} />
-              </div>
-
-              {/* Dynamic Suggested Question Chips */}
-              <div className="ai-suggested-section">
-                <div className="ai-chips-grid">
-                  {suggestedChips.map((chip, idx) => (
+                  <div className="ai-header-actions">
+                    <span className="ai-status-badge">
+                      <span className="ai-status-dot"></span>
+                      <span className="ai-status-text">Online</span>
+                    </span>
                     <button
-                      key={idx}
                       type="button"
-                      className="ai-chip-btn"
-                      onClick={() => handleChipClick(chip)}
-                      disabled={isTyping}
+                      className="ai-header-btn"
+                      onClick={handleResetChat}
+                      title="Reset conversation"
+                      aria-label="Reset conversation"
                     >
-                      {chip}
+                      <RotateCcw size={14} />
                     </button>
-                  ))}
+                    <button
+                      type="button"
+                      className="ai-header-btn ai-close-btn"
+                      onClick={() => {
+                        setIsOpen(false);
+                        fabRef.current?.focus();
+                      }}
+                      aria-label="Close Chat Window"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            {/* Fixed Bottom Input Form */}
-            <form className="ai-chat-footer" onSubmit={handleSubmit}>
-              <div className="ai-input-wrapper">
-                <input
-                  ref={inputRef}
-                  type="text"
-                  className="ai-chat-input"
-                  placeholder="Ask anything about Faheem..."
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  disabled={isTyping}
-                  aria-label="Ask Faheem's AI Assistant"
-                />
-                <button
-                  type="submit"
-                  className={`ai-send-btn ${inputText.trim() ? "is-active" : ""}`}
-                  disabled={!inputText.trim() || isTyping}
-                  aria-label="Send Message"
-                >
-                  <Send className="ai-send-icon" />
-                </button>
+                {/* Scrollable Chat Body Area */}
+                <div className="ai-chat-body">
+                  {/* Centered Profile Avatar Welcome Banner */}
+                  <div className="ai-welcome-banner">
+                    <div className="ai-profile-avatar-wrapper">
+                      {!avatarError && profileAvatarUrl ? (
+                        <img
+                          src={profileAvatarUrl}
+                          alt="Faheem A V"
+                          className="ai-profile-avatar-img"
+                          onError={() => setAvatarError(true)}
+                        />
+                      ) : (
+                        <div className="ai-avatar-fallback">
+                          <Sparkles size={24} className="ai-avatar-fallback-icon" />
+                        </div>
+                      )}
+                    </div>
+                    <h4 className="ai-welcome-title">Hi, I'm Faheem's AI Assistant.</h4>
+                    <p className="ai-welcome-subtitle">Ask me about my work, skills, projects, experience, or availability.</p>
+                  </div>
+
+                  {/* Messages Stream */}
+                  <div className="ai-messages-list">
+                    {messages.map((msg) => (
+                      <motion.div
+                        key={msg.id}
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className={`ai-message-row ${
+                          msg.sender === "user" ? "user-row" : "assistant-row"
+                        }`}
+                      >
+                        <div className="ai-msg-bubble-wrapper">
+                          <div className={`ai-msg-bubble ${msg.sender}-bubble`}>
+                            <p className="ai-msg-text">{msg.text}</p>
+                            
+                            {/* Contextual Action Buttons */}
+                            {Array.isArray(msg.actions) && msg.actions.length > 0 && (
+                              <div className="ai-msg-actions">
+                                {msg.actions.map((act, actionIdx) => (
+                                  <a
+                                    key={actionIdx}
+                                    href={act.url}
+                                    target={act.url.startsWith("http") || act.url.startsWith("mailto") ? "_blank" : "_self"}
+                                    rel="noopener noreferrer"
+                                    className="ai-action-btn"
+                                  >
+                                    <span>{act.label}</span>
+                                    <ExternalLink size={11} className="ai-action-icon" />
+                                  </a>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                          <span className="ai-msg-timestamp">{msg.timestamp}</span>
+                        </div>
+                      </motion.div>
+                    ))}
+
+                    {/* Typing Indicator State */}
+                    {isTyping && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="ai-message-row assistant-row"
+                      >
+                        <div className="ai-msg-bubble-wrapper">
+                          <div className="ai-msg-bubble assistant-bubble ai-typing-bubble">
+                            <div className="ai-typing-dots">
+                              <span className="ai-dot"></span>
+                              <span className="ai-dot"></span>
+                              <span className="ai-dot"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+
+                    <div ref={messagesEndRef} />
+                  </div>
+
+                  {/* Dynamic Suggested Question Chips */}
+                  <div className="ai-suggested-section">
+                    <div className="ai-chips-grid">
+                      {suggestedChips.map((chip, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          className="ai-chip-btn"
+                          onClick={() => handleChipClick(chip)}
+                          disabled={isTyping}
+                        >
+                          {chip}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Fixed Bottom Input Form */}
+                <form className="ai-chat-footer" onSubmit={handleSubmit}>
+                  <div className="ai-input-wrapper">
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      className="ai-chat-input"
+                      placeholder="Ask anything about Faheem..."
+                      value={inputText}
+                      onChange={(e) => setInputText(e.target.value)}
+                      disabled={isTyping}
+                      aria-label="Ask Faheem's AI Assistant"
+                    />
+                    <button
+                      type="submit"
+                      className={`ai-send-btn ${inputText.trim() ? "is-active" : ""}`}
+                      disabled={!inputText.trim() || isTyping}
+                      aria-label="Send Message"
+                    >
+                      <Send className="ai-send-icon" />
+                    </button>
+                  </div>
+                </form>
               </div>
-            </form>
+            </StarBorder>
           </motion.div>
         )}
       </AnimatePresence>
