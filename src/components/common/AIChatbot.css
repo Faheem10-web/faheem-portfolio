@@ -108,9 +108,9 @@
 }
 
 /* --------------------------------------------------------------------------
-   Chatbot Panel Container & Outer StarBorder Wrapper
+   Chatbot Panel Container (Soft Purple Gradient Background)
    -------------------------------------------------------------------------- */
-.ai-chatbot-panel-wrapper {
+.ai-chatbot-panel {
   position: absolute;
   bottom: 72px;
   right: 0;
@@ -118,22 +118,9 @@
   max-width: calc(100vw - 32px);
   height: 500px;
   max-height: calc(100vh - 100px);
-  z-index: 99999;
-}
-
-.ai-chatbot-star-border {
-  width: 100%;
-  height: 100%;
-  border-radius: 26px;
-}
-
-.ai-chatbot-panel {
-  position: relative;
-  width: 100%;
-  height: 100%;
   background: linear-gradient(180deg, #7C3AED 0%, #A78BFA 32%, #F5F3FF 72%, #FFFFFF 100%);
   border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 25px;
+  border-radius: 26px;
   box-shadow: 
     0 24px 54px rgba(124, 58, 237, 0.25),
     0 8px 24px rgba(0, 0, 0, 0.06);
@@ -141,7 +128,7 @@
   flex-direction: column;
   overflow: hidden;
   overscroll-behavior: contain;
-  z-index: 2;
+  z-index: 99999;
 }
 
 /* --------------------------------------------------------------------------
@@ -641,7 +628,7 @@
     height: 30px;
   }
 
-  .ai-chatbot-panel-wrapper {
+  .ai-chatbot-panel {
     position: fixed;
     bottom: 76px;
     right: 12px;
@@ -649,6 +636,7 @@
     width: calc(100vw - 24px);
     height: calc(100vh - 95px);
     max-height: 500px;
+    border-radius: 22px;
   }
 
   .ai-chat-header {
@@ -692,7 +680,7 @@
 }
 
 @media (max-width: 360px) {
-  .ai-chatbot-panel-wrapper {
+  .ai-chatbot-panel {
     bottom: 70px;
     right: 8px;
     left: 8px;

@@ -1,0 +1,37 @@
+/* ==========================================================================
+   AI Assistant Avatar - Futuristic 3D Robot CSS
+   ========================================================================== */
+
+.ai-robot-avatar-root {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.ai-robot-outer-glow {
+  position: absolute;
+  inset: -12%;
+  border-radius: 50%;
+  transition: background 0.3s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ai-robot-svg {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+  display: block;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .ai-robot-avatar-root {
+    animation: none !important;
+    transform: none !important;
+  }
+}
