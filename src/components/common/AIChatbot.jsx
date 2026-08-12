@@ -8,16 +8,16 @@ import "./AIChatbot.css";
 const INITIAL_WELCOME_MESSAGE = {
   id: "welcome-1",
   sender: "assistant",
-  text: "Ask me about Faheem's work, skills, projects, or experience.",
+  text: "Ask me about my work, skills, projects, experience, or availability.",
   timestamp: "Just now",
   actions: [],
 };
 
 const DEFAULT_SUGGESTED_CHIPS = [
-  "Who is Faheem?",
-  "Show me his projects",
-  "What are his skills?",
-  "How can I contact him?",
+  "Explore Projects",
+  "My Skills",
+  "My Experience",
+  "Recruiter Mode",
 ];
 
 const DEFAULT_AVATAR_FALLBACK = "https://res.cloudinary.com/ddluoarzr/image/upload/v1785645438/fhm._xtraoh.png";
@@ -319,7 +319,7 @@ export default function AIChatbot() {
                   )}
                 </div>
                 <h4 className="ai-welcome-title">Hi, I'm Faheem's AI Assistant.</h4>
-                <p className="ai-welcome-subtitle">Ask me about his work, skills, projects, or experience.</p>
+                <p className="ai-welcome-subtitle">Ask me about my work, skills, projects, experience, or availability.</p>
               </div>
 
               {/* Messages Stream */}
