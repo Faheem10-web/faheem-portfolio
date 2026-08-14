@@ -203,17 +203,18 @@
     text-decoration: none;
     cursor: pointer;
     opacity: 0;
-    transform: translateY(10px) scale(0.96) translateZ(0);
+    transform: translateY(8px);
     transition: opacity 250ms cubic-bezier(0.16, 1, 0.3, 1), 
                 transform 250ms cubic-bezier(0.16, 1, 0.3, 1), 
                 background-color 200ms ease, 
                 border-color 200ms ease, 
                 box-shadow 200ms ease;
-    will-change: opacity, transform;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.25);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .project-hover-btn:focus-visible {
@@ -225,12 +226,12 @@
     background: #f8fafc;
     color: #000000;
     border-color: #ffffff;
-    transform: translateY(-2px) scale(1.04) translateZ(0);
+    transform: translateY(-2px);
     box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.35);
 }
 
 .project-hover-btn:active {
-    transform: translateY(0) scale(0.98) translateZ(0);
+    transform: translateY(0);
 }
 
 .project-hover-btn--primary {
@@ -248,20 +249,22 @@
                 background 200ms ease,
                 border-color 200ms ease,
                 box-shadow 200ms ease;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .project-hover-btn--primary:hover {
     background: linear-gradient(135deg, #a855f7 0%, #8867ff 50%, #7c3aed 100%);
     color: #ffffff;
     border-color: rgba(255, 255, 255, 0.75);
-    transform: translateY(-2px) scale(1.04) translateZ(0);
+    transform: translateY(-2px);
     box-shadow:
         0 6px 20px rgba(0, 0, 0, 0.45),
         inset 0 2px 2px #ffffff;
 }
 
 .project-hover-btn--primary:active {
-    transform: translateY(0) scale(0.98) translateZ(0);
+    transform: translateY(0);
 }
 
 .project-hover-btn--primary svg {
@@ -277,46 +280,49 @@
 }
 
 .project-card-wrapper:hover .project-image,
-.project-card-wrapper:focus-within .project-image {
-    transform: scale(1.05) translateZ(0); /* Image zooms to 1.05 max */
-    filter: brightness(0.85) translateZ(0);
+.project-card-wrapper:focus-within .project-image,
+.project-card:hover .project-image {
+    transform: scale(1.08) translateZ(0);
+    filter: brightness(0.8) blur(6px) translateZ(0);
 }
 
 /* Card Active & Touch Focus states */
 .project-card-wrapper:hover .project-overlay,
 .project-card-wrapper:focus-within .project-overlay,
-.project-card-wrapper:active .project-overlay {
-    opacity: 1;
+.project-card-wrapper:active .project-overlay,
+.project-card:hover .project-overlay {
+    opacity: 1 !important;
     backdrop-filter: blur(0px);
     -webkit-backdrop-filter: blur(0px);
-    pointer-events: auto;
+    pointer-events: auto !important;
 }
 
 .project-card-wrapper:hover .project-hover-btn,
 .project-card-wrapper:focus-within .project-hover-btn,
-.project-card-wrapper:active .project-hover-btn {
-    opacity: 1;
-    transform: translateY(0) scale(1) translateZ(0); /* 10px -> 0, scale 0.96 -> 1 */
+.project-card-wrapper:active .project-hover-btn,
+.project-card:hover .project-hover-btn {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
     transition-delay: 50ms;
 }
 
-/* Force Reset Idle State to Prevent Stuck Overlays on Tab Focus Return */
-.project-card-wrapper.is-idle .project-overlay {
+/* Force Reset Idle State Only When Not Hovered */
+.project-card-wrapper.is-idle:not(:hover) .project-overlay {
     opacity: 0 !important;
     pointer-events: none !important;
 }
 
-.project-card-wrapper.is-idle .project-hover-btn {
+.project-card-wrapper.is-idle:not(:hover) .project-hover-btn {
     opacity: 0 !important;
-    transform: translateY(10px) scale(0.96) translateZ(0) !important;
+    transform: translateY(8px) !important;
 }
 
-.project-card-wrapper.is-idle .project-card {
+.project-card-wrapper.is-idle:not(:hover) .project-card {
     transform: scale(1) translateZ(0) !important;
     box-shadow: none !important;
 }
 
-.project-card-wrapper.is-idle .project-image {
+.project-card-wrapper.is-idle:not(:hover) .project-image {
     transform: scale(1) translateZ(0) !important;
     filter: brightness(1) translateZ(0) !important;
 }

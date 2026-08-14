@@ -98,7 +98,6 @@ function ProjectCard({ project, index, cardLink, coverImg, cardTitle, demoLink }
             onMouseMove={handleMouseMove}
             onMouseLeave={resetState}
             onPointerLeave={resetState}
-            onBlur={resetState}
         >
             <div className="proj-card-inner" tabIndex="0">
                 <div className="proj-card-image-wrap">

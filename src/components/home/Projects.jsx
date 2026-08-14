@@ -118,7 +118,6 @@ const ProjectCard = memo(function ProjectCard({ project, index, cardLink, coverI
             onMouseMove={handleMouseMove}
             onMouseLeave={resetState}
             onPointerLeave={resetState}
-            onBlur={resetState}
         >
             <div className="project-card" tabIndex="0">
                 {optimizedCover ? (

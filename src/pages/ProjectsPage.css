@@ -305,9 +305,10 @@
 }
 
 .proj-card-inner:hover .proj-card-image,
-.proj-card-inner:focus-within .proj-card-image {
-    transform: scale(1.05) translateZ(0); /* Image zooms to 1.05 max */
-    filter: brightness(0.85) translateZ(0);
+.proj-card-inner:focus-within .proj-card-image,
+.proj-card-box:hover .proj-card-image {
+    transform: scale(1.08) translateZ(0);
+    filter: brightness(0.8) blur(6px) translateZ(0);
 }
 
 /* 2026 Premium Hover overlay */
@@ -329,11 +330,12 @@
 
 .proj-card-inner:hover .proj-card-hover-overlay,
 .proj-card-inner:focus-within .proj-card-hover-overlay,
-.proj-card-inner:active .proj-card-hover-overlay {
-    opacity: 1;
+.proj-card-inner:active .proj-card-hover-overlay,
+.proj-card-box:hover .proj-card-hover-overlay {
+    opacity: 1 !important;
     backdrop-filter: blur(0px);
     -webkit-backdrop-filter: blur(0px);
-    pointer-events: auto;
+    pointer-events: auto !important;
 }
 
 .proj-card-hover-buttons {
@@ -359,13 +361,14 @@
     text-decoration: none;
     cursor: pointer;
     opacity: 0;
-    transform: translateY(10px) scale(0.96) translateZ(0);
+    transform: translateY(8px);
     transition: opacity 250ms cubic-bezier(0.16, 1, 0.3, 1), 
                 transform 250ms cubic-bezier(0.16, 1, 0.3, 1), 
                 background-color 200ms ease, 
                 border-color 200ms ease, 
                 box-shadow 200ms ease;
-    will-change: opacity, transform;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .proj-card-hover-overlay .hover-btn:focus-visible {
@@ -375,29 +378,30 @@
 
 .proj-card-inner:hover .proj-card-hover-overlay .hover-btn,
 .proj-card-inner:focus-within .proj-card-hover-overlay .hover-btn,
-.proj-card-inner:active .proj-card-hover-overlay .hover-btn {
-    opacity: 1;
-    transform: translateY(0) scale(1) translateZ(0); /* 10px -> 0, scale 0.96 -> 1 */
+.proj-card-inner:active .proj-card-hover-overlay .hover-btn,
+.proj-card-box:hover .proj-card-hover-overlay .hover-btn {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
     transition-delay: 50ms;
 }
 
-/* Force Reset Idle State to Prevent Stuck Overlays on Tab Focus Return */
-.proj-card-box.is-idle .proj-card-hover-overlay {
+/* Force Reset Idle State Only When Not Hovered */
+.proj-card-box.is-idle:not(:hover) .proj-card-hover-overlay {
     opacity: 0 !important;
     pointer-events: none !important;
 }
 
-.proj-card-box.is-idle .hover-btn {
+.proj-card-box.is-idle:not(:hover) .hover-btn {
     opacity: 0 !important;
-    transform: translateY(10px) scale(0.96) translateZ(0) !important;
+    transform: translateY(8px) !important;
 }
 
-.proj-card-box.is-idle .proj-card-inner {
+.proj-card-box.is-idle:not(:hover) .proj-card-inner {
     transform: scale(1) translateZ(0) !important;
     box-shadow: none !important;
 }
 
-.proj-card-box.is-idle .proj-card-image {
+.proj-card-box.is-idle:not(:hover) .proj-card-image {
     transform: scale(1) translateZ(0) !important;
     filter: brightness(1) translateZ(0) !important;
 }
@@ -416,11 +420,11 @@
     color: #000000;
     border-color: #ffffff;
     box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.35);
-    transform: translateY(-2px) scale(1.04) translateZ(0);
+    transform: translateY(-2px);
 }
 
 .proj-card-hover-overlay .hover-btn-glass:active {
-    transform: translateY(0) scale(0.98) translateZ(0);
+    transform: translateY(0);
 }
 
 /* Button 2: Live Preview or Single Button (Premium Purple Gradient) */
@@ -439,19 +443,21 @@
                 background 200ms ease, 
                 border-color 200ms ease, 
                 box-shadow 200ms ease;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .proj-card-hover-overlay .hover-btn-purple:hover {
     background: linear-gradient(135deg, #a855f7 0%, #8867ff 50%, #7c3aed 100%);
     border-color: rgba(255, 255, 255, 0.75);
-    transform: translateY(-2px) scale(1.04) translateZ(0);
+    transform: translateY(-2px);
     box-shadow:
         0 6px 20px rgba(0, 0, 0, 0.45),
         inset 0 2px 2px #ffffff;
 }
 
 .proj-card-hover-overlay .hover-btn-purple:active {
-    transform: translateY(0) scale(0.98) translateZ(0);
+    transform: translateY(0);
 }
 
 .proj-card-hover-overlay .hover-btn-purple svg {
