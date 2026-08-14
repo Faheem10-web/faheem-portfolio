@@ -101,48 +101,48 @@ export default function AIChatbot() {
     const isMobile = screenWidth <= 480;
     const isTablet = screenWidth > 480 && screenWidth <= 1024;
 
-    let baseSize = 64;  // Normal page desktop: 64px
+    let baseSize = 80;
     let scaleVal = 1;
-    let rightPos = 36;
-    let bottomPos = 32;
+    let rightPos = 40;
+    let bottomPos = 36;
 
     if (isHeroSection) {
       if (isMobile) {
-        // Mobile hero: 58px -> 68px
-        baseSize = 58;
-        scaleVal = 1 + (10 / 58) * scrollProgress;
+        // Mobile: 60px base, scale 1 -> 1.166 (60px -> 70px), right: 18px, bottom: 20px
+        baseSize = 60;
+        scaleVal = 1 + 0.166 * scrollProgress;
         rightPos = 18;
         bottomPos = 20;
       } else if (isTablet) {
-        // Tablet hero: 68px -> 80px
-        baseSize = 68;
-        scaleVal = 1 + (12 / 68) * scrollProgress;
-        rightPos = 26;
-        bottomPos = 26;
+        // Tablet: 72px base, scale 1 -> 1.138 (72px -> 82px), right: 28px, bottom: 28px
+        baseSize = 72;
+        scaleVal = 1 + 0.138 * scrollProgress;
+        rightPos = 28;
+        bottomPos = 28;
       } else {
-        // Desktop hero: 80px -> 88px max
+        // Desktop: 80px base, scale 1 -> 1.10 (80px -> 88px max), right: 40px, bottom: 36px
         baseSize = 80;
-        scaleVal = 1 + (8 / 80) * scrollProgress;
-        rightPos = 36;
-        bottomPos = 32;
+        scaleVal = 1 + 0.10 * scrollProgress;
+        rightPos = 40;
+        bottomPos = 36;
       }
     } else {
-      // Normal page (past hero)
+      // Normal Page (past hero section): 60-64px base, scale 1
       if (isMobile) {
-        baseSize = 58;
+        baseSize = 60;
         scaleVal = 1;
-        rightPos = 18;
-        bottomPos = 20;
+        rightPos = 16;
+        bottomPos = 18;
       } else if (isTablet) {
-        baseSize = 62;
+        baseSize = 60;
         scaleVal = 1;
         rightPos = 24;
         bottomPos = 24;
       } else {
         baseSize = 64;
         scaleVal = 1;
-        rightPos = 36;
-        bottomPos = 32;
+        rightPos = 28;
+        bottomPos = 28;
       }
     }
 
@@ -382,13 +382,12 @@ export default function AIChatbot() {
               transition: { duration: 0.24, ease: [0.22, 1, 0.36, 1] },
             }}
           >
-            {/* Header with Robot Badge + Title */}
+            {/* Minimal Header with Robot Badge */}
             <div className="ai-chat-header">
               <div className="ai-chat-header-left">
                 <div className="ai-header-icon-badge">
                   <AIAssistantAvatar state={isTyping ? "thinking" : "idle"} size={26} />
                 </div>
-                <span className="ai-header-title">Faheem's AI Assistant</span>
               </div>
 
               <div className="ai-header-actions">

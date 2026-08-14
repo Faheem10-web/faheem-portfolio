@@ -9,7 +9,7 @@ export default function AIAssistantAvatar({
   state = "idle",
   size = 50,
   className = "",
-  src = "/assets/chatbot-cropped.png"
+  src = "/assets/chatboart.png"
 }) {
   const sizeStyle = typeof size === "number" ? `${size}px` : size;
 
